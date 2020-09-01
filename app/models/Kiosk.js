@@ -20,11 +20,11 @@ Kiosk.init(
       type: GEOMETRY,
       allowNull: false
     },
-    lastName: {
+    description: {
       type: STRING,
       allowNull: false
     },
-    mobileNumber: {
+    enabled: {
       type: BOOLEAN,
       allowNull: false
     }
