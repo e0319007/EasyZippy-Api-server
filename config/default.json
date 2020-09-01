@@ -7,7 +7,7 @@
   "postgres": {
     "host": "localhost",
     "user": "postgres",
-    "password": "postgres",
+    "password": "password",
     "database": "easy_zippy_db"
   }
 }
