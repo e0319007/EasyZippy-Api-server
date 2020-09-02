@@ -1,3 +1,5 @@
+const Category = require('./app/models/Category');
+const PaymentRecord = require('./app/models/PaymentRecord');
 const Staff = require('./app/models/Staff');
 const sequelize = require('./app/common/database');
 
