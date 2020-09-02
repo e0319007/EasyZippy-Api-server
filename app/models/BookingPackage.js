@@ -3,7 +3,6 @@ const {
   INTEGER, DATE, Model
 } = Sequelize;
 const sequelize = require('../common/database');
-const { INTEGER, DATE } = require('sequelize');
 
 class BookingPackage extends Model {
 }
@@ -22,7 +21,7 @@ BookingPackage.init(
     },
     promoIdUsed: {
       type: INTEGER,
-      allowNull: false
+      allowNull: true
     },
     startDate: {
       type: DATE,
@@ -35,9 +34,9 @@ BookingPackage.init(
   },
   {
     sequelize,
-    modelName: 'staff',
+    modelName: 'bookingPackage',
     underscored: true
   }
 );
 
-module.exports = Staff;
+module.exports = BookingPackage;

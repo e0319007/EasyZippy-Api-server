@@ -1,9 +1,8 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, DATE, Model, STRING, BOOLEAN
+  INTEGER, DATE, Model, DECIMAL, STRING, BOOLEAN
 } = Sequelize;
 const sequelize = require('../common/database');
-const { INTEGER, DATE, STRING, DECIMAL, BOOLEAN } = require('sequelize');
 
 class Advertisement extends Model {
 }
@@ -18,11 +17,13 @@ Advertisement.init(
     },
     description: {
       type: STRING,
-      allowNull: false
+      allowNull: false,
+      defaultValue: ""
     },
     imageUrl: {
       type: STRING,
-      allowNull: false
+      allowNull: false,
+      defaultValue: ""
     },
     startDate: {
       type: DATE,
@@ -34,18 +35,22 @@ Advertisement.init(
     },
     amountPaid: {
       type: DECIMAL,
-      allowNull: false
+      allowNull: false,
+      validate: {
+          min: 0.0
+      }
     },
     expired: {
       type: BOOLEAN,
-      allowNull: false
+      allowNull: false,
+      defaultValue: false
     }
   },
   {
     sequelize,
-    modelName: 'staff',
+    modelName: 'advertisement',
     underscored: true
   }
 );
 
-module.exports = Staff;
+module.exports = Advertisement;

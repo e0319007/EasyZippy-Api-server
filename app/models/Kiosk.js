@@ -1,9 +1,8 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, STRING, Model, BOOLEAN
+  INTEGER, STRING, Model, BOOLEAN, GEOMETRY
 } = Sequelize;
 const sequelize = require('../common/database');
-const { GEOMETRY } = require('sequelize');
 
 class Kiosk extends Model {
 }
@@ -22,18 +21,20 @@ Kiosk.init(
     },
     description: {
       type: STRING,
-      allowNull: false
+      allowNull: false,
+      defaultValue: ""
     },
     enabled: {
       type: BOOLEAN,
-      allowNull: false
+      allowNull: false,
+      defaultValue: true
     }
   },
   {
     sequelize,
-    modelName: 'staff',
+    modelName: 'kiosk',
     underscored: true
   }
 );
 
-module.exports = Staff;
+module.exports = Kiosk;

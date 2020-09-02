@@ -18,9 +18,9 @@ Locker.init(
   },
   {
     sequelize,
-    modelName: 'staff',
+    modelName: 'locker',
     underscored: true
   }
 );
 
-module.exports = Staff;
+module.exports = Locker;

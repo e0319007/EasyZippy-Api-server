@@ -1,9 +1,8 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, DATE, Model,STRING, DOUBLE
+  INTEGER, Model,STRING, DOUBLE, DECIMAL
 } = Sequelize;
 const sequelize = require('../common/database');
-const { INTEGER, DATE, DECIMAL } = require('sequelize');
 
 class LockerType extends Model {
 }
@@ -22,26 +21,38 @@ LockerType.init(
     },
     height: {
       type: DOUBLE,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        min: 0.0
+    }
     },
     width: {
       type: DOUBLE,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        min: 0.0
+    }
     },
     length: {
       type: DOUBLE,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        min: 0.0
+    }
     },
     price: {
       type: DECIMAL,
-      allowNull: false
+      allowNull: false,
+      validate: {
+          min: 0.0
+      }
     }
   },
   {
     sequelize,
-    modelName: 'staff',
+    modelName: 'lockerType',
     underscored: true
   }
 );
 
-module.exports = Staff;
+module.exports = LockerType;

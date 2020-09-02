@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, DATE, Model, DOUBLE
+  INTEGER, DATE, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 const { INTEGER, DATE } = require('sequelize');
@@ -18,14 +18,15 @@ LockerActionRecord.init(
     },
     timestamp: {
       type: DATE,
-      allowNull: false
+      allowNull: false,
+      defaultValue: Sequelize.NOW
     }
   },
   {
     sequelize,
-    modelName: 'staff',
+    modelName: 'lockerActionRecord',
     underscored: true
   }
 );
 
-module.exports = Staff;
+module.exports = LockerActionRecord;

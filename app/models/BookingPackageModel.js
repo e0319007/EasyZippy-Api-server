@@ -3,7 +3,6 @@ const {
   INTEGER, STRING, Model, DECIMAL
 } = Sequelize;
 const sequelize = require('../common/database');
-const { DECIMAL } = require('sequelize');
 
 class BookingPackageModel extends Model {
 }
@@ -22,26 +21,37 @@ BookingPackageModel.init(
     },
     description: {
       type: STRING,
-      allowNull: false
+      allowNull: false,
+      defaultValue: ""
     },
     quota: {
       type: INTEGER,
-      allowNull: false
+      allowNull: false,
+      defaultValue: 1,
+      validate: {
+          min: 1
+      }
     },
     price: {
       type: DECIMAL,
-      allowNull: false
+      allowNull: false,
+      validate: {
+          min: 0.0
+      }
     },
     duration: {
       type: INTEGER,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        min: 1
+      }
     }
   },
   {
     sequelize,
-    modelName: 'staff',
+    modelName: 'bookingPackageModel',
     underscored: true
   }
 );
 
-module.exports = Staff;
+module.exports = BookingPackageModel;

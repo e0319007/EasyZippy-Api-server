@@ -3,7 +3,6 @@ const {
   INTEGER, DATE, Model, STRING
 } = Sequelize;
 const sequelize = require('../common/database');
-const { INTEGER, DATE, DECIMAL } = require('sequelize');
 
 class LockerType extends Model {
 }
@@ -18,18 +17,20 @@ LockerType.init(
     },
     description: {
       type: STRING,
-      allowNull: false
+      allowNull: false,
+      defaultValue: ""
     },
     maintenanceDate: {
       type: DATE,
-      allowNull: false
+      allowNull: false,
+      defaultValue: Sequelize.NOW
     }
   },
   {
     sequelize,
-    modelName: 'staff',
+    modelName: 'lockerType',
     underscored: true
   }
 );
 
-module.exports = Staff;
+module.exports = LockerType;
