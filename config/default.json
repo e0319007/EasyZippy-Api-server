@@ -1,5 +1,5 @@
 {
-  "name": "Easy Zippy Database",
+  "name": "Easy Zippy Development Server",
   "server": {
     "host": "0.0.0.0",
     "port": "5000"
