@@ -17,7 +17,10 @@ BookingPackage.init(
     },
     lockerCount: {
       type: INTEGER,
-      allowNull: false
+      allowNull: false,
+      validate: {
+          min: 0
+      }
     },
     promoIdUsed: {
       type: INTEGER,
