@@ -4,10 +4,10 @@ const {
 } = Sequelize;
 const sequelize = require('../common/database');
 
-class PaymentRecord extends Model {
+class Product extends Model {
 }
 
-PaymentRecord.init(
+Product.init(
   {
     id: {
       type: INTEGER,
@@ -15,26 +15,29 @@ PaymentRecord.init(
       autoIncrement: true,
       allowNull: false
     },
-    externalId: {
+    name: {
       type: STRING,
-      allowNull: true
+      allowNull: false
     },
-    amount: {
+    unitPrice: {
       type: DECIMAL,
       allowNull: false,
       validate: {
         min: 0.0
       }
     },
-    code: {
-      type: DECIMAL,
+    description: {
+      type: STRING,
       allowNull: true
     },
-    payload: {
-      type: JSON,
-      allowNull: true
+    quantityAvailable: {
+      type: INTEGER,
+      allowNull: false,
+      validate: {
+        min: 0
+      }
     },
-    paymentDate: {
+    listDate: {
       type: DATE,
       allowNull: false,
       defaultValue: Sequelize.NOW
@@ -42,9 +45,9 @@ PaymentRecord.init(
   },
   {
     sequelize,
-    modelName: 'paymentRecord',
+    modelName: 'product',
     underscored: true
   }
 );
 
-module.exports = PaymentRecord;
+module.exports = Product;

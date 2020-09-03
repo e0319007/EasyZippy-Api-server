@@ -1,13 +1,14 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, STRING, DECIMAL, JSON, DATE, Model
+  INTEGER, STRING, DATE, Model
 } = Sequelize;
 const sequelize = require('../common/database');
+const { BOOLEAN } = require('sequelize');
 
-class PaymentRecord extends Model {
+class Notification extends Model {
 }
 
-PaymentRecord.init(
+Notification.init(
   {
     id: {
       type: INTEGER,
@@ -15,26 +16,16 @@ PaymentRecord.init(
       autoIncrement: true,
       allowNull: false
     },
-    externalId: {
+    description: {
       type: STRING,
       allowNull: true
     },
-    amount: {
-      type: DECIMAL,
+    read: {
+      type: BOOLEAN,
       allowNull: false,
-      validate: {
-        min: 0.0
-      }
+      defaultValue: false
     },
-    code: {
-      type: DECIMAL,
-      allowNull: true
-    },
-    payload: {
-      type: JSON,
-      allowNull: true
-    },
-    paymentDate: {
+    sentTime: {
       type: DATE,
       allowNull: false,
       defaultValue: Sequelize.NOW
@@ -42,9 +33,9 @@ PaymentRecord.init(
   },
   {
     sequelize,
-    modelName: 'paymentRecord',
+    modelName: 'notification',
     underscored: true
   }
 );
 
-module.exports = PaymentRecord;
+module.exports = Notification;
