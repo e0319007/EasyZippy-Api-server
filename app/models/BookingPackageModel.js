@@ -21,8 +21,7 @@ BookingPackageModel.init(
     },
     description: {
       type: STRING,
-      allowNull: false,
-      defaultValue: ""
+      allowNull: true
     },
     quota: {
       type: INTEGER,

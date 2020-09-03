@@ -17,13 +17,11 @@ Advertisement.init(
     },
     description: {
       type: STRING,
-      allowNull: false,
-      defaultValue: ""
+      allowNull: true
     },
     imageUrl: {
       type: STRING,
-      allowNull: false,
-      defaultValue: ""
+      allowNull: true
     },
     startDate: {
       type: DATE,

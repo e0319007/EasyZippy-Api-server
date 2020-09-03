@@ -4,10 +4,10 @@ const {
 } = Sequelize;
 const sequelize = require('../common/database');
 
-class LockerType extends Model {
+class MaintenanceAction extends Model {
 }
 
-LockerType.init(
+MaintenanceAction.init(
   {
     id: {
       type: INTEGER,
@@ -17,8 +17,7 @@ LockerType.init(
     },
     description: {
       type: STRING,
-      allowNull: false,
-      defaultValue: ""
+      allowNull: true
     },
     maintenanceDate: {
       type: DATE,
@@ -28,9 +27,9 @@ LockerType.init(
   },
   {
     sequelize,
-    modelName: 'lockerType',
+    modelName: 'maintenanceAction',
     underscored: true
   }
 );
 
-module.exports = LockerType;
+module.exports = MaintenanceAction;

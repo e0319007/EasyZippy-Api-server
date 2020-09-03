@@ -20,7 +20,8 @@ BookingPackage.init(
       allowNull: false,
       validate: {
           min: 0
-      }
+      },
+      defaultValue: 0
     },
     promoIdUsed: {
       type: INTEGER,
