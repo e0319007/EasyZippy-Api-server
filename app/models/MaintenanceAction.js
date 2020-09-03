@@ -3,6 +3,7 @@ const {
   INTEGER, DATE, Model, STRING
 } = Sequelize;
 const sequelize = require('../common/database');
+const Locker = require('./Locker');
 
 class MaintenanceAction extends Model {
 }
@@ -31,5 +32,8 @@ MaintenanceAction.init(
     underscored: true
   }
 );
+
+MaintenanceAction.belongsTo(Locker, { foreignKey: { allowNull: false } });
+Locker.hasMany(MaintenanceAction);
 
 module.exports = MaintenanceAction;

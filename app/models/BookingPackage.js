@@ -5,6 +5,8 @@ const {
 const sequelize = require('../common/database');
 
 const Customer = require('./Customer');
+const Merchant = require('./Merchant');
+const BookingPackageModel = require('./BookingPackageModel');
 
 class BookingPackage extends Model {
 }
@@ -47,5 +49,10 @@ BookingPackage.init(
 
 Customer.hasMany(BookingPackage);
 BookingPackage.belongsTo(Customer);
+
+Merchant.hasMany(BookingPackage);
+BookingPackage.belongsTo(Merchant);
+
+BookingPackage.belongsTo(BookingPackageModel, { foreignKey: { allowNull: false } })
 
 module.exports = BookingPackage;
