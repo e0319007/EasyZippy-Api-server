@@ -29,7 +29,7 @@ Order.init(
     orderDate: {
       type: DATE,
       allowNull: false,
-      defaultValue: Sequelizel.NOW
+      defaultValue: Sequelize.NOW
     }
   },
   {

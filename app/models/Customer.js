@@ -4,7 +4,7 @@ const {
 } = Sequelize;
 const sequelize = require('../common/database');
 
-
+const Cart = require('./Cart');
 
 class Customer extends Model {
 }
@@ -54,6 +54,11 @@ Customer.init(
           min: 0.0
       }
     },
+    // cartId: {
+    //   type: INTEGER,
+    //   references: 'carts',
+    //   key: 'id'
+    // },
   },
   {
     sequelize,
@@ -62,4 +67,7 @@ Customer.init(
   }
 );
 
+Customer.hasOne(Cart);
+
+// , { foreignKey: 'customerId', as: 'customer' }
 module.exports = Customer;
