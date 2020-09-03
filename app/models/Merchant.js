@@ -1,15 +1,13 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, STRING, Model, BOOLEAN, DECIMAL
+  INTEGER, STRING, Model, BOOLEAN
 } = Sequelize;
 const sequelize = require('../common/database');
 
-const Cart = require('./Cart');
-
-class Customer extends Model {
+class Merchant extends Model {
 }
 
-Customer.init(
+Merchant.init(
   {
     id: {
       type: INTEGER,
@@ -17,11 +15,7 @@ Customer.init(
       autoIncrement: true,
       allowNull: false
     },
-    firstName: {
-      type: STRING,
-      allowNull: false
-    },
-    lastName: {
+    name: {
       type: STRING,
       allowNull: false
     },
@@ -43,33 +37,17 @@ Customer.init(
       allowNull: false,
       unique: true
     },
-    activated: {
+    approved: {
+      allowNull: false,
       type: BOOLEAN,
-      allowNull: false,
-      defaultValue: true
-    },
-    creditBalance: {
-      type: DECIMAL,
-      allowNull: false,
-      defaultValue: 0.0,
-      validate: {
-          min: 0.0
-      }
-    },
-    // cartId: {
-    //   type: INTEGER,
-    //   references: 'carts',
-    //   key: 'id'
-    // },
+      defaultValue: false
+    }
   },
   {
     sequelize,
-    modelName: 'customer',
+    modelName: 'merchant',
     underscored: true
   }
 );
 
-Customer.hasOne(Cart);
-
-// , { foreignKey: 'customerId', as: 'customer' }
-module.exports = Customer;
+module.exports = Merchant;

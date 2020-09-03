@@ -25,7 +25,8 @@ Staff.init(
     },
     mobileNumber: {
       type: STRING,
-      allowNull: false
+      allowNull: false,
+      unique: true
     },
     password: {
       type: STRING,
@@ -37,7 +38,8 @@ Staff.init(
     },
     email: {
       type: STRING,
-      allowNull: false
+      allowNull: false,
+      unique: true
     }
   },
   {

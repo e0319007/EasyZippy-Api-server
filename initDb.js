@@ -11,6 +11,7 @@ const Locker = require('./app/models/Locker');
 const LockerActionRecord = require('./app/models/LockerActionRecord');
 const LockerType = require('./app/models/LockerType');
 const MaintenanceAction = require('./app/models/MaintenanceAction');
+const Merchant = require('./app/models/Merchant');
 const Notification = require('./app/models/Notification');
 const Order = require('./app/models/Order');
 const PaymentRecord = require('./app/models/PaymentRecord');
