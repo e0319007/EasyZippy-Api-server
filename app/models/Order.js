@@ -4,6 +4,8 @@ const {
 } = Sequelize;
 const sequelize = require('../common/database');
 
+const Customer = require('./Customer');
+
 class Order extends Model {
 }
 
@@ -38,5 +40,8 @@ Order.init(
     underscored: true
   }
 );
+
+Customer.hasMany(Order);
+Order.belongsTo(Customer, { foreignKey: { allowNull: false } });
 
 module.exports = Order;

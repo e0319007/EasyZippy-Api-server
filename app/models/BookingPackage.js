@@ -4,6 +4,8 @@ const {
 } = Sequelize;
 const sequelize = require('../common/database');
 
+const Customer = require('./Customer');
+
 class BookingPackage extends Model {
 }
 
@@ -42,5 +44,8 @@ BookingPackage.init(
     underscored: true
   }
 );
+
+Customer.hasMany(BookingPackage);
+BookingPackage.belongsTo(Customer);
 
 module.exports = BookingPackage;
