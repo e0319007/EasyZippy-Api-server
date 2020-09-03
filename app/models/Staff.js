@@ -15,7 +15,27 @@ Staff.init(
       autoIncrement: true,
       allowNull: false
     },
-    name: {
+    firstName: {
+      type: STRING,
+      allowNull: false
+    },
+    lastName: {
+      type: STRING,
+      allowNull: false
+    },
+    mobileNumber: {
+      type: STRING,
+      allowNull: false
+    },
+    password: {
+      type: STRING,
+      allowNull: false
+    },
+    salt: {
+      type: STRING,
+      allowNull: false
+    },
+    email: {
       type: STRING,
       allowNull: false
     }

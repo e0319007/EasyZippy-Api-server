@@ -1,3 +1,11 @@
+const Advertisement = require('./app/models/Advertisement');
+const BookingPackage = require('./app/models/BookingPackage');
+const BookingPackageModel = require('./app/models/BookingPackageModel');
+const Kiosk = require('./app/models/Kiosk');
+const Locker = require('./app/models/Locker');
+const LockerActionRecord = require('./app/models/LockerActionRecord');
+const LockerType = require('./app/models/LockerType');
+const MaintenanceAction = require('./app/models/MaintenanceAction');
 const Staff = require('./app/models/Staff');
 const sequelize = require('./app/common/database');
 
