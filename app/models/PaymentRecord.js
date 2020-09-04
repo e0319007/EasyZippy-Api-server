@@ -5,6 +5,10 @@ const {
 const sequelize = require('../common/database');
 const { PaymentStatus, PaymentType } = require('../common/constants');
 
+const Booking = require('./Booking');
+const BookingPackage = require('./BookingPackage');
+const Order = require('./Order');
+
 class PaymentRecord extends Model {
 }
 
@@ -55,5 +59,14 @@ PaymentRecord.init(
     underscored: true
   }
 );
+
+PaymentRecord.belongsTo(Booking);
+Booking.hasMany(PaymentRecord, { foreignKey: { allowNull: false } });
+
+PaymentRecord.belongsTo(BookingPackage);
+BookingPackage.hasMany(PaymentRecord, { foreignKey: { allowNull: false } });
+
+PaymentRecord.belongsTo(Order);
+BookingPackage.hasMany(PaymentRecord, { foreignKey: { allowNull: false } });
 
 module.exports = PaymentRecord;
