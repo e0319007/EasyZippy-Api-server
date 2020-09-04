@@ -23,9 +23,7 @@ const sequelize = require('./app/common/database');
 
 const initialiseDatabase = async () => {
   await sequelize.drop()
-    .then(async (modelsDropped) => {
-      console.log('Models Dropped: ');
-      console.log(modelsDropped);
+    .then(async () => {
       return sequelize.sync({ force: true });
     })
     .catch((error) => {

@@ -1,8 +1,9 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, STRING, DECIMAL, JSON, DATE, Model
+  INTEGER, STRING, DECIMAL, JSON, DATE, ENUM, Model
 } = Sequelize;
 const sequelize = require('../common/database');
+const { PaymentStatus, PaymentType } = require('../common/constants');
 
 class PaymentRecord extends Model {
 }
@@ -38,6 +39,14 @@ PaymentRecord.init(
       type: DATE,
       allowNull: false,
       defaultValue: Sequelize.NOW
+    },
+    paymentStatus: {
+      type: ENUM(PaymentStatus.Cancelled, PaymentStatus.Paid),
+      allowNull: false
+    },
+    paymentType: {
+      type: ENUM(PaymentType.Cash, PaymentType.CreditCard, PaymentType.Paylah, PaymentType.Paynow),
+      allowNull: false
     }
   },
   {

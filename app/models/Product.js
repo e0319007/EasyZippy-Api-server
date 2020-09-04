@@ -4,6 +4,9 @@ const {
 } = Sequelize;
 const sequelize = require('../common/database');
 
+const Category = require('./Category');
+const Merchant = require('./Merchant');
+
 class Product extends Model {
 }
 
@@ -49,5 +52,11 @@ Product.init(
     underscored: true
   }
 );
+
+Product.belongsTo(Category, { foreignKey: { allowNull: false } });
+Category.hasMany(Product);
+
+Product.belongsTo(Merchant, { foreignKey: { allowNull: false } });
+Merchant.hasMany(Product);
 
 module.exports = Product;
