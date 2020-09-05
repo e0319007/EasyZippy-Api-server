@@ -1,12 +1,13 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, Model
+  INTEGER, ENUM, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 
 const Kiosk = require('./Kiosk');
 const LockerActionRecord = require('./LockerActionRecord');
 const LockerType = require('./LockerType');
+const { LockerStatus } = require('../common/constants');
 
 class Locker extends Model {
 }
@@ -17,6 +18,10 @@ Locker.init(
       type: INTEGER,
       primaryKey: true,
       autoIncrement: true,
+      allowNull: false
+    },
+    lockerStatus: {
+      type: ENUM(LockerStatus.Disabled, LockerStatus.Empty, LockerStatus.InUse),
       allowNull: false
     }
   },

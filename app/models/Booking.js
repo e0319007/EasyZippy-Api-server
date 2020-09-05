@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, DATE, Model, STRING
+  INTEGER, DATE, STRING, ENUM, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 
@@ -9,6 +9,8 @@ const Customer = require('./Customer');
 const Merchant = require('./Merchant');
 const Order = require('./Order');
 const PaymentRecord = require('./PaymentRecord');
+
+const { BookingStatus, BookingSource } = require('../common/constants');
 
 class Booking extends Model {
 }
@@ -35,6 +37,14 @@ Booking.init(
     },
     endDate: {
       type: DATE,
+      allowNull: false
+    },
+    bookingStatus: {
+      type: ENUM(BookingStatus.Cancelled, BookingStatus.Fufilled, BookingStatus.Unfufilled),
+      allowNull: false
+    },
+    bookingSource: {
+      type: ENUM(BookingSource.Kiosk, BookingSource.Mobile),
       allowNull: false
     }
   },

@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, DATE, Model, STRING
+  INTEGER, DATE, STRING, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 const Locker = require('./Locker');
