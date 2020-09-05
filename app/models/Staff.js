@@ -1,8 +1,10 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, STRING, Model
+  INTEGER, STRING, ENUM, Model
 } = Sequelize;
 const sequelize = require('../common/database');
+
+const { StaffRole } = require('../common/constants');
 
 class Staff extends Model {
 }
@@ -25,7 +27,8 @@ Staff.init(
     },
     mobileNumber: {
       type: STRING,
-      allowNull: false
+      allowNull: false,
+      unique: true
     },
     password: {
       type: STRING,
@@ -37,6 +40,11 @@ Staff.init(
     },
     email: {
       type: STRING,
+      allowNull: false,
+      unique: true
+    }, 
+    staffRole: {
+      type: ENUM(StaffRole.Admin, StaffRole.Employee),
       allowNull: false
     }
   },

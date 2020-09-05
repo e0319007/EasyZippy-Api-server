@@ -1,8 +1,12 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, DATE, Model, DECIMAL
+  INTEGER, DATE, DECIMAL, ENUM, Model
 } = Sequelize;
 const sequelize = require('../common/database');
+
+const Customer = require('./Customer');
+const Merchant = require('./Merchant');
+const { OrderStatus } = require('../common/constants');
 
 class Order extends Model {
 }
@@ -29,7 +33,11 @@ Order.init(
     orderDate: {
       type: DATE,
       allowNull: false,
-      defaultValue: Sequelizel.NOW
+      defaultValue: Sequelize.NOW
+    },
+    orderStatus: {
+      type: ENUM(OrderStatus.Cancelled, OrderStatus.PendingPayment, OrderStatus.Processing, OrderStatus.ReadyForCollection, OrderStatus.Refund),
+      allowNull: false
     }
   },
   {
@@ -38,5 +46,11 @@ Order.init(
     underscored: true
   }
 );
+
+Customer.hasMany(Order);
+Order.belongsTo(Customer, { foreignKey: { allowNull: false } });
+
+Merchant.hasMany(Order);
+Order.belongsTo(Merchant, { foreignKey: { allowNull: false } });
 
 module.exports = Order;

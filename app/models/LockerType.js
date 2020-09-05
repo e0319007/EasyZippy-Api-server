@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, Model,STRING, DOUBLE, DECIMAL
+  INTEGER,STRING, DOUBLE, DECIMAL, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 
