@@ -5,6 +5,7 @@ const {
 const sequelize = require('../common/database');
 
 const Customer = require('./Customer');
+const LineItem = require('./LineItem');
 const Merchant = require('./Merchant');
 const { OrderStatus } = require('../common/constants');
 
@@ -52,5 +53,7 @@ Order.belongsTo(Customer, { foreignKey: { allowNull: false } });
 
 Merchant.hasMany(Order);
 Order.belongsTo(Merchant, { foreignKey: { allowNull: false } });
+
+Order.hasMany(LineItem);
 
 module.exports = Order;

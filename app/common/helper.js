@@ -16,4 +16,8 @@ module.exports = {
       });
     });
   },
+
+  comparePassword: async (passwordInput, hashedPassword) => {
+    return bcrypt.compare(passwordInput, hashedPassword);
+  }
 };

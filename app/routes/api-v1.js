@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/test', async (req, res) => {
-  return res.status(200).send('Test');
-});
+const MerchantController = require('../controllers/merchantController');
+
+// Merchant
+router.post('/merchant', MerchantController.registerMerchant);
 
 module.exports = router;

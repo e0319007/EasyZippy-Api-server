@@ -67,6 +67,6 @@ PaymentRecord.belongsTo(BookingPackage);
 BookingPackage.hasMany(PaymentRecord, { foreignKey: { allowNull: false } });
 
 PaymentRecord.belongsTo(Order);
-BookingPackage.hasMany(PaymentRecord, { foreignKey: { allowNull: false } });
+Order.hasMany(PaymentRecord, { foreignKey: { allowNull: false } });
 
 module.exports = PaymentRecord;

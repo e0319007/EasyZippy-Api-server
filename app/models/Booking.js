@@ -8,7 +8,6 @@ const BookingPackage = require('./BookingPackage');
 const Customer = require('./Customer');
 const Merchant = require('./Merchant');
 const Order = require('./Order');
-const PaymentRecord = require('./PaymentRecord');
 
 const { BookingStatus, BookingSource } = require('../common/constants');
 
@@ -57,9 +56,6 @@ Booking.init(
 
 Booking.belongsTo(Customer, { foreignKey: { allowNull: false } });
 Customer.hasMany(Booking);
-
-Booking.belongsToMany(PaymentRecord, { through: 'booking_payment_record' });
-PaymentRecord.belongsToMany(Booking, { through: 'booking_payment_record' });
 
 Booking.belongsTo(Order);
 Order.hasOne(Booking, { foreignKey: { allowNull: false } });
