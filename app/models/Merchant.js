@@ -41,6 +41,11 @@ Merchant.init(
       allowNull: false,
       type: BOOLEAN,
       defaultValue: false
+    },
+    disabled: {
+      type: BOOLEAN,
+      defaultValue: false,
+      allowNull: false
     }
   },
   {

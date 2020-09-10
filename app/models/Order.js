@@ -7,6 +7,7 @@ const sequelize = require('../common/database');
 const Customer = require('./Customer');
 const Merchant = require('./Merchant');
 const { OrderStatus } = require('../common/constants');
+const LineItem = require('./LineItem');
 
 class Order extends Model {
 }
@@ -35,10 +36,10 @@ Order.init(
       allowNull: false,
       defaultValue: Sequelize.NOW
     },
-    orderStatus: {
-      type: ENUM(OrderStatus.Cancelled, OrderStatus.PendingPayment, OrderStatus.Processing, OrderStatus.ReadyForCollection, OrderStatus.Refund),
-      allowNull: false
-    }
+    // orderStatus: {
+    //   type: ENUM(OrderStatus.Cancelled, OrderStatus.PendingPayment, OrderStatus.Processing, OrderStatus.ReadyForCollection, OrderStatus.Refund),
+    //   allowNull: false
+    // }
   },
   {
     sequelize,
@@ -52,5 +53,7 @@ Order.belongsTo(Customer, { foreignKey: { allowNull: false } });
 
 Merchant.hasMany(Order);
 Order.belongsTo(Merchant, { foreignKey: { allowNull: false } });
+
+Order.hasMany(LineItem);
 
 module.exports = Order;

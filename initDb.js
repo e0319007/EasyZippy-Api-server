@@ -1,4 +1,5 @@
 const Advertisement = require('./app/models/Advertisement');
+const Announcement = require('./app/models/Announcement');
 const Booking = require('./app/models/Booking');
 const BookingPackage = require('./app/models/BookingPackage');
 const BookingPackageModel = require('./app/models/BookingPackageModel');
@@ -14,7 +15,7 @@ const MaintenanceAction = require('./app/models/MaintenanceAction');
 const Merchant = require('./app/models/Merchant');
 const Notification = require('./app/models/Notification');
 const Order = require('./app/models/Order');
-const PaymentRecord = require('./app/models/PaymentRecord');
+const CreditRecord = require('./app/models/CreditRecord');
 const Product = require('./app/models/Product');
 const Promotion = require('./app/models/Promotion');
 const Staff = require('./app/models/Staff');

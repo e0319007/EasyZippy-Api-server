@@ -53,6 +53,11 @@ Customer.init(
       validate: {
           min: 0.0
       }
+    },
+    disabled: {
+      type: BOOLEAN,
+      defaultValue: false,
+      allowNull: false
     }
   },
   {

@@ -3,6 +3,7 @@ const {
   INTEGER, Model
 } = Sequelize;
 const sequelize = require('../common/database');
+const Product = require('./Product');
 
 class LineItem extends Model {
 }
@@ -29,5 +30,7 @@ LineItem.init(
     underscored: true
   }
 );
+
+LineItem.hasOne(Product);
 
 module.exports = LineItem;

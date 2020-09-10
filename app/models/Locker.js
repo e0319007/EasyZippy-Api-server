@@ -20,10 +20,10 @@ Locker.init(
       autoIncrement: true,
       allowNull: false
     },
-    lockerStatus: {
-      type: ENUM(LockerStatus.Disabled, LockerStatus.Empty, LockerStatus.InUse),
-      allowNull: false
-    }
+    // lockerStatus: {
+    //   type: ENUM(LockerStatus.Disabled, LockerStatus.Empty, LockerStatus.InUse),
+    //   allowNull: false
+    // }
   },
   {
     sequelize,
@@ -35,7 +35,7 @@ Locker.init(
 Locker.belongsTo(LockerType);
 LockerType.hasMany(LockerType, { foreignKey: { allowNull: false } });
 
-Locker.belongsTo(LockerActionRecord)
+Locker.hasMany(LockerActionRecord);
 
 Locker.belongsTo(Kiosk, { foreignKey: { allowNull: false } });
 Kiosk.hasMany(Locker);

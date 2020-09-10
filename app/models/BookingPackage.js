@@ -53,6 +53,6 @@ BookingPackage.belongsTo(Customer);
 Merchant.hasMany(BookingPackage);
 BookingPackage.belongsTo(Merchant);
 
-BookingPackage.belongsTo(BookingPackageModel, { foreignKey: { allowNull: false } })
+BookingPackage.hasOne(BookingPackageModel, { foreignKey: { allowNull: false } })
 
 module.exports = BookingPackage;

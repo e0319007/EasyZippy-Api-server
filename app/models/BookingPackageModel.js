@@ -3,6 +3,7 @@ const {
   INTEGER, STRING, DECIMAL, Model
 } = Sequelize;
 const sequelize = require('../common/database');
+const LockerType = require('./LockerType');
 
 class BookingPackageModel extends Model {
 }
@@ -52,5 +53,7 @@ BookingPackageModel.init(
     underscored: true
   }
 );
+
+BookingPackageModel.hasOne(LockerType, { foreignKey: { allowNull: false } });
 
 module.exports = BookingPackageModel;

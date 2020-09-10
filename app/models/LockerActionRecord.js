@@ -21,10 +21,10 @@ LockerActionRecord.init(
       allowNull: false,
       defaultValue: Sequelize.NOW
     },
-    lockerAction: {
-      type: ENUM(LockerAction.Close, LockerAction.Open),
-      allowNull: false 
-    }
+    // lockerAction: {
+    //   type: ENUM(LockerAction.Close, LockerAction.Open),
+    //   allowNull: false 
+    // }
   },
   {
     sequelize,

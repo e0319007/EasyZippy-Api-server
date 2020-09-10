@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, STRING, ENUM, Model
+  INTEGER, STRING, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 
@@ -43,10 +43,9 @@ Staff.init(
       allowNull: false,
       unique: true
     }, 
-    staffRole: {
-      type: ENUM(StaffRole.Admin, StaffRole.Employee),
-      allowNull: false
-    }
+    // staffRole: {
+    //   type: Sequelize.DataTypes.ENUM('ADMIN', 'EMPLOYEE')
+    // }
   },
   {
     sequelize,
@@ -54,5 +53,6 @@ Staff.init(
     underscored: true
   }
 );
+
 
 module.exports = Staff;
