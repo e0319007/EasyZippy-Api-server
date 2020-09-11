@@ -1,0 +1,13 @@
+{
+  "name": "Easy Zippy Test",
+  "server": {
+      "host": "localhost",
+      "port": "7700"
+  },
+  "postgres": {
+      "host": "localhost",
+      "user": "postgres",
+      "password": "password",
+      "database": "easy_zippy_test_db"
+  }
+}
