@@ -1,16 +1,16 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, STRING, DATE, BOOLEAN, Model
+  INTEGER, DATE, STRING, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 
-const Customer = require('./Customer');
+const Staff = require('./Staff');
 const Merchant = require('./Merchant');
 
-class Notification extends Model {
+class Announcement extends Model {
 }
 
-Notification.init(
+Announcement.init(
   {
     id: {
       type: INTEGER,
@@ -22,11 +22,6 @@ Notification.init(
       type: STRING,
       allowNull: true
     },
-    read: {
-      type: BOOLEAN,
-      allowNull: false,
-      defaultValue: false
-    },
     sentTime: {
       type: DATE,
       allowNull: false,
@@ -35,15 +30,12 @@ Notification.init(
   },
   {
     sequelize,
-    modelName: 'notification',
+    modelName: 'announcement',
     underscored: true
   }
 );
 
-Notification.belongsTo(Customer);
-Customer.hasMany(Notification);
+Staff.hasMany(Announcement);
+Announcement.belongsTo(Staff, { foreignKey: { allowNull: false } });
 
-Notification.belongsTo(Merchant);
-Merchant.hasMany(Notification);
-
-module.exports = Notification;
+module.exports = Announcement;

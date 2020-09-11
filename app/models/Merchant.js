@@ -1,15 +1,13 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, STRING, Model
+  INTEGER, STRING, BOOLEAN, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 
-const { StaffRole } = require('../common/constants');
-
-class Staff extends Model {
+class Merchant extends Model {
 }
 
-Staff.init(
+Merchant.init(
   {
     id: {
       type: INTEGER,
@@ -17,11 +15,7 @@ Staff.init(
       autoIncrement: true,
       allowNull: false
     },
-    firstName: {
-      type: STRING,
-      allowNull: false
-    },
-    lastName: {
+    name: {
       type: STRING,
       allowNull: false
     },
@@ -42,17 +36,23 @@ Staff.init(
       type: STRING,
       allowNull: false,
       unique: true
-    }, 
-    // staffRole: {
-    //   type: Sequelize.DataTypes.ENUM('ADMIN', 'EMPLOYEE')
-    // }
+    },
+    approved: {
+      allowNull: false,
+      type: BOOLEAN,
+      defaultValue: false
+    },
+    disabled: {
+      type: BOOLEAN,
+      defaultValue: false,
+      allowNull: false
+    }
   },
   {
     sequelize,
-    modelName: 'staff',
+    modelName: 'merchant',
     underscored: true
   }
 );
 
-
-module.exports = Staff;
+module.exports = Merchant;

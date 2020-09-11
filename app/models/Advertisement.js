@@ -1,8 +1,10 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, DATE, Model, DECIMAL, STRING, BOOLEAN
+  INTEGER, DATE, DECIMAL, STRING, BOOLEAN, Model
 } = Sequelize;
 const sequelize = require('../common/database');
+const Staff = require('./Staff');
+const Merchant = require('./Merchant');
 
 class Advertisement extends Model {
 }
@@ -42,6 +44,14 @@ Advertisement.init(
       type: BOOLEAN,
       allowNull: false,
       defaultValue: false
+    },
+    advertiserMobile: {
+      type: STRING,
+      allowNull: true
+    },
+    advertiserEmail: {
+      type: STRING,
+      allowNull: true
     }
   },
   {
@@ -50,5 +60,11 @@ Advertisement.init(
     underscored: true
   }
 );
+
+Advertisement.belongsTo(Staff);
+Staff.hasMany(Advertisement);
+
+Advertisement.belongsTo(Merchant);
+Merchant.hasMany(Advertisement);
 
 module.exports = Advertisement;

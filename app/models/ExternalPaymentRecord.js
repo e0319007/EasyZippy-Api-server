@@ -1,13 +1,17 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, STRING, DECIMAL, JSON, DATE, Model
+  INTEGER, STRING, DECIMAL, JSON, DATE, ENUM, Model
 } = Sequelize;
 const sequelize = require('../common/database');
+const Merchant = require('./Merchant');
+const Customer = require('./Customer');
 
-class PaymentRecord extends Model {
+
+class ExternalPaymentRecord extends Model {
 }
 
-PaymentRecord.init(
+
+ExternalPaymentRecord.init(
   {
     id: {
       type: INTEGER,
@@ -38,13 +42,23 @@ PaymentRecord.init(
       type: DATE,
       allowNull: false,
       defaultValue: Sequelize.NOW
-    }
+    },
+    // paymentType: {
+    //   type: ENUM('cash', 'creditCard', 'paylah', 'paynow'),
+    //   allowNull: false
+    // }
   },
   {
     sequelize,
-    modelName: 'paymentRecord',
+    modelName: 'externalPaymentRecord',
     underscored: true
   }
 );
 
-module.exports = PaymentRecord;
+ExternalPaymentRecord.belongsTo(Merchant);
+Merchant.hasMany(ExternalPaymentRecord);
+
+ExternalPaymentRecord.belongsTo(Customer);
+Customer.hasMany(ExternalPaymentRecord);
+
+module.exports = ExternalPaymentRecord;

@@ -1,4 +1,5 @@
 const Advertisement = require('./app/models/Advertisement');
+const Announcement = require('./app/models/Announcement');
 const Booking = require('./app/models/Booking');
 const BookingPackage = require('./app/models/BookingPackage');
 const BookingPackageModel = require('./app/models/BookingPackageModel');
@@ -11,9 +12,10 @@ const Locker = require('./app/models/Locker');
 const LockerActionRecord = require('./app/models/LockerActionRecord');
 const LockerType = require('./app/models/LockerType');
 const MaintenanceAction = require('./app/models/MaintenanceAction');
+const Merchant = require('./app/models/Merchant');
 const Notification = require('./app/models/Notification');
 const Order = require('./app/models/Order');
-const PaymentRecord = require('./app/models/PaymentRecord');
+const CreditPaymentRecord = require('./app/models/CreditPaymentRecord');
 const Product = require('./app/models/Product');
 const Promotion = require('./app/models/Promotion');
 const Staff = require('./app/models/Staff');
@@ -22,9 +24,7 @@ const sequelize = require('./app/common/database');
 
 const initialiseDatabase = async () => {
   await sequelize.drop()
-    .then(async (modelsDropped) => {
-      console.log('Models Dropped: ');
-      console.log(modelsDropped);
+    .then(async () => {
       return sequelize.sync({ force: true });
     })
     .catch((error) => {

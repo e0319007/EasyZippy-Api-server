@@ -1,8 +1,9 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, STRING, Model, DECIMAL
+  INTEGER, STRING, DECIMAL, Model
 } = Sequelize;
 const sequelize = require('../common/database');
+const LockerType = require('./LockerType');
 
 class BookingPackageModel extends Model {
 }
@@ -52,5 +53,7 @@ BookingPackageModel.init(
     underscored: true
   }
 );
+
+BookingPackageModel.belongsTo(LockerType, { foreignKey: { allowNull: false } });
 
 module.exports = BookingPackageModel;

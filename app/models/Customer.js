@@ -1,10 +1,8 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, STRING, Model, BOOLEAN, DECIMAL
+  INTEGER, STRING, BOOLEAN, DECIMAL, Model
 } = Sequelize;
 const sequelize = require('../common/database');
-
-
 
 class Customer extends Model {
 }
@@ -27,7 +25,8 @@ Customer.init(
     },
     mobileNumber: {
       type: STRING,
-      allowNull: false
+      allowNull: false,
+     unique: true
     },
     password: {
       type: STRING,
@@ -39,7 +38,8 @@ Customer.init(
     },
     email: {
       type: STRING,
-      allowNull: false
+      allowNull: false,
+      unique: true
     },
     activated: {
       type: BOOLEAN,
@@ -54,6 +54,11 @@ Customer.init(
           min: 0.0
       }
     },
+    disabled: {
+      type: BOOLEAN,
+      defaultValue: false,
+      allowNull: false
+    }
   },
   {
     sequelize,
