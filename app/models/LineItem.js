@@ -31,6 +31,6 @@ LineItem.init(
   }
 );
 
-LineItem.hasOne(Product);
+LineItem.belongsTo(Product, { foreignKey: { allowNull: false } });
 
 module.exports = LineItem;

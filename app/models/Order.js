@@ -48,11 +48,11 @@ Order.init(
   }
 );
 
-Customer.hasMany(Order);
 Order.belongsTo(Customer, { foreignKey: { allowNull: false } });
+Customer.hasMany(Order);
 
-Merchant.hasMany(Order);
 Order.belongsTo(Merchant, { foreignKey: { allowNull: false } });
+Merchant.hasMany(Order);
 
 Order.hasMany(LineItem);
 

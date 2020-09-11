@@ -47,11 +47,11 @@ BookingPackage.init(
   }
 );
 
-Customer.hasMany(BookingPackage);
 BookingPackage.belongsTo(Customer);
+Customer.hasMany(BookingPackage);
 
-Merchant.hasMany(BookingPackage);
 BookingPackage.belongsTo(Merchant);
+Merchant.hasMany(BookingPackage);
 
 BookingPackage.hasOne(BookingPackageModel, { foreignKey: { allowNull: false } })
 

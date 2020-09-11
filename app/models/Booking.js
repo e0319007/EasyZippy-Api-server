@@ -67,7 +67,7 @@ Customer.hasMany(Booking, { as: 'primaryBooking', foreignKey: 'primaryBookingId'
 Booking.belongsTo(Merchant);
 Merchant.hasMany(Booking);
 
-Booking.belongsTo(BookingPackage, { foreignKey: { allowNull: false } });
+Booking.belongsTo(BookingPackage);
 BookingPackage.hasMany(Booking);
 
 Booking.belongsTo(Locker, { foreignKey: { allowNull: false } });

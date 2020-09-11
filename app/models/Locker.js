@@ -32,8 +32,8 @@ Locker.init(
   }
 );
 
-Locker.belongsTo(LockerType);
-LockerType.hasMany(LockerType, { foreignKey: { allowNull: false } });
+Locker.belongsTo(LockerType, { foreignKey: { allowNull: false } });
+LockerType.hasMany(Locker);
 
 Locker.hasMany(LockerActionRecord);
 

@@ -11,10 +11,10 @@ const Order = require('./Order');
 const Merchant = require('./Merchant');
 const Customer = require('./Customer');
 
-class CreditRecord extends Model {
+class CreditPaymentRecord extends Model {
 }
 
-CreditRecord.init(
+CreditPaymentRecord.init(
   {
     id: {
       type: INTEGER,
@@ -57,24 +57,24 @@ CreditRecord.init(
   },
   {
     sequelize,
-    modelName: 'creditRecord',
+    modelName: 'creditPaymentRecord',
     underscored: true
   }
 );
 
-CreditRecord.belongsTo(Booking);
-Booking.hasMany(CreditRecord, { foreignKey: { allowNull: false } });
+CreditPaymentRecord.belongsTo(Booking);
+Booking.hasMany(CreditPaymentRecord, { foreignKey: { allowNull: false } });
 
-CreditRecord.belongsTo(BookingPackage);
-BookingPackage.hasMany(CreditRecord, { foreignKey: { allowNull: false } });
+CreditPaymentRecord.belongsTo(BookingPackage);
+BookingPackage.hasMany(CreditPaymentRecord, { foreignKey: { allowNull: false } });
 
-CreditRecord.belongsTo(Order);
-BookingPackage.hasMany(CreditRecord, { foreignKey: { allowNull: false } });
+CreditPaymentRecord.belongsTo(Order);
+Order.hasMany(CreditPaymentRecord, { foreignKey: { allowNull: false } });
 
-CreditRecord.belongsTo(Merchant);
-Merchant.hasMany(CreditRecord);
+CreditPaymentRecord.belongsTo(Merchant);
+Merchant.hasMany(CreditPaymentRecord);
 
-CreditRecord.belongsTo(Customer);
-Customer.hasMany(CreditRecord);
+CreditPaymentRecord.belongsTo(Customer);
+Customer.hasMany(CreditPaymentRecord);
 
-module.exports = CreditRecord;
+module.exports = CreditPaymentRecord;

@@ -26,8 +26,8 @@ Cart.init(
   }
 );
 
-Customer.hasOne(Cart, { foreignKey: { allowNull: false } });
 Cart.belongsTo(Customer, { foreignKey: { allowNull: false } });
+Customer.hasOne(Cart, { foreignKey: { allowNull: false } });
 
 Cart.hasMany(LineItem);
 
