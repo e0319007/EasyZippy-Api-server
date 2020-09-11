@@ -3,11 +3,11 @@ const {
   INTEGER, ENUM, Model
 } = Sequelize;
 const sequelize = require('../common/database');
+const { LockerStatus } = require('../common/constants');
 
 const Kiosk = require('./Kiosk');
 const LockerActionRecord = require('./LockerActionRecord');
 const LockerType = require('./LockerType');
-const { LockerStatus } = require('../common/constants');
 
 class Locker extends Model {
 }
@@ -20,10 +20,10 @@ Locker.init(
       autoIncrement: true,
       allowNull: false
     },
-    lockerStatus: {
-      type: ENUM(LockerStatus.Disabled, LockerStatus.Empty, LockerStatus.InUse),
-      allowNull: false
-    }
+    // lockerStatus: {
+    //   type: ENUM(LockerStatus.Disabled, LockerStatus.Empty, LockerStatus.InUse),
+    //   allowNull: false
+    // }
   },
   {
     sequelize,
@@ -32,10 +32,10 @@ Locker.init(
   }
 );
 
-Locker.belongsTo(LockerType);
-LockerType.hasMany(LockerType, { foreignKey: { allowNull: false } });
+Locker.belongsTo(LockerType, { foreignKey: { allowNull: false } });
+LockerType.hasMany(Locker);
 
-Locker.belongsTo(LockerActionRecord)
+Locker.hasMany(LockerActionRecord);
 
 Locker.belongsTo(Kiosk, { foreignKey: { allowNull: false } });
 Kiosk.hasMany(Locker);

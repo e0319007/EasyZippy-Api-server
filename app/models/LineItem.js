@@ -4,6 +4,8 @@ const {
 } = Sequelize;
 const sequelize = require('../common/database');
 
+const Product = require('./Product');
+
 class LineItem extends Model {
 }
 
@@ -29,5 +31,7 @@ LineItem.init(
     underscored: true
   }
 );
+
+LineItem.belongsTo(Product, { foreignKey: { allowNull: false } });
 
 module.exports = LineItem;

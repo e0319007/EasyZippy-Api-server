@@ -1,9 +1,11 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, STRING, DATE, Model
+  INTEGER, STRING, DATE, BOOLEAN, Model
 } = Sequelize;
 const sequelize = require('../common/database');
-const { BOOLEAN } = require('sequelize');
+
+const Customer = require('./Customer');
+const Merchant = require('./Merchant');
 
 class Notification extends Model {
 }
@@ -37,5 +39,11 @@ Notification.init(
     underscored: true
   }
 );
+
+Notification.belongsTo(Customer);
+Customer.hasMany(Notification);
+
+Notification.belongsTo(Merchant);
+Merchant.hasMany(Notification);
 
 module.exports = Notification;

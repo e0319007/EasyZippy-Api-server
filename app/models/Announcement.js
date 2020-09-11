@@ -4,12 +4,12 @@ const {
 } = Sequelize;
 const sequelize = require('../common/database');
 
-const Locker = require('./Locker');
+const Staff = require('./Staff');
 
-class MaintenanceAction extends Model {
+class Announcement extends Model {
 }
 
-MaintenanceAction.init(
+Announcement.init(
   {
     id: {
       type: INTEGER,
@@ -21,7 +21,7 @@ MaintenanceAction.init(
       type: STRING,
       allowNull: true
     },
-    maintenanceDate: {
+    sentTime: {
       type: DATE,
       allowNull: false,
       defaultValue: Sequelize.NOW
@@ -29,12 +29,12 @@ MaintenanceAction.init(
   },
   {
     sequelize,
-    modelName: 'maintenanceAction',
+    modelName: 'announcement',
     underscored: true
   }
 );
 
-MaintenanceAction.belongsTo(Locker, { foreignKey: { allowNull: false } });
-Locker.hasMany(MaintenanceAction);
+Staff.hasMany(Announcement);
+Announcement.belongsTo(Staff, { foreignKey: { allowNull: false } });
 
-module.exports = MaintenanceAction;
+module.exports = Announcement;

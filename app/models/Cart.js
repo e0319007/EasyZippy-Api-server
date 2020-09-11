@@ -4,7 +4,8 @@ const {
 } = Sequelize;
 const sequelize = require('../common/database');
 
-const Customer = require('./Customer')
+const Customer = require('./Customer');
+const LineItem = require('./LineItem');
 
 class Cart extends Model {
 }
@@ -25,7 +26,9 @@ Cart.init(
   }
 );
 
-Customer.hasOne(Cart, { foreignKey: { allowNull: false } });
 Cart.belongsTo(Customer, { foreignKey: { allowNull: false } });
+Customer.hasOne(Cart, { foreignKey: { allowNull: false } });
+
+Cart.hasMany(LineItem);
 
 module.exports = Cart;
