@@ -1,10 +1,10 @@
 const sequelize = require('../app/common/database');
 const Customer = require('../app/models/Customer');
 
-describe('Sample Test Desc', () => {
+describe('Sample Test Desc 2', () => {
   beforeAll(async (done) => {
     await sequelize.truncate({ cascade: true });
-    
+
     done();
   });
 
@@ -20,7 +20,7 @@ describe('Sample Test Desc', () => {
     await sequelize.truncate({ cascade: true });
 
     await sequelize.close();
-
+    
     done();
   });
 });
