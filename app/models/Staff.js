@@ -3,7 +3,6 @@ const {
   INTEGER, STRING, Model
 } = Sequelize;
 const sequelize = require('../common/database');
-
 const { StaffRole } = require('../common/constants');
 
 class Staff extends Model {

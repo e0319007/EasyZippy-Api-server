@@ -3,6 +3,7 @@ const {
   INTEGER, DATE, STRING, Model
 } = Sequelize;
 const sequelize = require('../common/database');
+
 const Locker = require('./Locker');
 
 class MaintenanceAction extends Model {

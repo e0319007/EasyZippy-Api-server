@@ -3,11 +3,11 @@ const {
   INTEGER, ENUM, Model
 } = Sequelize;
 const sequelize = require('../common/database');
+const { LockerStatus } = require('../common/constants');
 
 const Kiosk = require('./Kiosk');
 const LockerActionRecord = require('./LockerActionRecord');
 const LockerType = require('./LockerType');
-const { LockerStatus } = require('../common/constants');
 
 class Locker extends Model {
 }

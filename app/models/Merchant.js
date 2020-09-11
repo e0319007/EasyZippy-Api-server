@@ -28,10 +28,6 @@ Merchant.init(
       type: STRING,
       allowNull: false
     },
-    salt: {
-      type: STRING,
-      allowNull: false
-    },
     email: {
       type: STRING,
       allowNull: false,

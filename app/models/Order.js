@@ -3,11 +3,11 @@ const {
   INTEGER, DATE, DECIMAL, ENUM, Model
 } = Sequelize;
 const sequelize = require('../common/database');
+const { OrderStatus } = require('../common/constants');
 
 const Customer = require('./Customer');
-const Merchant = require('./Merchant');
-const { OrderStatus } = require('../common/constants');
 const LineItem = require('./LineItem');
+const Merchant = require('./Merchant');
 
 class Order extends Model {
 }

@@ -14,9 +14,9 @@ module.exports = {
     Employee: 'Employee'
   },
   OrderStatus: {
-    PendingPayment: 'PendingPayment',
+    PendingPayment: 'Pending Payment',
     Processing: 'Processing',
-    ReadyForCollection: 'ReadyForCollection',
+    ReadyForCollection: 'Ready For Collection',
     Cancelled: 'Cancelled',
     Refund: 'Refund'
   },
@@ -27,7 +27,7 @@ module.exports = {
     Cancelled: 'Cancelled'
   },
   LockerStatus: {
-    InUse: 'InUse',
+    InUse: 'In Use',
     Empty: 'Empty',
     Disabled: 'Disabled'
   },
@@ -38,5 +38,15 @@ module.exports = {
   BookingSource: {
     Mobile: 'Mobile',
     Kiosk: 'Kiosk'
+  },
+  Error: {
+    EmailInvalid: 'Email is invalid',
+    EmailNotUnique: 'Email is not unique',
+    EmailRequired: 'Email is required',
+    MobileNumberNotUnique: 'Mobile number is not unique',
+    MobileNumberRequired: 'Mobile number is required',
+    NameRequired: 'Name is required',
+    PasswordRequired: 'Password is required',
+    UnexpectedError: 'An unexpected error has occured'
   }
 };

@@ -3,9 +3,9 @@ const {
   INTEGER, STRING, DECIMAL, JSON, DATE, ENUM, Model
 } = Sequelize;
 const sequelize = require('../common/database');
+
 const Merchant = require('./Merchant');
 const Customer = require('./Customer');
-
 
 class ExternalPaymentRecord extends Model {
 }

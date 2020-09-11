@@ -3,6 +3,7 @@ const {
   INTEGER, STRING, DECIMAL, Model
 } = Sequelize;
 const sequelize = require('../common/database');
+
 const LockerType = require('./LockerType');
 
 class BookingPackageModel extends Model {

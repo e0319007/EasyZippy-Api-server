@@ -5,7 +5,6 @@ const {
 const sequelize = require('../common/database');
 
 const Staff = require('./Staff');
-const Merchant = require('./Merchant');
 
 class Announcement extends Model {
 }

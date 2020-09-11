@@ -3,6 +3,7 @@ const {
   INTEGER, Model
 } = Sequelize;
 const sequelize = require('../common/database');
+
 const Product = require('./Product');
 
 class LineItem extends Model {

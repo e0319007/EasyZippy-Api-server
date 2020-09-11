@@ -3,13 +3,12 @@ const {
   INTEGER, DATE, STRING, ENUM, Model
 } = Sequelize;
 const sequelize = require('../common/database');
+const { BookingStatus, BookingSource } = require('../common/constants');
 
 const BookingPackage = require('./BookingPackage');
 const Customer = require('./Customer');
 const Merchant = require('./Merchant');
 const Order = require('./Order');
-
-const { BookingStatus, BookingSource } = require('../common/constants');
 const Locker = require('./Locker');
 
 class Booking extends Model {
