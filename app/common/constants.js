@@ -47,6 +47,7 @@ module.exports = {
     MobileNumberRequired: 'Mobile number is required',
     NameRequired: 'Name is required',
     PasswordRequired: 'Password is required',
+    StaffNotFound: 'Staff not found',
     UnexpectedError: 'An unexpected error has occured'
   }
 };

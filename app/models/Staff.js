@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, STRING, Model
+  INTEGER, STRING, BOOLEAN,  Model
 } = Sequelize;
 const sequelize = require('../common/database');
 const { StaffRole } = require('../common/constants');
@@ -42,6 +42,11 @@ Staff.init(
       allowNull: false,
       unique: true
     }, 
+    disabled: {
+      type: BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    }
     // staffRole: {
     //   type: Sequelize.DataTypes.ENUM('ADMIN', 'EMPLOYEE')
     // }
