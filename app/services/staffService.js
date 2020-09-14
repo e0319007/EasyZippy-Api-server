@@ -6,14 +6,13 @@ const Constants = require('../common/constants');
 const CustomError = require('../common/error/customError');
 
 const Staff = require('../models/Staff');
-const { ifEmptyThrowError } = require('../common/checker');
 
 module.exports = {
   createStaff: async (staffData, transaction) => {
-    const { firstname, lastname, mobileNumber, password, email } = staffData;
+    const { firstName, lastName, mobileNumber, password, email } = staffData;
 
-    Checker.ifEmptyThrowError(firstname, Constants.Error.NameRequired);
-    Checker.ifEmptyThrowError(lastname, Constants.Error.NameRequired);
+    Checker.ifEmptyThrowError(firstName, Constants.Error.FirstNameRequired);
+    Checker.ifEmptyThrowError(lastName, Constants.Error.LastNameRequired);
     Checker.ifEmptyThrowError(mobileNumber, Constants.Error.MobileNumberRequired);
     Checker.ifEmptyThrowError(password, Constants.Error.PasswordRequired);
     Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
@@ -35,8 +34,8 @@ module.exports = {
     return staff;
   },
 
-  retrieveStaff: async (staffId) => {
-    const staff = await Staff.findByPk(staffId);
+  retrieveStaff: async (id) => {
+    const staff = await Staff.findByPk(id);
     
     if (Checker.isEmpty(staff)) {
       throw new CustomError(Constants.Error.StaffNotFound);
@@ -51,25 +50,25 @@ module.exports = {
   },
 
   updateStaff: async(id, staffData, transaction) => {
-    Checker.ifEmptyThrowError(staffId, Constants.Error.IdRequired);
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let staff = await Staff.findByPk(id);
     Checker.ifEmptyThrowError(staff, Constants.Error.StaffNotFound);
 
-    const updateKeys = Object.keys(staffData);
+    const updateKeys = Object.keys('staffData');
 
-    if(updateKeys.includes(firstName)) {
+    if(updateKeys.includes('firstName')) {
       Checker.ifEmptyThrowError(staffData.firstName, Constants.Error.FirstNameRequired);
     }
-    if(updateKeys.includes(lastName)) {
+    if(updateKeys.includes('lastName')) {
       Checker.ifEmptyThrowError(staffData.lastName, Constants.Error.LastNameRequired);
     }
-    if(updateKeys.includes(mobileNumber)) {
+    if(updateKeys.includes('mobileNumber')) {
       Checker.ifEmptyThrowError(staffData.mobileNumber, Constants.Error.MobileNumberRequired);
       if(!Checker.isEmpty(await Staff.findOne({ where: { mobileNumber } }))) {
         throw new CustomError(Constants.Error.MobileNumberNotUnique);
       }
     }
-    if(updateKeys.includes(email)) {
+    if(updateKeys.includes('email')) {
       Checker.ifEmptyThrowError(staffData.email, Constants.Error.EmailRequired);
       if (!Checker.isEmpty(await Staff.findOne({ where: { email } }))) {
         throw new CustomError(Constants.Error.EmailNotUnique);
@@ -82,21 +81,21 @@ module.exports = {
     return staff;
   },
 
-  disableStaff: async(staffId, transaction) => {
+  toggleDisableStaff: async(id, transaction) => {
     const curStaff = await Staff.findOne({
       where : {
-        id : staffId
+        id
       }
     });
-    Checker.ifEmptyThrowError(staff, Constants.Error.StaffNotFound);
+    Checker.ifEmptyThrowError(curStaff, Constants.Error.StaffNotFound);
     
     let staff = Staff.update({
       disabled: !curStaff.disabled
     }, {
       where : {
-        id : staffId
+        id
       }
-    }, { returning: true, transaction });
+    }, { transaction });
     return staff;
   }
 };
