@@ -9,9 +9,9 @@ router.post('/merchant', MerchantController.registerMerchant);
 
 //Staff
 router.post('/staff', staffController.registerStaff);
-router.get('/staff/:staffId', staffController.retrieveStaff);
+router.get('/staff/:id', staffController.retrieveStaff);
 router.get('/staff/retrieveAllStaff', staffController.retrieveAllStaff);
-router.put('/staff/:staffId/edit', staffController.updateStaff);
-router.put('/staff/:staffId', staffController.disableStaff);
+router.put('/staff/:id', staffController.updateStaff);
+router.put('/staff/:id/disable', staffController.disableStaff);
 
 module.exports = router;

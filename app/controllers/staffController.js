@@ -1,7 +1,6 @@
 const sequelize = require('../common/database');
 const StaffService = require('../services/staffService');
 const { sendErrorResponse } = require('../common/error/errorHandler');
-const Staff = require('../models/Staff');
 
 module.exports = {
   registerStaff: async (req, res) => {
@@ -21,7 +20,7 @@ module.exports = {
 
   retrieveStaff: async (req, res) => {
     try {
-      const staffId = req.body.staffId;
+      const { id } = req.params;
       let staff = await StaffService.retrieveStaff(staffId);
       return res.status(200).send(staff);
     } catch (err){
@@ -41,9 +40,10 @@ module.exports = {
   updateStaff: async (req, res) => {
     try {
       const staffData = req.body;
+      const { id } = req.params;
       let staff;
       await sequelize.transaction(async (transaction) => {
-        staff = await StaffService.updateStaff(staffData, transaction);
+        staff = await StaffService.updateStaff(id, staffData, transaction);
       });
       return res.status(200).send(staff);
     } catch (err){
@@ -53,7 +53,7 @@ module.exports = {
   
   disableStaff: async (req, res) => {
     try {
-      const staffId = req.body.staffId;
+      const { id } = req.params;
       await sequelize.transaction(async (transaction) => {
         staff = await StaffService.disableStaff(staffId, transaction)
       });
