@@ -4,7 +4,6 @@ const router = express.Router();
 const MerchantController = require('../controllers/merchantController');
 const staffController = require('../controllers/staffController');
 const kioskController = require('../controllers/kioskController');
-const categoryController = require('../controllers/categoryController');
 
 //Kiosk
 router.post('/kiosk', kioskController.createKiosk);
