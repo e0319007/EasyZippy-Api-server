@@ -46,6 +46,7 @@ module.exports = {
     FirstNameRequired: 'First name is required',
     IdRequired: 'ID is required',
     LastNameRequired: 'Last name is required',
+    MerchantNotFound: 'Merchant not found',
     MobileNumberNotUnique: 'Mobile number is not unique',
     MobileNumberRequired: 'Mobile number is required',
     NameRequired: 'Name is required',

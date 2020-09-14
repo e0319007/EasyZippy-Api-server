@@ -54,6 +54,7 @@ module.exports = {
   disableStaff: async (req, res) => {
     try {
       const { id } = req.params;
+      let staff;
       await sequelize.transaction(async (transaction) => {
         staff = await StaffService.disableStaff(staffId, transaction)
       });
