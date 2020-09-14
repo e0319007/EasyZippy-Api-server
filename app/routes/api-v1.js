@@ -12,6 +12,14 @@ router.put('/customer/:id', customerController.updateCustomer);
 router.put('/customer/:id/disable', customerController.disableCustomer);
 router.put('/customer/:id/activate', customerController.activateCustomer);
 
+// Merchant
+router.post('/merchant', MerchantController.registerMerchant);
+router.get('/merchant/:id', MerchantController.retrieveMerchant);
+router.get('/merchants', MerchantController.retrieveAllMerchant);
+router.put('/merchant/:id', MerchantController.updateMerchant);
+router.put('/merchant/:id/disable', MerchantController.disableMerchant);
+router.put('/merchant/:id/approve', MerchantController.approveMerchant);
+
 //Staff
 router.post('/staff', staffController.registerStaff);
 router.get('/staff/:id', staffController.retrieveStaff);
