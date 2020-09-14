@@ -43,10 +43,14 @@ module.exports = {
     EmailInvalid: 'Email is invalid',
     EmailNotUnique: 'Email is not unique',
     EmailRequired: 'Email is required',
+    FirstNameRequired: 'First name is required',
+    IdRequired: 'ID is required',
+    LastNameRequired: 'Last name is required',
     MobileNumberNotUnique: 'Mobile number is not unique',
     MobileNumberRequired: 'Mobile number is required',
     NameRequired: 'Name is required',
     PasswordRequired: 'Password is required',
+    StaffNotFound: 'Staff not found',
     UnexpectedError: 'An unexpected error has occured'
   }
 };

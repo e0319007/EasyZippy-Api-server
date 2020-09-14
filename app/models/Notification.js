@@ -3,7 +3,6 @@ const {
   INTEGER, STRING, DATE, BOOLEAN, Model
 } = Sequelize;
 const sequelize = require('../common/database');
-
 const Customer = require('./Customer');
 const Merchant = require('./Merchant');
 
