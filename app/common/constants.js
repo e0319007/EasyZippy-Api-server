@@ -40,6 +40,7 @@ module.exports = {
     Kiosk: 'Kiosk'
   },
   Error: {
+    CustomerNotFound: 'Customer not found',
     EmailInvalid: 'Email is invalid',
     EmailNotUnique: 'Email is not unique',
     EmailRequired: 'Email is required',

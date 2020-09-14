@@ -4,6 +4,16 @@ const router = express.Router();
 const MerchantController = require('../controllers/merchantController');
 const staffController = require('../controllers/staffController');
 const kioskController = require('../controllers/kioskController');
+const categoryController = require('../controllers/categoryController');
+const customerController = require('../controllers/customerController');
+
+//Customer
+router.post('/customer', customerController.registerCustomer);
+router.get('/customer/:id', customerController.retrieveCustomer);
+router.get('/customers', customerController.retrieveAllCustomer);
+router.put('/customer/:id', customerController.updateCustomer);
+router.put('/customer/:id/disable', customerController.disableCustomer);
+router.put('/customer/:id/activate', customerController.activateCustomer);
 
 //Category
 router.post('/category', categoryController.createCategory);
