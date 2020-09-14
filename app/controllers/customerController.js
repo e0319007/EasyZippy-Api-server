@@ -47,7 +47,9 @@ module.exports = {
         });
         return res.status(200).send(customer);
     } catch (err){
+        console.log(err);
         sendErrorResponse(res, err);
+       
     }
   },
   
@@ -60,6 +62,7 @@ module.exports = {
         });
         return res.status(200).send(customer);
     } catch (err){
+        console.log(err);
         sendErrorResponse(res, err);
     }
   }, 

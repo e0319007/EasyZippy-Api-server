@@ -17,7 +17,7 @@ module.exports = {
         Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
 
         if(!emailValidator.validate(email)) {
-            throw new CustomError(Constants.Error.InvalidEmail);
+            throw new CustomError(Constants.Error.EmailInvalid);
           }
           if(!Checker.isEmpty(await Customer.findOne({ where: { mobileNumber } }))) {
             throw new CustomError(Constants.Error.MobileNumberNotUnique);
@@ -55,19 +55,19 @@ module.exports = {
 
         const updateKeys = Object.keys(customerData);
 
-        if(updateKeys.includes(firstName)) {
+        if(updateKeys.includes('firstName')) {
             Checker.ifEmptyThrowError(customerData.firstName, Constants.Error.FirstNameRequired);
         }
-        if(updateKeys.includes(lastName)) {
+        if(updateKeys.includes('lastName')) {
             Checker.ifEmptyThrowError(customerData.lastName, Constants.Error.LastNameRequired);
         }
-        if(updateKeys.includes(mobileNumber)) {
+        if(updateKeys.includes('mobileNumber')) {
             Checker.ifEmptyThrowError(customerData.mobileNumber, Constants.Error.MobileNumberRequired);
             if(!Checker.isEmpty(await Customer.findOne({ where: { mobileNumber } }))) {
             throw new CustomError(Constants.Error.MobileNumberNotUnique);
             }
         }
-        if(updateKeys.includes(email)) {
+        if(updateKeys.includes('email')) {
             Checker.ifEmptyThrowError(customerData.email, Constants.Error.EmailRequired);
             if (!Checker.isEmpty(await Customer.findOne({ where: { email } }))) {
             throw new CustomError(Constants.Error.EmailNotUnique);
@@ -76,27 +76,23 @@ module.exports = {
             throw new CustomError(Constants.Error.InvalidEmail);
             }
         }
-        customer = await Customer.update(customerData, { returning: true, transaction }, { where : { id } });
+        customer = await Customer.update(customerData, { where : { id }, returning: true, transaction });
         return customer;
     },
     
     disableCustomer: async(id, transaction) => {
         const curCustomer = await Customer.findByPk(id);
-        Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
+        Checker.ifEmptyThrowError(curCustomer, Constants.Error.CustomerNotFound);
         
         let customer = Customer.update({
             disabled: !curCustomer.disabled
-        }, {
-            where : {
-            id : id
-            }
-        }, { returning: true, transaction });
+        }, { where : { id }, returning: true, transaction });
         return customer;
     },
 
     activateCustomer: async(id, transaction) => {
         const curCustomer = await Customer.findByPk(id);
-        Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
+        Checker.ifEmptyThrowError(curCustomer, Constants.Error.CustomerNotFound);
         
         let customer = Customer.update({
             activated: !curCustomer.activated
@@ -104,7 +100,7 @@ module.exports = {
             where : {
             id
             }
-        }, { returning: true, transaction });
+        , returning: true, transaction });
         return customer;
     }
 }

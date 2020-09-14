@@ -18,7 +18,7 @@ module.exports = {
     Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
 
     if(!emailValidator.validate(email)) {
-      throw new CustomError(Constants.Error.InvalidEmail);
+      throw new CustomError(Constants.Error.EmailInvalid);
     }
     if(!Checker.isEmpty(await Staff.findOne({ where: { mobileNumber } }))) {
       throw new CustomError(Constants.Error.MobileNumberNotUnique);
