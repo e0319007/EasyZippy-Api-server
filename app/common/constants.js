@@ -43,6 +43,7 @@ module.exports = {
     EmailInvalid: 'Email is invalid',
     EmailNotUnique: 'Email is not unique',
     EmailRequired: 'Email is required',
+    KioskNotFound: 'Kiosk not found',
     MobileNumberNotUnique: 'Mobile number is not unique',
     MobileNumberRequired: 'Mobile number is required',
     NameRequired: 'Name is required',
