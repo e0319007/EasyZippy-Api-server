@@ -7,7 +7,7 @@ module.exports = {
     try {
       const merchantData = req.body;
       let merchant;
-
+      
       await sequelize.transaction(async (transaction) => {
         merchant = await MerchantService.createMerchant(merchantData, transaction);
       });
