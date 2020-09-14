@@ -7,7 +7,7 @@ const staffController = require('../controllers/staffController');
 // Merchant
 router.post('/merchant', MerchantController.registerMerchant);
 router.get('/merchant/:id', MerchantController.retrieveMerchant);
-router.get('/merchant/retrieveAllMerchant', MerchantController.retrieveAllMerchant);
+router.get('/merchants', MerchantController.retrieveAllMerchant);
 router.put('/merchant/:id', MerchantController.updateMerchant);
 router.put('/merchant/:id/disable', MerchantController.disableMerchant);
 router.put('/merchant/:id/approve', MerchantController.approveMerchant);

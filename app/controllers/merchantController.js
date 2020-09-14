@@ -31,7 +31,7 @@ module.exports = {
 
   retrieveAllMerchant: async(req, res) => {
     try {
-      let merchants = await MerchantService.retrieveMerchant();
+      let merchants = await MerchantService.retrieveAllMerchant();
       return res.status(200).send(merchants);
     } catch (err) {
       sendErrorResponse(res, err);
@@ -48,6 +48,7 @@ module.exports = {
       })
       return res.status(200).send(merchant);
     } catch (err) {
+      console.log(err);
       sendErrorResponse(res, err);
     }
   },

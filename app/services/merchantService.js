@@ -51,19 +51,19 @@ module.exports = {
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
 
     const updateKeys = Object.keys(merchantData);
-    if(updateKeys.includes(firstName)) {
+    if(updateKeys.includes('firstName')) {
       Checker.ifEmptyThrowError(merchantData.firstName, Constants.Error.FirstNameRequired);
     }
-    if(updateKeys.includes(lastName)) {
+    if(updateKeys.includes('lastName')) {
       Checker.ifEmptyThrowError(merchantData.lastName, Constants.Error.LastNameRequired);
     }
-    if(updateKeys.includes(mobileNumber)) {
+    if(updateKeys.includes('mobileNumber')) {
       Checker.ifEmptyThrowError(merchantData.mobileNumber, Constants.Error.MobileNumberRequired);
-      if(!Checker.isEmpty(await Merchant.findOne({ where: { mobileNumber } }))) {
+      if(!Checker.isEmpty(await Merchant.findOne({ where: { mobileNumber: merchantData.mobileNumber } }))) {
         throw new CustomError(Constants.Error.MobileNumberNotUnique);
       }
     }
-    if(updateKeys.includes(email)) {
+    if(updateKeys.includes('email')) {
       Checker.ifEmptyThrowError(merchantData.email, Constants.Error.EmailRequired);
       if (!Checker.isEmpty(await Merchant.findOne({ where: { email } }))) {
         throw new CustomError(Constants.Error.EmailNotUnique);
@@ -85,8 +85,7 @@ module.exports = {
     }, {
       where: { 
         id: id
-      }
-    }, { returning: true, transaction });
+      }, returning: true, transaction });
     return merchant;
   },
 
@@ -99,7 +98,7 @@ module.exports = {
       where: { 
         id: id
       }
-    }, { returning: true, transaction });
+    , returning: true, transaction });
     return merchant;
   }
 };
