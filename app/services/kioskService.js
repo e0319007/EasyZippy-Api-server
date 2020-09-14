@@ -12,6 +12,7 @@ const { update } = require("lodash");
       }, 
 
       updateKiosk: async(id, kioskData, transaction) => {
+        Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
         let kiosk = await Kiosk.findByPk(id);
         Checker.ifEmptyThrowError(kiosk, Constants.Error.KioskNotFound);
 
@@ -53,7 +54,7 @@ const { update } = require("lodash");
         const kiosk = await Kiosk.findByPk(id);
         Kiosk.destroy({
             where: {
-                id = id
+                id : id
             }
         });
       }
