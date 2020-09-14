@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "pretest": "cross-env NODE_ENV=test node initDb.js",
+    "test": "cross-env NODE_ENV=test jest --testTimeout=5000 --runInBand --detectOpenHandles"
   },
   "repository": {
     "type": "git",
@@ -22,8 +23,10 @@
     "body-parser": "^1.19.0",
     "config": "^3.3.1",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.2",
     "email-validator": "^2.0.4",
     "express": "^4.17.1",
+    "jest": "^26.4.2",
     "lodash": "^4.17.20",
     "nodemon": "^2.0.4",
     "pg": "^8.3.3",
