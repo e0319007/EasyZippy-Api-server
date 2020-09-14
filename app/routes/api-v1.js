@@ -5,6 +5,13 @@ const MerchantController = require('../controllers/merchantController');
 const staffController = require('../controllers/staffController');
 const kioskController = require('../controllers/kioskController');
 
+//Category
+router.post('/category', categoryController.createCategory);
+router.get('/category/:id', categoryController.retrieveCategory);
+router.get('/categories', categoryController.retrieveAllCategory);
+router.put('/category/:id', categoryController.updateCategory);
+router.delete('/category/:id', categoryController.deleteCategory);
+
 //Kiosk
 router.post('/kiosk', kioskController.createKiosk);
 router.get('/kiosk/:id', kioskController.createKiosk);
