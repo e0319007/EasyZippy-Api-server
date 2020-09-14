@@ -21,9 +21,9 @@ module.exports = {
   retrieveStaff: async (req, res) => {
     try {
       const { id } = req.params;
-      let staff = await StaffService.retrieveStaff(staffId);
+      let staff = await StaffService.retrieveStaff(id);
       return res.status(200).send(staff);
-    } catch (err){
+    } catch (err) {
       sendErrorResponse(res, err);
     }
   },
@@ -32,7 +32,7 @@ module.exports = {
     try {
       let staffs = await StaffService.retrieveAllStaff();
       return res.status(200).send(staffs);
-    } catch (err){
+    } catch (err) {
       sendErrorResponse(res, err);
     }
   },
@@ -46,19 +46,20 @@ module.exports = {
         staff = await StaffService.updateStaff(id, staffData, transaction);
       });
       return res.status(200).send(staff);
-    } catch (err){
+    } catch (err) {
       sendErrorResponse(res, err);
     }
   },
   
-  disableStaff: async (req, res) => {
+  toggleDisableStaff: async (req, res) => {
     try {
       const { id } = req.params;
+      let staff;
       await sequelize.transaction(async (transaction) => {
-        staff = await StaffService.disableStaff(staffId, transaction)
+        staff = await StaffService.toggleDisableStaff(id, transaction);
       });
       return res.status(200).send(staff);
-    } catch (err){
+    } catch (err) {
       sendErrorResponse(res, err);
     }
   },
