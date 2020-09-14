@@ -6,7 +6,6 @@ const Constants = require('../common/constants');
 const CustomError = require('../common/error/customError');
 
 const Staff = require('../models/Staff');
-const { ifEmptyThrowError } = require('../common/checker');
 
 module.exports = {
   createStaff: async (staffData, transaction) => {

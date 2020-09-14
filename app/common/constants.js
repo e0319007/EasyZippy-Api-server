@@ -40,6 +40,9 @@ module.exports = {
     Kiosk: 'Kiosk'
   },
   Error: {
+    CategoryNameExist: 'Category name exists',
+    CategoryNameRequired: 'Category name is required',
+    CategoryNotFound: 'Category is not found',
     EmailInvalid: 'Email is invalid',
     EmailNotUnique: 'Email is not unique',
     EmailRequired: 'Email is required',
