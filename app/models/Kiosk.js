@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, STRING, BOOLEAN, Model
+  INTEGER, DECIMAL, STRING, BOOLEAN, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 
@@ -15,8 +15,12 @@ Kiosk.init(
       autoIncrement: true,
       allowNull: false
     },
-    location: {
-      type: STRING,
+    lat: {
+      type: DECIMAL,
+      allowNull: false
+    },
+    long: {
+      type: DECIMAL,
       allowNull: false
     },
     description: {
