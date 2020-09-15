@@ -13,5 +13,6 @@ router.get('/staff/:id', staffController.retrieveStaff);
 router.get('/staff', staffController.retrieveAllStaff);
 router.put('/staff/:id', staffController.updateStaff);
 router.put('/staff/:id/toggleDisable', staffController.toggleDisableStaff);
+router.post('/staff/login', staffController.loginStaff);
 
 module.exports = router;

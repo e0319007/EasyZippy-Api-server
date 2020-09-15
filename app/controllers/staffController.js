@@ -63,4 +63,16 @@ module.exports = {
       sendErrorResponse(res, err);
     }
   },
+
+  loginStaff: async (req, res) => {
+    try {
+      const { email, password } = req.body;
+
+      const token = { token: await StaffService.loginStaff(email, password) };
+
+      return res.status(200).send(token);
+    } catch (err) {
+      sendErrorResponse(res, err, 401);
+    }
+  }
 };

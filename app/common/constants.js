@@ -1,4 +1,9 @@
 module.exports = {
+  AccountType: {
+    Customer: 'Customer',
+    Merchant: 'Merchant',
+    Staff: 'Staff'
+  },
   PaymentStatus: {
     Cancelled: 'Cancelled',
     Paid: 'Paid'
@@ -49,6 +54,7 @@ module.exports = {
     MobileNumberNotUnique: 'Mobile number is not unique',
     MobileNumberRequired: 'Mobile number is required',
     NameRequired: 'Name is required',
+    PasswordIncorrect: 'Password is incorrect',
     PasswordRequired: 'Password is required',
     StaffNotFound: 'Staff not found',
     UnexpectedError: 'An unexpected error has occured'
