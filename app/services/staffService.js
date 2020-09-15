@@ -46,6 +46,8 @@ module.exports = {
     }
   },
 
+  // To include a method to retrieve all staff excluding disabled ones, likewise for other 2 users
+
   retrieveAllStaff: async () => {
     const staffs = await Staff.findAll();
     return staffs;
@@ -108,6 +110,10 @@ module.exports = {
     const staff = await Staff.findOne({ where: { email } });
 
     Checker.ifEmptyThrowError(staff, Constants.Error.StaffNotFound);
+
+    if (staff.disabled) {
+      throw new CustomError(Constants.Error.StaffDisabled);
+    }
 
     if (!(await Helper.comparePassword(password, staff.password))) {
       throw new CustomError(Constants.Error.PasswordIncorrect);
