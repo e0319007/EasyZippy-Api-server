@@ -4,7 +4,7 @@ const router = express.Router();
 const staffController = require('../controllers/staffController');
 const customerController = require('../controllers/customerController');
 const MerchantController = require('../controllers/MerchantController');
-
+const kioskController = require('../controllers/kioskController');
 
 //Customer
 router.post('/customer', customerController.registerCustomer);
@@ -14,6 +14,13 @@ router.put('/customer/:id', customerController.updateCustomer);
 router.put('/customer/:id/disable', customerController.disableCustomer);
 router.put('/customer/:id/activate', customerController.activateCustomer);
 
+//Kiosk
+router.post('/kiosk', kioskController.createKiosk);
+router.get('/kiosk/:id', kioskController.retrieveKiosk);
+router.get('/kiosks', kioskController.retrieveAllKiosk);
+router.put('/kiosk/:id', kioskController.updateKiosk);
+router.put('/kiosk/:id/disable', kioskController.disableKiosk);
+router.delete('/kiosk/:id', kioskController.deleteKiosk);
 
 // Merchant
 router.post('/merchant', MerchantController.registerMerchant);
