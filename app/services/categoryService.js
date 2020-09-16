@@ -6,10 +6,10 @@ const Category = require('../models/Category');
 
 module.exports = {
   createCategory: async(categoryData, transaction) => {
-    const { name, description } = categoryData;
-    Checker.ifEmptyThrowError(name, Constants.Error.CategoryNameRequired);
+    const { name } = categoryData;
+    Checker.ifEmptyThrowError(name, Constants.Error.NameRequired);
     if(!Checker.isEmpty(await Category.findOne({ where : { name } }))) {
-      throw new CustomError(Constants.Error.CategoryNameExist);
+      throw new CustomError(Constants.Error.NameNotUnique);
     }
     const category = await Category.create(categoryData, { transaction })
     return category;
@@ -33,7 +33,7 @@ module.exports = {
     Checker.ifEmptyThrowError(category, Constants.Error.CategoryNotFound);
     const updateKeys = Object.keys(categoryData);
     if(updateKeys.includes('name')) {
-        Checker.ifEmptyThrowError(Constants.Error.CategoryNameRequired);
+        Checker.ifEmptyThrowError(Constants.Error.NameRequired);
     }
     category = Category.update(
       categoryData,
