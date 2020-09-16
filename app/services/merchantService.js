@@ -40,7 +40,7 @@ module.exports = {
     return merchant;
   },
 
-  retrieveAllMerchant: async() => {
+  retrieveAllMerchants: async() => {
     const merchants = await Merchant.findAll();
     return merchants;
   },

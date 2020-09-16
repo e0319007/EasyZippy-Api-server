@@ -43,7 +43,7 @@ module.exports = {
         }
       },
     
-    retrieveAllCustomer: async () => {
+    retrieveAllCustomers: async () => {
         const customers = await Customer.findAll();
         return customers;
     },

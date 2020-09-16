@@ -28,9 +28,9 @@ module.exports = {
     }
   },
 
-  retrieveAllCustomer: async (req, res) => {
+  retrieveAllCustomers: async (req, res) => {
     try {
-        let customers = await CustomerService.retrieveAllCustomer();
+        let customers = await CustomerService.retrieveAllCustomers();
         return res.status(200).send(customers);
     } catch (err){
         sendErrorResponse(res, err);

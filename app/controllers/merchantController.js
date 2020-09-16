@@ -29,9 +29,9 @@ module.exports = {
     }
   },
 
-  retrieveAllMerchant: async(req, res) => {
+  retrieveAllMerchants: async(req, res) => {
     try {
-      let merchants = await MerchantService.retrieveAllMerchant();
+      let merchants = await MerchantService.retrieveAllMerchants();
       return res.status(200).send(merchants);
     } catch (err) {
       sendErrorResponse(res, err);

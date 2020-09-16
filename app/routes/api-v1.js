@@ -1,40 +1,40 @@
 const express = require('express');
 const router = express.Router();
 
-const staffController = require('../controllers/staffController');
-const customerController = require('../controllers/customerController');
+const StaffController = require('../controllers/staffController');
+const CustomerController = require('../controllers/customerController');
 const MerchantController = require('../controllers/MerchantController');
-const kioskController = require('../controllers/kioskController');
+const KioskController = require('../controllers/kioskController');
 
 //Customer
-router.post('/customer', customerController.registerCustomer);
-router.get('/customer/:id', customerController.retrieveCustomer);
-router.get('/customers', customerController.retrieveAllCustomer);
-router.put('/customer/:id', customerController.updateCustomer);
-router.put('/customer/:id/disable', customerController.disableCustomer);
-router.put('/customer/:id/activate', customerController.activateCustomer);
+router.post('/customer', CustomerController.registerCustomer);
+router.get('/customer/:id', CustomerController.retrieveCustomer);
+router.get('/customers', CustomerController.retrieveAllCustomers);
+router.put('/customer/:id', CustomerController.updateCustomer);
+router.put('/customer/:id/disable', CustomerController.disableCustomer);
+router.put('/customer/:id/activate', CustomerController.activateCustomer);
 
 //Kiosk
-router.post('/kiosk', kioskController.createKiosk);
-router.get('/kiosk/:id', kioskController.retrieveKiosk);
-router.get('/kiosks', kioskController.retrieveAllKiosk);
-router.put('/kiosk/:id', kioskController.updateKiosk);
-router.put('/kiosk/:id/disable', kioskController.disableKiosk);
-router.delete('/kiosk/:id', kioskController.deleteKiosk);
+router.post('/kiosk', KioskController.createKiosk);
+router.get('/kiosk/:id', KioskController.retrieveKiosk);
+router.get('/kiosks', KioskController.retrieveAllKiosks);
+router.put('/kiosk/:id', KioskController.updateKiosk);
+router.put('/kiosk/:id/disable', KioskController.toggleDisableKiosk);
+router.delete('/kiosk/:id', KioskController.deleteKiosk);
 
 // Merchant
 router.post('/merchant', MerchantController.registerMerchant);
 router.get('/merchant/:id', MerchantController.retrieveMerchant);
-router.get('/merchants', MerchantController.retrieveAllMerchant);
+router.get('/merchants', MerchantController.retrieveAllMerchants);
 router.put('/merchant/:id', MerchantController.updateMerchant);
 router.put('/merchant/:id/disable', MerchantController.disableMerchant);
 router.put('/merchant/:id/approve', MerchantController.approveMerchant);
 
 //Staff
-router.post('/staff', staffController.registerStaff);
-router.get('/staff/:id', staffController.retrieveStaff);
-router.get('/staff', staffController.retrieveAllStaff);
-router.put('/staff/:id', staffController.updateStaff);
-router.put('/staff/:id/toggleDisable', staffController.toggleDisableStaff);
+router.post('/staff', StaffController.registerStaff);
+router.get('/staff/:id', StaffController.retrieveStaff);
+router.get('/staff', StaffController.retrieveAllStaff);
+router.put('/staff/:id', StaffController.updateStaff);
+router.put('/staff/:id/toggleDisable', StaffController.toggleDisableStaff);
 
 module.exports = router;

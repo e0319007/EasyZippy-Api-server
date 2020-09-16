@@ -1,7 +1,6 @@
 const sequelize = require('../common/database');
 const KioskService = require('../services/kioskService');
 const { sendErrorResponse } = require('../common/error/errorHandler');
-const kioskService = require('../services/kioskService');
 
 module.exports = {
     createKiosk: async(req, res) => {
@@ -33,11 +32,11 @@ module.exports = {
         } 
     },
 
-    disableKiosk: async(req, res) => {
+    toggleDisableKiosk: async(req, res) => {
         try {
             const { id } = req.params;
             await sequelize.transaction(async (transaction) => {
-                kiosk = await KioskService.disableKiosk(id, transaction);
+                kiosk = await KioskService.toggleDisableKiosk(id, transaction);
             })
             return res.status(200).send(kiosk);
         } catch(err) {
@@ -48,16 +47,16 @@ module.exports = {
     retrieveKiosk: async(req, res) => {
         try {
             const { id } = req.params;
-            let kiosk = await kioskService.retrieveKiosk(id);
+            let kiosk = await KioskService.retrieveKiosk(id);
             return res.status(200).send(kiosk);
         } catch(err) {
             sendErrorResponse(res, err);
         }
     },
 
-    retrieveAllKiosk: async(req, res) => {
+    retrieveAllKiosks: async(req, res) => {
         try {
-            let kiosks = await kioskService.retrieveAllKiosk();
+            let kiosks = await KioskService.retrieveAllKiosks();
             return res.status(200).send(kiosks);
         } catch(err) {
             sendErrorResponse(res, err);
@@ -65,9 +64,10 @@ module.exports = {
     },
     
     deleteKiosk: async(req, res) => {
+        //to disallow deletion if there are associated lockers
         try {
             let { id } = req.params;
-            kioskService.deleteKiosk(id);
+            KioskService.deleteKiosk(id);
             console.log(id)
             return res.status(200).send();
         } catch(err) {
