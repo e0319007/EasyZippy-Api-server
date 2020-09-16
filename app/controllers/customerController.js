@@ -84,9 +84,9 @@ module.exports = {
     try {
       const { email, password } = req.body;
 
-      const token = { token: await CustomerService.loginCustomer(email, password) };
+      const { customer, token } = await CustomerService.loginCustomer(email, password);
 
-      return res.status(200).send(token);
+      return res.status(200).send({ customer, token });
     } catch (err) {
       sendErrorResponse(res, err, 401);
     }
