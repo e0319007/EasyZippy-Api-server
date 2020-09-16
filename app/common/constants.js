@@ -45,6 +45,13 @@ module.exports = {
     Kiosk: 'Kiosk'
   },
   Error: {
+    AdvertisementExpired: 'Advertisement has expired',
+    AdvertisementEndDateRequired: 'Advertisement end date is required',
+    AdvertisementNotFound: 'Advertisement not found',
+    AdvertisementStartDateRequired: 'Advertisement start date is required',
+    AdvertisementTitleRequired: 'Advertisement title is required',
+    AdvertiserEmailRequired: 'Advertiser email required',
+    AdvertiserMobileRequired: 'Advertiser mobile required',
     CategoryNameExist: 'Category name exists',
     CategoryNameRequired: 'Category name is required',
     CategoryNotFound: 'Category is not found',
@@ -70,6 +77,7 @@ module.exports = {
     PasswordRequired: 'Password is required',
     StaffDisabled: 'Staff is disabled',
     StaffNotFound: 'Staff not found',
+    StartDateLaterThanEndDate: 'Start date should not be later then end date',
     UnexpectedError: 'An unexpected error has occured'
   }
 };

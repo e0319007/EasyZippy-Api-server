@@ -17,6 +17,10 @@ Advertisement.init(
       autoIncrement: true,
       allowNull: false
     },
+    title: {
+      type: STRING,
+      allowNull: false
+    },
     description: {
       type: STRING,
       allowNull: true
@@ -52,7 +56,12 @@ Advertisement.init(
     advertiserEmail: {
       type: STRING,
       allowNull: true
-    }
+    },
+    approved: {
+      type: BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
   },
   {
     sequelize,
