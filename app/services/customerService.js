@@ -187,5 +187,14 @@ module.exports = {
       transaction
     });
     return customer;
+  },
+
+  retrieveCustomerByEmail: async(email) => {
+    const customer = await Customer.findOne({ where : { email } });
+    if (Checker.isEmpty(customer)) {
+      throw new CustomError(Constants.Error.CustomerNotFound);
+    } else {
+      return customer;
+    }
   }
 }
