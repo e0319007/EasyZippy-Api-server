@@ -73,6 +73,7 @@ module.exports = {
     PasswordWeak: 'Password requires at least 8 characters, 1 lowercase letter, 1 uppercase letter, 1 numeric digit, and 1 special character',
     StaffDisabled: 'Staff is disabled',
     StaffNotFound: 'Staff not found',
+    TenancyAgreementRequired: 'Tenancy agreement is required',
     UnexpectedError: 'An unexpected error has occured'
   }
 };

@@ -103,5 +103,18 @@ module.exports = {
     } catch (err) {
       sendErrorResponse(res, err);
     }
+  },
+
+  uploadTenancyAgreement: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const images = req.files;
+      await sequelize.transaction(async (transaction) => {
+        await MerchantService.uploadTenancyAgreement(id, images[0], transaction);
+      });
+      return res.status(200).send();
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
   }
 };

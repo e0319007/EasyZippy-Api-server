@@ -170,5 +170,15 @@ module.exports = {
       transaction
     });
     return merchant;
+  },
+
+  uploadTenancyAgreement: async(id, tenancyAgreement, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
+    Checker.ifEmptyThrowError(tenancyAgreement, Constants.Error.TenancyAgreementRequired);
+
+    const merchant = await Merchant.findByPk(id);
+
+    Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
+
   }
 };

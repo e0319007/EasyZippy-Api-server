@@ -34,8 +34,8 @@ Merchant.init(
       unique: true
     },
     approved: {
-      allowNull: false,
       type: BOOLEAN,
+      allowNull: false,
       defaultValue: false
     },
     disabled: {
