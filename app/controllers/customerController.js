@@ -104,5 +104,18 @@ module.exports = {
     } catch (err) {
       sendErrorResponse(res, err);
     }
+  },
+  
+  retrieveCustomerByEmail: async (req, res) => {
+    try {
+      const { email } = req.body;
+      let customer;
+      await sequelize.transaction(async (transaction) => {
+        customer = await CustomerService.retrieveCustomerByEmail(email, transaction)
+      });
+      return res.status(200).send(customer);
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
   }
 };
