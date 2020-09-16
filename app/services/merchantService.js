@@ -28,6 +28,9 @@ module.exports = {
     if (!Checker.isEmpty( await Merchant.findOne({ where: { email } }))) {
       throw new CustomError(Constants.Error.EmailNotUnique);
     }
+    if (!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/).test(password)) {
+      throw new CustomError(Constants.Error.PasswordWeak);
+    }
 
     merchantData.password = await Helper.hashPassword(password);
 
@@ -53,6 +56,10 @@ module.exports = {
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
 
     const updateKeys = Object.keys(merchantData);
+
+    if(updateKeys.includes('password')) {
+      throw new CustomError(Constants.Error.PasswordCannotChange);
+    }
     if(updateKeys.includes('firstName')) {
       Checker.ifEmptyThrowError(merchantData.firstName, Constants.Error.FirstNameRequired);
     }
@@ -79,7 +86,7 @@ module.exports = {
     return merchant;
   },
 
-  disableMerchant: async(id, transaction) => {
+  toggleDisableMerchant: async(id, transaction) => {
     const curMerchant = await Merchant.findByPk(id);
     Checker.ifEmptyThrowError(curMerchant);
     let merchant = Merchant.update( {
@@ -134,5 +141,34 @@ module.exports = {
     );
 
     return token;
+  },
+
+  changePassword: async(id, newPassword, currentPassword, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
+    Checker.ifEmptyThrowError(newPassword, Constants.Error.NewPasswordRequired);
+    Checker.ifEmptyThrowError(currentPassword, Constants.Error.CurrentPasswordRequired);
+
+    let merchant = await Merchant.findByPk(id);
+
+    Checker.ifEmptyThrowError(merchant, Constants.Error.CustomerNotFound);
+
+    if (!(await Helper.comparePassword(currentPassword, merchant.password))) {
+      throw new CustomError(Constants.Error.PasswordIncorrect);
+    }
+
+    if (!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/).test(newPassword)) {
+      throw new CustomError(Constants.Error.PasswordWeak);
+    }
+
+    newPassword = await Helper.hashPassword(newPassword);
+
+    merchant = await merchant.update({
+      password: newPassword
+    }, {
+      where: { id },
+      returning: true,
+      transaction
+    });
+    return merchant;
   }
 };

@@ -74,5 +74,19 @@ module.exports = {
     } catch (err) {
       sendErrorResponse(res, err, 401);
     }
+  },
+
+  changePassword: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { newPassword, currentPassword } = req.body;
+      let staff;
+      await sequelize.transaction(async (transaction) => {
+        staff = await StaffService.changePassword(id, newPassword, currentPassword, transaction)
+      });
+      return res.status(200).send(staff);
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
   }
 };

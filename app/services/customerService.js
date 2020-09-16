@@ -61,6 +61,9 @@ module.exports = {
 
       const updateKeys = Object.keys(customerData);
 
+      if(updateKeys.includes('password')) {
+        throw new CustomError(Constants.Error.PasswordCannotChange);
+      }
       if(updateKeys.includes('firstName')) {
           Checker.ifEmptyThrowError(customerData.firstName, Constants.Error.FirstNameRequired);
       }
@@ -86,7 +89,7 @@ module.exports = {
       return customer;
   },
   
-  disableCustomer: async(id, transaction) => {
+  toggleDisableCustomer: async(id, transaction) => {
       const curCustomer = await Customer.findByPk(id);
       Checker.ifEmptyThrowError(curCustomer, Constants.Error.CustomerNotFound);
       

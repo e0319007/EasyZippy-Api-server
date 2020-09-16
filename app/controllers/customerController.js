@@ -53,12 +53,12 @@ module.exports = {
     }
   },
   
-  disableCustomer: async (req, res) => {
+  toggleDisableCustomer: async (req, res) => {
     try {
         const { id } = req.params;
         let customer;
         await sequelize.transaction(async (transaction) => {
-            customer = await CustomerService.disableCustomer(id, transaction)
+            customer = await CustomerService.toggleDisableCustomer(id, transaction)
         });
         return res.status(200).send(customer);
     } catch (err){

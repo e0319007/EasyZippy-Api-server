@@ -67,6 +67,7 @@ module.exports = {
     NameNotUnique: 'Name is not unique',
     NameRequired: 'Name is required',
     NewPasswordRequired: 'New password required',
+    PasswordCannotChange: 'Password cannot be changed',
     PasswordIncorrect: 'Password is incorrect',
     PasswordRequired: 'Password is required',
     PasswordWeak: 'Password requires at least 8 characters, 1 lowercase letter, 1 uppercase letter, 1 numeric digit, and 1 special character',
