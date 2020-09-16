@@ -1,4 +1,9 @@
 module.exports = {
+  AccountType: {
+    Customer: 'Customer',
+    Merchant: 'Merchant',
+    Staff: 'Staff'
+  },
   PaymentStatus: {
     Cancelled: 'Cancelled',
     Paid: 'Paid'
@@ -43,6 +48,8 @@ module.exports = {
     CategoryNameExist: 'Category name exists',
     CategoryNameRequired: 'Category name is required',
     CategoryNotFound: 'Category is not found',
+    CustomerDisabled: 'Customer is disabled',
+    CustomerNotActivated: 'Customer not activated',
     CustomerNotFound: 'Customer not found',
     EmailInvalid: 'Email is invalid',
     EmailNotUnique: 'Email is not unique',
@@ -53,11 +60,15 @@ module.exports = {
     FirstNameRequired: 'First name is required',
     IdRequired: 'ID is required',
     LastNameRequired: 'Last name is required',
+    MerchantDisabled: 'Merchant is disabled',
+    MerchantNotApproved: 'Merchant is not approved',
     MerchantNotFound: 'Merchant not found',
     MobileNumberNotUnique: 'Mobile number is not unique',
     MobileNumberRequired: 'Mobile number is required',
     NameRequired: 'Name is required',
+    PasswordIncorrect: 'Password is incorrect',
     PasswordRequired: 'Password is required',
+    StaffDisabled: 'Staff is disabled',
     StaffNotFound: 'Staff not found',
     UnexpectedError: 'An unexpected error has occured'
   }

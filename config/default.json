@@ -9,5 +9,8 @@
     "user": "postgres",
     "password": "password",
     "database": "easy_zippy_db"
+  },
+  "jwt": {
+    "private_key": "private_key"
   }
 }

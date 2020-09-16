@@ -78,5 +78,17 @@ module.exports = {
     } catch (err){
          sendErrorResponse(res, err);
     }
+  },
+
+  loginCustomer: async (req, res) => {
+    try {
+      const { email, password } = req.body;
+
+      const token = { token: await CustomerService.loginCustomer(email, password) };
+
+      return res.status(200).send(token);
+    } catch (err) {
+      sendErrorResponse(res, err, 401);
+    }
   }
 };

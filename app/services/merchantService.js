@@ -1,4 +1,6 @@
 const emailValidator = require('email-validator');
+const jwt = require('jsonwebtoken');
+const config = require('config');
 
 const Helper = require('../common/helper');
 const Checker = require('../common/checker');
@@ -100,5 +102,37 @@ module.exports = {
       }
     , returning: true, transaction });
     return merchant;
+  },
+
+  loginMerchant: async(email, password) => {
+    Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
+    Checker.ifEmptyThrowError(password, Constants.Error.PasswordRequired);
+
+    const merchant = await Merchant.findOne({ where: { email } });
+
+    Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
+
+    if (merchant.disabled) {
+      throw new CustomError(Constants.Error.MerchantDisabled)
+    }
+
+    if (!(await Helper.comparePassword(password, merchant.password))) {
+      throw new CustomError(Constants.Error.PasswordIncorrect);
+    };
+
+    if (!merchant.approved) {
+      throw new CustomError(Constants.Error.MerchantNotApproved);
+    }
+
+    const token = jwt.sign(
+      {
+        id: merchant.id,
+        accountType: Constants.AccountType.Merchant
+      },
+      config.get('jwt.private_key'),
+      { expiresIn: '1d' }
+    );
+
+    return token;
   }
 };

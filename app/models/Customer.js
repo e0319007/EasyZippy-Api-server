@@ -40,7 +40,7 @@ Customer.init(
     activated: {
       type: BOOLEAN,
       allowNull: false,
-      defaultValue: true
+      defaultValue: false
     },
     creditBalance: {
       type: DECIMAL,
