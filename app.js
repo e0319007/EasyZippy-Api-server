@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const multer = require('multer');
 const bodyParser = require('body-parser');
 const config = require('config');
 
@@ -13,6 +14,7 @@ app.use(cors());
 app.options('*', cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(multer().any());
 app.use(routes);
 
 if (app.get('env') === 'development') {
