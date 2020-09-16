@@ -27,6 +27,10 @@ module.exports = {
         if(!Checker.isEmpty(await Customer.findOne({ where: { email } }))) {
           throw new CustomError(Constants.Error.EmailNotUnique);
         }
+
+        if (!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/).test(password)) {
+          throw new CustomError(Constants.Error.PasswordWeak);
+        }
     
         customerData.password = await Helper.hashPassword(password);
     
@@ -141,5 +145,34 @@ module.exports = {
     );
 
     return token;
+  },
+
+  changePassword: async(id, newPassword, currentPassword, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
+    Checker.ifEmptyThrowError(newPassword, Constants.Error.NewPasswordRequired);
+    Checker.ifEmptyThrowError(currentPassword, Constants.Error.CurrentPasswordRequired);
+
+    let customer = await Customer.findByPk(id);
+
+    Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
+
+    if (!(await Helper.comparePassword(currentPassword, customer.password))) {
+      throw new CustomError(Constants.Error.PasswordIncorrect);
+    }
+
+    if (!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/).test(newPassword)) {
+      throw new CustomError(Constants.Error.PasswordWeak);
+    }
+
+    newPassword = await Helper.hashPassword(newPassword);
+
+    customer = await customer.update({
+      password: newPassword
+    }, {
+      where: { id },
+      returning: true,
+      transaction
+    });
+    return customer;
   }
 }

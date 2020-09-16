@@ -22,6 +22,7 @@ router.put('/customer/:id', CustomerController.updateCustomer);
 router.put('/customer/:id/disable', CustomerController.disableCustomer);
 router.put('/customer/:id/activate', CustomerController.activateCustomer);
 router.post('/customer/login', CustomerController.loginCustomer);
+router.put('/customer/:id/changePassword', CustomerController.changePassword);
 
 //Kiosk
 router.post('/kiosk', KioskController.createKiosk);
