@@ -20,7 +20,7 @@ router.post('/kiosk', KioskController.createKiosk);
 router.get('/kiosk/:id', KioskController.retrieveKiosk);
 router.get('/kiosks', KioskController.retrieveAllKiosks);
 router.put('/kiosk/:id', KioskController.updateKiosk);
-router.put('/kiosk/:id/disable', KioskController.toggleDisableKiosk);
+router.put('/kiosk/:id/toggleDisable', KioskController.toggleDisableKiosk);
 router.delete('/kiosk/:id', KioskController.deleteKiosk);
 
 // Merchant
