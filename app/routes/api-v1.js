@@ -1,10 +1,18 @@
 const express = require('express');
 const router = express.Router();
 
+const CategoryController = require('../controllers/categoryController');
 const CustomerController = require('../controllers/customerController');
 const KioskController = require('../controllers/kioskController');
 const MerchantController = require('../controllers/merchantController');
 const StaffController = require('../controllers/staffController');
+
+//Category
+router.post('/category', CategoryController.createCategory);
+router.get('/category/:id', CategoryController.retrieveCategory);
+router.get('/categories', CategoryController.retrieveAllCategory);
+router.put('/category/:id', CategoryController.updateCategory);
+router.delete('/category/:id', CategoryController.deleteCategory);
 
 //Customer
 router.post('/customer', CustomerController.registerCustomer);
