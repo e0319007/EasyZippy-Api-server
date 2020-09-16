@@ -83,9 +83,9 @@ module.exports = {
     try {
       const { email, password } = req.body;
 
-      const token = { token: await MerchantService.loginMerchant(email, password) };
+      const { merchant, token } = await MerchantService.loginMerchant(email, password);
 
-      return res.status(200).send(token);
+      return res.status(200).send({ merchant, token });
     } catch (err) {
       sendErrorResponse(res, err, 401);
     }

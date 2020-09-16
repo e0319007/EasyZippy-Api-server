@@ -84,21 +84,34 @@ module.exports = {
     try {
       const { email, password } = req.body;
 
-      const token = { token: await CustomerService.loginCustomer(email, password) };
+      const { customer, token } = await CustomerService.loginCustomer(email, password);
 
-      return res.status(200).send(token);
+      return res.status(200).send({ customer, token });
     } catch (err) {
       sendErrorResponse(res, err, 401);
+    }
+  },
+
+  verifyCurrentPassword: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { currentPassword } = req.body;
+
+      const verified = await CustomerService.verifyCurrentPassword(id, currentPassword);
+
+      return res.status(200).send({ verified });
+    } catch (err) {
+      sendErrorResponse(res, err);
     }
   },
 
   changePassword: async (req, res) => {
     try {
       const { id } = req.params;
-      const { newPassword, currentPassword } = req.body;
+      const { newPassword } = req.body;
       let customer;
       await sequelize.transaction(async (transaction) => {
-        customer = await CustomerService.changePassword(id, newPassword, currentPassword, transaction)
+        customer = await CustomerService.changePassword(id, newPassword, transaction)
       });
       return res.status(200).send(customer);
     } catch (err) {
