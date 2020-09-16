@@ -53,12 +53,12 @@ module.exports = {
     }
   },
   
-  disableCustomer: async (req, res) => {
+  toggleDisableCustomer: async (req, res) => {
     try {
         const { id } = req.params;
         let customer;
         await sequelize.transaction(async (transaction) => {
-            customer = await CustomerService.disableCustomer(id, transaction)
+            customer = await CustomerService.toggleDisableCustomer(id, transaction)
         });
         return res.status(200).send(customer);
     } catch (err){
@@ -89,6 +89,20 @@ module.exports = {
       return res.status(200).send(token);
     } catch (err) {
       sendErrorResponse(res, err, 401);
+    }
+  },
+
+  changePassword: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { newPassword, currentPassword } = req.body;
+      let customer;
+      await sequelize.transaction(async (transaction) => {
+        customer = await CustomerService.changePassword(id, newPassword, currentPassword, transaction)
+      });
+      return res.status(200).send(customer);
+    } catch (err) {
+      sendErrorResponse(res, err);
     }
   }
 };

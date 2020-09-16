@@ -46,6 +46,7 @@ module.exports = {
   },
   Error: {
     CategoryNotFound: 'Category is not found',
+    CurrentPasswordRequired: 'Current password required',
     CustomerDisabled: 'Customer is disabled',
     CustomerNotActivated: 'Customer not activated',
     CustomerNotFound: 'Customer not found',
@@ -65,8 +66,11 @@ module.exports = {
     MobileNumberRequired: 'Mobile number is required',
     NameNotUnique: 'Name is not unique',
     NameRequired: 'Name is required',
+    NewPasswordRequired: 'New password required',
+    PasswordCannotChange: 'Password cannot be changed',
     PasswordIncorrect: 'Password is incorrect',
     PasswordRequired: 'Password is required',
+    PasswordWeak: 'Password requires at least 8 characters, 1 lowercase letter, 1 uppercase letter, 1 numeric digit, and 1 special character',
     StaffDisabled: 'Staff is disabled',
     StaffNotFound: 'Staff not found',
     UnexpectedError: 'An unexpected error has occured'
