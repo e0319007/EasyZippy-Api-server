@@ -150,9 +150,8 @@ module.exports = {
     return { customer, token };
   },
 
-  changePassword: async(id, newPassword, currentPassword, transaction) => {
+  verifyCurrentPassword: async(id, currentPassword) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
-    Checker.ifEmptyThrowError(newPassword, Constants.Error.NewPasswordRequired);
     Checker.ifEmptyThrowError(currentPassword, Constants.Error.CurrentPasswordRequired);
 
     let customer = await Customer.findByPk(id);
@@ -162,6 +161,17 @@ module.exports = {
     if (!(await Helper.comparePassword(currentPassword, customer.password))) {
       throw new CustomError(Constants.Error.PasswordIncorrect);
     }
+
+    return true;
+  },
+
+  changePassword: async(id, newPassword, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
+    Checker.ifEmptyThrowError(newPassword, Constants.Error.NewPasswordRequired);
+
+    let customer = await Customer.findByPk(id);
+
+    Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
 
     if (!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/).test(newPassword)) {
       throw new CustomError(Constants.Error.PasswordWeak);
