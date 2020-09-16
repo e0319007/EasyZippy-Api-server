@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
+const Upload = require('../middleware/upload');
+
 const CategoryController = require('../controllers/categoryController');
 const CustomerController = require('../controllers/customerController');
 const KioskController = require('../controllers/kioskController');
