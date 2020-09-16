@@ -7,11 +7,13 @@ module.exports = {
     try {  
       const advertisementData = req.body;
       let advertisement;
+      console.log(advertisementData)
       await sequelize.transaction(async (transaction) => {
         advertisement = await AdvertisementService.createAdvertisementAsStaff(advertisementData, transaction)
       });
       return res.status(200).send(advertisement);
     } catch (err) {
+      console.log(err)
       sendErrorResponse(res, err);
     }
   },

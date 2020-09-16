@@ -19,7 +19,7 @@ module.exports = {
     Checker.ifEmptyThrowError(endDate, Constants.Error.AdvertisementEndDateRequired);
     Checker.ifEmptyThrowError(await Staff.findByPk(staffId), Constants.Error.StaffNotFound);
     const advertisement = await Advertisement.create({
-      advertisementData
+      title, description, imageUrl, startDate, endDate, amountPaid, advertiserMobile, advertiserEmail, staffId
     }, { transaction });
     return advertisement;
   },

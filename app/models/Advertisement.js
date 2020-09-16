@@ -40,6 +40,7 @@ Advertisement.init(
     amountPaid: {
       type: DECIMAL,
       allowNull: false,
+      defaultValue: 0.0,
       validate: {
           min: 0.0
       }
