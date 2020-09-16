@@ -27,10 +27,10 @@ Kiosk.init(
       type: STRING,
       allowNull: true
     },
-    enabled: {
+    disabled: {
       type: BOOLEAN,
       allowNull: false,
-      defaultValue: true
+      defaultValue: false
     }
   },
   {

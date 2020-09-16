@@ -28,9 +28,9 @@ module.exports = {
     }
   },
 
-  retrieveAllCustomer: async (req, res) => {
+  retrieveAllCustomers: async (req, res) => {
     try {
-        let customers = await CustomerService.retrieveAllCustomer();
+        let customers = await CustomerService.retrieveAllCustomers();
         return res.status(200).send(customers);
     } catch (err){
         sendErrorResponse(res, err);
@@ -47,7 +47,9 @@ module.exports = {
         });
         return res.status(200).send(customer);
     } catch (err){
+        console.log(err);
         sendErrorResponse(res, err);
+       
     }
   },
   
@@ -60,6 +62,7 @@ module.exports = {
         });
         return res.status(200).send(customer);
     } catch (err){
+        console.log(err);
         sendErrorResponse(res, err);
     }
   }, 
@@ -74,6 +77,18 @@ module.exports = {
         return res.status(200).send(customer);
     } catch (err){
          sendErrorResponse(res, err);
+    }
+  },
+
+  loginCustomer: async (req, res) => {
+    try {
+      const { email, password } = req.body;
+
+      const token = { token: await CustomerService.loginCustomer(email, password) };
+
+      return res.status(200).send(token);
+    } catch (err) {
+      sendErrorResponse(res, err, 401);
     }
   }
 };
