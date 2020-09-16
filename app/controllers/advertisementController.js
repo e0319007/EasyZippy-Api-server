@@ -54,8 +54,8 @@ module.exports = {
 
   retrieveAdvertisementByMerchantId: async(req, res) => {
     try {  
-      const id = req.body.merchantId;
-      let advertisements = AdvertisementService.retrieveAdvertisementByMerchantId(id);
+      const { merchantId } = req.params;
+      let advertisements = AdvertisementService.retrieveAdvertisementByMerchantId(merchantId);
       return res.status(200).send(advertisements);
     } catch (err) {
       sendErrorResponse(res, err);
@@ -64,8 +64,8 @@ module.exports = {
 
   retrieveAdvertisementByStaffId: async(req, res) => {
     try {  
-      const { id } = req.body.staffId;
-      let advertisements = AdvertisementService.retrieveAdvertisementByStaffId(id);
+      const { staffId } = req.params;
+      let advertisements = AdvertisementService.retrieveAdvertisementByStaffId(staffId);
       return res.status(200).send(advertisements);
     } catch (err) {
       sendErrorResponse(res, err);

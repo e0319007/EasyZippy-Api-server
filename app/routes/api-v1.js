@@ -1,10 +1,24 @@
 const express = require('express');
 const router = express.Router();
 
+const AdvertisementController = require('../controllers/advertisementController');
 const CustomerController = require('../controllers/customerController');
 const KioskController = require('../controllers/kioskController');
 const MerchantController = require('../controllers/merchantController');
 const StaffController = require('../controllers/staffController');
+
+//Advertisement
+router.post('/createAdvertisementAsStaff', AdvertisementController.createAdvertisementAsStaff);
+router.post('/createAdvertisementAsMerchant', AdvertisementController.createAdvertisementAsMerchant);
+router.post('/createAdvertisementAsMerchantWithoutAccount', AdvertisementController.createAdvertisementAsMerchantWithoutAccount);
+router.get('/advertisement/:id', AdvertisementController.retrieveAdvertisementById);
+router.get('/advertisement/merchant/:id', AdvertisementController.retrieveAdvertisementByMerchantId);
+router.get('/advertisement/staff/:id', AdvertisementController.retrieveAdvertisementByStaffId);
+router.get('/advertisements', AdvertisementController.retrieveAllAdvertisement);
+router.put('/advertisement/:id', AdvertisementController.updateAdvertisement);
+router.put('/advertisement/:id/approve', AdvertisementController.toggleApproveAdvertisement);
+router.put('/advertisement/:id/expire', AdvertisementController.setExpireAdvertisement);
+router.delete('/advertisement/:id', AdvertisementController.deleteAdvertisement);
 
 //Customer
 router.post('/customer', CustomerController.registerCustomer);
