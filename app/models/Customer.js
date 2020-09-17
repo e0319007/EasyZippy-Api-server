@@ -65,7 +65,7 @@ Customer.init(
     },
     oneTimePin: {
       type: STRING,
-      allowNull: false
+      allowNull: true
     }
   },
   {
