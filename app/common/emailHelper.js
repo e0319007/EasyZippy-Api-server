@@ -25,8 +25,8 @@ module.exports = {
         to: email, // list of receivers
         subject: 'Easy Zippy Password Reset', // Subject line
         text: 'You are receiving this because you requested the reset of the password for your account.\n\n' +
-        'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-        'http://' + host + '/resetPassword/' + token + '\n\n' +
+        'Please enter this code:\n\n' +
+         token + '\n\n' +
         'If you did not request this, please ignore this email and your password will remain unchanged.\n'
       });
 
@@ -43,7 +43,7 @@ module.exports = {
 
   generateToken: async() => {
     let token;
-    token = await crypto.randomBytes(50).toString('hex').slice(0,50);
+    token = await crypto.randomBytes(25).toString('hex').slice(0,50);
     return token;
   }
 

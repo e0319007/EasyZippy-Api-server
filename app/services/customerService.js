@@ -65,6 +65,8 @@ module.exports = {
         if (!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/).test(password)) {
           throw new CustomError(Constants.Error.PasswordWeak);
         }
+
+        //OTP
     
         customerData.password = await Helper.hashPassword(password);
     
@@ -244,16 +246,28 @@ module.exports = {
     await EmailHelper.sendEmail(email, token, host);
   },
 
+  checkValidToken: async(token, email) => {
+    Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
+    Checker.ifEmptyThrowError(token, );
+    let customer = await Customer.findOne({
+      where: {
+        resetPasswordToken: token,
+        email
+      }
+    });
+    Checker.ifEmptyThrowError(customer, Constants.Error.TokenNotFound);
+  },
+
   resetPassword: async(token, password, transaction) => {
     let customer = await Customer.findOne({
       where: {
         resetPasswordToken: token
       }
     });
-    Checker.ifEmptyThrowError(customer, "Token cannot be found")
+    Checker.ifEmptyThrowError(customer, Constants.Error.TokenNotFound)
     let id = customer.id;
     if(customer.resetPasswordExpires < Date.now()) {
-      throw new CustomError('Expired')
+      throw new CustomError(Constants.Error.TokenExpired);
     } else {
       customer = await changePasswordForResetPassword(id, password, transaction);
     }

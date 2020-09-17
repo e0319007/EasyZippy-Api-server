@@ -26,9 +26,9 @@ router.put('/customer/:id/activate', CustomerController.activateCustomer);
 router.post('/customer/login', CustomerController.loginCustomer);
 router.post('/customer/:id/verifyPassword', CustomerController.verifyCurrentPassword);
 router.put('/customer/:id/changePassword', CustomerController.changePassword);
-router.get('customer/forgot');
 router.post('/customer/forgotPassword', CustomerController.sendResetPasswordEmail);
-router.post('/customer/resetPassword/:token', CustomerController.resetPassword);
+router.post('/customer/resetPassword/checkValidToken', CustomerController.checkValidToken);
+router.post('/customer/resetPassword/', CustomerController.resetPassword);
 
 //Kiosk
 router.post('/kiosk', KioskController.createKiosk);
