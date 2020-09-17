@@ -18,10 +18,12 @@ router.delete('/category/:id', CategoryController.deleteCategory);
 router.post('/customer', CustomerController.registerCustomer);
 router.get('/customer/:id', CustomerController.retrieveCustomer);
 router.get('/customers', CustomerController.retrieveAllCustomers);
+router.get('/customer', CustomerController.retrieveCustomerByEmail);
 router.put('/customer/:id', CustomerController.updateCustomer);
 router.put('/customer/:id/toggleDisable', CustomerController.toggleDisableCustomer);
 router.put('/customer/:id/activate', CustomerController.activateCustomer);
 router.post('/customer/login', CustomerController.loginCustomer);
+router.post('/customer/:id/verifyPassword', CustomerController.verifyCurrentPassword);
 router.put('/customer/:id/changePassword', CustomerController.changePassword);
 
 router.post('/customer/resetPassword', CustomerController.resetPassword);

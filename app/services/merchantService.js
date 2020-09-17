@@ -140,7 +140,7 @@ module.exports = {
       { expiresIn: '1d' }
     );
 
-    return token;
+    return { merchant, token };
   },
 
   changePassword: async(id, newPassword, currentPassword, transaction) => {
