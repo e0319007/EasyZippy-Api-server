@@ -42,6 +42,12 @@ Merchant.init(
       type: BOOLEAN,
       defaultValue: false,
       allowNull: false
+    },
+    resetPasswordToken: {
+      type: STRING,
+    },
+    resetPasswordExpires: {
+      type: Sequelize.DATE,
     }
   },
   {

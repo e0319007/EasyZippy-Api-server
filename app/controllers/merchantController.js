@@ -104,6 +104,7 @@ module.exports = {
       sendErrorResponse(res, err);
     }
   },
+  
   sendResetPasswordEmail: async (req, res) => {
     try {
       const { email } = req.body;

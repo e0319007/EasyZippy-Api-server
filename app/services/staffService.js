@@ -9,6 +9,39 @@ const CustomError = require('../common/error/customError');
 
 const Staff = require('../models/Staff');
 
+const retrieveStaffByEmail = async(email) => {
+  const staff = await Staff.findOne({ where : { email } });
+  if (Checker.isEmpty(staff)) {
+    throw new CustomError(Constants.Error.StaffNotFound);
+  } else {
+    return staff;
+  }
+};
+
+const changePasswordForResetPassword = async(id, newPassword, transaction) => {
+  Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
+  Checker.ifEmptyThrowError(newPassword, Constants.Error.NewPasswordRequired);
+
+  let staff = await Staff.findByPk(id);
+
+  Checker.ifEmptyThrowError(staff, Constants.Error.StaffNotFound);
+
+  if (!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/).test(newPassword)) {
+    throw new CustomError(Constants.Error.PasswordWeak);
+  }
+
+  newPassword = await Helper.hashPassword(newPassword);
+
+  staff = await staff.update({
+    password: newPassword
+  }, {
+    where: { id },
+    returning: true,
+    transaction
+  });
+  return staff;
+};
+
 module.exports = {
   createStaff: async (staffData, transaction) => {
     const { firstName, lastName, mobileNumber, password, email } = staffData;
@@ -164,5 +197,44 @@ module.exports = {
       transaction
     });
     return staff;
-  }
+  },
+
+  sendResetPasswordEmail: async(email, host) => {
+    try{
+    let staff = await retrieveStaffByEmail(email);
+    } catch (err) {
+      throw new CustomError(Constants.Error.StaffNotFound);
+    }
+    let token = await EmailHelper.generateToken();
+    let resetPasswordExpires = Date.now() + 3600000; //1h
+
+    staff = await staff.update({
+      resetPasswordToken: token,
+      resetPasswordExpires
+    }, {
+      where: {
+        email
+      }
+    });
+    
+    await EmailHelper.sendEmail(email, token, host);
+  },
+
+  resetPassword: async(token, password, transaction) => {
+    let staff = await Staff.findOne({
+      where: {
+        resetPasswordToken: token
+      }
+    });
+    Checker.ifEmptyThrowError(staff, "Token cannot be found")
+    let id = staff.id;
+    if(staff.resetPasswordExpires < Date.now()) {
+      throw new CustomError('Expired')
+    } else {
+      staff = await changePasswordForResetPassword(id, password, transaction);
+    }
+    return staff;
+  },
+
+  retrieveStaffByEmail
 };

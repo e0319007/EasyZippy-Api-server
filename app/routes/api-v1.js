@@ -47,6 +47,8 @@ router.put('/merchant/:id/toggleDisable', MerchantController.toggleDisableMercha
 router.put('/merchant/:id/approve', MerchantController.approveMerchant);
 router.post('/merchant/login', MerchantController.loginMerchant);
 router.put('/merchant/:id/changePassword', MerchantController.changePassword);
+router.post('/merchant/forgotPassword', MerchantController.sendResetPasswordEmail);
+router.post('/merchant/resetPassword/:token', MerchantController.resetPassword);
 
 //Staff
 router.post('/staff', StaffController.registerStaff);
@@ -56,5 +58,7 @@ router.put('/staff/:id', StaffController.updateStaff);
 router.put('/staff/:id/toggleDisable', StaffController.toggleDisableStaff);
 router.post('/staff/login', StaffController.loginStaff);
 router.post('/staff/:id/changePassword', StaffController.changePassword);
+router.post('/staff/forgotPassword', StaffController.sendResetPasswordEmail);
+router.post('/staff/resetPassword/:token', StaffController.resetPassword);
 
 module.exports = router;

@@ -55,7 +55,6 @@ Customer.init(
       defaultValue: false,
       allowNull: false
     },
-
     resetPasswordToken: {
       type: STRING,
     },
