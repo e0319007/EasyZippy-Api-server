@@ -3,7 +3,6 @@ const {
   INTEGER, DATE, STRING, ENUM, Model
 } = Sequelize;
 const sequelize = require('../common/database');
-const { BookingStatus, BookingSource } = require('../common/constants');
 
 const BookingPackage = require('./BookingPackage');
 const Customer = require('./Customer');
@@ -38,14 +37,14 @@ Booking.init(
       type: DATE,
       allowNull: false
     },
-    // bookingStatus: {
-    //   type: ENUM(BookingStatus.Cancelled, BookingStatus.Fufilled, BookingStatus.Unfufilled),
-    //   allowNull: false
-    // },
-    // bookingSource: {
-    //   type: ENUM(BookingSource.Kiosk, BookingSource.Mobile),
-    //   allowNull: false
-    // }
+    bookingStatusEnum: {
+      type: STRING,
+      allowNull: false
+    },
+    bookingSourceEnum: {
+      type: STRING,
+      allowNull: false
+    }
   },
   {
     sequelize,
