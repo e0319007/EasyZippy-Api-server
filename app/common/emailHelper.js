@@ -3,7 +3,7 @@ const crypto = require('crypto');
 
 module.exports = {
   // async..await is not allowed in global scope, must use a wrapper
-  sendEmail: async (email, token, host) => {
+  sendEmail: async (email, token) => {
     try{
       // Generate test SMTP service account from ethereal.email
       // Only needed if you don't have a real mail account for testing

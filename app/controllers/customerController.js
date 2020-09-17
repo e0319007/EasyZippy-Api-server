@@ -131,8 +131,7 @@ module.exports = {
   sendResetPasswordEmail: async (req, res) => {
     try {
       const { email } = req.body;
-      const host = req.headers.host;
-      await CustomerService.sendResetPasswordEmail(email, host);
+      await CustomerService.sendResetPasswordEmail(email);
       return res.status(200).send();
     } catch (err) {
       sendErrorResponse(res, err);

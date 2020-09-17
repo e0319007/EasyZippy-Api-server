@@ -28,7 +28,7 @@ router.post('/customer/:id/verifyPassword', CustomerController.verifyCurrentPass
 router.put('/customer/:id/changePassword', CustomerController.changePassword);
 router.post('/customer/forgotPassword', CustomerController.sendResetPasswordEmail);
 router.post('/customer/resetPassword/checkValidToken', CustomerController.checkValidToken);
-router.post('/customer/resetPassword/', CustomerController.resetPassword);
+router.post('/customer/resetPassword', CustomerController.resetPassword);
 
 //Kiosk
 router.post('/kiosk', KioskController.createKiosk);
@@ -48,7 +48,8 @@ router.put('/merchant/:id/approve', MerchantController.approveMerchant);
 router.post('/merchant/login', MerchantController.loginMerchant);
 router.put('/merchant/:id/changePassword', MerchantController.changePassword);
 router.post('/merchant/forgotPassword', MerchantController.sendResetPasswordEmail);
-router.post('/merchant/resetPassword/:token', MerchantController.resetPassword);
+router.post('/merchant/resetPassword/checkValidToken', MerchantController.checkValidToken);
+router.post('/merchant/resetPassword', MerchantController.resetPassword);
 
 //Staff
 router.post('/staff', StaffController.registerStaff);
@@ -59,6 +60,7 @@ router.put('/staff/:id/toggleDisable', StaffController.toggleDisableStaff);
 router.post('/staff/login', StaffController.loginStaff);
 router.post('/staff/:id/changePassword', StaffController.changePassword);
 router.post('/staff/forgotPassword', StaffController.sendResetPasswordEmail);
-router.post('/staff/resetPassword/:token', StaffController.resetPassword);
+router.post('/staff/resetPassword/checkValidToken', StaffController.checkValidToken);
+router.post('/staff/resetPassword', StaffController.resetPassword);
 
 module.exports = router;

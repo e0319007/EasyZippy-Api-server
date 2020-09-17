@@ -225,7 +225,7 @@ module.exports = {
     return customer;
   },
 
-  sendResetPasswordEmail: async(email, host) => {
+  sendResetPasswordEmail: async(email) => {
     try{
     let customer = await retrieveCustomerByEmail(email);
     } catch (err) {
@@ -243,12 +243,11 @@ module.exports = {
       }
     });
     
-    await EmailHelper.sendEmail(email, token, host);
+    await EmailHelper.sendEmail(email, token);
   },
 
   checkValidToken: async(token, email) => {
     Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
-    Checker.ifEmptyThrowError(token, );
     let customer = await Customer.findOne({
       where: {
         resetPasswordToken: token,

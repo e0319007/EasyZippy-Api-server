@@ -104,21 +104,31 @@ module.exports = {
       sendErrorResponse(res, err);
     }
   },
-  
   sendResetPasswordEmail: async (req, res) => {
     try {
       const { email } = req.body;
-      const host = req.headers.host;
-      await MerchantService.sendResetPasswordEmail(email, host);
+      await MerchantService.sendResetPasswordEmail(email);
       return res.status(200).send();
     } catch (err) {
       sendErrorResponse(res, err);
     }
   },
 
+  checkValidToken: async (req, res) => {
+    try {
+      const { token } = req.body;
+      const { email } = req.body;
+      await MerchantService.checkValidToken(token, email);
+      return res.status(200).send();
+    } catch(err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  },
+
   resetPassword: async (req, res) => {
     try {
-      const { token } = req.params;
+      const { token } = req.body;
       const { newPassword } = req.body;
       let merchant;
       await sequelize.transaction(async (transaction) => {

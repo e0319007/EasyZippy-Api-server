@@ -205,7 +205,7 @@ module.exports = {
     return merchant;
   },
 
-  sendResetPasswordEmail: async(email, host) => {
+  sendResetPasswordEmail: async(email) => {
     try{
     let merchant = await retrieveMerchantByEmail(email);
     } catch (err) {
@@ -223,7 +223,18 @@ module.exports = {
       }
     });
     
-    await EmailHelper.sendEmail(email, token, host);
+    await EmailHelper.sendEmail(email, token);
+  },
+
+  checkValidToken: async(token, email) => {
+    Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
+    let merchant = await Merchant.findOne({
+      where: {
+        resetPasswordToken: token,
+        email
+      }
+    });
+    Checker.ifEmptyThrowError(merchant, Constants.Error.TokenNotFound);
   },
 
   resetPassword: async(token, password, transaction) => {
