@@ -1,5 +1,4 @@
-
-const nodemailer = require("nodemailer");
+const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 
 module.exports = {
@@ -24,18 +23,18 @@ module.exports = {
       let info = await transporter.sendMail({
         from: 'easyzippyhelp@gmail.com', // sender address
         to: email, // list of receivers
-        subject: "Easy Zippy Reset Password", // Subject line
-        text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+        subject: 'Easy Zippy Password Reset', // Subject line
+        text: 'You are receiving this because you requested the reset of the password for your account.\n\n' +
         'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
         'http://' + host + '/resetPassword/' + token + '\n\n' +
         'If you did not request this, please ignore this email and your password will remain unchanged.\n'
       });
 
-      console.log("Message sent: %s", info.messageId);
+      console.log('Message sent: %s', info.messageId);
       // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 
       // Preview only available when sending through an Ethereal account
-      console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+      console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
       // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
     } catch (err) {
       console.log(err)
