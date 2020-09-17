@@ -244,6 +244,18 @@ module.exports = {
     await EmailHelper.sendEmail(email, token, host);
   },
 
+  checkValidToken: async(token, email) => {
+    Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
+    Checker.ifEmptyThrowError(token, 'Token Required');
+    let customer = await Customer.findOne({
+      where: {
+        resetPasswordToken: token,
+        email
+      }
+    });
+    Checker.ifEmptyThrowError(customer, "Token cannot be found");
+  },
+
   resetPassword: async(token, password, transaction) => {
     let customer = await Customer.findOne({
       where: {
