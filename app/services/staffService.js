@@ -199,7 +199,7 @@ module.exports = {
     return staff;
   },
 
-  sendResetPasswordEmail: async(email, host) => {
+  sendResetPasswordEmail: async(email) => {
     try{
     let staff = await retrieveStaffByEmail(email);
     } catch (err) {
@@ -217,7 +217,18 @@ module.exports = {
       }
     });
     
-    await EmailHelper.sendEmail(email, token, host);
+    await EmailHelper.sendEmail(email, token);
+  },
+
+  checkValidToken: async(token, email) => {
+    Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
+    let staff = await Staff.findOne({
+      where: {
+        resetPasswordToken: token,
+        email
+      }
+    });
+    Checker.ifEmptyThrowError(staff, Constants.Error.TokenNotFound);
   },
 
   resetPassword: async(token, password, transaction) => {
