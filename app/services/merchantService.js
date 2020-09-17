@@ -216,9 +216,9 @@ module.exports = {
   preUploadCheck: async (id, file) => {
     ifEmptyThrowError(id, Constants.Error.IdRequired);
     ifEmptyThrowError(file, Constants.Error.FileRequired);
-    if (isEmpty(file.mimetype) || !file.mimetype.startsWith('image/')) {
+    if (isEmpty(file.mimetype) || !file.mimetype.startsWith('application/pdf')) {
       fs.remove(`./app/assets/${file.filename}`);
-      throw new CustomError(Constants.Error.ImageFileRequired);
+      throw new CustomError(Constants.Error.PdfFileRequired);
     }
   },
 
@@ -273,10 +273,10 @@ module.exports = {
         resetPasswordToken: token
       }
     });
-    Checker.ifEmptyThrowError(merchant, "Token cannot be found")
+    Checker.ifEmptyThrowError(merchant, Constants.Error.TokenNotFound)
     let id = merchant.id;
     if(merchant.resetPasswordExpires < Date.now()) {
-      throw new CustomError('Expired')
+      throw new CustomError(Constants.Error.TokenExpired)
     } else {
       merchant = await changePasswordForResetPassword(id, password, transaction);
     }

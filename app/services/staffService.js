@@ -82,6 +82,12 @@ module.exports = {
     }
   },
 
+  retrieveStaffByEmail: async (email) => {
+    const staff = await Staff.findOne({ where: { email } });
+    Checker.ifEmptyThrowError(staff, Constants.Error.StaffNotFound);
+    return staff;
+  },
+
   // To include a method to retrieve all staff excluding disabled ones, likewise for other 2 users
 
   retrieveAllStaff: async () => {
@@ -246,6 +252,4 @@ module.exports = {
     }
     return staff;
   },
-
-  retrieveStaffByEmail
 };
