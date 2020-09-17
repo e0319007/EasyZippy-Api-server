@@ -47,7 +47,6 @@ module.exports = {
         });
         return res.status(200).send(customer);
     } catch (err){
-        console.log(err);
         sendErrorResponse(res, err);
        
     }
@@ -62,7 +61,6 @@ module.exports = {
         });
         return res.status(200).send(customer);
     } catch (err){
-        console.log(err);
         sendErrorResponse(res, err);
     }
   }, 
@@ -132,14 +130,28 @@ module.exports = {
     }
   },
 
+  sendResetPasswordEmail: async (req, res) => {
+    try {
+      const { email } = req.body;
+      const host = req.headers.host;
+      await CustomerService.sendResetPasswordEmail(email, host);
+      return res.status(200).send();
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
   resetPassword: async (req, res) => {
     try {
-      const { email } = req.body.email;
-      CustomerService.resetPassword(email);
+      const { token } = req.params;
+      const { newPassword } = req.body;
+      let customer;
+      await sequelize.transaction(async (transaction) => {
+        customer = await CustomerService.resetPassword(token, newPassword, transaction);
+      });
+      return res.status(200).send(customer);
     } catch (err) {
       sendErrorResponse(res, err);
     }
   }
-
-  
 };

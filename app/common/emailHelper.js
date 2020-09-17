@@ -1,40 +1,34 @@
 
 const nodemailer = require("nodemailer");
+const crypto = require('crypto');
 
 module.exports = {
   // async..await is not allowed in global scope, must use a wrapper
-  sendEmail: async () => {
+  sendEmail: async (email, token, host) => {
     try{
-      console.log('(******)')
       // Generate test SMTP service account from ethereal.email
       // Only needed if you don't have a real mail account for testing
       let testAccount = await nodemailer.createTestAccount();
 
       // create reusable transporter object using the default SMTP transport
       let transporter = nodemailer.createTransport({
-        host: "smtp.mailtrap.io",
-        port: 2525,
-        secure: false, // upgrade later with STARTTLS
+
+       service:'gmail',
         auth: {
-          user: "1a2b3c4d5e6f7g",
-          pass: "1a2b3c4d5e6f7g"
-        }
-  
-      //  service:'gmail',
-      //   auth: {
-      //     user: 'szhan100@gmail.com', // generated ethereal user
-      //     pass: 'Sz13914117700Sz90021283', // generated ethereal password
-      //   },
+          user: 'easyzippyhelp@gmail.com', // generated ethereal user
+          pass: 'Easyzippy123!', // generated ethereal password
+        },
       });
-      console.log('(******)')
 
       // send mail with defined transport object
       let info = await transporter.sendMail({
-        from: '"help@eazyzippy.com', // sender address
-        to: "shizhan97@gmail.com", // list of receivers
-        subject: "Hello ✔", // Subject line
-        text: "Hello world?", // plain text body
-        html: "<b>Hello world?</b>", // html body
+        from: 'easyzippyhelp@gmail.com', // sender address
+        to: email, // list of receivers
+        subject: "Easy Zippy Reset Password", // Subject line
+        text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+        'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+        'http://' + host + '/resetPassword/' + token + '\n\n' +
+        'If you did not request this, please ignore this email and your password will remain unchanged.\n'
       });
 
       console.log("Message sent: %s", info.messageId);
@@ -46,7 +40,13 @@ module.exports = {
     } catch (err) {
       console.log(err)
     }
-  } 
+  },
+
+  generateToken: async() => {
+    let token;
+    token = await crypto.randomBytes(50).toString('hex').slice(0,50);
+    return token;
+  }
 
 }
 
