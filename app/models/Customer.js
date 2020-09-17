@@ -62,6 +62,10 @@ Customer.init(
     resetPasswordExpires: {
       type: Sequelize.DATE,
       allowNull: true
+    },
+    oneTimePin: {
+      type: STRING,
+      allowNull: false
     }
   },
   {

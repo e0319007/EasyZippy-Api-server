@@ -74,6 +74,9 @@ module.exports = {
     PasswordWeak: 'Password requires at least 8 characters, 1 lowercase letter, 1 uppercase letter, 1 numeric digit, and 1 special character',
     StaffDisabled: 'Staff is disabled',
     StaffNotFound: 'Staff not found',
+    TokenExpired: 'Token is expired',
+    TokenRequired: 'Token is required',
+    TokenNotFound: 'Token not found',
     UnexpectedError: 'An unexpected error has occured'
   }
 };
