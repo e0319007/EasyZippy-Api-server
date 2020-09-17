@@ -47,7 +47,6 @@ module.exports = {
         });
         return res.status(200).send(customer);
     } catch (err){
-        console.log(err);
         sendErrorResponse(res, err);
        
     }
@@ -62,7 +61,6 @@ module.exports = {
         });
         return res.status(200).send(customer);
     } catch (err){
-        console.log(err);
         sendErrorResponse(res, err);
     }
   }, 
@@ -96,9 +94,7 @@ module.exports = {
     try {
       const { id } = req.params;
       const { currentPassword } = req.body;
-
       const verified = await CustomerService.verifyCurrentPassword(id, currentPassword);
-
       return res.status(200).send({ verified });
     } catch (err) {
       sendErrorResponse(res, err);
@@ -125,6 +121,31 @@ module.exports = {
       let customer;
       await sequelize.transaction(async (transaction) => {
         customer = await CustomerService.retrieveCustomerByEmail(email, transaction)
+      });
+      return res.status(200).send(customer);
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
+  sendResetPasswordEmail: async (req, res) => {
+    try {
+      const { email } = req.body;
+      const host = req.headers.host;
+      await CustomerService.sendResetPasswordEmail(email, host);
+      return res.status(200).send();
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
+  resetPassword: async (req, res) => {
+    try {
+      const { token } = req.params;
+      const { newPassword } = req.body;
+      let customer;
+      await sequelize.transaction(async (transaction) => {
+        customer = await CustomerService.resetPassword(token, newPassword, transaction);
       });
       return res.status(200).send(customer);
     } catch (err) {

@@ -54,6 +54,14 @@ Customer.init(
       type: BOOLEAN,
       defaultValue: false,
       allowNull: false
+    },
+    resetPasswordToken: {
+      type: STRING,
+      allowNull: true
+    },
+    resetPasswordExpires: {
+      type: Sequelize.DATE,
+      allowNull: true
     }
   },
   {

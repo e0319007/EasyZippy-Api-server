@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const crypto = require('crypto');
 
 const CategoryController = require('../controllers/categoryController');
 const CustomerController = require('../controllers/customerController');
@@ -25,6 +26,9 @@ router.put('/customer/:id/activate', CustomerController.activateCustomer);
 router.post('/customer/login', CustomerController.loginCustomer);
 router.post('/customer/:id/verifyPassword', CustomerController.verifyCurrentPassword);
 router.put('/customer/:id/changePassword', CustomerController.changePassword);
+router.get('customer/forgot');
+router.post('/customer/forgotPassword', CustomerController.sendResetPasswordEmail);
+router.post('/customer/resetPassword/:token', CustomerController.resetPassword);
 
 //Kiosk
 router.post('/kiosk', KioskController.createKiosk);
@@ -43,6 +47,8 @@ router.put('/merchant/:id/toggleDisable', MerchantController.toggleDisableMercha
 router.put('/merchant/:id/approve', MerchantController.approveMerchant);
 router.post('/merchant/login', MerchantController.loginMerchant);
 router.put('/merchant/:id/changePassword', MerchantController.changePassword);
+router.post('/merchant/forgotPassword', MerchantController.sendResetPasswordEmail);
+router.post('/merchant/resetPassword/:token', MerchantController.resetPassword);
 
 //Staff
 router.post('/staff', StaffController.registerStaff);
@@ -51,6 +57,8 @@ router.get('/staff', StaffController.retrieveAllStaff);
 router.put('/staff/:id', StaffController.updateStaff);
 router.put('/staff/:id/toggleDisable', StaffController.toggleDisableStaff);
 router.post('/staff/login', StaffController.loginStaff);
-router.put('/staff/:id/changePassword', StaffController.changePassword);
+router.post('/staff/:id/changePassword', StaffController.changePassword);
+router.post('/staff/forgotPassword', StaffController.sendResetPasswordEmail);
+router.post('/staff/resetPassword/:token', StaffController.resetPassword);
 
 module.exports = router;

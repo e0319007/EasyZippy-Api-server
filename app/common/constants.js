@@ -50,6 +50,7 @@ module.exports = {
     CustomerDisabled: 'Customer is disabled',
     CustomerNotActivated: 'Customer not activated',
     CustomerNotFound: 'Customer not found',
+    CustomerNotFoundWithEmail: 'Customer not found with the email entered',
     EmailInvalid: 'Email is invalid',
     EmailNotUnique: 'Email is not unique',
     EmailRequired: 'Email is required',
