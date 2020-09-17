@@ -3,7 +3,6 @@ const {
   INTEGER, STRING, DECIMAL, JSON, DATE, Model
 } = Sequelize;
 const sequelize = require('../common/database');
-const { PaymentStatus, PaymentType } = require('../common/constants');
 
 const Booking = require('./Booking');
 const BookingPackage = require('./BookingPackage');
@@ -46,14 +45,10 @@ CreditPaymentRecord.init(
       allowNull: false,
       defaultValue: Sequelize.NOW
     },
-    // paymentStatus: {
-    //   type: ENUM(PaymentStatus.Cancelled, PaymentStatus.Paid),
-    //   allowNull: false
-    // },
-    // paymentType: {
-    //   type: ENUM(PaymentType.Cash, PaymentType.CreditCard, PaymentType.Paylah, PaymentType.Paynow),
-    //   allowNull: false
-    // }
+    paymentStatusEnum: {
+      type: STRING,
+      allowNull: false
+    }
   },
   {
     sequelize,
