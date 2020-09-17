@@ -1,11 +1,13 @@
 const emailValidator = require('email-validator');
 const jwt = require('jsonwebtoken');
 const config = require('config');
+const nodemailer = require('nodemailer')
 
 const Helper = require('../common/helper');
 const Checker = require('../common/checker');
 const Constants = require('../common/constants');
 const CustomError = require('../common/error/customError');
+const EmailHelper = require('../common/emailHelper')
 
 const Customer = require('../models/Customer');
 
@@ -177,5 +179,12 @@ module.exports = {
       transaction
     });
     return customer;
+  },
+
+  resetPassword: async(email) => {
+    
+    EmailHelper.sendEmail();
+      
   }
+  
 }

@@ -104,5 +104,16 @@ module.exports = {
     } catch (err) {
       sendErrorResponse(res, err);
     }
+  },
+
+  resetPassword: async (req, res) => {
+    try {
+      const { email } = req.body.email;
+      CustomerService.resetPassword(email);
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
   }
+
+  
 };

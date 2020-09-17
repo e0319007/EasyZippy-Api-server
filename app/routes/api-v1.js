@@ -24,6 +24,8 @@ router.put('/customer/:id/activate', CustomerController.activateCustomer);
 router.post('/customer/login', CustomerController.loginCustomer);
 router.put('/customer/:id/changePassword', CustomerController.changePassword);
 
+router.post('/customer/resetPassword', CustomerController.resetPassword);
+
 //Kiosk
 router.post('/kiosk', KioskController.createKiosk);
 router.get('/kiosk/:id', KioskController.retrieveKiosk);
@@ -49,6 +51,6 @@ router.get('/staff', StaffController.retrieveAllStaff);
 router.put('/staff/:id', StaffController.updateStaff);
 router.put('/staff/:id/toggleDisable', StaffController.toggleDisableStaff);
 router.post('/staff/login', StaffController.loginStaff);
-router.put('/staff/:id/changePassword', StaffController.changePassword);
+router.post('/staff/:id/changePassword', StaffController.changePassword);
 
 module.exports = router;
