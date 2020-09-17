@@ -88,5 +88,42 @@ module.exports = {
     } catch (err) {
       sendErrorResponse(res, err);
     }
+  },
+
+  sendResetPasswordEmail: async (req, res) => {
+    try {
+      const { email } = req.body;
+      const host = req.headers.host;
+      await StaffService.sendResetPasswordEmail(email, host);
+      return res.status(200).send();
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
+  checkValidToken: async (req, res) => {
+    try {
+      const { token } = req.body;
+      const { email } = req.body;
+      await StaffService.checkValidToken(token, email);
+      return res.status(200).send();
+    } catch(err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  },
+
+  resetPassword: async (req, res) => {
+    try {
+      const { token } = req.body;
+      const { newPassword } = req.body;
+      let staff;
+      await sequelize.transaction(async (transaction) => {
+        staff = await StaffService.resetPassword(token, newPassword, transaction);
+      });
+      return res.status(200).send(staff);
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
   }
 };

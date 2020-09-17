@@ -11,6 +11,39 @@ const CustomError = require('../common/error/customError');
 const Merchant = require('../models/Merchant');
 const { ifEmptyThrowError, isEmpty } = require('../common/checker');
 
+const retrieveMerchantByEmail = async(email) => {
+  const merchant = await Merchant.findOne({ where : { email } });
+  if (Checker.isEmpty(merchant)) {
+    throw new CustomError(Constants.Error.MerchantNotFound);
+  } else {
+    return merchant;
+  }
+};
+
+const changePasswordForResetPassword = async(id, newPassword, transaction) => {
+  Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
+  Checker.ifEmptyThrowError(newPassword, Constants.Error.NewPasswordRequired);
+
+  let merchant = await Merchant.findByPk(id);
+
+  Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
+
+  if (!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/).test(newPassword)) {
+    throw new CustomError(Constants.Error.PasswordWeak);
+  }
+
+  newPassword = await Helper.hashPassword(newPassword);
+
+  merchant = await merchant.update({
+    password: newPassword
+  }, {
+    where: { id },
+    returning: true,
+    transaction
+  });
+  return merchant;
+};
+
 module.exports = {
   createMerchant: async (merchantData, transaction) => {
     const { name, mobileNumber, password, email } = merchantData;
@@ -43,6 +76,12 @@ module.exports = {
 
   retrieveMerchant: async(id) => {
     const merchant = await Merchant.findByPk(id);
+    Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
+    return merchant;
+  },
+
+  retrieveMerchantByEmail: async(email) => {
+    const merchant = await Merchant.findOne({ where: { email } });
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
     return merchant;
   },
@@ -152,7 +191,7 @@ module.exports = {
 
     let merchant = await Merchant.findByPk(id);
 
-    Checker.ifEmptyThrowError(merchant, Constants.Error.CustomerNotFound);
+    Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
 
     if (!(await Helper.comparePassword(currentPassword, merchant.password))) {
       throw new CustomError(Constants.Error.PasswordIncorrect);
@@ -194,5 +233,53 @@ module.exports = {
     merchant = await merchant.update({ tenancyAgreement }, { returning: true, transaction });
 
     return merchant;
-  }
+  },
+
+  sendResetPasswordEmail: async(email) => {
+    try{
+    let merchant = await retrieveMerchantByEmail(email);
+    } catch (err) {
+      throw new CustomError(Constants.Error.MerchantNotFound);
+    }
+    let token = await EmailHelper.generateToken();
+    let resetPasswordExpires = Date.now() + 3600000; //1h
+
+    merchant = await merchant.update({
+      resetPasswordToken: token,
+      resetPasswordExpires
+    }, {
+      where: {
+        email
+      }
+    });
+    
+    await EmailHelper.sendEmail(email, token);
+  },
+
+  checkValidToken: async(token, email) => {
+    Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
+    let merchant = await Merchant.findOne({
+      where: {
+        resetPasswordToken: token,
+        email
+      }
+    });
+    Checker.ifEmptyThrowError(merchant, Constants.Error.TokenNotFound);
+  },
+
+  resetPassword: async(token, password, transaction) => {
+    let merchant = await Merchant.findOne({
+      where: {
+        resetPasswordToken: token
+      }
+    });
+    Checker.ifEmptyThrowError(merchant, "Token cannot be found")
+    let id = merchant.id;
+    if(merchant.resetPasswordExpires < Date.now()) {
+      throw new CustomError('Expired')
+    } else {
+      merchant = await changePasswordForResetPassword(id, password, transaction);
+    }
+    return merchant;
+  },
 };

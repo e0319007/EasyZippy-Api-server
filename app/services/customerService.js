@@ -6,8 +6,42 @@ const Helper = require('../common/helper');
 const Checker = require('../common/checker');
 const Constants = require('../common/constants');
 const CustomError = require('../common/error/customError');
+const EmailHelper = require('../common/emailHelper')
 
 const Customer = require('../models/Customer');
+
+const retrieveCustomerByEmail = async(email) => {
+  const customer = await Customer.findOne({ where : { email } });
+  if (Checker.isEmpty(customer)) {
+    throw new CustomError(Constants.Error.CustomerNotFound);
+  } else {
+    return customer;
+  }
+};
+
+const changePasswordForResetPassword = async(id, newPassword, transaction) => {
+  Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
+  Checker.ifEmptyThrowError(newPassword, Constants.Error.NewPasswordRequired);
+
+  let customer = await Customer.findByPk(id);
+
+  Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
+
+  if (!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/).test(newPassword)) {
+    throw new CustomError(Constants.Error.PasswordWeak);
+  }
+
+  newPassword = await Helper.hashPassword(newPassword);
+
+  customer = await customer.update({
+    password: newPassword
+  }, {
+    where: { id },
+    returning: true,
+    transaction
+  });
+  return customer;
+};
 
 module.exports = {
   createCustomer: async(customerData, transaction) => {
@@ -31,6 +65,8 @@ module.exports = {
         if (!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/).test(password)) {
           throw new CustomError(Constants.Error.PasswordWeak);
         }
+
+        //OTP
     
         customerData.password = await Helper.hashPassword(password);
     
@@ -187,5 +223,57 @@ module.exports = {
       transaction
     });
     return customer;
-  }
+  },
+
+  sendResetPasswordEmail: async(email) => {
+    try{
+    let customer = await retrieveCustomerByEmail(email);
+    } catch (err) {
+      throw new CustomError(Constants.Error.CustomerNotFoundWithEmail);
+    }
+    let token = await EmailHelper.generateToken();
+    let resetPasswordExpires = Date.now() + 3600000; //1h
+
+    customer = await Customer.update({
+      resetPasswordToken: token,
+      resetPasswordExpires
+    }, {
+      where: {
+        email
+      }
+    });
+    
+    await EmailHelper.sendEmail(email, token);
+  },
+
+  checkValidToken: async(token, email) => {
+    Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
+    let customer = await Customer.findOne({
+      where: {
+        resetPasswordToken: token,
+        email
+      }
+    });
+    Checker.ifEmptyThrowError(customer, Constants.Error.TokenNotFound);
+  },
+
+  resetPassword: async(token, password, transaction) => {
+    let customer = await Customer.findOne({
+      where: {
+        resetPasswordToken: token
+      }
+    });
+    Checker.ifEmptyThrowError(customer, Constants.Error.TokenNotFound)
+    let id = customer.id;
+    if(customer.resetPasswordExpires < Date.now()) {
+      throw new CustomError(Constants.Error.TokenExpired);
+    } else {
+      customer = await changePasswordForResetPassword(id, password, transaction);
+    }
+    return customer
+  },
+
+  retrieveCustomerByEmail
 }
+
+
