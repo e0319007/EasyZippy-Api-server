@@ -1,20 +1,29 @@
 const express = require('express');
 const cors = require('cors');
-const multer = require('multer');
 const bodyParser = require('body-parser');
 const config = require('config');
+const multer = require('multer');
 
 const routes = require('./app/routes');
 
 const app = express();
 const host = config.get('server.host');
 const port = config.get('server.port');
+const storage = multer.diskStorage({
+  destination: './app/assets',
+  filename: (req, file, next) => {
+    next(
+      null,
+      `${Date.now()}.${file.mimetype.split('/')[1]}`
+    );
+  },
+});
 
 app.use(cors());
 app.options('*', cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(multer().any());
+app.use(multer({ storage }).any());
 app.use(routes);
 
 if (app.get('env') === 'development') {

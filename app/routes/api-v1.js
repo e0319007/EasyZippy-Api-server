@@ -44,7 +44,7 @@ router.put('/merchant/:id/toggleDisable', MerchantController.toggleDisableMercha
 router.put('/merchant/:id/approve', MerchantController.approveMerchant);
 router.post('/merchant/login', MerchantController.loginMerchant);
 router.put('/merchant/:id/changePassword', MerchantController.changePassword);
-router.post('/merchant/:id/uploadTenancyAgreement', MerchantController.uploadTenancyAgreement);
+router.post('/merchant/:id/uploadTenancyAgreement', Upload.preUploadCheck, MerchantController.uploadTenancyAgreement);
 
 //Staff
 router.post('/staff', StaffController.registerStaff);

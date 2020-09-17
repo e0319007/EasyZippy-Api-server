@@ -1,30 +1,17 @@
-const multer = require('multer');
+const { sendErrorResponse } = require('../common/error/errorHandler');
+const MerchantService = require('../services/merchantService');
 
-const multerConf = {
-  storage: multer.diskStorage({
-    destination: (req, file, next) => {
-      next(null, '../assets');
-    },
-    filename: (req, file, next) => {
-      next(
-        null,
-        file.fieldname + '-' + Date.now() + '.' + file.mimetype.split('/')[1]
-      );
-    }
-  }),
-  fileFilter: (req, file, next) => {
-    if (!file) {
-      next();
-    }
-    const image = file.mimetype.startsWith('image/');
-    if (image) {
-      next(null, true);
-    } else {
-      next({ message: 'File type not supported' }, false);
+module.exports = {
+  preUploadCheck: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const file = req.files[0];
+
+      await MerchantService.preUploadCheck(id, file);
+
+      return next();
+    } catch (err) {
+      sendErrorResponse(res, err);
     }
   }
 };
-
-const upload = multer(multerConf).single('photo');
-
-module.exports = upload;
