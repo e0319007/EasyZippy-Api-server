@@ -22,7 +22,17 @@ module.exports = {
   retrieveMerchant: async(req, res) => {
     try {
       const { id } = req.params;
-      let merchant = await MerchantService.retrieveMerchant(id);
+      const merchant = await MerchantService.retrieveMerchant(id);
+      return res.status(200).send(merchant);
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
+  retrieveMerchantByEmail: async(req, res) => {
+    try {
+      const { email } = req.body;
+      const merchant = await MerchantService.retrieveMerchantByEmail(email);
       return res.status(200).send(merchant);
     } catch (err) {
       sendErrorResponse(res, err);
@@ -48,7 +58,6 @@ module.exports = {
       })
       return res.status(200).send(merchant);
     } catch (err) {
-      console.log(err);
       sendErrorResponse(res, err);
     }
   },
@@ -104,6 +113,22 @@ module.exports = {
       sendErrorResponse(res, err);
     }
   },
+
+  uploadTenancyAgreement: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const fileName = req.files[0].filename;
+      let merchant;
+
+      await sequelize.transaction(async (transaction) => {
+        merchant = await MerchantService.uploadTenancyAgreement(id, fileName, transaction);
+      });
+      return res.status(200).send(merchant);
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
   sendResetPasswordEmail: async (req, res) => {
     try {
       const { email } = req.body;

@@ -1,6 +1,7 @@
 const emailValidator = require('email-validator');
 const jwt = require('jsonwebtoken');
 const config = require('config');
+const fs = require('fs-extra');
 
 const Helper = require('../common/helper');
 const Checker = require('../common/checker');
@@ -8,6 +9,7 @@ const Constants = require('../common/constants');
 const CustomError = require('../common/error/customError');
 
 const Merchant = require('../models/Merchant');
+const { ifEmptyThrowError, isEmpty } = require('../common/checker');
 
 const retrieveMerchantByEmail = async(email) => {
   const merchant = await Merchant.findOne({ where : { email } });
@@ -74,6 +76,12 @@ module.exports = {
 
   retrieveMerchant: async(id) => {
     const merchant = await Merchant.findByPk(id);
+    Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
+    return merchant;
+  },
+
+  retrieveMerchantByEmail: async(email) => {
+    const merchant = await Merchant.findOne({ where: { email } });
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
     return merchant;
   },
@@ -205,6 +213,28 @@ module.exports = {
     return merchant;
   },
 
+  preUploadCheck: async (id, file) => {
+    ifEmptyThrowError(id, Constants.Error.IdRequired);
+    ifEmptyThrowError(file, Constants.Error.FileRequired);
+    if (isEmpty(file.mimetype) || !file.mimetype.startsWith('application/pdf')) {
+      fs.remove(`./app/assets/${file.filename}`);
+      throw new CustomError(Constants.Error.PdfFileRequired);
+    }
+  },
+
+  uploadTenancyAgreement: async(id, tenancyAgreement, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
+    Checker.ifEmptyThrowError(tenancyAgreement, Constants.Error.TenancyAgreementRequired);
+
+    let merchant = await Merchant.findByPk(id);
+
+    Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
+
+    merchant = await merchant.update({ tenancyAgreement }, { returning: true, transaction });
+
+    return merchant;
+  },
+
   sendResetPasswordEmail: async(email) => {
     try{
     let merchant = await retrieveMerchantByEmail(email);
@@ -243,15 +273,13 @@ module.exports = {
         resetPasswordToken: token
       }
     });
-    Checker.ifEmptyThrowError(merchant, "Token cannot be found")
+    Checker.ifEmptyThrowError(merchant, Constants.Error.TokenNotFound)
     let id = merchant.id;
     if(merchant.resetPasswordExpires < Date.now()) {
-      throw new CustomError('Expired')
+      throw new CustomError(Constants.Error.TokenExpired)
     } else {
       merchant = await changePasswordForResetPassword(id, password, transaction);
     }
     return merchant;
   },
-
-  retrieveMerchantByEmail
 };

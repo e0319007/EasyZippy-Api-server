@@ -5,7 +5,7 @@ const MerchantService = require('./app/services/merchantService');
 const StaffService = require('./app/services/staffService');
 
 const addDummyData = async () => {
-  await StaffService.createStaff({ firstName: 'Ben', lastName: 'Ban', mobileNumber: '91234567', password: 'Password123!', email: 'ben@email.com' });
+  await StaffService.createStaff({ firstName: 'Ben', lastName: 'Ban', mobileNumber: '91234567', password: 'Password123!', email: 'ben@email.com', staffRoleEnum: 'Admin' });
   await CustomerService.createCustomer({ firstName: 'Alice', lastName: 'Ang', mobileNumber: '91234567', password: 'Password123!', email: 'alice@email.com' });
   await MerchantService.createMerchant({ name: 'Nike', mobileNumber: '91234567', password: 'Password123!', email: 'nike@email.com' })
   await Category.create({ name: 'Fashion & Apparel', description: 'Sample Description' });

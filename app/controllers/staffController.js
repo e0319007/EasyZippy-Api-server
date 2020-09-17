@@ -26,7 +26,17 @@ module.exports = {
       return res.status(200).send(staff);
     } catch (err) {
       sendErrorResponse(res, err);
-;    }
+    }
+  },
+
+  retrieveStaffByEmail: async(req, res) => {
+    try {
+      const { email } = req.body;
+      const staff = await StaffService.retrieveStaffByEmail(email);
+      return res.status(200).send(staff);
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
   },
 
   retrieveAllStaff: async (req, res) => {
