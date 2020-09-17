@@ -25,8 +25,8 @@ Customer.init(
     },
     mobileNumber: {
       type: STRING,
-      allowNull: false,
-     unique: true
+      allowNull: true,
+      unique: true
     },
     password: {
       type: STRING,
@@ -65,7 +65,7 @@ Customer.init(
     },
     oneTimePin: {
       type: STRING,
-      allowNull: false
+      allowNull: true
     }
   },
   {

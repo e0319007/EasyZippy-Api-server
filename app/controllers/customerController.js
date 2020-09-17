@@ -14,6 +14,7 @@ module.exports = {
 
         return res.status(200).send(customer);
     } catch (err) {
+      console.log(err)
         sendErrorResponse(res, err);
     }
   },
@@ -160,6 +161,34 @@ module.exports = {
         customer = await CustomerService.resetPassword(token, newPassword, transaction);
       });
       return res.status(200).send(customer);
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
+  sendOtp: async (req, res) => {
+    try {
+      const { email } = req.body;
+      const { password } = req.body;
+      const { mobile } = req.body;
+      await sequelize.transaction(async (transaction) => {
+        customer = await CustomerService.sendOtp(mobile, email, password, transaction);
+      });
+      return res.status(200).send();
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
+  verifyOtp: async (req, res) => {
+    try {
+      const { otp } = req.body;
+      const { email } = req.body;
+      const { password } = req.body;
+      await sequelize.transaction(async (transaction) => {
+        await CustomerService.sendOtp(otp, email, password, transaction);
+      });
+      return res.status(200).send();
     } catch (err) {
       sendErrorResponse(res, err);
     }
