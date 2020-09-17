@@ -94,9 +94,7 @@ module.exports = {
     try {
       const { id } = req.params;
       const { currentPassword } = req.body;
-
       const verified = await CustomerService.verifyCurrentPassword(id, currentPassword);
-
       return res.status(200).send({ verified });
     } catch (err) {
       sendErrorResponse(res, err);

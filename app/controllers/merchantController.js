@@ -103,5 +103,29 @@ module.exports = {
     } catch (err) {
       sendErrorResponse(res, err);
     }
+  },
+  sendResetPasswordEmail: async (req, res) => {
+    try {
+      const { email } = req.body;
+      const host = req.headers.host;
+      await MerchantService.sendResetPasswordEmail(email, host);
+      return res.status(200).send();
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
+  resetPassword: async (req, res) => {
+    try {
+      const { token } = req.params;
+      const { newPassword } = req.body;
+      let merchant;
+      await sequelize.transaction(async (transaction) => {
+        merchant = await MerchantService.resetPassword(token, newPassword, transaction);
+      });
+      return res.status(200).send(merchant);
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
   }
 };
