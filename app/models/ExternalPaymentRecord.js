@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, STRING, DECIMAL, JSON, DATE, ENUM, Model
+  INTEGER, STRING, DECIMAL, JSON, DATE, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 
@@ -43,10 +43,10 @@ ExternalPaymentRecord.init(
       allowNull: false,
       defaultValue: Sequelize.NOW
     },
-    // paymentType: {
-    //   type: ENUM('cash', 'creditCard', 'paylah', 'paynow'),
-    //   allowNull: false
-    // }
+    paymentTypeEnum: {
+      type: STRING,
+      allowNull: false
+    }
   },
   {
     sequelize,

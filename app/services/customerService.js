@@ -82,14 +82,20 @@ module.exports = {
   },
 
   retrieveCustomer: async (id) => {
-      const customer = await Customer.findByPk(id);
-      
-      if (Checker.isEmpty(customer)) {
-        throw new CustomError(Constants.Error.CustomerNotFound);
-      } else {
-        return customer;
-      }
-    },
+    const customer = await Customer.findByPk(id);
+    
+    if (Checker.isEmpty(customer)) {
+      throw new CustomError(Constants.Error.CustomerNotFound);
+    } else {
+      return customer;
+    }
+  },
+
+  retrieveCustomerByEmail: async (email) => {
+    const customer = await Customer.findOne({ where: { email } });
+    Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
+    return customer;
+  },
   
   retrieveAllCustomers: async () => {
       const customers = await Customer.findAll();
@@ -207,11 +213,11 @@ module.exports = {
     return true;
   },
 
-  changePassword: async(id, newPassword, transaction) => {
-    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
+  changePassword: async(email, newPassword, transaction) => {
+    Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
     Checker.ifEmptyThrowError(newPassword, Constants.Error.NewPasswordRequired);
 
-    let customer = await Customer.findByPk(id);
+    let customer = await Customer.findOne({ where: { email } });
 
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
 
@@ -231,7 +237,7 @@ module.exports = {
     return customer;
   },
 
-  sendResetPasswordEmail: async(email, host) => {
+  sendResetPasswordEmail: async(email) => {
     try{
     let customer = await retrieveCustomerByEmail(email);
     } catch (err) {
@@ -249,12 +255,11 @@ module.exports = {
       }
     });
     
-    await EmailHelper.sendEmail(email, token, host);
+    await EmailHelper.sendEmail(email, token);
   },
 
   checkValidToken: async(token, email) => {
     Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
-    Checker.ifEmptyThrowError(token, );
     let customer = await Customer.findOne({
       where: {
         resetPasswordToken: token,

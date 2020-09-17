@@ -29,6 +29,16 @@ module.exports = {
     }
   },
 
+  retrieveCustomerByEmail: async(req, res) => {
+    try {
+      const { email } = req.body;
+      const customer = await CustomerService.retrieveCustomerByEmail(email);
+      return res.status(200).send(customer);
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
   retrieveAllCustomers: async (req, res) => {
     try {
         let customers = await CustomerService.retrieveAllCustomers();
@@ -104,11 +114,10 @@ module.exports = {
 
   changePassword: async (req, res) => {
     try {
-      const { id } = req.params;
-      const { newPassword } = req.body;
+      const { email, newPassword } = req.body;
       let customer;
       await sequelize.transaction(async (transaction) => {
-        customer = await CustomerService.changePassword(id, newPassword, transaction)
+        customer = await CustomerService.changePassword(email, newPassword, transaction)
       });
       return res.status(200).send(customer);
     } catch (err) {
@@ -132,8 +141,7 @@ module.exports = {
   sendResetPasswordEmail: async (req, res) => {
     try {
       const { email } = req.body;
-      const host = req.headers.host;
-      await CustomerService.sendResetPasswordEmail(email, host);
+      await CustomerService.sendResetPasswordEmail(email);
       return res.status(200).send();
     } catch (err) {
       sendErrorResponse(res, err);

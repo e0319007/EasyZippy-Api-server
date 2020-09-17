@@ -1,9 +1,8 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, DATE, ENUM, Model
+  INTEGER, DATE, STRING, Model
 } = Sequelize;
 const sequelize = require('../common/database');
-const { LockerAction } = require('../common/constants');
 
 class LockerActionRecord extends Model {
 }
@@ -21,10 +20,10 @@ LockerActionRecord.init(
       allowNull: false,
       defaultValue: Sequelize.NOW
     },
-    // lockerAction: {
-    //   type: ENUM(LockerAction.Close, LockerAction.Open),
-    //   allowNull: false 
-    // }
+    lockerActionEnum: {
+      type: STRING,
+      allowNull: false 
+    }
   },
   {
     sequelize,

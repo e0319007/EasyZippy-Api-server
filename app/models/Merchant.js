@@ -33,9 +33,13 @@ Merchant.init(
       allowNull: false,
       unique: true
     },
+    tenancyAgreement: {
+      type: STRING,
+      allowNull: true
+    },
     approved: {
-      allowNull: false,
       type: BOOLEAN,
+      allowNull: false,
       defaultValue: false
     },
     disabled: {
