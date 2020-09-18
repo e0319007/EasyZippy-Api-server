@@ -122,13 +122,15 @@ module.exports = {
       }
       if(updateKeys.includes('mobileNumber')) {
           Checker.ifEmptyThrowError(customerData.mobileNumber, Constants.Error.MobileNumberRequired);
-          if(!Checker.isEmpty(await Customer.findOne({ where: { mobileNumber } }))) {
+          const customerWithMobileNumber = await Customer.findOne({ where: { mobileNumber } });
+          if(!Checker.isEmpty(customerWithMobileNumber) && customerWithMobileNumber.id !== id) {
           throw new CustomError(Constants.Error.MobileNumberNotUnique);
           }
       }
       if(updateKeys.includes('email')) {
           Checker.ifEmptyThrowError(customerData.email, Constants.Error.EmailRequired);
-          if (!Checker.isEmpty(await Customer.findOne({ where: { email } }))) {
+          const customerWithEmail = await Customer.findOne({ where: { email } });
+          if (!Checker.isEmpty(customerWithEmail) && customerWithEmail.id !== id) {
           throw new CustomError(Constants.Error.EmailNotUnique);
           }
           if (!emailValidator.validate(customerData.email)) {
