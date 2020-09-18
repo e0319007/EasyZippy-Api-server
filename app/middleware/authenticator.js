@@ -5,7 +5,7 @@ const AuthService = require('../services/authService');
 module.exports = {
   customerOnly: async (req, res, next) => {
     try {
-      const token = req.header('auth-token');
+      const token = req.header('AuthToken');
       if (await AuthService.customerOnly(token)) {
         return next();
       }
@@ -17,7 +17,7 @@ module.exports = {
 
   merchantOnly: async (req, res, next) => {
     try {
-      const token = req.header('auth-token');
+      const token = req.header('AuthToken');
       if (await AuthService.merchantOnly(token)) {
         return next();
       }
@@ -29,7 +29,7 @@ module.exports = {
 
   staffOnly: async (req, res, next) => {
     try {
-      const token = req.header('auth-token');
+      const token = req.header('AuthToken');
       if (await AuthService.staffOnly(token)) {
         return next();
       }
@@ -41,7 +41,7 @@ module.exports = {
 
   customerOnly: async (req, res, next) => {
     try {
-      const token = req.header('auth-token');
+      const token = req.header('AuthToken');
       if (await AuthService.customerOnly(token)) {
         return next();
       }
@@ -53,7 +53,7 @@ module.exports = {
 
   customerAndMerchantOnly: async (req, res, next) => {
     try {
-      const token = req.header('auth-token');
+      const token = req.header('AuthToken');
       if (await AuthService.customerAndMerchantOnly(token)) {
         return next();
       }
@@ -65,7 +65,7 @@ module.exports = {
 
   customerAndStaffOnly: async (req, res, next) => {
     try {
-      const token = req.header('auth-token');
+      const token = req.header('AuthToken');
       if (await AuthService.customerAndStaffOnly(token)) {
         return next();
       }
@@ -77,7 +77,7 @@ module.exports = {
 
   merchantAndStaffOnly: async (req, res, next) => {
     try {
-      const token = req.header('auth-token');
+      const token = req.header('AuthToken');
       if (await AuthService.merchantAndStaffOnly(token)) {
         return next();
       }
@@ -89,7 +89,7 @@ module.exports = {
 
   customerAndMerchantAndStaffOnly: async (req, res, next) => {
     try {
-      const token = req.header('auth-token');
+      const token = req.header('AuthToken');
       if (await AuthService.customerAndMerchantAndStaffOnly(token)) {
         return next();
       }
