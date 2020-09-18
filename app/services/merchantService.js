@@ -113,14 +113,14 @@ module.exports = {
     if(updateKeys.includes('mobileNumber')) {
       Checker.ifEmptyThrowError(merchantData.mobileNumber, Constants.Error.MobileNumberRequired);
       const merchantWithMobileNumber = await Merchant.findOne({ where: { mobileNumber: merchantData.mobileNumber } });
-      if(!Checker.isEmpty(merchantWithMobileNumber) && merchantWithMobileNumber.id !== id) {
+      if(!Checker.isEmpty(merchantWithMobileNumber) && merchantWithMobileNumber.id !== parseInt(id)) {
         throw new CustomError(Constants.Error.MobileNumberNotUnique);
       }
     }
     if(updateKeys.includes('email')) {
       Checker.ifEmptyThrowError(merchantData.email, Constants.Error.EmailRequired);
       const merchantWithEmail = await Merchant.findOne({ where: { email } });
-      if (!Checker.isEmpty(merchantWithEmail) && merchantWithEmail.id !== id) {
+      if (!Checker.isEmpty(merchantWithEmail) && merchantWithEmail.id !== parseInt(id)) {
         throw new CustomError(Constants.Error.EmailNotUnique);
       }
       if (!emailValidator.validate(merchantData.email)) {

@@ -123,14 +123,14 @@ module.exports = {
     if(updateKeys.includes('mobileNumber')) {
       Checker.ifEmptyThrowError(staffData.mobileNumber, Constants.Error.MobileNumberRequired);
       const staffWithMobileNumber = await Staff.findOne({ where: { mobileNumber: staffData.mobileNumber } });
-      if(!Checker.isEmpty(staffWithMobileNumber) && staffWithMobileNumber.id !== id) {
+      if(!Checker.isEmpty(staffWithMobileNumber) && staffWithMobileNumber.id !== parseInt(id)) {
         throw new CustomError(Constants.Error.MobileNumberNotUnique);
       }
     }
     if(updateKeys.includes('email')) {
       Checker.ifEmptyThrowError(staffData.email, Constants.Error.EmailRequired);
       const staffWithEmail = await Staff.findOne({ where: { email } });
-      if (!Checker.isEmpty(staffWithEmail) && staffWithEmail.id !== id) {
+      if (!Checker.isEmpty(staffWithEmail) && staffWithEmail.id !== parseInt(id)) {
         throw new CustomError(Constants.Error.EmailNotUnique);
       }
       if (!emailValidator.validate(staffData.email)) {
