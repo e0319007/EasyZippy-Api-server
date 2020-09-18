@@ -3,11 +3,20 @@ const router = express.Router();
 const Authenticator = require('../middleware/authenticator');
 const Upload = require('../middleware/upload');
 
+const AnnouncementController = require('../controllers/announcementController');
 const CategoryController = require('../controllers/categoryController');
 const CustomerController = require('../controllers/customerController');
 const KioskController = require('../controllers/kioskController');
 const MerchantController = require('../controllers/merchantController');
 const StaffController = require('../controllers/staffController');
+
+//Announcement
+router.get('/announcement/:id', Authenticator.staffOnly, AnnouncementController.createAnnouncement);
+router.get('/announcements', Authenticator.staffOnly, AnnouncementController.retrieveAllAnnouncement);
+router.put('/announcement/:id',  Authenticator.staffOnly, AnnouncementController.updateAnnouncement);
+router.post('/announcement', Authenticator.staffOnly, AnnouncementController.createAnnouncement);
+router.delete('/announcement/:id', Authenticator.staffOnly, AnnouncementController.deleteAnnouncement);
+
 
 //Category
 router.get('/category/:id', Authenticator.customerAndMerchantAndStaffOnly, CategoryController.retrieveCategory);

@@ -46,6 +46,7 @@ module.exports = {
   },
   Error: {
     AnnouncementNotFound: 'Announcement not found',
+    AnnouncementCannotBeDeleted: 'Announcement cannot be deleted',
     AccessDenied: 'Access denied',
     CategoryNotFound: 'Category is not found',
     CurrentPasswordRequired: 'Current password required',

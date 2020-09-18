@@ -32,11 +32,19 @@ module.exports = {
       Checker.ifEmptyThrowError(Constants.Error.AnnouncementNotFound);
     }
 
-    kiosk
+    announcement = await announcement.update(announcementData, { returning: true, transaction});
+    return announcement
   },
 
-  deleteAnnouncement: async() => {
-    //check if sent, if not cannot delete
+  deleteAnnouncement: async(id) => {
+    //check if announcement is sent. Cannot delete sent announcement
+    const announcement = await Announcement.findByPk(id);
+    Checker.ifEmptyThrowError(announcement, Constants.Error.AnnouncementNotFound);
+    if(announcement.sentTime > Date.now) {
+      await Announcement.destroy({ where: { id } });
+    } else {
+      throw new CustomError(Constants.Error.AnnouncementCannotBeDeleted);
+    }
   }
 
 }

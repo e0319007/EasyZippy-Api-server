@@ -63,7 +63,7 @@ const Kiosk = require('../models/Kiosk');
       console.log(id);
       const kiosk = await Kiosk.findByPk(id);
       Checker.ifEmptyThrowError(kiosk, Constants.Error.KioskNotFound);
-      Kiosk.destroy({
+      await Kiosk.destroy({
         where: {
           id
         }
