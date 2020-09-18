@@ -123,14 +123,14 @@ module.exports = {
       if(updateKeys.includes('mobileNumber')) {
           Checker.ifEmptyThrowError(customerData.mobileNumber, Constants.Error.MobileNumberRequired);
           const customerWithMobileNumber = await Customer.findOne({ where: { mobileNumber } });
-          if(!Checker.isEmpty(customerWithMobileNumber) && customerWithMobileNumber.id !== id) {
+          if(!Checker.isEmpty(customerWithMobileNumber) && customerWithMobileNumber.id !== parseInt(id)) {
           throw new CustomError(Constants.Error.MobileNumberNotUnique);
           }
       }
       if(updateKeys.includes('email')) {
           Checker.ifEmptyThrowError(customerData.email, Constants.Error.EmailRequired);
           const customerWithEmail = await Customer.findOne({ where: { email } });
-          if (!Checker.isEmpty(customerWithEmail) && customerWithEmail.id !== id) {
+          if (!Checker.isEmpty(customerWithEmail) && customerWithEmail.id !== parseInt(id)) {
           throw new CustomError(Constants.Error.EmailNotUnique);
           }
           if (!emailValidator.validate(customerData.email)) {
@@ -296,6 +296,10 @@ module.exports = {
     let customer = await Customer.findOne({
       where: { email }
     });
+    let customerWithMobile = await Customer.findOne({ where: mobileNumber });
+    if(!Checker.isEmpty(customerWithMobile) && customerWithMobile.activated) {
+      throw new CustomerError(Constants.Error.MobileNumberInUse);
+    }
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
     let oneTimePin = OtpHelper.generateOtp();
     OtpHelper.sendOtp(mobileNumber, oneTimePin);
