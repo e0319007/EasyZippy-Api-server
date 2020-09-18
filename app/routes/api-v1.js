@@ -30,6 +30,8 @@ router.post('/customer/forgotPassword', CustomerController.sendResetPasswordEmai
 router.post('/customer/resetPassword/checkValidToken', CustomerController.checkValidToken);
 router.post('/customer/resetPassword', CustomerController.resetPassword);
 
+router.post('/customer/loginWithFacebook', CustomerController.loginWithFacebook);
+
 //Kiosk
 router.post('/kiosk', KioskController.createKiosk);
 router.get('/kiosk/:id', KioskController.retrieveKiosk);

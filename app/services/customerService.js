@@ -7,6 +7,7 @@ const Checker = require('../common/checker');
 const Constants = require('../common/constants');
 const CustomError = require('../common/error/customError');
 const EmailHelper = require('../common/emailHelper')
+const FacebookHelper = require('../common/facebookHelper')
 
 const Customer = require('../models/Customer');
 
@@ -271,6 +272,10 @@ module.exports = {
       customer = await changePasswordForResetPassword(id, password, transaction);
     }
     return customer
+  },
+
+  loginWithFacebook: async() => {
+    FacebookHelper.login = FacebookHelper.loginWithFacebook();
   },
 
   retrieveCustomerByEmail

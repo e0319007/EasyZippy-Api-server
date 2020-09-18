@@ -25,12 +25,12 @@ Customer.init(
     },
     mobileNumber: {
       type: STRING,
-      allowNull: false,
-     unique: true
+      allowNull: true,
+      unique: true
     },
     password: {
       type: STRING,
-      allowNull: false
+      allowNull: true
     },
     email: {
       type: STRING,
@@ -66,6 +66,12 @@ Customer.init(
     oneTimePin: {
       type: STRING,
       allowNull: false
+    },
+    facebookId: {
+      type: STRING
+    },
+    facebookToken: {
+      type: STRING
     }
   },
   {

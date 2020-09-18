@@ -162,5 +162,14 @@ module.exports = {
     } catch (err) {
       sendErrorResponse(res, err);
     }
+  },
+
+  loginWithFacebook: async(req, res) => {
+    try {
+      let token = CustomerService.loginWithFacebook();
+      return res.status(200).send(token);
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
   }
 };
