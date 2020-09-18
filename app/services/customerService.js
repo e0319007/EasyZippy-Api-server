@@ -287,9 +287,7 @@ module.exports = {
 
   sendOtp: async(mobileNumber, email, inputPassword, transaction) => {
     let customer = await Customer.findOne({
-      where: {
-        email
-      }
+      where: { email }
     });
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
     if (!(await Helper.comparePassword(inputPassword, customer.password))) {
@@ -305,9 +303,7 @@ module.exports = {
 
   verifyOtp: async(otp, email, inputPassword, transaction) => {
     let customer = await Customer.findOne({
-      where: {
-        email
-      }
+      where: { email }
     });
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
     if (!(await Helper.comparePassword(inputPassword, customer.password))) {
@@ -318,8 +314,6 @@ module.exports = {
     } 
     customer = await customer.update({ activated: true }, { transaction });
   },
-
-  retrieveCustomerByEmail
 }
 
 

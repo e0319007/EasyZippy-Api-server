@@ -1,4 +1,4 @@
-const ISMSPH = require("isms-ph-api");
+const ISMSPH = require('isms-ph-api');
 var otpGenerator = require('otp-generator');
  
 
