@@ -51,9 +51,10 @@ Staff.init(
       type: Sequelize.DATE,
       allowNull: true
     },
-    // staffRole: {
-    //   type: Sequelize.DataTypes.ENUM('ADMIN', 'EMPLOYEE')
-    // }
+    staffRoleEnum: {
+      type: STRING,
+      allowNull: false
+    }
   },
   {
     sequelize,

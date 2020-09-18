@@ -1,6 +1,8 @@
 const emailValidator = require('email-validator');
 const jwt = require('jsonwebtoken');
 const config = require('config');
+const _ = require('lodash');
+
 
 const Helper = require('../common/helper');
 const Checker = require('../common/checker');
@@ -44,13 +46,14 @@ const changePasswordForResetPassword = async(id, newPassword, transaction) => {
 
 module.exports = {
   createStaff: async (staffData, transaction) => {
-    const { firstName, lastName, mobileNumber, password, email } = staffData;
+    const { firstName, lastName, mobileNumber, password, email,  staffRoleEnum} = staffData;
 
     Checker.ifEmptyThrowError(firstName, Constants.Error.FirstNameRequired);
     Checker.ifEmptyThrowError(lastName, Constants.Error.LastNameRequired);
     Checker.ifEmptyThrowError(mobileNumber, Constants.Error.MobileNumberRequired);
     Checker.ifEmptyThrowError(password, Constants.Error.PasswordRequired);
     Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
+    Checker.ifEmptyThrowError(staffRoleEnum, 'StaffRoleEnum' + Constants.Error.EnumRequired);
 
     if(!emailValidator.validate(email)) {
       throw new CustomError(Constants.Error.EmailInvalid);
@@ -63,6 +66,10 @@ module.exports = {
     }
     if (!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/).test(password)) {
       throw new CustomError(Constants.Error.PasswordWeak);
+    }
+
+    if(!_.includes(Constants.StaffRole, staffRoleEnum)) {
+      throw new CustomError(staffRoleEnum + Constants.Error.EnumDoesNotExist);
     }
 
     staffData.password = await Helper.hashPassword(password);
@@ -80,6 +87,12 @@ module.exports = {
     } else {
       return staff;
     }
+  },
+
+  retrieveStaffByEmail: async (email) => {
+    const staff = await Staff.findOne({ where: { email } });
+    Checker.ifEmptyThrowError(staff, Constants.Error.StaffNotFound);
+    return staff;
   },
 
   // To include a method to retrieve all staff excluding disabled ones, likewise for other 2 users
@@ -231,21 +244,20 @@ module.exports = {
     Checker.ifEmptyThrowError(staff, Constants.Error.TokenNotFound);
   },
 
-  resetPassword: async(token, password, transaction) => {
+  resetPassword: async(email, token, password, transaction) => {
     let staff = await Staff.findOne({
       where: {
+        email,
         resetPasswordToken: token
       }
     });
-    Checker.ifEmptyThrowError(staff, "Token cannot be found")
+    Checker.ifEmptyThrowError(staff, Constants.Error.TokenNotFound)
     let id = staff.id;
     if(staff.resetPasswordExpires < Date.now()) {
-      throw new CustomError('Expired')
+      throw new CustomError(Constants.Error.TokenExpired)
     } else {
       staff = await changePasswordForResetPassword(id, password, transaction);
     }
     return staff;
   },
-
-  retrieveStaffByEmail
 };

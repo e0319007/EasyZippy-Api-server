@@ -8,6 +8,9 @@ const Constants = require('../common/constants');
 const CustomError = require('../common/error/customError');
 const EmailHelper = require('../common/emailHelper')
 const FacebookHelper = require('../common/facebookHelper')
+const EmailHelper = require('../common/emailHelper');
+const OtpHelper = require('../common/otpHelper');
+
 
 const Customer = require('../models/Customer');
 
@@ -59,17 +62,21 @@ module.exports = {
         if(!Checker.isEmpty(await Customer.findOne({ where: { mobileNumber } }))) {
           throw new CustomError(Constants.Error.MobileNumberNotUnique);
         }
-        if(!Checker.isEmpty(await Customer.findOne({ where: { email } }))) {
-          throw new CustomError(Constants.Error.EmailNotUnique);
-        }
 
         if (!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/).test(password)) {
           throw new CustomError(Constants.Error.PasswordWeak);
         }
 
-        //OTP
-    
         customerData.password = await Helper.hashPassword(password);
+        let curCustomer = await Customer.findOne({ where: { email } });
+        if(!Checker.isEmpty(curCustomer)) {
+          if (!curCustomer.activated) {
+            curCustomer = curCustomer.update(customerData, { transaction });
+            return curCustomer;
+          } else {
+            throw new CustomError(Constants.Error.EmailNotUnique);
+          }
+        }
     
         const customer = await Customer.create(customerData, { transaction });
     
@@ -77,14 +84,20 @@ module.exports = {
   },
 
   retrieveCustomer: async (id) => {
-      const customer = await Customer.findByPk(id);
-      
-      if (Checker.isEmpty(customer)) {
-        throw new CustomError(Constants.Error.CustomerNotFound);
-      } else {
-        return customer;
-      }
-    },
+    const customer = await Customer.findByPk(id);
+    
+    if (Checker.isEmpty(customer)) {
+      throw new CustomError(Constants.Error.CustomerNotFound);
+    } else {
+      return customer;
+    }
+  },
+
+  retrieveCustomerByEmail: async (email) => {
+    const customer = await Customer.findOne({ where: { email } });
+    Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
+    return customer;
+  },
   
   retrieveAllCustomers: async () => {
       const customers = await Customer.findAll();
@@ -202,11 +215,11 @@ module.exports = {
     return true;
   },
 
-  changePassword: async(id, newPassword, transaction) => {
-    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
+  changePassword: async(email, newPassword, transaction) => {
+    Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
     Checker.ifEmptyThrowError(newPassword, Constants.Error.NewPasswordRequired);
 
-    let customer = await Customer.findByPk(id);
+    let customer = await Customer.findOne({ where: { email } });
 
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
 
@@ -258,20 +271,50 @@ module.exports = {
     Checker.ifEmptyThrowError(customer, Constants.Error.TokenNotFound);
   },
 
-  resetPassword: async(token, password, transaction) => {
+  resetPassword: async(email, token, password, transaction) => {
     let customer = await Customer.findOne({
       where: {
+        email,
         resetPasswordToken: token
       }
     });
     Checker.ifEmptyThrowError(customer, Constants.Error.TokenNotFound)
-    let id = customer.id;
     if(customer.resetPasswordExpires < Date.now()) {
       throw new CustomError(Constants.Error.TokenExpired);
     } else {
-      customer = await changePasswordForResetPassword(id, password, transaction);
+      customer = await changePasswordForResetPassword(customer.id, password, transaction);
     }
-    return customer
+    return customer;
+  },
+
+  sendOtp: async(mobileNumber, email, inputPassword, transaction) => {
+    let customer = await Customer.findOne({
+      where: { email }
+    });
+    Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
+    if (!(await Helper.comparePassword(inputPassword, customer.password))) {
+      throw new CustomError(Constants.Error.PasswordIncorrect);
+    }
+    let oneTimePin = OtpHelper.generateOtp();
+    OtpHelper.sendOtp(mobileNumber, oneTimePin);
+    customer = await customer.update({
+      oneTimePin,
+      mobileNumber
+    }, { where: { email },  transaction });
+  },
+
+  verifyOtp: async(otp, email, inputPassword, transaction) => {
+    let customer = await Customer.findOne({
+      where: { email }
+    });
+    Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
+    if (!(await Helper.comparePassword(inputPassword, customer.password))) {
+      throw new CustomError(Constants.Error.PasswordIncorrect);
+    }
+    if(otp !== customer.oneTimePin) {
+      throw new CustomError(Constants.Error.OtpInvalid);
+    } 
+    customer = await customer.update({ activated: true }, { transaction });
   },
 
   loginWithFacebook: async() => {
