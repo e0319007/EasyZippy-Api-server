@@ -26,7 +26,7 @@ router.put('/customer/:id', Authenticator.customerOnly, CustomerController.updat
 router.post('/customer/login', CustomerController.loginCustomer);
 router.post('/customer/email', Authenticator.customerAndMerchantAndStaffOnly, CustomerController.retrieveCustomerByEmail);
 router.post('/customer/:id/verifyPassword', Authenticator.customerOnly, CustomerController.verifyCurrentPassword);
-router.post('/customer/forgotPassword', Authenticator.customerOnly, CustomerController.sendResetPasswordEmail);
+router.post('/customer/forgotPassword', CustomerController.sendResetPasswordEmail);
 router.post('/customer/resetPassword/checkValidToken', Authenticator.customerOnly, CustomerController.checkValidToken);
 router.post('/customer/resetPassword', CustomerController.resetPassword);
 router.post('/customer/sendOtp', CustomerController.sendOtp);
@@ -50,7 +50,7 @@ router.put('/merchant/:id/changePassword', Authenticator.merchantOnly, MerchantC
 router.put('/merchant/:id', Authenticator.merchantOnly, MerchantController.updateMerchant);
 router.post('/merchant/login', MerchantController.loginMerchant);
 router.post('/merchant/email', Authenticator.customerAndMerchantAndStaffOnly, MerchantController.retrieveMerchantByEmail);
-router.post('/merchant/forgotPassword', Authenticator.merchantOnly, MerchantController.sendResetPasswordEmail);
+router.post('/merchant/forgotPassword', MerchantController.sendResetPasswordEmail);
 router.post('/merchant/resetPassword/checkValidToken', MerchantController.checkValidToken);
 router.post('/merchant/resetPassword', MerchantController.resetPassword);
 router.post('/merchant', MerchantController.registerMerchant);
