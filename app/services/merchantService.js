@@ -267,9 +267,10 @@ module.exports = {
     Checker.ifEmptyThrowError(merchant, Constants.Error.TokenNotFound);
   },
 
-  resetPassword: async(token, password, transaction) => {
+  resetPassword: async(email, token, password, transaction) => {
     let merchant = await Merchant.findOne({
       where: {
+        email,
         resetPasswordToken: token
       }
     });

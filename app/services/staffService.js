@@ -244,16 +244,17 @@ module.exports = {
     Checker.ifEmptyThrowError(staff, Constants.Error.TokenNotFound);
   },
 
-  resetPassword: async(token, password, transaction) => {
+  resetPassword: async(email, token, password, transaction) => {
     let staff = await Staff.findOne({
       where: {
+        email,
         resetPasswordToken: token
       }
     });
-    Checker.ifEmptyThrowError(staff, "Token cannot be found")
+    Checker.ifEmptyThrowError(staff, Constants.Error.TokenNotFound)
     let id = staff.id;
     if(staff.resetPasswordExpires < Date.now()) {
-      throw new CustomError('Expired')
+      throw new CustomError(Constants.Error.TokenExpired)
     } else {
       staff = await changePasswordForResetPassword(id, password, transaction);
     }
