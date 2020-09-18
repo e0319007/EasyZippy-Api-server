@@ -27,7 +27,7 @@ router.post('/customer/login', CustomerController.loginCustomer);
 router.post('/customer/email', Authenticator.customerAndMerchantAndStaffOnly, CustomerController.retrieveCustomerByEmail);
 router.post('/customer/:id/verifyPassword', Authenticator.customerOnly, CustomerController.verifyCurrentPassword);
 router.post('/customer/forgotPassword', CustomerController.sendResetPasswordEmail);
-router.post('/customer/resetPassword/checkValidToken', Authenticator.customerOnly, CustomerController.checkValidToken);
+router.post('/customer/resetPassword/checkValidToken', CustomerController.checkValidToken);
 router.post('/customer/resetPassword', CustomerController.resetPassword);
 router.post('/customer/sendOtp', CustomerController.sendOtp);
 router.post('/customer/verifyOtp', CustomerController.verifyOtp);
