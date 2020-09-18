@@ -54,6 +54,8 @@ module.exports = {
       Checker.ifEmptyThrowError(password, Constants.Error.PasswordRequired);
       Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
 
+      customerData.email = customerData.email.toLowerCase();
+
       if(!emailValidator.validate(email)) {
           throw new CustomError(Constants.Error.EmailInvalid);
         }
@@ -169,6 +171,8 @@ module.exports = {
     Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
     Checker.ifEmptyThrowError(password, Constants.Error.PasswordRequired);
 
+    email = email.toLowerCase();
+
     const customer = await Customer.findOne({ where: { email } });
 
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
@@ -230,7 +234,7 @@ module.exports = {
     customer = await customer.update({
       password: newPassword
     }, {
-      where: { id },
+      where: { email },
       returning: true,
       transaction
     });
@@ -286,14 +290,11 @@ module.exports = {
     return customer;
   },
 
-  sendOtp: async(mobileNumber, email, inputPassword, transaction) => {
+  sendOtp: async(mobileNumber, email, transaction) => {
     let customer = await Customer.findOne({
       where: { email }
     });
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
-    if (!(await Helper.comparePassword(inputPassword, customer.password))) {
-      throw new CustomError(Constants.Error.PasswordIncorrect);
-    }
     let oneTimePin = OtpHelper.generateOtp();
     OtpHelper.sendOtp(mobileNumber, oneTimePin);
     customer = await customer.update({
@@ -302,14 +303,11 @@ module.exports = {
     }, { where: { email },  transaction });
   },
 
-  verifyOtp: async(otp, email, inputPassword, transaction) => {
+  verifyOtp: async(otp, email, transaction) => {
     let customer = await Customer.findOne({
       where: { email }
     });
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
-    if (!(await Helper.comparePassword(inputPassword, customer.password))) {
-      throw new CustomError(Constants.Error.PasswordIncorrect);
-    }
     if(otp !== customer.oneTimePin) {
       throw new CustomError(Constants.Error.OtpInvalid);
     } 
