@@ -153,8 +153,7 @@ module.exports = {
 
   resetPassword: async (req, res) => {
     try {
-      const { token } = req.body;
-      const { newPassword } = req.body;
+      const { email, token, newPassword } = req.body;
       let merchant;
       await sequelize.transaction(async (transaction) => {
         merchant = await MerchantService.resetPassword(token, newPassword, transaction);
