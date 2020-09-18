@@ -42,10 +42,19 @@ Staff.init(
       type: BOOLEAN,
       allowNull: false,
       defaultValue: false
+    },
+    resetPasswordToken: {
+      type: STRING,
+      allowNull: true
+    },
+    resetPasswordExpires: {
+      type: Sequelize.DATE,
+      allowNull: true
+    },
+    staffRoleEnum: {
+      type: STRING,
+      allowNull: false
     }
-    // staffRole: {
-    //   type: Sequelize.DataTypes.ENUM('ADMIN', 'EMPLOYEE')
-    // }
   },
   {
     sequelize,

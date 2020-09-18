@@ -22,7 +22,17 @@ module.exports = {
   retrieveMerchant: async(req, res) => {
     try {
       const { id } = req.params;
-      let merchant = await MerchantService.retrieveMerchant(id);
+      const merchant = await MerchantService.retrieveMerchant(id);
+      return res.status(200).send(merchant);
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
+  retrieveMerchantByEmail: async(req, res) => {
+    try {
+      const { email } = req.body;
+      const merchant = await MerchantService.retrieveMerchantByEmail(email);
       return res.status(200).send(merchant);
     } catch (err) {
       sendErrorResponse(res, err);
@@ -48,17 +58,16 @@ module.exports = {
       })
       return res.status(200).send(merchant);
     } catch (err) {
-      console.log(err);
       sendErrorResponse(res, err);
     }
   },
 
-  disableMerchant: async(req, res) => {
+  toggleDisableMerchant: async(req, res) => {
     try {
       const { id } = req.params;
       let merchant;
       await sequelize.transaction(async(transaction) => {
-        merchant = await MerchantService.disableMerchant(id, transaction);
+        merchant = await MerchantService.toggleDisableMerchant(id, transaction);
       })
       return res.status(200).send(merchant);
     } catch (err) {
@@ -83,11 +92,74 @@ module.exports = {
     try {
       const { email, password } = req.body;
 
-      const token = { token: await MerchantService.loginMerchant(email, password) };
+      const { merchant, token } = await MerchantService.loginMerchant(email, password);
 
-      return res.status(200).send(token);
+      return res.status(200).send({ merchant, token });
     } catch (err) {
       sendErrorResponse(res, err, 401);
+    }
+  },
+
+  changePassword: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { newPassword, currentPassword } = req.body;
+      let merchant;
+      await sequelize.transaction(async (transaction) => {
+        merchant = await MerchantService.changePassword(id, newPassword, currentPassword, transaction)
+      });
+      return res.status(200).send(merchant);
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
+  uploadTenancyAgreement: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const fileName = req.files[0].filename;
+      let merchant;
+
+      await sequelize.transaction(async (transaction) => {
+        merchant = await MerchantService.uploadTenancyAgreement(id, fileName, transaction);
+      });
+      return res.status(200).send(merchant);
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
+  sendResetPasswordEmail: async (req, res) => {
+    try {
+      const { email } = req.body;
+      await MerchantService.sendResetPasswordEmail(email);
+      return res.status(200).send();
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
+  checkValidToken: async (req, res) => {
+    try {
+      const { email, token } = req.body;
+      await MerchantService.checkValidToken(token, email);
+      return res.status(200).send();
+    } catch(err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  },
+
+  resetPassword: async (req, res) => {
+    try {
+      const { email, token, newPassword } = req.body;
+      let merchant;
+      await sequelize.transaction(async (transaction) => {
+        merchant = await MerchantService.resetPassword(email, token, newPassword, transaction);
+      });
+      return res.status(200).send(merchant);
+    } catch (err) {
+      sendErrorResponse(res, err);
     }
   }
 };

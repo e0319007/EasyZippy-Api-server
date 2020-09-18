@@ -33,15 +33,27 @@ Merchant.init(
       allowNull: false,
       unique: true
     },
+    tenancyAgreement: {
+      type: STRING,
+      allowNull: true
+    },
     approved: {
-      allowNull: false,
       type: BOOLEAN,
+      allowNull: false,
       defaultValue: false
     },
     disabled: {
       type: BOOLEAN,
       defaultValue: false,
       allowNull: false
+    },
+    resetPasswordToken: {
+      type: STRING,
+      allowNull: true
+    },
+    resetPasswordExpires: {
+      type: Sequelize.DATE,
+      allowNull: true
     }
   },
   {
