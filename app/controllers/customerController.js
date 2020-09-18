@@ -172,10 +172,9 @@ module.exports = {
 
   sendOtp: async (req, res) => {
     try {
-      const { email, password, mobile } = req.body;
-
+      const { email, mobile } = req.body;
       await sequelize.transaction(async (transaction) => {
-        customer = await CustomerService.sendOtp(mobile, email, password, transaction);
+        customer = await CustomerService.sendOtp(mobile, email, transaction);
       });
       return res.status(200).send();
     } catch (err) {
@@ -186,10 +185,9 @@ module.exports = {
 
   verifyOtp: async (req, res) => {
     try {
-      const { otp, email, password } = req.body;
-      
+      const { email, otp } = req.body;
       await sequelize.transaction(async (transaction) => {
-        await CustomerService.verifyOtp(otp, email, password, transaction);
+        await CustomerService.verifyOtp(otp, email, transaction);
       });
       return res.status(200).send();
     } catch (err) {
