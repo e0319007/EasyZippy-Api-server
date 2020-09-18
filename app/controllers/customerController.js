@@ -184,6 +184,7 @@ module.exports = {
       });
       return res.status(200).send();
     } catch (err) {
+      console.log(err);
       sendErrorResponse(res, err);
     }
   },
@@ -194,10 +195,11 @@ module.exports = {
       const { email } = req.body;
       const { password } = req.body;
       await sequelize.transaction(async (transaction) => {
-        await CustomerService.sendOtp(otp, email, password, transaction);
+        await CustomerService.verifyOtp(otp, email, password, transaction);
       });
       return res.status(200).send();
     } catch (err) {
+      console.log(err)
       sendErrorResponse(res, err);
     }
   }
