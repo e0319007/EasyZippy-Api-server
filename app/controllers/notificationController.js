@@ -21,7 +21,9 @@ module.exports = {
 
   retrieveAllNotificationByMerchantId: async(req, res) => {
     try {
-      return res.status(200).send(notications);
+      const { merchantId } = req.body;
+      let notifications = NotificationService.retrieveAllNotificationByMerchantId(merchantId);
+      return res.status(200).send(notifications);
     } catch(err) {
       sendErrorResponse(res, err);
     }
@@ -29,7 +31,9 @@ module.exports = {
 
   retrieveAllNotificationByCustomerId: async(req, res) => {
     try {
-      return res.status(200).send(notications);
+      const { customerId } = req.body;
+      let notifications = NotificationService.retrieveAllNotificationByCustomerId(customerId);
+      return res.status(200).send(notifications);
     } catch(err) {
       sendErrorResponse(res, err);
     }
