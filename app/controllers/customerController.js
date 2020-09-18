@@ -161,11 +161,10 @@ module.exports = {
 
   resetPassword: async (req, res) => {
     try {
-      const { token } = req.body;
-      const { newPassword } = req.body;
+      const { email, token, newPassword } = req.body;
       let customer;
       await sequelize.transaction(async (transaction) => {
-        customer = await CustomerService.resetPassword(token, newPassword, transaction);
+        customer = await CustomerService.resetPassword(email, token, newPassword, transaction);
       });
       return res.status(200).send(customer);
     } catch (err) {
