@@ -149,8 +149,7 @@ module.exports = {
 
   checkValidToken: async (req, res) => {
     try {
-      const { token } = req.body;
-      const { email } = req.body;
+      const { email, token } = req.body;
       await CustomerService.checkValidToken(token, email);
       return res.status(200).send();
     } catch(err) {

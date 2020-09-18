@@ -141,8 +141,7 @@ module.exports = {
 
   checkValidToken: async (req, res) => {
     try {
-      const { token } = req.body;
-      const { email } = req.body;
+      const { email, token } = req.body;
       await MerchantService.checkValidToken(token, email);
       return res.status(200).send();
     } catch(err) {
@@ -156,7 +155,7 @@ module.exports = {
       const { email, token, newPassword } = req.body;
       let merchant;
       await sequelize.transaction(async (transaction) => {
-        merchant = await MerchantService.resetPassword(token, newPassword, transaction);
+        merchant = await MerchantService.resetPassword(email, token, newPassword, transaction);
       });
       return res.status(200).send(merchant);
     } catch (err) {
