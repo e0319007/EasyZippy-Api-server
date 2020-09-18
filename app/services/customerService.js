@@ -54,6 +54,8 @@ module.exports = {
       Checker.ifEmptyThrowError(password, Constants.Error.PasswordRequired);
       Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
 
+      customerData.email = customerData.email.toLowerCase();
+
       if(!emailValidator.validate(email)) {
           throw new CustomError(Constants.Error.EmailInvalid);
         }
@@ -169,6 +171,8 @@ module.exports = {
     Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
     Checker.ifEmptyThrowError(password, Constants.Error.PasswordRequired);
 
+    email = email.toLowerCase();
+
     const customer = await Customer.findOne({ where: { email } });
 
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
@@ -230,7 +234,7 @@ module.exports = {
     customer = await customer.update({
       password: newPassword
     }, {
-      where: { id },
+      where: { email },
       returning: true,
       transaction
     });

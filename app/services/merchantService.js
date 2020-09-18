@@ -53,6 +53,8 @@ module.exports = {
     Checker.ifEmptyThrowError(password, Constants.Error.PasswordRequired);
     Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
 
+    merchantData.email = merchantData.email.toLowerCase();
+
     if (!emailValidator.validate(email)) {
       throw new CustomError(Constants.Error.InvalidEmail);
     }
@@ -155,6 +157,8 @@ module.exports = {
   loginMerchant: async(email, password) => {
     Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
     Checker.ifEmptyThrowError(password, Constants.Error.PasswordRequired);
+
+    email = email.toLowerCase();
 
     const merchant = await Merchant.findOne({ where: { email } });
 

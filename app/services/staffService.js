@@ -55,6 +55,8 @@ module.exports = {
     Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
     Checker.ifEmptyThrowError(staffRoleEnum, 'StaffRoleEnum' + Constants.Error.EnumRequired);
 
+    staffData.email = staffData.email.toLowerCase();
+
     if(!emailValidator.validate(email)) {
       throw new CustomError(Constants.Error.EmailInvalid);
     }
@@ -159,6 +161,8 @@ module.exports = {
     Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
     Checker.ifEmptyThrowError(password, Constants.Error.PasswordRequired);
 
+    email = email.toLowerCase();
+    
     const staff = await Staff.findOne({ where: { email } });
 
     Checker.ifEmptyThrowError(staff, Constants.Error.StaffNotFound);
