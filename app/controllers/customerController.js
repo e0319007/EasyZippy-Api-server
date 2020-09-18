@@ -177,7 +177,6 @@ module.exports = {
   sendOtp: async (req, res) => {
     try {
       const { email } = req.body;
-      const { password } = req.body;
       const { mobile } = req.body;
       await sequelize.transaction(async (transaction) => {
         customer = await CustomerService.sendOtp(mobile, email, password, transaction);
@@ -193,7 +192,6 @@ module.exports = {
     try {
       const { otp } = req.body;
       const { email } = req.body;
-      const { password } = req.body;
       await sequelize.transaction(async (transaction) => {
         await CustomerService.verifyOtp(otp, email, password, transaction);
       });
