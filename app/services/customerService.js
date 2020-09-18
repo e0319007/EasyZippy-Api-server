@@ -79,7 +79,7 @@ module.exports = {
         }
     
         const customer = await Customer.create(customerData, { transaction });
-    
+        let cart = await Cart.create({customerId: customer.id});
         return customer;
   },
 
