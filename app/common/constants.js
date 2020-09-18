@@ -45,6 +45,7 @@ module.exports = {
     Kiosk: 'Kiosk'
   },
   Error: {
+    AccessDenied: 'Access denied',
     CategoryNotFound: 'Category is not found',
     CurrentPasswordRequired: 'Current password required',
     CustomerDisabled: 'Customer is disabled',
@@ -84,6 +85,7 @@ module.exports = {
     TokenExpired: 'Token is expired',
     TokenRequired: 'Token is required',
     TokenNotFound: 'Token not found',
-    UnexpectedError: 'An unexpected error has occured'
+    UnexpectedError: 'An unexpected error has occured',
+    UserUnauthorised: 'User is unauthorised'
   }
 };
