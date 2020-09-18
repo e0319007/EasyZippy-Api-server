@@ -4,6 +4,7 @@ const config = require('config');
 const fs = require('fs-extra');
 
 const Helper = require('../common/helper');
+const EmailHelper = require('../common/emailHelper');
 const Checker = require('../common/checker');
 const Constants = require('../common/constants');
 const CustomError = require('../common/error/customError');
@@ -240,8 +241,9 @@ module.exports = {
   },
 
   sendResetPasswordEmail: async(email) => {
+    let merchant;
     try{
-    let merchant = await retrieveMerchantByEmail(email);
+    merchant = await retrieveMerchantByEmail(email);
     } catch (err) {
       throw new CustomError(Constants.Error.MerchantNotFound);
     }

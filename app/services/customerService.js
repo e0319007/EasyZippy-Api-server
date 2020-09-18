@@ -242,8 +242,9 @@ module.exports = {
   },
 
   sendResetPasswordEmail: async(email) => {
+    let customer;
     try{
-    let customer = await retrieveCustomerByEmail(email);
+    customer = await retrieveCustomerByEmail(email);
     } catch (err) {
       throw new CustomError(Constants.Error.CustomerNotFoundWithEmail);
     }
