@@ -269,27 +269,25 @@ module.exports = {
     Checker.ifEmptyThrowError(customer, Constants.Error.TokenNotFound);
   },
 
-  resetPassword: async(token, password, transaction) => {
+  resetPassword: async(email, token, password, transaction) => {
     let customer = await Customer.findOne({
       where: {
+        email,
         resetPasswordToken: token
       }
     });
     Checker.ifEmptyThrowError(customer, Constants.Error.TokenNotFound)
-    let id = customer.id;
     if(customer.resetPasswordExpires < Date.now()) {
       throw new CustomError(Constants.Error.TokenExpired);
     } else {
-      customer = await changePasswordForResetPassword(id, password, transaction);
+      customer = await changePasswordForResetPassword(customer.id, password, transaction);
     }
-    return customer
+    return customer;
   },
 
   sendOtp: async(mobileNumber, email, transaction) => {
     let customer = await Customer.findOne({
-      where: {
-        email
-      }
+      where: { email }
     });
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
     let oneTimePin = OtpHelper.generateOtp();
@@ -302,9 +300,7 @@ module.exports = {
 
   verifyOtp: async(otp, email, transaction) => {
     let customer = await Customer.findOne({
-      where: {
-        email
-      }
+      where: { email }
     });
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
     if(otp !== customer.oneTimePin) {
@@ -312,8 +308,6 @@ module.exports = {
     } 
     customer = await customer.update({ activated: true }, { transaction });
   },
-
-  retrieveCustomerByEmail
 }
 
 
