@@ -71,6 +71,7 @@ module.exports = {
     NameNotUnique: 'Name is not unique',
     NameRequired: 'Name is required',
     NewPasswordRequired: 'New password required',
+    OtpInvalid: 'OTP is invalid',
     PasswordCannotChange: 'Password cannot be changed',
     PasswordIncorrect: 'Password is incorrect',
     PasswordRequired: 'Password is required',

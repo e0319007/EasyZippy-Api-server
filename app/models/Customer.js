@@ -25,8 +25,8 @@ Customer.init(
     },
     mobileNumber: {
       type: STRING,
-      allowNull: false,
-     unique: true
+      allowNull: true,
+      unique: true
     },
     password: {
       type: STRING,

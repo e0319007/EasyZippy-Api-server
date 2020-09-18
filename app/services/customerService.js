@@ -6,7 +6,9 @@ const Helper = require('../common/helper');
 const Checker = require('../common/checker');
 const Constants = require('../common/constants');
 const CustomError = require('../common/error/customError');
-const EmailHelper = require('../common/emailHelper')
+const EmailHelper = require('../common/emailHelper');
+const OtpHelper = require('../common/otpHelper');
+
 
 const Customer = require('../models/Customer');
 
@@ -58,17 +60,21 @@ module.exports = {
         if(!Checker.isEmpty(await Customer.findOne({ where: { mobileNumber } }))) {
           throw new CustomError(Constants.Error.MobileNumberNotUnique);
         }
-        if(!Checker.isEmpty(await Customer.findOne({ where: { email } }))) {
-          throw new CustomError(Constants.Error.EmailNotUnique);
-        }
 
         if (!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/).test(password)) {
           throw new CustomError(Constants.Error.PasswordWeak);
         }
 
-        //OTP
-    
         customerData.password = await Helper.hashPassword(password);
+        let curCustomer = await Customer.findOne({ where: { email } });
+        if(!Checker.isEmpty(curCustomer)) {
+          if (!curCustomer.activated) {
+            curCustomer = curCustomer.update(customerData, { transaction });
+            return curCustomer;
+          } else {
+            throw new CustomError(Constants.Error.EmailNotUnique);
+          }
+        }
     
         const customer = await Customer.create(customerData, { transaction });
     
@@ -277,6 +283,36 @@ module.exports = {
       customer = await changePasswordForResetPassword(customer.id, password, transaction);
     }
     return customer;
+  },
+
+  sendOtp: async(mobileNumber, email, inputPassword, transaction) => {
+    let customer = await Customer.findOne({
+      where: { email }
+    });
+    Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
+    if (!(await Helper.comparePassword(inputPassword, customer.password))) {
+      throw new CustomError(Constants.Error.PasswordIncorrect);
+    }
+    let oneTimePin = OtpHelper.generateOtp();
+    OtpHelper.sendOtp(mobileNumber, oneTimePin);
+    customer = await customer.update({
+      oneTimePin,
+      mobileNumber
+    }, { where: { email },  transaction });
+  },
+
+  verifyOtp: async(otp, email, inputPassword, transaction) => {
+    let customer = await Customer.findOne({
+      where: { email }
+    });
+    Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
+    if (!(await Helper.comparePassword(inputPassword, customer.password))) {
+      throw new CustomError(Constants.Error.PasswordIncorrect);
+    }
+    if(otp !== customer.oneTimePin) {
+      throw new CustomError(Constants.Error.OtpInvalid);
+    } 
+    customer = await customer.update({ activated: true }, { transaction });
   },
 }
 
