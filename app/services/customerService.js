@@ -294,6 +294,10 @@ module.exports = {
     let customer = await Customer.findOne({
       where: { email }
     });
+    let customerWithMobile = await Customer.findOne({ where: mobileNumber });
+    if(!Checker.isEmpty(customerWithMobile) && customerWithMobile.activated == true) {
+      throw new CustomerError(Constants.Error.MobileNumberInUse);
+    }
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
     let oneTimePin = OtpHelper.generateOtp();
     OtpHelper.sendOtp(mobileNumber, oneTimePin);
