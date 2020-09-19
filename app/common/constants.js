@@ -67,6 +67,7 @@ module.exports = {
     MerchantDisabled: 'Merchant is disabled',
     MerchantNotApproved: 'Merchant is not approved',
     MerchantNotFound: 'Merchant not found',
+    MobileNumberInUse: 'Mobile number is in use',
     MobileNumberNotUnique: 'Mobile number is not unique',
     MobileNumberRequired: 'Mobile number is required',
     NameNotUnique: 'Name is not unique',

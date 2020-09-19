@@ -17,11 +17,13 @@ Kiosk.init(
     },
     lat: {
       type: DECIMAL,
-      allowNull: false
+      allowNull: false,
+      defaultValue: 0
     },
     long: {
       type: DECIMAL,
-      allowNull: false
+      allowNull: false,
+      defaultValue: 0
     },
     description: {
       type: STRING,
