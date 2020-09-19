@@ -296,7 +296,7 @@ module.exports = {
     let customer = await Customer.findOne({
       where: { email }
     });
-    let customerWithMobile = await Customer.findOne({ where: mobileNumber });
+    let customerWithMobile = await Customer.findOne({ where: { mobileNumber } });
     if(!Checker.isEmpty(customerWithMobile) && customerWithMobile.activated) {
       throw new CustomerError(Constants.Error.MobileNumberInUse);
     }
