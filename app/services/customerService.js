@@ -47,10 +47,10 @@ const changePasswordForResetPassword = async(id, newPassword, transaction) => {
 
 module.exports = {
   createCustomer: async(customerData, transaction) => {
-      const {firstName, lastName, mobileNumber, password, email} = customerData;
+      const {firstName, lastName, password, email} = customerData;
       Checker.ifEmptyThrowError(firstName, Constants.Error.NameRequired);
       Checker.ifEmptyThrowError(lastName, Constants.Error.NameRequired);
-      Checker.ifEmptyThrowError(mobileNumber, Constants.Error.MobileNumberRequired);
+      //Checker.ifEmptyThrowError(mobileNumber, Constants.Error.MobileNumberRequired);
       Checker.ifEmptyThrowError(password, Constants.Error.PasswordRequired);
       Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
 
@@ -59,9 +59,9 @@ module.exports = {
       if(!emailValidator.validate(email)) {
           throw new CustomError(Constants.Error.EmailInvalid);
         }
-        if(!Checker.isEmpty(await Customer.findOne({ where: { mobileNumber } }))) {
-          throw new CustomError(Constants.Error.MobileNumberNotUnique);
-        }
+        // if(!Checker.isEmpty(await Customer.findOne({ where: { mobileNumber } }))) {
+        //   throw new CustomError(Constants.Error.MobileNumberNotUnique);
+        // }
 
         if (!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/).test(password)) {
           throw new CustomError(Constants.Error.PasswordWeak);
@@ -296,11 +296,13 @@ module.exports = {
     let customer = await Customer.findOne({
       where: { email }
     });
+    Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
+
     let customerWithMobile = await Customer.findOne({ where: { mobileNumber } });
-    if(!Checker.isEmpty(customerWithMobile) && customerWithMobile.activated) {
+    if(!Checker.isEmpty(customerWithMobile)) {
       throw new CustomerError(Constants.Error.MobileNumberInUse);
     }
-    Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
+
     let oneTimePin = OtpHelper.generateOtp();
     OtpHelper.sendOtp(mobileNumber, oneTimePin);
     customer = await customer.update({
@@ -309,7 +311,7 @@ module.exports = {
     }, { where: { email },  transaction });
   },
 
-  verifyOtp: async(otp, email, transaction) => {
+  verifyOtp: async(otp, mobileNumber, email, transaction) => {
     let customer = await Customer.findOne({
       where: { email }
     });
@@ -317,7 +319,7 @@ module.exports = {
     if(otp !== customer.oneTimePin) {
       throw new CustomError(Constants.Error.OtpInvalid);
     } 
-    customer = await customer.update({ activated: true }, { transaction });
+    customer = await customer.update({ activated: true, mobileNumber }, { transaction });
   },
 }
 
