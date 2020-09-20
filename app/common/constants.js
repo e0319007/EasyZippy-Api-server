@@ -44,6 +44,10 @@ module.exports = {
     Mobile: 'Mobile',
     Kiosk: 'Kiosk'
   },
+  PromotionType: {
+    MallPromotion: 'Mall Promotion',
+    MerchantPromotion: 'Merchant Promotion'
+  },
   Error: {
     AccessDenied: 'Access denied',
     CategoryNotFound: 'Category is not found',
