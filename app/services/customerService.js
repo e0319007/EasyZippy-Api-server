@@ -300,14 +300,14 @@ module.exports = {
 
     let customerWithMobile = await Customer.findOne({ where: { mobileNumber } });
     if(!Checker.isEmpty(customerWithMobile)) {
-      throw new CustomerError(Constants.Error.MobileNumberInUse);
+      throw new CustomError(Constants.Error.MobileNumberInUse);
     }
 
     let oneTimePin = OtpHelper.generateOtp();
     OtpHelper.sendOtp(mobileNumber, oneTimePin);
     customer = await customer.update({
       oneTimePin,
-      mobileNumber
+      //mobileNumber
     }, { where: { email },  transaction });
   },
 
