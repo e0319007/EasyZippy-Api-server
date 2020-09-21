@@ -11,7 +11,7 @@ module.exports = {
       const notificationData = req.body;
       let notification;
       await sequelize.transaction(async (transaction) => {
-        notification = await NotificationService.createNotication(notificationData, transaction)
+        notification = await NotificationService.createNotification(notificationData, transaction)
       });
       return res.status(200).send(notication);
     } catch(err) {
@@ -34,6 +34,16 @@ module.exports = {
       const { customerId } = req.body;
       let notifications = NotificationService.retrieveAllNotificationByCustomerId(customerId);
       return res.status(200).send(notifications);
+    } catch(err) {
+      sendErrorResponse(res, err);
+    }
+  },
+  
+  readNotification: async(req, res) => {
+    try {
+      const { id } = req.params;
+      let notification = NotificationService.customerReadNotification(id);
+      return res.status(200).send(notification);
     } catch(err) {
       sendErrorResponse(res, err);
     }
