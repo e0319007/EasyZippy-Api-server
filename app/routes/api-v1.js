@@ -11,12 +11,14 @@ const MerchantController = require('../controllers/merchantController');
 const StaffController = require('../controllers/staffController');
 
 //Announcement
-router.get('/announcement/:id', Authenticator.staffOnly, AnnouncementController.createAnnouncement);
-router.get('/announcements', Authenticator.staffOnly, AnnouncementController.retrieveAllAnnouncement);
-router.put('/announcement/:id',  Authenticator.staffOnly, AnnouncementController.updateAnnouncement);
-router.post('/announcement', Authenticator.staffOnly, AnnouncementController.createAnnouncement);
-router.delete('/announcement/:id', Authenticator.staffOnly, AnnouncementController.deleteAnnouncement);
-
+router.get('/announcement/:id', AnnouncementController.retrieveAnnouncement);
+router.get('/announcement/staff/:staffId', AnnouncementController.retrieveAnnouncementByStaffId);
+router.get('/announcements', AnnouncementController.retrieveAllAnnouncement);
+router.get('/latestAnnouncement', AnnouncementController.retrieveLatestAnnouncement);
+router.get('/announcements/:count', AnnouncementController.retrieveLatestAnnouncementByLimit);
+router.put('/announcement/:id', AnnouncementController.updateAnnouncement);
+router.post('/announcement', AnnouncementController.createAnnouncement);
+router.delete('/announcement/:id', AnnouncementController.deleteAnnouncement);
 
 //Category
 router.get('/category/:id', Authenticator.customerAndMerchantAndStaffOnly, CategoryController.retrieveCategory);

@@ -47,6 +47,7 @@ module.exports = {
   Error: {
     AnnouncementNotFound: 'Announcement not found',
     AnnouncementCannotBeDeleted: 'Announcement cannot be deleted',
+    AnnouncementTimeInvalid: 'Announcement sent time should be in the future',
     AccessDenied: 'Access denied',
     CategoryNotFound: 'Category is not found',
     CurrentPasswordRequired: 'Current password required',
@@ -84,7 +85,7 @@ module.exports = {
     StaffNotFound: 'Staff not found',
     StaffRoleRequired: 'Staff role is required',
     TenancyAgreementRequired: 'Tenancy agreement is required',
-    TitleRequried: 'Title is required',
+    TitleRequired: 'Title is required',
     TokenExpired: 'Token is expired',
     TokenRequired: 'Token is required',
     TokenNotFound: 'Token not found',

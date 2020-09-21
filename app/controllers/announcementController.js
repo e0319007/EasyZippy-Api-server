@@ -12,7 +12,8 @@ module.exports = {
         announcement = await AnnouncementService.createAnnouncement(announcementData, transaction)
       });
       return res.status(200).send(announcement);
-    } catch {
+    } catch (err) {
+      console.log(err)
       sendErrorResponse(res, err);
     }
   },
@@ -20,9 +21,20 @@ module.exports = {
   retrieveAnnouncement: async(req, res) => {
     try {
       const { id } = req.params;
-      let announcement = await AnnouncementService.createAnnouncement(id);
+      let announcement = await AnnouncementService.retrieveAnnouncement(id);
       return res.status(200).send(announcement);
-    } catch {
+    } catch (err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  },
+
+  retrieveAnnouncementByStaffId: async(req, res) => {
+    try {
+      let { staffId } = req.params;
+      return res.status(200).send(await AnnouncementService.retrieveAnnouncementByStaffId(staffId));
+    } catch (err) {
+      console.log(err)
       sendErrorResponse(res, err);
     }
   },
@@ -30,7 +42,27 @@ module.exports = {
   retrieveAllAnnouncement: async(req, res) => {
     try {
       return res.status(200).send(await AnnouncementService.retrieveAllAnnouncement());
-    } catch {
+    } catch (err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  },
+
+  retrieveLatestAnnouncement: async(req, res) => {
+    try {
+      return res.status(200).send(await AnnouncementService.retrieveLatestAnnouncement());
+    } catch (err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  },
+
+  retrieveLatestAnnouncementByLimit: async(req, res) => {
+    try {
+      const { count } = req.params;
+      return res.status(200).send(await AnnouncementService.retrieveLatestAnnouncementByLimit(count));
+    } catch (err) {
+      console.log(err)
       sendErrorResponse(res, err);
     }
   },
@@ -44,7 +76,8 @@ module.exports = {
         announcement = await AnnouncementService.updateAnnouncement(id, announcementData, transaction)
       });
       return res.status(200).send(announcement);
-    } catch {
+    } catch (err) {
+      console.log(err)
       sendErrorResponse(res, err);
     }
   },
@@ -54,7 +87,8 @@ module.exports = {
       const { id } = req.params;
       await AnnouncementService.deleteAnnouncement(id);
       return res.status(200).send();
-    } catch {
+    } catch (err) {
+      console.log(err)
       sendErrorResponse(res, err);
     }
   }
