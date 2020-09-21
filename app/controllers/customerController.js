@@ -185,9 +185,9 @@ module.exports = {
 
   verifyOtp: async (req, res) => {
     try {
-      const { email, otp } = req.body;
+      const { email, otp, mobileNumber} = req.body;
       await sequelize.transaction(async (transaction) => {
-        await CustomerService.verifyOtp(otp, email, transaction);
+        await CustomerService.verifyOtp(otp, mobileNumber, email, transaction);
       });
       return res.status(200).send();
     } catch (err) {
