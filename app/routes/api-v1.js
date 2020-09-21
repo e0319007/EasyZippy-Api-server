@@ -11,18 +11,18 @@ const MerchantController = require('../controllers/merchantController');
 const StaffController = require('../controllers/staffController');
 
 //Advertisement
-router.post('/createAdvertisementAsStaff', AdvertisementController.createAdvertisementAsStaff);
-router.post('/createAdvertisementAsMerchant', AdvertisementController.createAdvertisementAsMerchant);
+router.post('/createAdvertisementAsStaff', Authenticator.staffOnly, AdvertisementController.createAdvertisementAsStaff);
+router.post('/createAdvertisementAsMerchant', Authenticator.merchantOnly, AdvertisementController.createAdvertisementAsMerchant);
 router.post('/createAdvertisementAsMerchantWithoutAccount', AdvertisementController.createAdvertisementAsMerchantWithoutAccount);
-router.get('/advertisement/:id', AdvertisementController.retrieveAdvertisementById);
-router.get('/advertisement/merchant/:merchantId', AdvertisementController.retrieveAdvertisementByMerchantId);
-router.get('/advertisement/staff/:staffId', AdvertisementController.retrieveAdvertisementByStaffId);
-router.get('/advertisements/ongoing', AdvertisementController.retrieveOngoingAdvertisement);
-router.get('/advertisements', AdvertisementController.retrieveAllAdvertisement);
-router.put('/advertisement/:id', AdvertisementController.updateAdvertisement);
-router.put('/advertisement/:id/approve', AdvertisementController.toggleApproveAdvertisement);
-router.put('/advertisement/:id/expire', AdvertisementController.setExpireAdvertisement);
-router.delete('/advertisement/:id', AdvertisementController.deleteAdvertisement);
+router.get('/advertisement/:id', Authenticator.merchantAndStaffOnly, AdvertisementController.retrieveAdvertisementById);
+router.get('/advertisement/merchant/:merchantId', Authenticator.merchantOnly, AdvertisementController.retrieveAdvertisementByMerchantId);
+router.get('/advertisement/staff/:staffId', Authenticator.staffOnly, AdvertisementController.retrieveAdvertisementByStaffId);
+router.get('/advertisements/ongoing', Authenticator.customerAndStaffOnly, AdvertisementController.retrieveOngoingAdvertisement);
+router.get('/advertisements', Authenticator.staffOnly, AdvertisementController.retrieveAllAdvertisement);
+router.put('/advertisement/:id', Authenticator.merchantAndStaffOnly, AdvertisementController.updateAdvertisement);
+router.put('/advertisement/:id/approve', Authenticator.staffOnly, AdvertisementController.toggleApproveAdvertisement);
+router.put('/advertisement/:id/expire', Authenticator.staffOnly, AdvertisementController.setExpireAdvertisement);
+router.delete('/advertisement/:id', Authenticator.staffOnly, AdvertisementController.deleteAdvertisement);
 
 //Category
 router.get('/category/:id', Authenticator.customerAndMerchantAndStaffOnly, CategoryController.retrieveCategory);
