@@ -7,6 +7,7 @@ const CategoryController = require('../controllers/categoryController');
 const CustomerController = require('../controllers/customerController');
 const KioskController = require('../controllers/kioskController');
 const MerchantController = require('../controllers/merchantController');
+const NotificationController = require('../controllers/notificationController');
 const StaffController = require('../controllers/staffController');
 
 //Category
@@ -55,6 +56,12 @@ router.post('/merchant/resetPassword/checkValidToken', MerchantController.checkV
 router.post('/merchant/resetPassword', MerchantController.resetPassword);
 router.post('/merchant', MerchantController.registerMerchant);
 router.post('/merchant/:id/uploadTenancyAgreement', Upload.preUploadCheck, MerchantController.uploadTenancyAgreement);
+
+//Notification
+router.get('/notification/customer', Authenticator.customerOnly, NotificationController.retrieveAllNotificationByCustomerId);
+router.get('/notification/merchant', Authenticator.merchantOnly, NotificationController.retrieveAllNotificationByMerchantId);
+router.put('/readNotification/:id', NotificationController.readNotification);
+router.post('/notification/create', NotificationController.createNotification);
 
 //Staff
 router.get('/staff/:id', Authenticator.staffOnly, StaffController.retrieveStaff);
