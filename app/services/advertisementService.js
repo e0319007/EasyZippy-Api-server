@@ -1,12 +1,14 @@
 const Checker = require('../common/checker');
 const Constants = require('../common/constants');
 const CustomError = require('../common/error/customError');
-const moment = require('moment')
+const moment = require('moment');
+const Sequelize = require('sequelize');
 
 const Advertisement = require('../models/Advertisement');
 const Merchant = require('../models/Merchant');
 const Staff = require('../models/Staff');
 const Kiosk = require('../models/Kiosk');
+const { now } = require('lodash');
 
 module.exports = {
   createAdvertisementAsStaff: async(advertisementData, transaction) => {
@@ -25,24 +27,26 @@ module.exports = {
   },
 
   createAdvertisementAsMerchant: async(advertisementData, transaction) => {
-    const {title, description, imageUrl, startDate, endDate, amountPaid, advertiserMobile, advertiserEmail, merchantId} = advertisementData;
+    let {title, description, imageUrl, startDate, endDate, amountPaid, advertiserMobile, advertiserEmail, merchantId} = advertisementData;
     if(startDate > endDate) {
       throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     }
     Checker.ifEmptyThrowError(title, Constants.Error.AdvertisementTitleRequired);
     Checker.ifEmptyThrowError(startDate, Constants.Error.AdvertisementStartDateRequired);
     Checker.ifEmptyThrowError(endDate, Constants.Error.AdvertisementEndDateRequired);
-    let merchant = Merchant.findByPk(merchantId);
+    let merchant = await Merchant.findByPk(merchantId);
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
+    console.log("merchant info: " + merchant)
     if (Checker.isEmpty(advertiserEmail)) {
-      advertiserEmail = merchant.email;
+      console.log("merchant.email: " + merchant.email);
+      advertisementData.advertiserEmail = merchant.email;
     }
     if (Checker.isEmpty(advertiserMobile)) {
-      advertiserMobile = merchant.mobileNumber;
+      advertisementData.advertiserMobile = merchant.mobileNumber;
     }
-    const advertisement = await Advertisement.create({
+    const advertisement = await Advertisement.create(
       advertisementData
-    }, { transaction });
+    , { transaction });
     return advertisement;
   },
 
@@ -56,9 +60,9 @@ module.exports = {
     Checker.ifEmptyThrowError(endDate, Constants.Error.AdvertisementEndDateRequired);
     Checker.ifEmptyThrowError(advertiserMobile, Constants.Error.AdvertiserMobileRequired);
     Checker.ifEmptyThrowError(advertiserEmail, Constants.Error.AdvertiserEmailRequired);
-    const advertisement = await Advertisement.create({
+    const advertisement = await Advertisement.create(
       advertisementData
-    }, { transaction });
+    , { transaction });
     return advertisement;
   },
 
@@ -90,48 +94,84 @@ module.exports = {
     return await Advertisement.findAll();
   },
 
+  //retrieve advertisemnt that can be shown
+  retrieveOngoingAdvertisement: async() => {
+    console.log(new Date())
+    let advertisments = await Advertisement.findAll({
+      where: {
+        approved: true,
+        expired: false,
+        // $or: [
+        //   {
+        //     startDate: { 
+        //       $gte: new Date(), 
+        //     },
+        //   },{
+        //     endDate: { 
+        //       $lte: new Date(),
+        //     }
+        //   }
+        // ]
+      }
+    })
+    return advertisments;
+  },
+
   updateAdvertisement: async(id, advertisementData, transaction) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
-    let advertisement = Advertisement.findOne(id);
+    let advertisement = await Advertisement.findByPk(id);
     Checker.ifEmptyThrowError(advertisement, Constants.Error.AdvertisementNotFound);
 
     const updateKeys = Object.keys(advertisementData);
 
     if(updateKeys.includes('title')) {
-      Checker.ifEmptyThrowError(title, Constants.Error.AdvertisementTitleRequired);
+      Checker.ifEmptyThrowError(advertisementData.title, Constants.Error.AdvertisementTitleRequired);
     }
     if(updateKeys.includes('startDate')) {
-      Checker.ifEmptyThrowError(startDate, Constants.Error.AdvertisementStartDateRequired);
+      Checker.ifEmptyThrowError(advertisementData.startDate, Constants.Error.AdvertisementStartDateRequired);
     }
     if(updateKeys.includes('endDate')) {
-      Checker.ifEmptyThrowError(endDate, Constants.Error.AdvertisementEndDateRequired);
+      Checker.ifEmptyThrowError(advertisementData.endDate, Constants.Error.AdvertisementEndDateRequired);
     }
-    if(updateKeys.includes('startDate' && updateKeys.includes('endDaate'))) {
-      if(startDate > endDate) {
+    if(updateKeys.includes('startDate') && updateKeys.includes('endDate')) {
+      if(advertisementData.startDate > advertisementData.endDate) {
         throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
       }
     }
     if(Checker.isEmpty(advertisement.staffId)) {
+      console.log("advertisement is not a staff advertisement")
       if(updateKeys.includes('advertiserMobile')) {
-        Checker.ifEmptyThrowError(endDate, Constants.Error.AdvertiserMobileRequired);
+        Checker.ifEmptyThrowError(advertisementData.advertiserMobile, Constants.Error.AdvertiserMobileRequired);
       }
       if(updateKeys.includes('advertiserEmail')) {
-        Checker.ifEmptyThrowError(endDate, Constants.Error.AdvertiserEmailRequired);
+        Checker.ifEmptyThrowError(advertisementData.advertiserEmail, Constants.Error.AdvertiserEmailRequired);
       }
     }
-    advertisement = await Advertisement.update(advertisement, { where : { id }, returning: true, transaction });
+    advertisement = await Advertisement.update(advertisementData, { where : { id }, returning: true, transaction });
     return advertisement;
   },
 
   toggleApproveAdvertisement: async(id, transaction) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
-    let curAdvertisement = Advertisement.findOne(id);
+    let curAdvertisement = await Advertisement.findByPk(id);
     Checker.ifEmptyThrowError(curAdvertisement, Constants.Error.AdvertisementNotFound);
     
-    let curDateTime = moment();
-    if(curAdvertisement.expired || curDateTime > curAdvertisement.startDate) {
+    let curDateTime = new Date();
+
+    console.log(curAdvertisement.approved)
+    
+    //dont approve when advertisement has been mark as expired or when the start date of advertisement has passed
+    if(!curAdvertisement.approved && (curAdvertisement.expired || curDateTime > curAdvertisement.startDate)) {
+      console.log("current Date time: " + curDateTime)
+      console.log("start time: " + curAdvertisement.startDate)
       throw new CustomError(Constants.Error.AdvertisementExpired);
     }
+
+    //dont disapprove when advertisment is approved and showing at the same time
+    if(curAdvertisement.approved && (curDateTime > curAdvertisement.startDate && curDateTime < curAdvertisement.endDate)) {
+      throw new CustomError(Constants.Error.AdvertisementDisapproveError);
+    }
+
     let advertisement = await Advertisement.update({
       approved: !curAdvertisement.approved
     }, {
@@ -143,15 +183,15 @@ module.exports = {
 
   setExpireAdvertisement: async(id, transaction) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
-    let curAdvertisement = Advertisement.findOne(id);
+    let curAdvertisement = await Advertisement.findByPk(id);
     Checker.ifEmptyThrowError(curAdvertisement, Constants.Error.AdvertisementNotFound);
     
     let curDateTime = moment();
     if(curAdvertisement.approved && curDateTime < curAdvertisement.endDate) {
       if(curDateTime > curAdvertisement.startDate) {
-        throw new CustomError('Cannot mark expire an ongoing advertisement')
+        throw new CustomError(Constants.Error.AdvertisementOngoingCannotMarkExpire);
       } else {
-        throw new CustomError('Cannot mark expire an advertisement waiting to be advertised')
+        throw new CustomError(Constants.Error.AdvertisementApprovedCannotMarkExpire);
       }
     }
 
@@ -166,9 +206,12 @@ module.exports = {
 
   deleteAdvertisement: async(id) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
-    const advertisement= Advertisement.findByPk(id);
+    const advertisement = await Advertisement.findByPk(id);
+    if(advertisement.approved) {
+      throw new CustomError(Constants.Error.AdvertisementApprovedCannotDelete);
+    }
     Checker.ifEmptyThrowError(advertisement, Constants.Error.AdvertisementNotFound);
-    Kiosk.destroy({
+    Advertisement.destroy({
       where: {
         id
       }

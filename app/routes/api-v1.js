@@ -15,8 +15,9 @@ router.post('/createAdvertisementAsStaff', AdvertisementController.createAdverti
 router.post('/createAdvertisementAsMerchant', AdvertisementController.createAdvertisementAsMerchant);
 router.post('/createAdvertisementAsMerchantWithoutAccount', AdvertisementController.createAdvertisementAsMerchantWithoutAccount);
 router.get('/advertisement/:id', AdvertisementController.retrieveAdvertisementById);
-router.get('/advertisement/merchant/:id', AdvertisementController.retrieveAdvertisementByMerchantId);
-router.get('/advertisement/staff/:id', AdvertisementController.retrieveAdvertisementByStaffId);
+router.get('/advertisement/merchant/:merchantId', AdvertisementController.retrieveAdvertisementByMerchantId);
+router.get('/advertisement/staff/:staffId', AdvertisementController.retrieveAdvertisementByStaffId);
+router.get('/advertisements/ongoing', AdvertisementController.retrieveOngoingAdvertisement);
 router.get('/advertisements', AdvertisementController.retrieveAllAdvertisement);
 router.put('/advertisement/:id', AdvertisementController.updateAdvertisement);
 router.put('/advertisement/:id/approve', AdvertisementController.toggleApproveAdvertisement);

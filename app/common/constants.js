@@ -45,6 +45,10 @@ module.exports = {
     Kiosk: 'Kiosk'
   },
   Error: {
+    AdvertisementOngoingCannotMarkExpire: 'Cannot mark an ongoing advertisement as expired',
+    AdvertisementApprovedCannotMarkExpire : 'Cannot mark expire an advertisement waiting to be advertised',
+    AdvertisementApprovedCannotDelete : 'Cannot delete an approved advertisement',
+    AdvertisementDisapproveError: 'Cannot disapprove an ongoing advertisement',
     AdvertisementExpired: 'Advertisement has expired',
     AdvertisementEndDateRequired: 'Advertisement end date is required',
     AdvertisementNotFound: 'Advertisement not found',

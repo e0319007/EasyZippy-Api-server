@@ -1,5 +1,6 @@
 const sequelize = require('../common/database');
 const { sendErrorResponse } = require('../common/error/errorHandler');
+const Advertisement = require('../models/Advertisement');
 const AdvertisementService = require('../services/advertisementService');
 
 module.exports = {
@@ -21,12 +22,14 @@ module.exports = {
   createAdvertisementAsMerchant: async(req, res) => {
     try {  
       const advertisementData = req.body;
+      console.log(advertisementData)
       let advertisement;
       await sequelize.transaction(async (transaction) => {
         advertisement = await AdvertisementService.createAdvertisementAsMerchant(advertisementData, transaction)
       });
       return res.status(200).send(advertisement);
     } catch (err) {
+      console.log(err)
       sendErrorResponse(res, err);
     }
   },
@@ -47,7 +50,7 @@ module.exports = {
   retrieveAdvertisementById: async(req, res) => {
     try {  
       const { id } = req.params;
-      let advertisement = AdvertisementService.retrieveAdvertisementById(id);
+      let advertisement = await AdvertisementService.retrieveAdvertisementById(id);
       return res.status(200).send(advertisement);
     } catch (err) {
       sendErrorResponse(res, err);
@@ -57,9 +60,11 @@ module.exports = {
   retrieveAdvertisementByMerchantId: async(req, res) => {
     try {  
       const { merchantId } = req.params;
-      let advertisements = AdvertisementService.retrieveAdvertisementByMerchantId(merchantId);
+      console.log("merchant id: " + merchantId);
+      let advertisements = await AdvertisementService.retrieveAdvertisementByMerchantId(merchantId);
       return res.status(200).send(advertisements);
     } catch (err) {
+      console.log(err);
       sendErrorResponse(res, err);
     }
   },
@@ -67,15 +72,25 @@ module.exports = {
   retrieveAdvertisementByStaffId: async(req, res) => {
     try {  
       const { staffId } = req.params;
-      let advertisements = AdvertisementService.retrieveAdvertisementByStaffId(staffId);
+      let advertisements = await AdvertisementService.retrieveAdvertisementByStaffId(staffId);
+      return res.status(200).send(advertisements);
+    } catch (err) {
+      console.log(err);
+      sendErrorResponse(res, err);
+    }
+  },
+
+  retrieveAllAdvertisement: async(req, res) => {
+    let advertisements = await AdvertisementService.retrieveAllAdvertisement();
+    try {  
       return res.status(200).send(advertisements);
     } catch (err) {
       sendErrorResponse(res, err);
     }
   },
 
-  retrieveAllAdvertisement: async(req, res) => {
-    let advertisements = AdvertisementService.retrieveAllAdvertisement();
+  retrieveOngoingAdvertisement: async(req, res) => {
+    let advertisements = await AdvertisementService.retrieveOngoingAdvertisement();
     try {  
       return res.status(200).send(advertisements);
     } catch (err) {
@@ -89,10 +104,11 @@ module.exports = {
       const advertisementData = req.body;
       let advertisement;
       await sequelize.transaction(async (transaction) => {
-        advertisement = AdvertisementService.updateAdvertisement(id, advertisementData, transaction)
+        advertisement = await AdvertisementService.updateAdvertisement(id, advertisementData, transaction)
       });
       return res.status(200).send(advertisement);
     } catch (err) {
+      console.log(err)
       sendErrorResponse(res, err);
     }
   },
@@ -102,10 +118,11 @@ module.exports = {
       let advertisement;
       const { id } = req.params;
       await sequelize.transaction(async (transaction) => {
-        advertisement = AdvertisementService.toggleApproveAdvertisement(id, transaction);
+        advertisement = await AdvertisementService.toggleApproveAdvertisement(id, transaction);
       });
       return res.status(200).send(advertisement);
     } catch (err) {
+      console.log(err)
       sendErrorResponse(res, err);
     }
   },
@@ -115,7 +132,7 @@ module.exports = {
       const { id } = req.params;
       let advertisement;
       await sequelize.transaction(async (transaction) => {
-        advertisement = AdvertisementService.setExpireAdvertisement(id, transaction);
+        advertisement = await AdvertisementService.setExpireAdvertisement(id, transaction);
       });
       return res.status(200).send(advertisement);
     } catch (err) {
@@ -126,7 +143,7 @@ module.exports = {
   deleteAdvertisement: async(req, res) => {
     try {  
       const { id } = req.params;
-      AdvertisementService.deleteAdvertisement(id);
+      await AdvertisementService.deleteAdvertisement(id);
       return res.status(200).send();
     } catch (err) {
       sendErrorResponse(res, err);
