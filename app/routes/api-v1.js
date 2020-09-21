@@ -58,8 +58,8 @@ router.post('/merchant', MerchantController.registerMerchant);
 router.post('/merchant/:id/uploadTenancyAgreement', Upload.preUploadCheck, MerchantController.uploadTenancyAgreement);
 
 //Notification
-router.get('/notification/customer/:customerId', NotificationController.retrieveAllNotificationByCustomerId);
-router.get('/notification/merchant/:merchantId', NotificationController.retrieveAllNotificationByMerchantId);
+router.get('/notification/customer', Authenticator.customerOnly, NotificationController.retrieveAllNotificationByCustomerId);
+router.get('/notification/merchant', Authenticator.merchantOnly, NotificationController.retrieveAllNotificationByMerchantId);
 router.put('/readNotification/:id', NotificationController.readNotification);
 router.post('/notification/create', NotificationController.createNotification);
 

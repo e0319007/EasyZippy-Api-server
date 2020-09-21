@@ -13,8 +13,9 @@ module.exports = {
       await sequelize.transaction(async (transaction) => {
         notification = await NotificationService.createNotification(notificationData, transaction)
       });
-      return res.status(200).send(notication);
+      return res.status(200).send(notification);
     } catch(err) {
+      console.log(err)
       sendErrorResponse(res, err);
     }
   },
@@ -22,7 +23,7 @@ module.exports = {
   retrieveAllNotificationByMerchantId: async(req, res) => {
     try {
       const { merchantId } = req.body;
-      let notifications = NotificationService.retrieveAllNotificationByMerchantId(merchantId);
+      let notifications = await NotificationService.retrieveAllNotificationByMerchantId(merchantId);
       return res.status(200).send(notifications);
     } catch(err) {
       sendErrorResponse(res, err);
@@ -32,7 +33,7 @@ module.exports = {
   retrieveAllNotificationByCustomerId: async(req, res) => {
     try {
       const { customerId } = req.body;
-      let notifications = NotificationService.retrieveAllNotificationByCustomerId(customerId);
+      let notifications = await NotificationService.retrieveAllNotificationByCustomerId(customerId);
       return res.status(200).send(notifications);
     } catch(err) {
       sendErrorResponse(res, err);
@@ -42,9 +43,10 @@ module.exports = {
   readNotification: async(req, res) => {
     try {
       const { id } = req.params;
-      let notification = NotificationService.customerReadNotification(id);
+      let notification = await NotificationService.readNotification(id);
       return res.status(200).send(notification);
     } catch(err) {
+      console.log(err)
       sendErrorResponse(res, err);
     }
   }
