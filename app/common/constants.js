@@ -49,6 +49,9 @@ module.exports = {
     MerchantPromotion: 'Merchant Promotion'
   },
   Error: {
+    AnnouncementNotFound: 'Announcement not found',
+    AnnouncementCannotBeDeleted: 'Announcement cannot be deleted',
+    AnnouncementTimeInvalid: 'Announcement sent time should be in the future',
     AccessDenied: 'Access denied',
     CategoryNotFound: 'Category is not found',
     CurrentPasswordRequired: 'Current password required',
