@@ -8,6 +8,7 @@ const CustomerController = require('../controllers/customerController');
 const KioskController = require('../controllers/kioskController');
 const MerchantController = require('../controllers/merchantController');
 const StaffController = require('../controllers/staffController');
+const productController = require('../controllers/productController');
 
 //Category
 router.get('/category/:id', Authenticator.customerAndMerchantAndStaffOnly, CategoryController.retrieveCategory);
@@ -55,6 +56,10 @@ router.post('/merchant/resetPassword/checkValidToken', MerchantController.checkV
 router.post('/merchant/resetPassword', MerchantController.resetPassword);
 router.post('/merchant', MerchantController.registerMerchant);
 router.post('/merchant/:id/uploadTenancyAgreement', Upload.preUploadCheck, MerchantController.uploadTenancyAgreement);
+
+//Product
+router.post('/product/addImage', Upload.preUploadCheckForImg, productController.addImageForProduct);
+router.post('/product', productController.createProduct);
 
 //Staff
 router.get('/staff/:id', Authenticator.staffOnly, StaffController.retrieveStaff);

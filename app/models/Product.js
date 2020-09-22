@@ -44,6 +44,10 @@ Product.init(
       type: DATE,
       allowNull: false,
       defaultValue: Sequelize.NOW
+    },
+    image: {
+      type: STRING,
+      allowNull: false
     }
   },
   {

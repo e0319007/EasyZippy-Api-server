@@ -50,6 +50,7 @@ module.exports = {
   },
   Error: {
     AccessDenied: 'Access denied',
+    CannotBeNegative: 'must be more than zero',
     CategoryNotFound: 'Category is not found',
     CurrentPasswordRequired: 'Current password required',
     CustomerDisabled: 'Customer is disabled',
@@ -64,6 +65,7 @@ module.exports = {
     FileRequired: 'File is required',
     FirstNameRequired: 'First name is required',
     IdRequired: 'ID is required',
+    ImageRequired: 'Image file required',
     KioskDisabled: 'Kiosk is disabled',
     KioskLocationRequired: 'Kiosk location is required',
     KioskNotFound: 'Kiosk not found',
@@ -83,6 +85,7 @@ module.exports = {
     PasswordRequired: 'Password is required',
     PasswordWeak: 'Password requires at least 8 characters, 1 lowercase letter, 1 uppercase letter, 1 numeric digit, and 1 special character',
     PdfFileRequired: 'PDF file is required',
+    QuantityAvailableRequired: 'Quantity available is required',
     StaffDisabled: 'Staff is disabled',
     StaffNotFound: 'Staff not found',
     StaffRoleRequired: 'Staff role is required',
@@ -91,6 +94,7 @@ module.exports = {
     TokenRequired: 'Token is required',
     TokenNotFound: 'Token not found',
     UnexpectedError: 'An unexpected error has occured',
+    UnitPriceRequired: 'Unit Price is required',
     UserUnauthorised: 'User is unauthorised'
   }
 };
