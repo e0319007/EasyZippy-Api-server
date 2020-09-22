@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const config = require('config');
 const multer = require('multer');
 const path = require('path');
+const paypal = require('paypal-rest-sdk');
 
 const routes = require('./app/routes');
 
@@ -28,6 +29,12 @@ app.use(bodyParser.json());
 app.use(multer({ storage }).any());
 app.use(routes);
 app.use('/assets', express.static(assetsDir));
+
+paypal.configure({
+  'mode': 'sandbox',
+  'client_id': 'AfZLsZhIkUS8r66uV6Nu-Zu6wAKSJT6LraIfM31AaUg8T35fr2sCrUz7H4MFZ-jo4Tr861Y3t4Fkl_3y',
+  'client_secret': 'ENMr9KAnRRRhoFwu2e71VN885Ntu3VVEjT9MlAX35COkcQ38XZ_d1QOMrcT8kdEsqrguf9Tdd3ShHA0R'
+});
 
 if (app.get('env') === 'development') {
   app.locals.pretty = true;
