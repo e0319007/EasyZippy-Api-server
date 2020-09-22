@@ -49,6 +49,9 @@ module.exports = {
     MerchantPromotion: 'Merchant Promotion'
   },
   Error: {
+    AnnouncementNotFound: 'Announcement not found',
+    AnnouncementCannotBeDeleted: 'Announcement cannot be deleted',
+    AnnouncementTimeInvalid: 'Announcement sent time should be in the future',
     AccessDenied: 'Access denied',
     CannotBeNegative: 'must be more than zero',
     CategoryNotFound: 'Category is not found',
@@ -79,6 +82,7 @@ module.exports = {
     NameNotUnique: 'Name is not unique',
     NameRequired: 'Name is required',
     NewPasswordRequired: 'New password required',
+    NotificationNotFound: 'NotificationNotFound',
     OtpInvalid: 'OTP is invalid',
     PasswordCannotChange: 'Password cannot be changed',
     PasswordIncorrect: 'Password is incorrect',
@@ -90,6 +94,7 @@ module.exports = {
     StaffNotFound: 'Staff not found',
     StaffRoleRequired: 'Staff role is required',
     TenancyAgreementRequired: 'Tenancy agreement is required',
+    TitleRequired: 'Title is required',
     TokenExpired: 'Token is expired',
     TokenRequired: 'Token is required',
     TokenNotFound: 'Token not found',

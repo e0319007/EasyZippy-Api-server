@@ -17,6 +17,10 @@ Announcement.init(
       autoIncrement: true,
       allowNull: false
     },
+    title: {
+      type: STRING,
+      allowNull: false
+    },
     description: {
       type: STRING,
       allowNull: true
