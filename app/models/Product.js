@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, STRING, DECIMAL, JSON, DATE, Model
+  INTEGER, STRING, DECIMAL, JSON, DATE, Model,ARRAY
 } = Sequelize;
 const sequelize = require('../common/database');
 
@@ -45,7 +45,7 @@ Product.init(
       allowNull: false,
       defaultValue: Sequelize.NOW
     },
-    image: {
+    images: {
       type: STRING,
       allowNull: false
     }
