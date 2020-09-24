@@ -24,8 +24,8 @@ router.get('/advertisement/staff/:staffId', Authenticator.staffOnly, Advertiseme
 router.get('/advertisements/ongoing', Authenticator.customerAndStaffOnly, AdvertisementController.retrieveOngoingAdvertisement);
 router.get('/advertisements', Authenticator.staffOnly, AdvertisementController.retrieveAllAdvertisement);
 router.put('/advertisement/:id', Authenticator.merchantAndStaffOnly, AdvertisementController.updateAdvertisement);
-router.put('/advertisement/:id/approve', Authenticator.staffOnly, AdvertisementController.toggleApproveAdvertisement);
-router.put('/advertisement/:id/expire', Authenticator.staffOnly, AdvertisementController.setExpireAdvertisement);
+router.put('/approveAdvertisement/:id', Authenticator.staffOnly, AdvertisementController.toggleApproveAdvertisement);
+router.put('/setExpireAdvertisement/:id', Authenticator.staffOnly, AdvertisementController.setExpireAdvertisement);
 router.delete('/advertisement/:id', Authenticator.staffOnly, AdvertisementController.deleteAdvertisement);
 
 //Announcement
