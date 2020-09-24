@@ -97,8 +97,8 @@ module.exports = {
   },
 
   retrieveAllAdvertisement: async(req, res) => {
-    let advertisements = await AdvertisementService.retrieveAllAdvertisement();
-    try {  
+    try {
+      let advertisements = await AdvertisementService.retrieveAllAdvertisement();
       return res.status(200).send(advertisements);
     } catch (err) {
       sendErrorResponse(res, err);
@@ -106,8 +106,8 @@ module.exports = {
   },
 
   retrieveOngoingAdvertisement: async(req, res) => {
-    let advertisements = await AdvertisementService.retrieveOngoingAdvertisement();
-    try {  
+    try {
+      let advertisements = await AdvertisementService.retrieveOngoingAdvertisement();
       return res.status(200).send(advertisements);
     } catch (err) {
       sendErrorResponse(res, err);
