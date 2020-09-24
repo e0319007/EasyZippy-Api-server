@@ -9,6 +9,7 @@ const CustomerController = require('../controllers/customerController');
 const KioskController = require('../controllers/kioskController');
 const MerchantController = require('../controllers/merchantController');
 const NotificationController = require('../controllers/notificationController');
+const ProductController = require('../controllers/productController');
 const StaffController = require('../controllers/staffController');
 
 //Announcement
@@ -73,6 +74,17 @@ router.get('/notification/customer', Authenticator.customerOnly, NotificationCon
 router.get('/notification/merchant', Authenticator.merchantOnly, NotificationController.retrieveAllNotificationByMerchantId);
 router.put('/readNotification/:id', NotificationController.readNotification);
 router.post('/notification/create', NotificationController.createNotification);
+
+//Product
+router.get('/product/:id', ProductController.retrieveProduct);
+router.get('/products', ProductController.retrieveAllProduct);
+router.get('/merchantProducts/:merchantId', ProductController.retrieveProductByMerchantId);
+router.get('/categoryProducts/:categoryId', ProductController.retrieveProductByCategoryId);
+router.put('/product/disable/:id', Authenticator.merchantOrStaffOnly, ProductController.setDisableProduct);
+router.put('/product/archive/:id', Authenticator.merchantOrStaffOnly, ProductController.toggleArchiveProduct);
+router.put('/product/:id', Authenticator.merchantOnly, ProductController.updateProduct);
+router.post('/product/addImage', Authenticator.merchantOnly, Upload.preUploadCheckForImg, ProductController.addImageForProduct);
+router.post('/product', Authenticator.merchantOnly ProductController.createProduct);
 
 //Staff
 router.get('/staff/:id', Authenticator.staffOnly, StaffController.retrieveStaff);

@@ -23,7 +23,7 @@ Advertisement.init(
     },
     imageUrl: {
       type: STRING,
-      allowNull: true
+      allowNull: false
     },
     startDate: {
       type: DATE,
