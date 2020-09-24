@@ -194,7 +194,7 @@ module.exports = {
     let curAdvertisement = await Advertisement.findByPk(id);
     Checker.ifEmptyThrowError(curAdvertisement, Constants.Error.AdvertisementNotFound);
     
-    let curDateTime = moment();
+    let curDateTime = new Date();
     if(curAdvertisement.approved && curDateTime < curAdvertisement.endDate) {
       if(curDateTime > curAdvertisement.startDate) {
         throw new CustomError(Constants.Error.AdvertisementOngoingCannotMarkExpire);
