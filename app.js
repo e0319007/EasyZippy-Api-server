@@ -11,13 +11,15 @@ const app = express();
 const host = config.get('server.host');
 const port = config.get('server.port');
 const assetsDir = path.join(__dirname, '/app/assets');
+let i = 0;
 const storage = multer.diskStorage({
   destination: './app/assets',
   filename: (req, file, next) => {
     next(
       null,
-      `${Date.now()}.${file.mimetype.split('/')[1]}`
+      `${Date.now() + i}.${file.mimetype.split('/')[1]}`
     );
+    i++;
   },
 });
 
