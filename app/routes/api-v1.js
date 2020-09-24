@@ -9,6 +9,7 @@ const CustomerController = require('../controllers/customerController');
 const KioskController = require('../controllers/kioskController');
 const MerchantController = require('../controllers/merchantController');
 const NotificationController = require('../controllers/notificationController');
+const PaymentController = require('../controllers/paymentController');
 const StaffController = require('../controllers/staffController');
 
 //Announcement
@@ -86,5 +87,9 @@ router.post('/staff/forgotPassword', StaffController.sendResetPasswordEmail);
 router.post('/staff/resetPassword/checkValidToken', StaffController.checkValidToken);
 router.post('/staff/resetPassword', StaffController.resetPassword);
 router.post('/staff', Authenticator.staffOnly, StaffController.registerStaff);
+
+router.post('/pay', PaymentController.pay);
+router.get('/success', PaymentController.success);
+router.get('/cancel', PaymentController.cancel);
 
 module.exports = router;
