@@ -80,11 +80,11 @@ router.get('/product/:id', ProductController.retrieveProduct);
 router.get('/products', ProductController.retrieveAllProduct);
 router.get('/merchantProducts/:merchantId', ProductController.retrieveProductByMerchantId);
 router.get('/categoryProducts/:categoryId', ProductController.retrieveProductByCategoryId);
-router.put('/product/:id', ProductController.updateProduct);
-router.put('/product/disable/:id', ProductController.setDisableProduct);
-router.put('/product/archive/:id', ProductController.toggleArchiveProduct);
-router.post('/product/addImage', Upload.preUploadCheckForImg, ProductController.addImageForProduct);
-router.post('/product', ProductController.createProduct);
+router.put('/product/disable/:id', Authenticator.merchantOrStaffOnly, ProductController.setDisableProduct);
+router.put('/product/archive/:id', Authenticator.merchantOrStaffOnly, ProductController.toggleArchiveProduct);
+router.put('/product/:id', Authenticator.merchantOnly, ProductController.updateProduct);
+router.post('/product/addImage', Authenticator.merchantOnly, Upload.preUploadCheckForImg, ProductController.addImageForProduct);
+router.post('/product', Authenticator.merchantOnly ProductController.createProduct);
 
 //Staff
 router.get('/staff/:id', Authenticator.staffOnly, StaffController.retrieveStaff);
