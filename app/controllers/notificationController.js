@@ -22,7 +22,7 @@ module.exports = {
 
   retrieveAllNotificationByMerchantId: async(req, res) => {
     try {
-      const { merchantId } = req.body;
+      const { merchantId } = req.params;
       let notifications = await NotificationService.retrieveAllNotificationByMerchantId(merchantId);
       return res.status(200).send(notifications);
     } catch(err) {
@@ -32,7 +32,7 @@ module.exports = {
 
   retrieveAllNotificationByCustomerId: async(req, res) => {
     try {
-      const { customerId } = req.body;
+      const { customerId } = req.params;
       let notifications = await NotificationService.retrieveAllNotificationByCustomerId(customerId);
       return res.status(200).send(notifications);
     } catch(err) {

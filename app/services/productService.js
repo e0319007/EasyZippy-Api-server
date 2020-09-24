@@ -6,6 +6,8 @@ const Merchant = require('../models/Merchant');
 const Product = require('../models/Product');
 const Category = require('../models/Category');
 
+const fs = require('fs-extra');
+
 module.exports = {
   createProduct: async(productData, transaction) => {
     let {name, unitPrice, description, quantityAvailable, images, categoryId, merchantId} = productData;
