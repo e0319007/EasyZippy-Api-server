@@ -1,10 +1,11 @@
 const sequelize = require('../common/database');
 const { sendErrorResponse } = require('../common/error/errorHandler');
-const Advertisement = require('../models/Advertisement');
 const AdvertisementService = require('../services/advertisementService');
+const fs = require('fs-extra');
 
 module.exports = {
   createAdvertisementAsStaff: async(req, res) => {
+    let image = req.body.image;
     try {  
       const advertisementData = req.body;
       let advertisement;
@@ -14,12 +15,24 @@ module.exports = {
       });
       return res.status(200).send(advertisement);
     } catch (err) {
+      fs.remove(image);
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  },
+
+  addImageForAdvertisement: async (req, res) => {
+    try {
+      return res.status(200).send(req.files[0].filename);
+    } catch (err) {
+      fs.remove(image);
       console.log(err)
       sendErrorResponse(res, err);
     }
   },
 
   createAdvertisementAsMerchant: async(req, res) => {
+    let image = req.body.image;
     try {  
       const advertisementData = req.body;
       console.log(advertisementData)
@@ -29,12 +42,14 @@ module.exports = {
       });
       return res.status(200).send(advertisement);
     } catch (err) {
+      fs.remove(image);
       console.log(err)
       sendErrorResponse(res, err);
     }
   },
 
   createAdvertisementAsMerchantWithoutAccount: async(req, res) => {
+    let image = req.body.image;
     try {  
       let advertisement;      
       const advertisementData = req.body;
@@ -43,6 +58,7 @@ module.exports = {
       });
       return res.status(200).send(advertisement);
     } catch (err) {
+      fs.remove(image);
       sendErrorResponse(res, err);
     }
   },

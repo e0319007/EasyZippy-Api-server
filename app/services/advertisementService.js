@@ -2,17 +2,16 @@ const Checker = require('../common/checker');
 const Constants = require('../common/constants');
 const CustomError = require('../common/error/customError');
 const moment = require('moment');
-const Sequelize = require('sequelize');
+const fs = require('fs-extra');
 
 const Advertisement = require('../models/Advertisement');
 const Merchant = require('../models/Merchant');
 const Staff = require('../models/Staff');
-const Kiosk = require('../models/Kiosk');
-const { now } = require('lodash');
+
 
 module.exports = {
   createAdvertisementAsStaff: async(advertisementData, transaction) => {
-    const {title, description, imageUrl, startDate, endDate, amountPaid, advertiserMobile, advertiserEmail, staffId} = advertisementData;
+    let {title, description, image, advertiserUrl, startDate, endDate, amountPaid, advertiserMobile, advertiserEmail, staffId} = advertisementData;
     if(startDate > endDate) {
       throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     }
@@ -20,6 +19,7 @@ module.exports = {
     Checker.ifEmptyThrowError(startDate, Constants.Error.AdvertisementStartDateRequired);
     Checker.ifEmptyThrowError(endDate, Constants.Error.AdvertisementEndDateRequired);
     Checker.ifEmptyThrowError(await Staff.findByPk(staffId), Constants.Error.StaffNotFound);
+    Checker.ifEmptyThrowError(image, Constants.Error.ImageRequired);
     const advertisement = await Advertisement.create({
       title, description, imageUrl, startDate, endDate, amountPaid, advertiserMobile, advertiserEmail, staffId
     }, { transaction });
@@ -27,13 +27,15 @@ module.exports = {
   },
 
   createAdvertisementAsMerchant: async(advertisementData, transaction) => {
-    let {title, description, imageUrl, startDate, endDate, amountPaid, advertiserMobile, advertiserEmail, merchantId} = advertisementData;
+    let {title, description, image, advertiserUrl, startDate, endDate, amountPaid, advertiserMobile, advertiserEmail, merchantId} = advertisementData;
     if(startDate > endDate) {
       throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     }
     Checker.ifEmptyThrowError(title, Constants.Error.AdvertisementTitleRequired);
     Checker.ifEmptyThrowError(startDate, Constants.Error.AdvertisementStartDateRequired);
-    Checker.ifEmptyThrowError(endDate, Constants.Error.AdvertisementEndDateRequired);
+    Checker.ifEmptyThrowError(endDate, Constants.Error.AdvertisementEndDateRequired);    
+    Checker.ifEmptyThrowError(image, Constants.Error.ImageRequired);
+
     let merchant = await Merchant.findByPk(merchantId);
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
     console.log("merchant info: " + merchant)
@@ -51,7 +53,7 @@ module.exports = {
   },
 
   createAdvertisementAsMerchantWithoutAccount: async(advertisementData, transaction) => {
-    const {title, description, imageUrl, startDate, endDate, amountPaid, advertiserMobile, advertiserEmail} = advertisementData;
+    let {title, description, image, advertiserUrl, startDate, endDate, amountPaid, advertiserMobile, advertiserEmail} = advertisementData;
     if(startDate > endDate) {
       throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     }
@@ -60,6 +62,7 @@ module.exports = {
     Checker.ifEmptyThrowError(endDate, Constants.Error.AdvertisementEndDateRequired);
     Checker.ifEmptyThrowError(advertiserMobile, Constants.Error.AdvertiserMobileRequired);
     Checker.ifEmptyThrowError(advertiserEmail, Constants.Error.AdvertiserEmailRequired);
+    Checker.ifEmptyThrowError(image, Constants.Error.ImageRequired);
     const advertisement = await Advertisement.create(
       advertisementData
     , { transaction });
@@ -146,6 +149,11 @@ module.exports = {
       if(updateKeys.includes('advertiserEmail')) {
         Checker.ifEmptyThrowError(advertisementData.advertiserEmail, Constants.Error.AdvertiserEmailRequired);
       }
+    }
+    if(updateKeys.includes('image')) {
+      Checker.ifEmptyThrowError(advertisementData.image, Constants.Error.ImageRequired);
+      console.log(advertisement.image)
+      fs.remove(advertisement.image);
     }
     advertisement = await Advertisement.update(advertisementData, { where : { id }, returning: true, transaction });
     return advertisement;

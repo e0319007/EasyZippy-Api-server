@@ -25,7 +25,11 @@ Advertisement.init(
       type: STRING,
       allowNull: true
     },
-    imageUrl: {
+    advertiserUrl: {
+      type: STRING,
+      allowNull: true
+    },
+    image: {
       type: STRING,
       allowNull: false
     },
@@ -62,7 +66,7 @@ Advertisement.init(
       type: BOOLEAN,
       allowNull: false,
       defaultValue: false
-    },
+    }
   },
   {
     sequelize,
