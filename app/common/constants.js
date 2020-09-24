@@ -44,6 +44,10 @@ module.exports = {
     Mobile: 'Mobile',
     Kiosk: 'Kiosk'
   },
+  PromotionType: {
+    MallPromotion: 'Mall Promotion',
+    MerchantPromotion: 'Merchant Promotion'
+  },
   Error: {
     AdvertisementOngoingCannotMarkExpire: 'Cannot mark an ongoing advertisement as expired',
     AdvertisementApprovedCannotMarkExpire : 'Cannot mark expire an advertisement waiting to be advertised',
@@ -56,6 +60,9 @@ module.exports = {
     AdvertisementTitleRequired: 'Advertisement title is required',
     AdvertiserEmailRequired: 'Advertiser email required',
     AdvertiserMobileRequired: 'Advertiser mobile required',
+    AnnouncementNotFound: 'Announcement not found',
+    AnnouncementCannotBeDeleted: 'Announcement cannot be deleted',
+    AnnouncementTimeInvalid: 'Announcement sent time should be in the future',
     AccessDenied: 'Access denied',
     CategoryNameExist: 'Category name exists',
     CategoryNameRequired: 'Category name is required',
@@ -80,11 +87,13 @@ module.exports = {
     MerchantDisabled: 'Merchant is disabled',
     MerchantNotApproved: 'Merchant is not approved',
     MerchantNotFound: 'Merchant not found',
+    MobileNumberInUse: 'Mobile number is in use',
     MobileNumberNotUnique: 'Mobile number is not unique',
     MobileNumberRequired: 'Mobile number is required',
     NameNotUnique: 'Name is not unique',
     NameRequired: 'Name is required',
     NewPasswordRequired: 'New password required',
+    NotificationNotFound: 'NotificationNotFound',
     OtpInvalid: 'OTP is invalid',
     PasswordCannotChange: 'Password cannot be changed',
     PasswordIncorrect: 'Password is incorrect',
@@ -96,6 +105,7 @@ module.exports = {
     StartDateLaterThanEndDate: 'Start date should not be later then end date',
     StaffRoleRequired: 'Staff role is required',
     TenancyAgreementRequired: 'Tenancy agreement is required',
+    TitleRequired: 'Title is required',
     TokenExpired: 'Token is expired',
     TokenRequired: 'Token is required',
     TokenNotFound: 'Token not found',

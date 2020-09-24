@@ -4,10 +4,12 @@ const Authenticator = require('../middleware/authenticator');
 const Upload = require('../middleware/upload');
 
 const AdvertisementController = require('../controllers/advertisementController');
+const AnnouncementController = require('../controllers/announcementController');
 const CategoryController = require('../controllers/categoryController');
 const CustomerController = require('../controllers/customerController');
 const KioskController = require('../controllers/kioskController');
 const MerchantController = require('../controllers/merchantController');
+const NotificationController = require('../controllers/notificationController');
 const StaffController = require('../controllers/staffController');
 
 //Advertisement
@@ -23,6 +25,15 @@ router.put('/advertisement/:id', Authenticator.merchantAndStaffOnly, Advertiseme
 router.put('/advertisement/:id/approve', Authenticator.staffOnly, AdvertisementController.toggleApproveAdvertisement);
 router.put('/advertisement/:id/expire', Authenticator.staffOnly, AdvertisementController.setExpireAdvertisement);
 router.delete('/advertisement/:id', Authenticator.staffOnly, AdvertisementController.deleteAdvertisement);
+//Announcement
+router.get('/announcement/:id', AnnouncementController.retrieveAnnouncement);
+router.get('/announcement/staff/:staffId', AnnouncementController.retrieveAnnouncementByStaffId);
+router.get('/announcements', AnnouncementController.retrieveAllAnnouncement);
+router.get('/latestAnnouncement', AnnouncementController.retrieveLatestAnnouncement);
+router.get('/announcements/:count', AnnouncementController.retrieveLatestAnnouncementByLimit);
+router.put('/announcement/:id', AnnouncementController.updateAnnouncement);
+router.post('/announcement', AnnouncementController.createAnnouncement);
+router.delete('/announcement/:id', AnnouncementController.deleteAnnouncement);
 
 //Category
 router.get('/category/:id', Authenticator.customerAndMerchantAndStaffOnly, CategoryController.retrieveCategory);
@@ -41,8 +52,8 @@ router.put('/customer/:id', Authenticator.customerOnly, CustomerController.updat
 router.post('/customer/login', CustomerController.loginCustomer);
 router.post('/customer/email', Authenticator.customerAndMerchantAndStaffOnly, CustomerController.retrieveCustomerByEmail);
 router.post('/customer/:id/verifyPassword', Authenticator.customerOnly, CustomerController.verifyCurrentPassword);
-router.post('/customer/forgotPassword', Authenticator.customerOnly, CustomerController.sendResetPasswordEmail);
-router.post('/customer/resetPassword/checkValidToken', Authenticator.customerOnly, CustomerController.checkValidToken);
+router.post('/customer/forgotPassword', CustomerController.sendResetPasswordEmail);
+router.post('/customer/resetPassword/checkValidToken', CustomerController.checkValidToken);
 router.post('/customer/resetPassword', CustomerController.resetPassword);
 router.post('/customer/sendOtp', CustomerController.sendOtp);
 router.post('/customer/verifyOtp', CustomerController.verifyOtp);
@@ -65,11 +76,17 @@ router.put('/merchant/:id/changePassword', Authenticator.merchantOnly, MerchantC
 router.put('/merchant/:id', Authenticator.merchantOnly, MerchantController.updateMerchant);
 router.post('/merchant/login', MerchantController.loginMerchant);
 router.post('/merchant/email', Authenticator.customerAndMerchantAndStaffOnly, MerchantController.retrieveMerchantByEmail);
-router.post('/merchant/forgotPassword', Authenticator.merchantOnly, MerchantController.sendResetPasswordEmail);
+router.post('/merchant/forgotPassword', MerchantController.sendResetPasswordEmail);
 router.post('/merchant/resetPassword/checkValidToken', MerchantController.checkValidToken);
 router.post('/merchant/resetPassword', MerchantController.resetPassword);
 router.post('/merchant', MerchantController.registerMerchant);
 router.post('/merchant/:id/uploadTenancyAgreement', Upload.preUploadCheck, MerchantController.uploadTenancyAgreement);
+
+//Notification
+router.get('/notification/customer', Authenticator.customerOnly, NotificationController.retrieveAllNotificationByCustomerId);
+router.get('/notification/merchant', Authenticator.merchantOnly, NotificationController.retrieveAllNotificationByMerchantId);
+router.put('/readNotification/:id', NotificationController.readNotification);
+router.post('/notification/create', NotificationController.createNotification);
 
 //Staff
 router.get('/staff/:id', Authenticator.staffOnly, StaffController.retrieveStaff);

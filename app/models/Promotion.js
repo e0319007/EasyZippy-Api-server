@@ -4,6 +4,9 @@ const {
 } = Sequelize;
 const sequelize = require('../common/database');
 
+const Staff = require('./Staff')
+const Merchant = require('./Merchant')
+
 class Promotion extends Model {
 }
 
@@ -60,13 +63,23 @@ Promotion.init(
     imageUrl: {
       type: STRING,
       allowNull: true
+    },
+    promotionTypeEnum: {
+      type: STRING,
+      allowNull: false
     }
   },
   {
-    sequelize,
-    modelName: 'promotion',
-    underscored: true
+  sequelize,
+  modelName: 'promotion',
+  underscored: true
   }
 );
+    
+Promotion.belongsTo(Staff);
+Staff.hasMany(Promotion);
+
+Promotion.belongsTo(Merchant);
+Merchant.belongsTo(Staff);
 
 module.exports = Promotion;
