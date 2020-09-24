@@ -23,8 +23,7 @@ router.get('/advertisement/merchant/:merchantId', Authenticator.merchantOnly, Ad
 router.get('/advertisement/staff/:staffId', Authenticator.staffOnly, AdvertisementController.retrieveAdvertisementByStaffId);
 router.get('/advertisements/ongoing', Authenticator.customerAndStaffOnly, AdvertisementController.retrieveOngoingAdvertisement);
 router.get('/advertisements', Authenticator.staffOnly, AdvertisementController.retrieveAllAdvertisement);
-router.put('/advertisement/:id',  AdvertisementController.updateAdvertisement);
-//router.put('/advertisement/:id', Authenticator.merchantAndStaffOnly, AdvertisementController.updateAdvertisement);
+router.put('/advertisement/:id', Authenticator.merchantAndStaffOnly, AdvertisementController.updateAdvertisement);
 router.put('/advertisement/:id/approve', Authenticator.staffOnly, AdvertisementController.toggleApproveAdvertisement);
 router.put('/advertisement/:id/expire', Authenticator.staffOnly, AdvertisementController.setExpireAdvertisement);
 router.delete('/advertisement/:id', Authenticator.staffOnly, AdvertisementController.deleteAdvertisement);
