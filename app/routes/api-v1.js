@@ -76,6 +76,13 @@ router.put('/readNotification/:id', NotificationController.readNotification);
 router.post('/notification/create', NotificationController.createNotification);
 
 //Product
+router.get('/product/:id', ProductController.retrieveProduct);
+router.get('/products', ProductController.retrieveAllProduct);
+router.get('/merchantProducts/:merchantId', ProductController.retrieveProductByMerchantId);
+router.get('/categoryProducts/:categoryId', ProductController.retrieveProductByCategoryId);
+router.put('/product/:id', ProductController.updateProduct);
+router.put('/product/disable/:id', ProductController.setDisableProduct);
+router.put('/product/archive/:id', ProductController.toggleArchiveProduct);
 router.post('/product/addImage', Upload.preUploadCheckForImg, ProductController.addImageForProduct);
 router.post('/product', ProductController.createProduct);
 

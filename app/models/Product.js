@@ -1,6 +1,7 @@
+const { TEXT } = require('sequelize');
 const Sequelize = require('sequelize');
 const {
-  INTEGER, STRING, DECIMAL, JSON, DATE, Model,ARRAY
+  INTEGER, STRING, DECIMAL, ARRAY, BOOLEAN, DATE, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 
@@ -46,7 +47,17 @@ Product.init(
       defaultValue: Sequelize.NOW
     },
     images: {
-      type: STRING,
+      type: ARRAY(TEXT),
+      allowNull: false
+    },
+    disabled: {
+      type: BOOLEAN,
+      defaultValue: false,
+      allowNull: false
+    },
+    archived: {
+      type: BOOLEAN,
+      defaultValue: false,
       allowNull: false
     }
   },
