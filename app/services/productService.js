@@ -16,7 +16,7 @@ module.exports = {
     Checker.ifEmptyThrowError(categoryId, Constants.Error.CategoryIdRequired)
     Checker.ifEmptyThrowError(merchantId, Constants.Error.MerchantIdRequired)
     Checker.ifEmptyThrowError(await Merchant.findByPk(merchantId), Constants.Error.MerchantNotFound)
-    Checker.ifEmptyThrowError(await Category.findByPk(categoryId), Constants.Error.MerchantNotFound)
+    Checker.ifEmptyThrowError(await Category.findByPk(categoryId), Constants.Error.CategoryNotFound)
     if(unitPrice <= 0) {
       throw new CustomError("Unit price " + Constants.Error.CannotBeNegative);
     }
@@ -31,7 +31,7 @@ module.exports = {
   updateProduct: async(id, productData, transaction) => {
     let {name, unitPrice, description, quantityAvailable, images, categoryId, merchantId} = productData;
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
-    let product = Product.findByPk(id);
+    let product = await Product.findByPk(id);
 
     Checker.ifEmptyThrowError(product, Constants.Error.ProductNotFound)
 
@@ -66,10 +66,10 @@ module.exports = {
     } 
 
     Checker.ifEmptyThrowError(await Merchant.findByPk(merchantId), Constants.Error.MerchantNotFound)
-    Checker.ifEmptyThrowError(await Category.findByPk(categoryId), Constants.Error.MerchantNotFound)
+    Checker.ifEmptyThrowError(await Category.findByPk(categoryId), Constants.Error.CategoryNotFound)
     
     //product = await product.update(productData, { transaction, returning: true });
-    product = Product.update(productData, { where: { id }, transaction, returning: true })
+    product = await Product.update(productData, { where: { id }, transaction, returning: true })
     return product;
   },
   
@@ -112,7 +112,7 @@ module.exports = {
 
   retrieveProductByCategoryId: async(categoryId) => {
     Checker.ifEmptyThrowError(categoryId, 'Category ' + Constants.Error.IdRequired);
-    return Product.findAll({
+    return await Product.findAll({
       where: {
         categoryId
       }
@@ -121,7 +121,7 @@ module.exports = {
 
   retrieveProductByMerchantId: async(merchantId) => {
     Checker.ifEmptyThrowError(merchantId, 'Merchant ' + Constants.Error.IdRequired);
-    return Product.findAll({
+    return await Product.findAll({
       where: {
         merchantId
       }
