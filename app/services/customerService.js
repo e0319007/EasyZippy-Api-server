@@ -47,10 +47,11 @@ const changePasswordForResetPassword = async(id, newPassword, transaction) => {
 
 module.exports = {
   createCustomer: async(customerData, transaction) => {
-      const {firstName, lastName, password, email} = customerData;
+      const {firstName, lastName, password, mobileNumber, email} = customerData;
       Checker.ifEmptyThrowError(firstName, Constants.Error.NameRequired);
       Checker.ifEmptyThrowError(lastName, Constants.Error.NameRequired);
       Checker.ifEmptyThrowError(password, Constants.Error.PasswordRequired);
+      Checker.ifEmptyThrowError(mobileNumber, Constants.Error.MobileNumberRequired);
       Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
 
       customerData.email = customerData.email.toLowerCase();
@@ -64,7 +65,14 @@ module.exports = {
       }
 
       customerData.password = await Helper.hashPassword(password);
-      let curCustomer = await Customer.findOne({ where: { email } });
+
+      let curCustomer = await Customer.findOne({ where: { mobileNumber } });
+      
+      if(!Checker.isEmpty(curCustomer)) {
+        throw new CustomError(Constants.Error.MobileNumberNotUnique);
+      }
+
+      curCustomer = await Customer.findOne({ where: { email } });
       if(!Checker.isEmpty(curCustomer)) {
         if (!curCustomer.activated) {
           curCustomer = curCustomer.update(customerData, { transaction });
