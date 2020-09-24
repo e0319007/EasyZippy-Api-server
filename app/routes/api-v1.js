@@ -18,9 +18,9 @@ router.post('/createAdvertisementAsStaff', Authenticator.staffOnly, Advertisemen
 router.post('/createAdvertisementAsMerchant', Authenticator.merchantOnly, AdvertisementController.createAdvertisementAsMerchant);
 router.post('/createAdvertisementAsMerchantWithoutAccount', AdvertisementController.createAdvertisementAsMerchantWithoutAccount);
 router.post('/advertisement/addImage', Upload.preUploadCheckForImg, AdvertisementController.addImageForAdvertisement);
-router.get('/advertisement/:id', Authenticator.merchantAndStaffOnly, AdvertisementController.retrieveAdvertisementById);
 router.get('/advertisement/merchant/:merchantId', Authenticator.merchantOnly, AdvertisementController.retrieveAdvertisementByMerchantId);
 router.get('/advertisement/staff/:staffId', Authenticator.staffOnly, AdvertisementController.retrieveAdvertisementByStaffId);
+router.get('/advertisement/:id', Authenticator.merchantAndStaffOnly, AdvertisementController.retrieveAdvertisementById);
 router.get('/advertisements/ongoing', Authenticator.customerAndStaffOnly, AdvertisementController.retrieveOngoingAdvertisement);
 router.get('/advertisements', Authenticator.staffOnly, AdvertisementController.retrieveAllAdvertisement);
 router.put('/advertisement/:id', Authenticator.merchantAndStaffOnly, AdvertisementController.updateAdvertisement);
