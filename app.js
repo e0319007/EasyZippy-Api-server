@@ -8,6 +8,8 @@ const moment = require('moment-timezone');
 
 const routes = require('./app/routes');
 
+const dateRegex = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*))(?:Z|(\+|-)([\d|:]*))?$/;
+
 const app = express();
 const host = config.get('server.host');
 const port = config.get('server.port');
@@ -32,13 +34,8 @@ app.use(multer({ storage }).any());
 app.use(routes);
 app.use('/assets', express.static(assetsDir));
 app.set('json replacer', (key, value) => {
-  const possibleDate = new Date(value);
-  console.log('entered value: ' + value + ' : ' + typeof(value))
-  console.log('year: ' +(new Date(value)).getFullYear());
-  if (possibleDate.getFullYear() !== 1970) {
-    console.log(' is date')
-    // const unprocessedDate = moment(this[key]);
-    // value = unprocessedDate.tz('Asia/Singapore').format('ha z');
+  if (dateRegex.exec(value)) {
+    value = (moment(value)).tz('Asia/Singapore').format();
   }
   return value;
 });
