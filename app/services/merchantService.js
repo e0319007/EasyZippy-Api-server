@@ -119,7 +119,7 @@ module.exports = {
     }
     if(updateKeys.includes('email')) {
       Checker.ifEmptyThrowError(merchantData.email, Constants.Error.EmailRequired);
-      const merchantWithEmail = await Merchant.findOne({ where: { email } });
+      const merchantWithEmail = await Merchant.findOne({ where: { email: merchantData.email } });
       if (!Checker.isEmpty(merchantWithEmail) && merchantWithEmail.id !== parseInt(id)) {
         throw new CustomError(Constants.Error.EmailNotUnique);
       }

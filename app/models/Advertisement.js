@@ -17,13 +17,21 @@ Advertisement.init(
       autoIncrement: true,
       allowNull: false
     },
+    title: {
+      type: STRING,
+      allowNull: false
+    },
     description: {
       type: STRING,
       allowNull: true
     },
-    imageUrl: {
+    advertiserUrl: {
       type: STRING,
       allowNull: true
+    },
+    image: {
+      type: STRING,
+      allowNull: false
     },
     startDate: {
       type: DATE,
@@ -36,6 +44,7 @@ Advertisement.init(
     amountPaid: {
       type: DECIMAL,
       allowNull: false,
+      defaultValue: 0.0,
       validate: {
           min: 0.0
       }
@@ -52,6 +61,11 @@ Advertisement.init(
     advertiserEmail: {
       type: STRING,
       allowNull: true
+    },
+    approved: {
+      type: BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     }
   },
   {

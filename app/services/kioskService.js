@@ -1,6 +1,6 @@
-const Checker = require("../common/checker");
+const Checker = require('../common/checker');
 const Constants = require('../common/constants');
-const CustomError = require("../common/error/customError");
+const CustomError = require('../common/error/customError');
 
 const Kiosk = require('../models/Kiosk');
 
@@ -39,12 +39,12 @@ const Kiosk = require('../models/Kiosk');
       const curKiosk = await Kiosk.findByPk(id);
       Checker.ifEmptyThrowError(curKiosk, Constants.Error.KioskNotFound)
       console.log(curKiosk.disabled);
-        let kiosk = await Kiosk.update({
-          disabled: !curKiosk.disabled
-        }, {
-          where: {
-            id
-          }, returning: true, transaction });
+      let kiosk = await Kiosk.update({
+        disabled: !curKiosk.disabled
+      }, {
+        where: {
+          id
+        }, returning: true, transaction });
       return kiosk;
     },
 
@@ -63,7 +63,7 @@ const Kiosk = require('../models/Kiosk');
       console.log(id);
       const kiosk = await Kiosk.findByPk(id);
       Checker.ifEmptyThrowError(kiosk, Constants.Error.KioskNotFound);
-      Kiosk.destroy({
+      await Kiosk.destroy({
         where: {
           id
         }
