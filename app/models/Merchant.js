@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, STRING, BOOLEAN, Model
+  INTEGER, STRING, DECIMAL, BOOLEAN, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 
@@ -54,6 +54,14 @@ Merchant.init(
     resetPasswordExpires: {
       type: Sequelize.DATE,
       allowNull: true
+    },
+    creditBalance: {
+      type: DECIMAL,
+      allowNull: false,
+      defaultValue: 0.0,
+      validate: {
+          min: 0.0
+      }
     }
   },
   {
