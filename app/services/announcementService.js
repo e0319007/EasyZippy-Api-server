@@ -11,6 +11,9 @@ module.exports = {
     Checker.ifEmptyThrowError(title, Constants.Error.TitleRequired);
     Checker.ifEmptyThrowError(staffId, 'Staff ' + Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(await Staff.findByPk(staffId), Constants.Error.StaffNotFound);
+
+    announcementData.sentTime = new Date();
+    
     const announcement = await Announcement.create(announcementData, { transaction });
     return announcement;
   },
@@ -48,13 +51,7 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let announcement = await Announcement.findByPk(id);
     Checker.ifEmptyThrowError(announcement, Constants.Error.AnnouncementNotFound);
-    let then = Date.parse(announcementData.sentTime);
-    let now = new Date().valueOf();
-    console.log('then:'+ then)
-    console.log('now :'+ now)
-    if (then < now) {
-      throw new CustomError(Constants.Error.AnnouncementTimeInvalid)
-    }
+
     const updateKeys = Object.keys(announcementData);
     if(updateKeys.includes('title')) {
       Checker.ifEmptyThrowError(announcementData.title, Constants.Error.TitleRequired);

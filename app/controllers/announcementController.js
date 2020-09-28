@@ -1,7 +1,7 @@
 const { sendErrorResponse } = require('../common/error/errorHandler');
 const sequelize = require('../common/database');
 
-const AnnouncementService = require('../services/annoucementService');
+const AnnouncementService = require('../services/announcementService');
 
 module.exports = {
   createAnnouncement: async(req, res) => {
