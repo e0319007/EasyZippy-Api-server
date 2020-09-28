@@ -7,17 +7,10 @@ const Staff = require("../models/Staff");
 
 module.exports = {
   createAnnouncement: async(announcementData, transaction) => {
-    const { title, description, sentTime, staffId } = announcementData;
+    const { title, description, staffId } = announcementData;
     Checker.ifEmptyThrowError(title, Constants.Error.TitleRequired);
     Checker.ifEmptyThrowError(staffId, 'Staff ' + Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(await Staff.findByPk(staffId), Constants.Error.StaffNotFound);
-    let then = Date.parse(announcementData.sentTime);
-    let now = new Date().valueOf();
-    console.log('then:'+ then)
-    console.log('now :'+ now)
-    if (then < now) {
-      throw new CustomError(Constants.Error.AnnouncementTimeInvalid)
-    }
     const announcement = await Announcement.create(announcementData, { transaction });
     return announcement;
   },

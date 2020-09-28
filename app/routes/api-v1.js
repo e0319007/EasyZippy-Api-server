@@ -3,6 +3,7 @@ const router = express.Router();
 const Authenticator = require('../middleware/authenticator');
 const Upload = require('../middleware/upload');
 
+const AdvertisementController = require('../controllers/advertisementController');
 const AnnouncementController = require('../controllers/announcementController');
 const CategoryController = require('../controllers/categoryController');
 const CustomerController = require('../controllers/customerController');
@@ -10,17 +11,33 @@ const KioskController = require('../controllers/kioskController');
 const MerchantController = require('../controllers/merchantController');
 const NotificationController = require('../controllers/notificationController');
 const PaymentController = require('../controllers/paymentController');
+const ProductController = require('../controllers/productController');
 const StaffController = require('../controllers/staffController');
 
+//Advertisement
+router.post('/createAdvertisementAsStaff', Authenticator.staffOnly, AdvertisementController.createAdvertisementAsStaff);
+router.post('/createAdvertisementAsMerchant', Authenticator.merchantOnly, AdvertisementController.createAdvertisementAsMerchant);
+router.post('/createAdvertisementAsMerchantWithoutAccount', AdvertisementController.createAdvertisementAsMerchantWithoutAccount);
+router.post('/advertisement/addImage', Upload.preUploadCheckForImg, AdvertisementController.addImageForAdvertisement);
+router.get('/advertisement/merchant/:merchantId', Authenticator.merchantOnly, AdvertisementController.retrieveAdvertisementByMerchantId);
+router.get('/advertisement/staff/:staffId', Authenticator.staffOnly, AdvertisementController.retrieveAdvertisementByStaffId);
+router.get('/advertisement/:id', Authenticator.merchantAndStaffOnly, AdvertisementController.retrieveAdvertisementById);
+router.get('/advertisements/ongoing', Authenticator.customerAndStaffOnly, AdvertisementController.retrieveOngoingAdvertisement);
+router.get('/advertisements', Authenticator.staffOnly, AdvertisementController.retrieveAllAdvertisement);
+router.put('/advertisement/:id', Authenticator.merchantAndStaffOnly, AdvertisementController.updateAdvertisement);
+router.put('/approveAdvertisement/:id', Authenticator.staffOnly, AdvertisementController.toggleApproveAdvertisement);
+router.put('/setExpireAdvertisement/:id', Authenticator.staffOnly, AdvertisementController.setExpireAdvertisement);
+router.delete('/advertisement/:id', Authenticator.staffOnly, AdvertisementController.deleteAdvertisement);
+
 //Announcement
-router.get('/announcement/:id', AnnouncementController.retrieveAnnouncement);
-router.get('/announcement/staff/:staffId', AnnouncementController.retrieveAnnouncementByStaffId);
-router.get('/announcements', AnnouncementController.retrieveAllAnnouncement);
-router.get('/latestAnnouncement', AnnouncementController.retrieveLatestAnnouncement);
-router.get('/announcements/:count', AnnouncementController.retrieveLatestAnnouncementByLimit);
-router.put('/announcement/:id', AnnouncementController.updateAnnouncement);
-router.post('/announcement', AnnouncementController.createAnnouncement);
-router.delete('/announcement/:id', AnnouncementController.deleteAnnouncement);
+router.get('/announcement/:id', Authenticator.customerAndStaffOnly, AnnouncementController.retrieveAnnouncement);
+router.get('/announcement/staff/:staffId', Authenticator.customerAndStaffOnly, AnnouncementController.retrieveAnnouncementByStaffId);
+router.get('/announcements', Authenticator.customerAndStaffOnly, AnnouncementController.retrieveAllAnnouncement);
+router.get('/latestAnnouncement', Authenticator.customerAndStaffOnly, AnnouncementController.retrieveLatestAnnouncement);
+router.get('/announcements/:count', Authenticator.customerAndStaffOnly, AnnouncementController.retrieveLatestAnnouncementByLimit);
+router.put('/announcement/:id', Authenticator.staffOnly, AnnouncementController.updateAnnouncement);
+router.post('/announcement', Authenticator.staffOnly, AnnouncementController.createAnnouncement);
+router.delete('/announcement/:id', Authenticator.staffOnly, AnnouncementController.deleteAnnouncement);
 
 //Category
 router.get('/category/:id', Authenticator.customerAndMerchantAndStaffOnly, CategoryController.retrieveCategory);
@@ -70,10 +87,26 @@ router.post('/merchant', MerchantController.registerMerchant);
 router.post('/merchant/:id/uploadTenancyAgreement', Upload.preUploadCheck, MerchantController.uploadTenancyAgreement);
 
 //Notification
-router.get('/notification/customer', Authenticator.customerOnly, NotificationController.retrieveAllNotificationByCustomerId);
-router.get('/notification/merchant', Authenticator.merchantOnly, NotificationController.retrieveAllNotificationByMerchantId);
+router.get('/notification/customer/:customerId', Authenticator.customerOnly, NotificationController.retrieveAllNotificationByCustomerId);
+router.get('/notification/merchant:merchantId', Authenticator.merchantOnly, NotificationController.retrieveAllNotificationByMerchantId);
 router.put('/readNotification/:id', NotificationController.readNotification);
 router.post('/notification/create', NotificationController.createNotification);
+
+//Payment
+router.post('/pay', PaymentController.pay);
+router.get('/success', PaymentController.success);
+router.get('/cancel', PaymentController.cancel);
+
+//Product
+router.get('/product/:id', ProductController.retrieveProduct);
+router.get('/products', ProductController.retrieveAllProduct);
+router.get('/merchantProducts/:merchantId', ProductController.retrieveProductByMerchantId);
+router.get('/categoryProducts/:categoryId', ProductController.retrieveProductByCategoryId);
+router.put('/product/disable/:id', Authenticator.merchantAndStaffOnly, ProductController.setDisableProduct);
+router.put('/product/archive/:id', Authenticator.merchantAndStaffOnly, ProductController.toggleArchiveProduct);
+router.put('/product/:id', Authenticator.merchantOnly, ProductController.updateProduct);
+router.post('/product/addImage', Authenticator.merchantOnly, Upload.preUploadCheckForImg, ProductController.addImageForProduct);
+router.post('/product', Authenticator.merchantOnly, ProductController.createProduct);
 
 //Staff
 router.get('/staff/:id', Authenticator.staffOnly, StaffController.retrieveStaff);
@@ -87,9 +120,5 @@ router.post('/staff/forgotPassword', StaffController.sendResetPasswordEmail);
 router.post('/staff/resetPassword/checkValidToken', StaffController.checkValidToken);
 router.post('/staff/resetPassword', StaffController.resetPassword);
 router.post('/staff', Authenticator.staffOnly, StaffController.registerStaff);
-
-router.post('/pay', PaymentController.pay);
-router.get('/success', PaymentController.success);
-router.get('/cancel', PaymentController.cancel);
 
 module.exports = router;

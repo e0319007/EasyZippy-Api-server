@@ -39,12 +39,12 @@ const Kiosk = require('../models/Kiosk');
       const curKiosk = await Kiosk.findByPk(id);
       Checker.ifEmptyThrowError(curKiosk, Constants.Error.KioskNotFound)
       console.log(curKiosk.disabled);
-        let kiosk = await Kiosk.update({
-          disabled: !curKiosk.disabled
-        }, {
-          where: {
-            id
-          }, returning: true, transaction });
+      let kiosk = await Kiosk.update({
+        disabled: !curKiosk.disabled
+      }, {
+        where: {
+          id
+        }, returning: true, transaction });
       return kiosk;
     },
 
