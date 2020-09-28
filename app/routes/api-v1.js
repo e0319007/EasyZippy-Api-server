@@ -8,6 +8,7 @@ const AnnouncementController = require('../controllers/announcementController');
 const CategoryController = require('../controllers/categoryController');
 const CustomerController = require('../controllers/customerController');
 const KioskController = require('../controllers/kioskController');
+const MaintenanceActionController = require('../controllers/maintenanceActionController');
 const MerchantController = require('../controllers/merchantController');
 const NotificationController = require('../controllers/notificationController');
 const ProductController = require('../controllers/productController');
@@ -69,6 +70,13 @@ router.put('/kiosk/:id/toggleDisable', Authenticator.staffOnly, KioskController.
 router.put('/kiosk/:id', Authenticator.staffOnly, KioskController.updateKiosk);
 router.post('/kiosk', Authenticator.staffOnly, KioskController.createKiosk);
 router.delete('/kiosk/:id', Authenticator.staffOnly, KioskController.deleteKiosk);
+
+//MaintenanceAction
+router.get('/maintenanceAction/:id', MaintenanceActionController.retrieveMaintenanceAction);
+router.get('/maintenanceActions', MaintenanceActionController.retrieveAllMaintenanceAction);
+router.put('/maintenanceAction/:id', MaintenanceActionController.updateMaintenanceAction);
+router.post('/maintenanceAction', MaintenanceActionController.createMaintenanceAction);
+router.delete('/maintenanceAction/:id', MaintenanceActionController.deleteMaintenanceAction);
 
 // Merchant
 router.get('/merchant/:id', Authenticator.customerAndMerchantAndStaffOnly, MerchantController.retrieveMerchant);
