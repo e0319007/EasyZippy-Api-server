@@ -2,7 +2,7 @@ const Category = require('./app/models/Category');
 const CustomerService = require('./app/services/customerService');
 const MerchantService = require('./app/services/merchantService');
 const StaffService = require('./app/services/staffService');
-const AnnouncementService = require('./app/services/annoucementService');
+const AnnouncementService = require('./app/services/announcementService');
 const NotificationService = require('./app/services/notificationService');
 
 const addDummyData = async () => {
