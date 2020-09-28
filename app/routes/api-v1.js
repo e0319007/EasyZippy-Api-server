@@ -5,6 +5,7 @@ const Upload = require('../middleware/upload');
 
 const AdvertisementController = require('../controllers/advertisementController');
 const AnnouncementController = require('../controllers/announcementController');
+const CartController = require('../controllers/cartController');
 const CategoryController = require('../controllers/categoryController');
 const CustomerController = require('../controllers/customerController');
 const KioskController = require('../controllers/kioskController');
@@ -37,6 +38,10 @@ router.get('/announcements/:count', Authenticator.customerAndStaffOnly, Announce
 router.put('/announcement/:id', Authenticator.staffOnly, AnnouncementController.updateAnnouncement);
 router.post('/announcement', Authenticator.staffOnly, AnnouncementController.createAnnouncement);
 router.delete('/announcement/:id', Authenticator.staffOnly, AnnouncementController.deleteAnnouncement);
+
+//Cart
+router.put('/saveCart/:customerId', CartController.saveItemsToCart);
+router.get('/retrieveCart/:customerId', CartController.retrieveCartByCustomerId);
 
 //Category
 router.get('/category/:id', Authenticator.customerAndMerchantAndStaffOnly, CategoryController.retrieveCategory);
