@@ -6,9 +6,8 @@ const Kiosk = require('../models/Kiosk');
 
   module.exports = { 
     createKiosk: async(kioskData, transaction) => {
-        const { lat, long } = kioskData;
-        Checker.ifEmptyThrowError(lat, Constants.Error.KioskLocationRequired);
-        Checker.ifEmptyThrowError(long, Constants.Error.KioskLocationRequired);
+        const { address } = kioskData;
+        Checker.ifEmptyThrowError(address, Constants.Error.KioskAddressRequired);
         const kiosk = await Kiosk.create(kioskData, { transaction });
         return kiosk;
     }, 
@@ -23,12 +22,10 @@ const Kiosk = require('../models/Kiosk');
       }
 
       const updateKeys = Object.keys(kioskData);
-      if(updateKeys.includes('lat') ) {
-          Checker.ifEmptyThrowError(kioskData.lat, Constants.Error.KioskLocationRequired);
+      if(updateKeys.includes('address') ) {
+          Checker.ifEmptyThrowError(kioskData.address, Constants.Error.KioskAddressRequired);
       }
-      if(updateKeys.includes('long')) {
-        Checker.ifEmptyThrowError(kioskData.long, Constants.Error.KioskLocationRequired);
-      }
+
       kiosk = await kiosk.update(kioskData, { returning: true, transaction});
 
       return kiosk;
