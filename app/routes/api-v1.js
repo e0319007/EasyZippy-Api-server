@@ -52,7 +52,7 @@ router.delete('/category/:id', Authenticator.staffOnly, CategoryController.delet
 
 //Customer
 router.get('/customer/:id', Authenticator.customerAndMerchantAndStaffOnly, CustomerController.retrieveCustomer);
-router.get('/customers', /*Authenticator.customerAndMerchantAndStaffOnly,*/ CustomerController.retrieveAllCustomers);
+router.get('/customers', Authenticator.customerAndMerchantAndStaffOnly, CustomerController.retrieveAllCustomers);
 router.put('/customer/changePassword', Authenticator.customerOnly, CustomerController.changePassword);
 router.put('/customer/:id/toggleDisable', Authenticator.staffOnly, CustomerController.toggleDisableCustomer);
 router.put('/customer/:id/activate',  Authenticator.customerOnly, CustomerController.activateCustomer);
