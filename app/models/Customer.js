@@ -25,8 +25,8 @@ Customer.init(
     },
     mobileNumber: {
       type: STRING,
-      allowNull: false,
-     unique: true
+      allowNull: true,
+      unique: true
     },
     password: {
       type: STRING,
@@ -54,6 +54,18 @@ Customer.init(
       type: BOOLEAN,
       defaultValue: false,
       allowNull: false
+    },
+    resetPasswordToken: {
+      type: STRING,
+      allowNull: true
+    },
+    resetPasswordExpires: {
+      type: Sequelize.DATE,
+      allowNull: true
+    },
+    oneTimePin: {
+      type: STRING,
+      allowNull: true
     }
   },
   {

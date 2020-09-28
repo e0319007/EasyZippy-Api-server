@@ -1,9 +1,8 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, DATE, DECIMAL, ENUM, Model
+  INTEGER, DATE, DECIMAL, STRING, Model
 } = Sequelize;
 const sequelize = require('../common/database');
-const { OrderStatus } = require('../common/constants');
 
 const Customer = require('./Customer');
 const LineItem = require('./LineItem');
@@ -36,10 +35,10 @@ Order.init(
       allowNull: false,
       defaultValue: Sequelize.NOW
     },
-    // orderStatus: {
-    //   type: ENUM(OrderStatus.Cancelled, OrderStatus.PendingPayment, OrderStatus.Processing, OrderStatus.ReadyForCollection, OrderStatus.Refund),
-    //   allowNull: false
-    // }
+    orderStatusEnum: {
+      type: STRING,
+      allowNull: false
+    }
   },
   {
     sequelize,

@@ -14,6 +14,7 @@ module.exports = {
 
       return res.status(200).send(staff);
     } catch (err) {
+      console.log(err);
       sendErrorResponse(res, err);
     }
   },
@@ -25,7 +26,17 @@ module.exports = {
       return res.status(200).send(staff);
     } catch (err) {
       sendErrorResponse(res, err);
-;    }
+    }
+  },
+
+  retrieveStaffByEmail: async(req, res) => {
+    try {
+      const { email } = req.body;
+      const staff = await StaffService.retrieveStaffByEmail(email);
+      return res.status(200).send(staff);
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
   },
 
   retrieveAllStaff: async (req, res) => {
@@ -68,11 +79,60 @@ module.exports = {
     try {
       const { email, password } = req.body;
 
-      const token = { token: await StaffService.loginStaff(email, password) };
+      const { staff, token } = await StaffService.loginStaff(email, password);
 
-      return res.status(200).send(token);
+      return res.status(200).send({ staff, token });
     } catch (err) {
       sendErrorResponse(res, err, 401);
+    }
+  },
+
+  changePassword: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { newPassword, currentPassword } = req.body;
+      let staff;
+      await sequelize.transaction(async (transaction) => {
+        staff = await StaffService.changePassword(id, newPassword, currentPassword, transaction)
+      });
+      return res.status(200).send(staff);
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
+  sendResetPasswordEmail: async (req, res) => {
+    try {
+      const { email } = req.body;
+      const host = req.headers.host;
+      await StaffService.sendResetPasswordEmail(email, host);
+      return res.status(200).send();
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
+  checkValidToken: async (req, res) => {
+    try {
+      const { email, token } = req.body;
+      await StaffService.checkValidToken(token, email);
+      return res.status(200).send();
+    } catch(err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  },
+
+  resetPassword: async (req, res) => {
+    try {
+      const { email, token, newPassword } = req.body;
+      let staff;
+      await sequelize.transaction(async (transaction) => {
+        staff = await StaffService.resetPassword(email, token, newPassword, transaction);
+      });
+      return res.status(200).send(staff);
+    } catch (err) {
+      sendErrorResponse(res, err);
     }
   }
 };
