@@ -15,12 +15,8 @@ Kiosk.init(
       autoIncrement: true,
       allowNull: false
     },
-    lat: {
-      type: DECIMAL,
-      allowNull: false
-    },
-    long: {
-      type: DECIMAL,
+    address: {
+      type: STRING,
       allowNull: false
     },
     description: {

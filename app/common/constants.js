@@ -55,7 +55,7 @@ module.exports = {
     EmailNotUnique: 'Email is not unique',
     EmailRequired: 'Email is required',
     KioskDisabled: 'Kiosk is disabled',
-    KioskLocationRequired: 'Kiosk location is required',
+    KioskAddressRequired: 'Kiosk address is required',
     KioskNotFound: 'Kiosk not found',
     FirstNameRequired: 'First name is required',
     IdRequired: 'ID is required',
