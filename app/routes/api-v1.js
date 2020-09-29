@@ -81,7 +81,7 @@ router.delete('/maintenanceAction/:id', MaintenanceActionController.deleteMainte
 // Merchant
 router.get('/merchant/:id', Authenticator.customerAndMerchantAndStaffOnly, MerchantController.retrieveMerchant);
 router.get('/merchants', Authenticator.customerAndMerchantAndStaffOnly, MerchantController.retrieveAllMerchants);
-router.put('/merchant/:id/toggleDisable', Authenticator.merchantOnly, MerchantController.toggleDisableMerchant);
+router.put('/merchant/:id/toggleDisable', Authenticator.staffOnly, MerchantController.toggleDisableMerchant);
 router.put('/merchant/:id/approve', Authenticator.staffOnly, MerchantController.approveMerchant);
 router.put('/merchant/:id/changePassword', Authenticator.merchantOnly, MerchantController.changePassword);
 router.put('/merchant/:id', Authenticator.merchantOnly, MerchantController.updateMerchant);

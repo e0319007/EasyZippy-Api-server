@@ -85,7 +85,7 @@ module.exports = {
     IdRequired: 'ID is required',
     ImageRequired: 'Image file required',
     KioskDisabled: 'Kiosk is disabled',
-    KioskLocationRequired: 'Kiosk location is required',
+    KioskAddressRequired: 'Kiosk address is required',
     KioskNotFound: 'Kiosk not found',
     LastNameRequired: 'Last name is required',
     LockerNotFound: 'Locker is not found',
