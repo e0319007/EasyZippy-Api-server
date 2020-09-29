@@ -1,5 +1,4 @@
 const sequelize = require('../common/database');
-const MerchantService = require('../services/merchantService');
 const { sendErrorResponse } = require('../common/error/errorHandler');
 
 const MaintenanceActionService = require('../services/maintenanceActionService')
@@ -39,9 +38,7 @@ module.exports = {
     try {
       const { id } = req.params;
       let maintenanceAction;
-      await sequelize.transaction(async (transaction) => {
-        maintenanceAction = await MaintenanceActionService.retrieveMaintenanceAction(id, transaction);
-      })
+      maintenanceAction = await MaintenanceActionService.retrieveMaintenanceAction(id);
       return res.status(200).send(maintenanceAction);
     } catch (err) {
       console.log(err);

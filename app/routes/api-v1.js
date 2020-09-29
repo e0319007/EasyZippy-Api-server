@@ -72,11 +72,11 @@ router.post('/kiosk', Authenticator.staffOnly, KioskController.createKiosk);
 router.delete('/kiosk/:id', Authenticator.staffOnly, KioskController.deleteKiosk);
 
 //MaintenanceAction
-router.get('/maintenanceAction/:id', MaintenanceActionController.retrieveMaintenanceAction);
-router.get('/maintenanceActions', MaintenanceActionController.retrieveAllMaintenanceAction);
-router.put('/maintenanceAction/:id', MaintenanceActionController.updateMaintenanceAction);
-router.post('/maintenanceAction', MaintenanceActionController.createMaintenanceAction);
-router.delete('/maintenanceAction/:id', MaintenanceActionController.deleteMaintenanceAction);
+router.get('/maintenanceAction/:id', Authenticator.staffOnly, MaintenanceActionController.retrieveMaintenanceAction);
+router.get('/maintenanceActions', Authenticator.staffOnly, MaintenanceActionController.retrieveAllMaintenanceAction);
+router.put('/maintenanceAction/:id', Authenticator.staffOnly, MaintenanceActionController.updateMaintenanceAction);
+router.post('/maintenanceAction', Authenticator.staffOnly, MaintenanceActionController.createMaintenanceAction);
+router.delete('/maintenanceAction/:id', Authenticator.staffOnly, MaintenanceActionController.deleteMaintenanceAction);
 
 // Merchant
 router.get('/merchant/:id', Authenticator.customerAndMerchantAndStaffOnly, MerchantController.retrieveMerchant);
@@ -96,14 +96,14 @@ router.post('/merchant/:id/uploadTenancyAgreement', Upload.preUploadCheck, Merch
 //Notification
 router.get('/notification/customer/:customerId', Authenticator.customerOnly, NotificationController.retrieveAllNotificationByCustomerId);
 router.get('/notification/merchant:merchantId', Authenticator.merchantOnly, NotificationController.retrieveAllNotificationByMerchantId);
-router.put('/readNotification/:id', NotificationController.readNotification);
-router.post('/notification/create', NotificationController.createNotification);
+router.put('/readNotification/:id', Authenticator.staffOnly, NotificationController.readNotification);
+router.post('/notification/create', Authenticator.staffOnly, NotificationController.createNotification);
 
 //Product
-router.get('/product/:id', ProductController.retrieveProduct);
-router.get('/products', ProductController.retrieveAllProduct);
-router.get('/merchantProducts/:merchantId', ProductController.retrieveProductByMerchantId);
-router.get('/categoryProducts/:categoryId', ProductController.retrieveProductByCategoryId);
+router.get('/product/:id', Authenticator.customerAndMerchantAndStaffOnly, ProductController.retrieveProduct);
+router.get('/products', Authenticator.customerAndMerchantAndStaffOnly, ProductController.retrieveAllProduct);
+router.get('/merchantProducts/:merchantId', Authenticator.customerAndMerchantAndStaffOnly, ProductController.retrieveProductByMerchantId);
+router.get('/categoryProducts/:categoryId', Authenticator.customerAndMerchantAndStaffOnly, ProductController.retrieveProductByCategoryId);
 router.put('/product/disable/:id', Authenticator.merchantAndStaffOnly, ProductController.setDisableProduct);
 router.put('/product/archive/:id', Authenticator.merchantAndStaffOnly, ProductController.toggleArchiveProduct);
 router.put('/product/:id', Authenticator.merchantOnly, ProductController.updateProduct);

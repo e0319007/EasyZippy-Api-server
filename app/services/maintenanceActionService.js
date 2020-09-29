@@ -12,7 +12,7 @@ module.exports = {
     Checker.ifEmptyThrowError(maintenanceDate, Constants.Error.DateRequired);
     Checker.ifEmptyThrowError(lockerId, 'Locker ' + Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(await Locker.findByPk(lockerId), Constants.Error.LockerNotFound);
-    const maintenanceAction = MaintenanceAction.create(maintenanceActionData, { transaction });
+    const maintenanceAction = await MaintenanceAction.create(maintenanceActionData, { transaction });
     return maintenanceAction;
   },
  
@@ -24,6 +24,9 @@ module.exports = {
     const updateKeys = Object.keys(maintenanceActionData);
     if(updateKeys.includes('maintenanceDate')) {
       Checker.ifEmptyThrowError(maintenanceActionData.maintenanceDate, Constants.Error.DateRequired);
+    }
+    if(updateKeys.includes('lockerId')) {
+      Checker.ifEmptyThrowError(await Locker.findByPk(maintenanceActionData.lockerId), Constants.Error.LockerNotFound);
     }
 
     maintenanceAction = await maintenanceAction.update(maintenanceActionData, { returning: true, transaction});

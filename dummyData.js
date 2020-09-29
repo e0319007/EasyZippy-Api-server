@@ -20,7 +20,7 @@ const addDummyData = async () => {
   await AnnouncementService.createAnnouncement({ title: 'The Ez2keep system will be disabled for maintenance on 21 September 2020', staffId });
   await NotificationService.createNotification({ title: 'Alice Ang made an order', merchantId });
   await Category.create({ name: 'Fashion & Apparel', description: 'Sample Description' });
-  let kiosk = await Kiosk.create({ lat: 0, long: 0, description: 'Description'})
+  let kiosk = await Kiosk.create({ address: '1 Sengkang Square', description: 'Sample Description'})
   let lockerType = await LockerType.create({ name: 'BIG', height: 120, width: 40, length: 50, price: 3 });
   await Locker.create({ lockerStatusEnum: 'Open', kioskId: kiosk.id, lockerTypeId: lockerType.id});
 };
