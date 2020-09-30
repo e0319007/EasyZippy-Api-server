@@ -1,4 +1,7 @@
 const paypal = require('paypal-rest-sdk');
+const sequelize = require('../common/database');
+
+const ExternalPaymentRecordService = require('../services/externalPaymentRecordService');
 
 module.exports = {
   pay: async (req, res) => {
@@ -53,16 +56,41 @@ module.exports = {
         }
       }]
     };
+
+    let paymentData;
+
+    // const paymentExecutionFunction = util.promisify(paypal.payment.execute);
+    // await paymentExecutionFunction(paymentId, execute_payment_json)
+    //   .then((err, payment) => {
+    //     console.log('payment')
+    //     console.log(payment)
+    //   })
+    //   .catch(err => console.log(err))
+    // try {
+    //   console.log('pre call')
+    //   const x = await paymentExecutionFunction(paymentId, execute_payment_json);
+    //   console.log('post call')
+    //   console.log(x);
+    //   console.log('post x')  
+    // } catch (err) {
+    //   console.log('error: ' +err)
+    // }
       
-    paypal.payment.execute(paymentId, execute_payment_json, function (err, payment) {
+    paypal.payment.execute(paymentId, execute_payment_json, (err, payment) => {
       if (err) {
         console.log(err.response);
         throw err;
       } else {
-        console.log(payment.transactions[0].amount)
+        console.log('entered else')
+        paymentData = payment;
+        console.log(paymentData)
         res.render('success');
       }
     });
+
+    setTimeout(async () => {await sequelize.transaction(async (transaction) => {
+      await ExternalPaymentRecordService.createExternalPaymentRecord(paymentData, transaction);
+    })}, 10000);
   },
 
   cancel: async (req, res) => {

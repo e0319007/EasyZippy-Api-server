@@ -12,7 +12,8 @@ module.exports = {
     Cash: 'Cash',
     CreditCard: 'Credit Card',
     Paylah: 'Paylah',
-    Paynow: 'Paynow'
+    Paynow: 'Paynow',
+    Paypal: 'Paypal'
   },
   StaffRole: {
     Admin: 'Admin',
