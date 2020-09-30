@@ -3,7 +3,7 @@ const paypal = require('paypal-rest-sdk');
 module.exports = {
   pay: async (req, res) => {
     try {
-      const { amount } = req.body;
+      const { amount } = req.params;
       const payment = {
         "intent": "sale",
         "payer": {
@@ -59,6 +59,7 @@ module.exports = {
         console.log(err.response);
         throw err;
       } else {
+        console.log(payment.transactions[0].amount)
         res.render('success');
       }
     });
