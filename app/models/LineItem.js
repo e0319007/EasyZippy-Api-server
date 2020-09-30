@@ -17,7 +17,7 @@ LineItem.init(
       autoIncrement: true,
       allowNull: false
     },
-    quantityAvailable: {
+    quantity: {
       type: INTEGER,
       allowNull: false,
       validate: {
