@@ -101,7 +101,7 @@ router.put('/readNotification/:id', Authenticator.staffOnly, NotificationControl
 router.post('/notification/create', Authenticator.staffOnly, NotificationController.createNotification);
 
 //Payment
-router.get('/pay/:amount', Authenticator.customerAndMerchantOnly, PaymentController.pay);
+router.get('/pay/:customerId/:amount', Authenticator.customerAndMerchantOnly, PaymentController.pay);
 router.get('/success', PaymentController.success);
 router.get('/cancel', PaymentController.cancel);
 
