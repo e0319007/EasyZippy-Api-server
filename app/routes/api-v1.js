@@ -30,14 +30,14 @@ router.put('/setExpireAdvertisement/:id', Authenticator.staffOnly, Advertisement
 router.delete('/advertisement/:id', Authenticator.staffOnly, AdvertisementController.deleteAdvertisement);
 
 //Announcement
-router.get('/announcement/:id', Authenticator.customerAndStaffOnly, AnnouncementController.retrieveAnnouncement);
-router.get('/announcement/staff/:staffId', Authenticator.customerAndStaffOnly, AnnouncementController.retrieveAnnouncementByStaffId);
-router.get('/announcements', Authenticator.customerAndStaffOnly, AnnouncementController.retrieveAllAnnouncement);
-router.get('/latestAnnouncement', Authenticator.customerAndStaffOnly, AnnouncementController.retrieveLatestAnnouncement);
-router.get('/announcements/:count', Authenticator.customerAndStaffOnly, AnnouncementController.retrieveLatestAnnouncementByLimit);
-router.put('/announcement/:id', Authenticator.staffOnly, AnnouncementController.updateAnnouncement);
-router.post('/announcement', Authenticator.staffOnly, AnnouncementController.createAnnouncement);
-router.delete('/announcement/:id', Authenticator.staffOnly, AnnouncementController.deleteAnnouncement);
+router.get('/announcement/:id', Authenticator.customerAndMerchantAndStaffOnly, AnnouncementController.retrieveAnnouncement);
+router.get('/announcement/staff/:staffId', Authenticator.customerAndMerchantAndStaffOnly, AnnouncementController.retrieveAnnouncementByStaffId);
+router.get('/announcements', Authenticator.customerAndMerchantAndStaffOnly, AnnouncementController.retrieveAllAnnouncement);
+router.get('/latestAnnouncement', Authenticator.customerAndMerchantAndStaffOnly, AnnouncementController.retrieveLatestAnnouncement);
+router.get('/announcements/:count', Authenticator.customerAndMerchantAndStaffOnly, AnnouncementController.retrieveLatestAnnouncementByLimit);
+router.put('/announcement/:id', Authenticator.customerAndMerchantAndStaffOnly, AnnouncementController.updateAnnouncement);
+router.post('/announcement', Authenticator.customerAndMerchantAndStaffOnly, AnnouncementController.createAnnouncement);
+router.delete('/announcement/:id', Authenticator.customerAndMerchantAndStaffOnly, AnnouncementController.deleteAnnouncement);
 
 //Category
 router.get('/category/:id', Authenticator.customerAndMerchantAndStaffOnly, CategoryController.retrieveCategory);
