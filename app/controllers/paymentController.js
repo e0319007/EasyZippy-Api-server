@@ -6,14 +6,14 @@ const ExternalPaymentRecordService = require('../services/externalPaymentRecordS
 module.exports = {
   pay: async (req, res) => {
     try {
-      const { amount } = req.params;
+      const { customerId, amount } = req.params;
       const payment = {
         "intent": "sale",
         "payer": {
           "payment_method": "paypal"
         },
         "redirect_urls": {
-          "return_url": `http://localhost:5000/success?amount=${amount}`,
+          "return_url": `http://localhost:5000/success?customerId=${customerId}&amount=${amount}`,
           "cancel_url": "http://localhost:5000/cancel"
         },
         "transactions": [{
@@ -44,6 +44,7 @@ module.exports = {
   },
 
   success: async (req, res) => {
+    const customerId = req.query.customerId;
     const amount = req.query.amount;
     let payerId = req.query.PayerID;
     let paymentId = req.query.paymentId;
@@ -89,11 +90,11 @@ module.exports = {
     });
 
     setTimeout(async () => {await sequelize.transaction(async (transaction) => {
-      await ExternalPaymentRecordService.createExternalPaymentRecord(paymentData, transaction);
+      await ExternalPaymentRecordService.createExternalPaymentRecord(customerId, paymentData, transaction);
     })}, 10000);
   },
 
   cancel: async (req, res) => {
-    res.redirect('cancel');
+    res.render('cancel');
   }
 };
