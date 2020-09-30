@@ -2,8 +2,11 @@ const Category = require('./app/models/Category');
 const CustomerService = require('./app/services/customerService');
 const MerchantService = require('./app/services/merchantService');
 const StaffService = require('./app/services/staffService');
-const AnnouncementService = require('./app/services/annoucementService');
+const AnnouncementService = require('./app/services/announcementService');
 const NotificationService = require('./app/services/notificationService');
+const Locker = require('./app/models/Locker');
+const Kiosk = require('./app/models/Kiosk');
+const LockerType = require('./app/models/LockerType');
 
 const addDummyData = async () => {
   await StaffService.createStaff({ firstName: 'Alice', lastName: 'Ang', mobileNumber: '91234567', password: 'Password123!', email: 'alice@email.com', staffRoleEnum: 'Admin' });
@@ -17,6 +20,9 @@ const addDummyData = async () => {
   await AnnouncementService.createAnnouncement({ title: 'The Ez2keep system will be disabled for maintenance on 21 September 2020', staffId });
   await NotificationService.createNotification({ title: 'Alice Ang made an order', merchantId });
   await Category.create({ name: 'Fashion & Apparel', description: 'Sample Description' });
+  let kiosk = await Kiosk.create({ address: '1 Sengkang Square', description: 'Sample Description'})
+  let lockerType = await LockerType.create({ name: 'BIG', height: 120, width: 40, length: 50, price: 3 });
+  await Locker.create({ lockerStatusEnum: 'Open', kioskId: kiosk.id, lockerTypeId: lockerType.id});
 };
 
 addDummyData();
