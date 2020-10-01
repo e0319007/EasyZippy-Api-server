@@ -9,7 +9,7 @@ const Constants = require('../common/constants')
 module.exports = {
   //send notification when staff receives a new merchant application
   notificationNewApplication: (id) => {
-    let merchant = Merchant.findByPk(id);
+    let merchant = await Merchant.findByPk(id);
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
     
     let title = 'New Merchant Application';
@@ -25,7 +25,7 @@ module.exports = {
 
   //send notification to merchant after staff approves the merchant application
   notificationAccountApproval: (id) => {
-    let merchant = Merchant.findByPk(id);
+    let merchant = await Merchant.findByPk(id);
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound); 
 
     let title = 'Account Approved';
