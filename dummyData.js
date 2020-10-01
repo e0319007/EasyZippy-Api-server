@@ -11,7 +11,7 @@ const LockerType = require('./app/models/LockerType');
 const addDummyData = async () => {
   await StaffService.createStaff({ firstName: 'Alice', lastName: 'Ang', mobileNumber: '91234567', password: 'Password123!', email: 'alice@email.com', staffRoleEnum: 'Admin' });
   await CustomerService.createCustomer({ firstName: 'Ben', lastName: 'Bek', mobileNumber: '92345678', password: 'Password123!', email: 'ben@email.com' });
-  await MerchantService.createMerchant({ name: 'Nike', mobileNumber: '93456789', password: 'Password123!', email: 'nike@email.com' });
+  await MerchantService.createMerchant({ name: 'Nike', mobileNumber: '93456789', password: 'Password123!', email: 'nike@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '2', unitNumber: '5', pointOfContact: 'David' });
   const staffId = (await StaffService.retrieveAllStaff())[0].id;
   const customerId = (await CustomerService.retrieveAllCustomers())[0].id;
   const merchantId = (await MerchantService.retrieveAllMerchants())[0].id;

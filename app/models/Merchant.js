@@ -65,27 +65,27 @@ Merchant.init(
     }, 
     blk: {
       type: STRING,
-      allowNull: true
+      allowNull: false
     },
     street: {
       type: STRING,
-      allowNull: true
+      allowNull: false
     },
     postalCode: {
       type: STRING,
-      allowNull: true
+      allowNull: false
     },
     floor: {
       type: STRING,
-      allowNull: true
+      allowNull: false
     },
     unitNumber: {
       type: STRING,
-      allowNull: true
+      allowNull: false
     },
     pointOfContact: {
       type: STRING,
-      allowNull:true
+      allowNull:false
     }
   },
   {
