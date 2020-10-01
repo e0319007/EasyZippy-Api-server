@@ -86,13 +86,15 @@ module.exports = {
   toggleDisableLockerType: async(id, transaction) => {
     const curLockerType = await LockerType.findByPk(id);
     Checker.ifEmptyThrowError(curLockerType, Constants.Error.LockerTypeNotFound)
-    console.log(curLockerType.disabled);
+    console.log('******' +curLockerType.disabled);
     let lockerType = await LockerType.update({
       disabled: !curLockerType.disabled
     }, {
       where: {
         id
       }, returning: true, transaction });
+      console.log("locker type: " +lockerType)
+      console.log(curLockerType)
     return lockerType;
   },
 

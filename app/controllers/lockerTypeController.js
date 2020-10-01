@@ -62,6 +62,7 @@ module.exports = {
       })
       return res.status(200).send(lockerType);      
     } catch(err) {
+      console.log(err)
       sendErrorResponse(res, err);
     }
   },

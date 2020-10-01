@@ -74,8 +74,8 @@ router.delete('/kiosk/:id', Authenticator.staffOnly, KioskController.deleteKiosk
 //Locker Type
 router.get('/lockerType/:id', LockerTypeController.retrieveLockerType);
 router.get('/lockerTypes', LockerTypeController.retrieveAllLockerTypes);
+router.put('/lockerType/toggleDisable/:id', LockerTypeController.toggleDisableLockerType);
 router.put('/lockerType/:id', LockerTypeController.updateLockerType);
-router.put('/lockerType/toggleDisable', LockerTypeController.toggleDisableLockerType);
 router.post('/lockerType', LockerTypeController.createLockerType);
 
 
