@@ -13,25 +13,25 @@ module.exports = {
     Checker.ifEmptyThrowError(width, 'Width ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(length, 'Length ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(price, 'Price '  + Constants.Error.XXXIsRequired);
+    Checker.ifNotNumberThrowError(lockerTypeData.width, 'Width ' + Constants.Error.XXXMustBeNumber);
+    Checker.ifNotNumberThrowError(lockerTypeData.height, 'Height ' + Constants.Error.XXXMustBeNumber);
+    Checker.ifNotNumberThrowError(lockerTypeData.length, 'Length ' + Constants.Error.XXXMustBeNumber);
+    Checker.ifNotNumberThrowError(lockerTypeData.price, 'Price ' + Constants.Error.XXXMustBeNumber);
     if (height < 0) {
-      throw new CustomError('Height ' + Constants.Error.CannotBeNegative);
+      throw new CustomError('Height ' + Constants.Error.XXXCannotBeNegative);
     }
     if (width < 0) {
-      throw new CustomError('Width ' + Constants.Error.CannotBeNegative);
+      throw new CustomError('Width ' + Constants.Error.XXXCannotBeNegative);
     }
     if (length < 0) {
-      throw new CustomError('Length ' + Constants.Error.CannotBeNegative);
+      throw new CustomError('Length ' + Constants.Error.XXXCannotBeNegative);
     }
     if (price < 0) {
-      throw new CustomError('Price ' + Constants.Error.CannotBeNegative);
+      throw new CustomError('Price ' + Constants.Error.XXXCannotBeNegative);
     }
-    Checker.ifNotNumberThrowError(lockerTypeData.width, 'Width ' + Constants.Error.MustBeNumber);
-    Checker.ifNotNumberThrowError(lockerTypeData.height, 'Height ' + Constants.Error.MustBeNumber);
-    Checker.ifNotNumberThrowError(lockerTypeData.length, 'Length ' + Constants.Error.MustBeNumber);
-    Checker.ifNotNumberThrowError(lockerTypeData.price, 'Price ' + Constants.Error.MustBeNumber);
 
     name = name.toLowerCase();
-    if (await LockerType.findOne({ where: { name } })) {
+    if (!Checker.isEmpty(await LockerType.findOne({ where: { name } }))) {
       throw new CustomError(Constants.Error.NameNotUnique);
     }
     const lockerType = await LockerType.create(lockerTypeData, { transaction });
@@ -45,16 +45,16 @@ module.exports = {
     const updateKeys = Object.keys(lockerTypeData);
 
     if(updateKeys.includes('width') && lockerTypeData.width < 0) {
-      throw new CustomError('Width ' + Constants.Error.CannotBeNegative);
+      throw new CustomError('Width ' + Constants.Error.XXXCannotBeNegative);
     }
     if(updateKeys.includes('height') && lockerTypeData.height < 0) {
-      throw new CustomError('Height ' + Constants.Error.CannotBeNegative);
+      throw new CustomError('Height ' + Constants.Error.XXXCannotBeNegative);
     }
     if(updateKeys.includes('length') && lockerTypeData.length < 0) {
-      throw new CustomError('Length ' + Constants.Error.CannotBeNegative);
+      throw new CustomError('Length ' + Constants.Error.XXXCannotBeNegative);
     }
     if(updateKeys.includes('price') && lockerTypeData.price < 0) {
-      throw new CustomError('Price ' + Constants.Error.CannotBeNegative);
+      throw new CustomError('Price ' + Constants.Error.XXXCannotBeNegative);
     }
     if(updateKeys.includes('name')) {
       let name = lockerTypeData.name.toLowerCase();
@@ -63,10 +63,10 @@ module.exports = {
         throw new CustomError(Constants.Error.NameNotUnique);
       }
     }
-    Checker.ifNotNumberThrowError(lockerTypeData.width, 'Width ' + Constants.Error.MustBeNumber);
-    Checker.ifNotNumberThrowError(lockerTypeData.height, 'Height ' + Constants.Error.MustBeNumber);
-    Checker.ifNotNumberThrowError(lockerTypeData.length, 'Length ' + Constants.Error.MustBeNumber);
-    Checker.ifNotNumberThrowError(lockerTypeData.price, 'Price ' + Constants.Error.MustBeNumber);
+    Checker.ifNotNumberThrowError(lockerTypeData.width, 'Width ' + Constants.Error.XXXMustBeNumber);
+    Checker.ifNotNumberThrowError(lockerTypeData.height, 'Height ' + Constants.Error.XXXMustBeNumber);
+    Checker.ifNotNumberThrowError(lockerTypeData.length, 'Length ' + Constants.Error.XXXMustBeNumber);
+    Checker.ifNotNumberThrowError(lockerTypeData.price, 'Price ' + Constants.Error.XXXMustBeNumber);
 
     lockerType = await lockerType.update(lockerTypeData, { returning: true, transaction })
     return lockerType;
@@ -79,26 +79,24 @@ module.exports = {
   },
 
   retrieveAllLockerType: async() => {
-    const lockerType = await LockerType.findAll();
-    return lockerType;
+    const lockerTypes = await LockerType.findAll();
+    return lockerTypes;
   },
 
   toggleDisableLockerType: async(id, transaction) => {
     const curLockerType = await LockerType.findByPk(id);
     Checker.ifEmptyThrowError(curLockerType, Constants.Error.LockerTypeNotFound)
-    console.log('******' +curLockerType.disabled);
     let lockerType = await LockerType.update({
       disabled: !curLockerType.disabled
     }, {
       where: {
         id
       }, returning: true, transaction });
-      console.log("locker type: " +lockerType)
-      console.log(curLockerType)
     return lockerType;
   },
 
   deleteLockerType: async(id) => {
+    // To check for associated lockers
     const lockerType = await LockerType.findByPk(id);
     Checker.ifEmptyThrowError(LockerType, Constants.Error.LockerTypeNotFound);
     await LockerType.destroy({
