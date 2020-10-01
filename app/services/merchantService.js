@@ -149,15 +149,15 @@ module.exports = {
 
   approveMerchant: async(id, transaction) => {
     const curMerchant = await Merchant.findByPk(id);
-    Checker.ifEmptyThrowError(curMerchant);
+    Checker.ifEmptyThrowError(curMerchant, Constants.Error.MerchantNotFound);
     let merchant = await Merchant.update( {
       approved: !curMerchant.approved
     }, {
       where: { 
-        id: id
+        id
       }
     , returning: true, transaction });
-    NotificationHelper.notificationAccountApproval(merchant.id);
+    NotificationHelper.notificationAccountApproval(merchant[1][0].dataValues.id);
     return merchant;
   },
 
