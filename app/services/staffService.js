@@ -180,7 +180,8 @@ module.exports = {
     const token = jwt.sign(
       {
         id: staff.id,
-        accountType: Constants.AccountType.Staff
+        accountType: Constants.AccountType.Staff,
+        staffRole: staff.staffRoleEnum
       },
       config.get('jwt.private_key'),
       { expiresIn: '1d' }
