@@ -4,7 +4,7 @@ const Booking = require("../models/Booking");
 const Customer = require("../models/Customer");
 
 const NotificationService = require('../services/notificationService');
-
+const Checker = require('../common/checker');
 module.exports = {
   //send notification when staff receives a new merchant application
   notificationNewApplication: (id) => {
