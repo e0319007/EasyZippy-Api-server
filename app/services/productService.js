@@ -70,7 +70,7 @@ module.exports = {
     }
 
     while(!Checker.isEmpty(product.images)) {
-      fs.remove(product.image.pop());
+      fs.remove(product.images.pop());
     } 
 
     Checker.ifEmptyThrowError(await Merchant.findByPk(merchantId), Constants.Error.MerchantNotFound)
