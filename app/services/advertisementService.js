@@ -150,6 +150,12 @@ module.exports = {
         Checker.ifEmptyThrowError(advertisementData.advertiserEmail, Constants.Error.AdvertiserEmailRequired);
       }
     }
+    if(updateKeys.includes('amountPaid')) {
+      Checker.ifNotNumberThrowError(advertisementData.amountPaid, 'Amount paid ' + Constants.Error.MustBeNumber);
+      if (advertisementData.amountPaid < 0) {
+        throw new CustomError('Amount paid ' + Constants.Error.CannotBeNegative);
+      }
+    }
     if(updateKeys.includes('image')) {
       Checker.ifEmptyThrowError(advertisementData.image, Constants.Error.ImageRequired);
       console.log(advertisement.image)

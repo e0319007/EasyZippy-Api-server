@@ -16,5 +16,10 @@ module.exports = {
     if (isEmpty(object)) {
       throw new CustomError(errorMessage);
     }
+  },
+  ifNotNumberThrowError: (object, errorMessage) => {
+    if(isNaN(object)) {
+      throw new CustomError(errorMessage);
+    }
   }
 };

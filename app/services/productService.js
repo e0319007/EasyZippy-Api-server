@@ -11,6 +11,10 @@ const fs = require('fs-extra');
 module.exports = {
   createProduct: async(productData, transaction) => {
     let {name, unitPrice, description, quantityAvailable, images, categoryId, merchantId} = productData;
+
+    Checker.ifNotNumberThrowError(unitPrice, 'Unit price ' + Constants.Error.MustBeNumber);
+    Checker.ifNotNumberThrowError(quantityAvailable, 'Quantity available ' + Constants.Error.MustBeNumber);
+
     Checker.ifEmptyThrowError(name, Constants.Error.NameRequired);
     Checker.ifEmptyThrowError(images, Constants.Error.ImageRequired);
     Checker.ifEmptyThrowError(quantityAvailable, Constants.Error.QuantityAvailableRequired);
@@ -46,12 +50,14 @@ module.exports = {
     }
     if(updateKeys.includes('quantityAvailable')) {
       Checker.ifEmptyThrowError(quantityAvailable, Constants.Error.QuantityAvailableRequired);
+      Checker.ifNotNumberThrowError(quantityAvailable, 'Quantity available ' + Constants.Error.MustBeNumber);
       if(quantityAvailable <= 0) {
         throw new CustomError("Quantity available " + Constants.Error.CannotBeNegative);
       }
     }
     if(updateKeys.includes('unitPrice')) {
       Checker.ifEmptyThrowError(unitPrice, Constants.Error.UnitPriceRequired);
+      Checker.ifNotNumberThrowError(unitPrice, 'Unit price ' + Constants.Error.MustBeNumber);
       if(unitPrice <= 0) {
         throw new CustomError("Unit price " + Constants.Error.CannotBeNegative);
       }

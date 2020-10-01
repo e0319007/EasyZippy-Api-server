@@ -97,6 +97,7 @@ module.exports = {
     MobileNumberInUse: 'Mobile number is in use',
     MobileNumberNotUnique: 'Mobile number is not unique',
     MobileNumberRequired: 'Mobile number is required',
+    MustBeNumber: 'must be a number',
     NameNotUnique: 'Name is not unique',
     NameRequired: 'Name is required',
     NewPasswordRequired: 'New password required',
