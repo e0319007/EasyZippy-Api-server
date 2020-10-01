@@ -47,7 +47,7 @@ const changePasswordForResetPassword = async(id, newPassword, transaction) => {
 
 module.exports = {
   createMerchant: async (merchantData, transaction) => {
-    const { name, mobileNumber, password, email } = merchantData;
+    const { name, mobileNumber, password, email, blk, street, postalCode, unitNumber, floor, pointOfContact } = merchantData;
 
     Checker.ifEmptyThrowError(name, Constants.Error.NameRequired);
     Checker.ifEmptyThrowError(mobileNumber, Constants.Error.MobileNumberRequired);
