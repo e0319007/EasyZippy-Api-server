@@ -5,6 +5,7 @@ const Customer = require("../models/Customer");
 
 const NotificationService = require('../services/notificationService');
 const Checker = require('../common/checker');
+const Constants = require('../common/constants')
 module.exports = {
   //send notification when staff receives a new merchant application
   notificationNewApplication: (id) => {
@@ -19,7 +20,7 @@ module.exports = {
     let senderId = id
     let receiverId = null;
     let forStaff = true;
-    NotificationService.createNotification({ title, description, modelRequired, senderModel, senderId, receiverModel, receiverId, forStaff });
+    NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId, forStaff });
   },
 
   //send notification to merchant after staff approves the merchant application
@@ -34,7 +35,7 @@ module.exports = {
     let receiverModel = Constants.ModelEnum.Merchant;
     let senderId = null
     let receiverId = id;
-    NotificationService.createNotification({ title, description, modelRequired, senderModel, senderId, receiverModel, receiverId });
+    NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
   },
 
   //send notification to merchant of new order
@@ -49,7 +50,7 @@ module.exports = {
     let receiverModel = Constants.ModelEnum.Merchant;
     let senderId = orderId;
     let receiverId = merchantId;
-    NotificationService.createNotification({ title, description, modelRequired, senderModel, senderId, receiverModel, receiverId });
+    NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
   },
 
   //send notification to customers that booking time starting in 10 mins
