@@ -48,6 +48,13 @@ module.exports = {
     MallPromotion: 'Mall Promotion',
     MerchantPromotion: 'Merchant Promotion'
   },
+  ModelEnum: {
+    Merchant: 'Merchant',
+    Booking: 'Booking',
+    Order: 'Order',
+    Staff: 'Staff',
+    Customer: 'Customer'
+  },
   Error: {
     AdvertisementOngoingCannotMarkExpire: 'Cannot mark an ongoing advertisement as expired',
     AdvertisementApprovedCannotMarkExpire : 'Cannot mark expire an advertisement waiting to be advertised',
@@ -102,6 +109,7 @@ module.exports = {
     NameRequired: 'Name is required',
     NewPasswordRequired: 'New password required',
     NotificationNotFound: 'NotificationNotFound',
+    OrderNotFound: 'Order not found',
     OtpInvalid: 'OTP is invalid',
     PasswordCannotChange: 'Password cannot be changed',
     PasswordIncorrect: 'Password is incorrect',
