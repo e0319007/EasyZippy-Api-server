@@ -9,6 +9,7 @@ const CategoryController = require('../controllers/categoryController');
 const CustomerController = require('../controllers/customerController');
 const KioskController = require('../controllers/kioskController');
 const LockerTypeController = require('../controllers/lockerTypeController');
+const MaintenanceActionController = require('../controllers/maintenanceActionController');
 const MerchantController = require('../controllers/merchantController');
 const NotificationController = require('../controllers/notificationController');
 const ProductController = require('../controllers/productController');
@@ -30,14 +31,14 @@ router.put('/setExpireAdvertisement/:id', Authenticator.staffOnly, Advertisement
 router.delete('/advertisement/:id', Authenticator.staffOnly, AdvertisementController.deleteAdvertisement);
 
 //Announcement
-router.get('/announcement/:id', Authenticator.customerAndStaffOnly, AnnouncementController.retrieveAnnouncement);
-router.get('/announcement/staff/:staffId', Authenticator.customerAndStaffOnly, AnnouncementController.retrieveAnnouncementByStaffId);
-router.get('/announcements', Authenticator.customerAndStaffOnly, AnnouncementController.retrieveAllAnnouncement);
-router.get('/latestAnnouncement', Authenticator.customerAndStaffOnly, AnnouncementController.retrieveLatestAnnouncement);
-router.get('/announcements/:count', Authenticator.customerAndStaffOnly, AnnouncementController.retrieveLatestAnnouncementByLimit);
-router.put('/announcement/:id', Authenticator.staffOnly, AnnouncementController.updateAnnouncement);
-router.post('/announcement', Authenticator.staffOnly, AnnouncementController.createAnnouncement);
-router.delete('/announcement/:id', Authenticator.staffOnly, AnnouncementController.deleteAnnouncement);
+router.get('/announcement/:id', Authenticator.customerAndMerchantAndStaffOnly, AnnouncementController.retrieveAnnouncement);
+router.get('/announcement/staff/:staffId', Authenticator.customerAndMerchantAndStaffOnly, AnnouncementController.retrieveAnnouncementByStaffId);
+router.get('/announcements', Authenticator.customerAndMerchantAndStaffOnly, AnnouncementController.retrieveAllAnnouncement);
+router.get('/latestAnnouncement', Authenticator.customerAndMerchantAndStaffOnly, AnnouncementController.retrieveLatestAnnouncement);
+router.get('/announcements/:count', Authenticator.customerAndMerchantAndStaffOnly, AnnouncementController.retrieveLatestAnnouncementByLimit);
+router.put('/announcement/:id', Authenticator.customerAndMerchantAndStaffOnly, AnnouncementController.updateAnnouncement);
+router.post('/announcement', Authenticator.customerAndMerchantAndStaffOnly, AnnouncementController.createAnnouncement);
+router.delete('/announcement/:id', Authenticator.customerAndMerchantAndStaffOnly, AnnouncementController.deleteAnnouncement);
 
 //Category
 router.get('/category/:id', Authenticator.customerAndMerchantAndStaffOnly, CategoryController.retrieveCategory);
@@ -78,8 +79,14 @@ router.put('/lockerType/toggleDisable/:id', Authenticator.staffOnly, LockerTypeC
 router.put('/lockerType/:id', Authenticator.staffOnly, LockerTypeController.updateLockerType);
 router.post('/lockerType', Authenticator.staffOnly, LockerTypeController.createLockerType);
 
+//MaintenanceAction
+router.get('/maintenanceAction/:id', Authenticator.staffOnly, MaintenanceActionController.retrieveMaintenanceAction);
+router.get('/maintenanceActions', Authenticator.staffOnly, MaintenanceActionController.retrieveAllMaintenanceAction);
+router.put('/maintenanceAction/:id', Authenticator.staffOnly, MaintenanceActionController.updateMaintenanceAction);
+router.post('/maintenanceAction', Authenticator.staffOnly, MaintenanceActionController.createMaintenanceAction);
+router.delete('/maintenanceAction/:id', Authenticator.staffOnly, MaintenanceActionController.deleteMaintenanceAction);
 
-//Merchant
+// Merchant
 router.get('/merchant/:id', Authenticator.customerAndMerchantAndStaffOnly, MerchantController.retrieveMerchant);
 router.get('/merchants', Authenticator.customerAndMerchantAndStaffOnly, MerchantController.retrieveAllMerchants);
 router.put('/merchant/:id/toggleDisable', Authenticator.staffOnly, MerchantController.toggleDisableMerchant);
@@ -96,15 +103,15 @@ router.post('/merchant/:id/uploadTenancyAgreement', Upload.preUploadCheck, Merch
 
 //Notification
 router.get('/notification/customer/:customerId', Authenticator.customerOnly, NotificationController.retrieveAllNotificationByCustomerId);
-router.get('/notification/merchant:merchantId', Authenticator.merchantOnly, NotificationController.retrieveAllNotificationByMerchantId);
-router.put('/readNotification/:id', NotificationController.readNotification);
-router.post('/notification/create', NotificationController.createNotification);
+router.get('/notification/merchant/:merchantId', Authenticator.merchantOnly, NotificationController.retrieveAllNotificationByMerchantId);
+router.put('/readNotification/:id', Authenticator.staffOnly, NotificationController.readNotification);
+router.post('/notification/create', Authenticator.staffOnly, NotificationController.createNotification);
 
 //Product
-router.get('/product/:id', ProductController.retrieveProduct);
-router.get('/products', ProductController.retrieveAllProduct);
-router.get('/merchantProducts/:merchantId', ProductController.retrieveProductByMerchantId);
-router.get('/categoryProducts/:categoryId', ProductController.retrieveProductByCategoryId);
+router.get('/product/:id', Authenticator.customerAndMerchantAndStaffOnly, ProductController.retrieveProduct);
+router.get('/products', Authenticator.customerAndMerchantAndStaffOnly, ProductController.retrieveAllProduct);
+router.get('/merchantProducts/:merchantId', Authenticator.customerAndMerchantAndStaffOnly, ProductController.retrieveProductByMerchantId);
+router.get('/categoryProducts/:categoryId', Authenticator.customerAndMerchantAndStaffOnly, ProductController.retrieveProductByCategoryId);
 router.put('/product/disable/:id', Authenticator.merchantAndStaffOnly, ProductController.setDisableProduct);
 router.put('/product/archive/:id', Authenticator.merchantAndStaffOnly, ProductController.toggleArchiveProduct);
 router.put('/product/:id', Authenticator.merchantOnly, ProductController.updateProduct);
