@@ -64,7 +64,6 @@ module.exports = {
     AnnouncementCannotBeDeleted: 'Announcement cannot be deleted',
     AnnouncementTimeInvalid: 'Announcement sent time should be in the future',
     AccessDenied: 'Access denied',
-    CannotBeNegative: 'must be more than zero',
     CategoryNameExist: 'Category name exists',
     CategoryNameRequired: 'Category name is required',
     CategoryIdRequired: 'Category ID is required',
@@ -98,7 +97,6 @@ module.exports = {
     MobileNumberInUse: 'Mobile number is in use',
     MobileNumberNotUnique: 'Mobile number is not unique',
     MobileNumberRequired: 'Mobile number is required',
-    MustBeNumber: 'must be a number',
     NameNotUnique: 'Name is not unique',
     NameRequired: 'Name is required',
     NewPasswordRequired: 'New password required',
@@ -124,6 +122,8 @@ module.exports = {
     UnexpectedError: 'An unexpected error has occured',
     UnitPriceRequired: 'Unit Price is required',
     UserUnauthorised: 'User is unauthorised',
-    XXXIsRequired:'is required'
+    XXXCannotBeNegative: 'must be more than zero',
+    XXXIsRequired:'is required',
+    XXXMustBeNumber: 'must be a number',
   }
 };
