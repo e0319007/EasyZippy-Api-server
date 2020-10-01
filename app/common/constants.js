@@ -87,6 +87,7 @@ module.exports = {
     KioskAddressRequired: 'Kiosk address is required',
     KioskNotFound: 'Kiosk not found',
     LastNameRequired: 'Last name is required',
+    LockerTypeNotFound: 'Locker type not found',
     MerchantIdRequired: 'Merchant ID is required',
     MerchantDisabled: 'Merchant is disabled',
     MerchantNotApproved: 'Merchant is not approved',
@@ -118,6 +119,7 @@ module.exports = {
     TokenNotFound: 'Token not found',
     UnexpectedError: 'An unexpected error has occured',
     UnitPriceRequired: 'Unit Price is required',
-    UserUnauthorised: 'User is unauthorised'
+    UserUnauthorised: 'User is unauthorised',
+    XXXIsRequired:'is required'
   }
 };

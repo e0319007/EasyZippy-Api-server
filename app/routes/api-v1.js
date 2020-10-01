@@ -70,7 +70,9 @@ router.put('/kiosk/:id', Authenticator.staffOnly, KioskController.updateKiosk);
 router.post('/kiosk', Authenticator.staffOnly, KioskController.createKiosk);
 router.delete('/kiosk/:id', Authenticator.staffOnly, KioskController.deleteKiosk);
 
-// Merchant
+//Locker Type
+
+//Merchant
 router.get('/merchant/:id', Authenticator.customerAndMerchantAndStaffOnly, MerchantController.retrieveMerchant);
 router.get('/merchants', Authenticator.customerAndMerchantAndStaffOnly, MerchantController.retrieveAllMerchants);
 router.put('/merchant/:id/toggleDisable', Authenticator.staffOnly, MerchantController.toggleDisableMerchant);
