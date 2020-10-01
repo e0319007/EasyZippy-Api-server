@@ -24,21 +24,21 @@ LockerType.init(
       allowNull: false,
       validate: {
         min: 0.0
-    }
+      }
     },
     width: {
       type: DOUBLE,
       allowNull: false,
       validate: {
         min: 0.0
-    }
+      }
     },
     length: {
       type: DOUBLE,
       allowNull: false,
       validate: {
         min: 0.0
-    }
+      }
     },
     price: {
       type: DECIMAL,
