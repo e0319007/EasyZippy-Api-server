@@ -62,6 +62,30 @@ Merchant.init(
       validate: {
           min: 0.0
       }
+    }, 
+    blk: {
+      type: STRING,
+      allowNull: true
+    },
+    street: {
+      type: STRING,
+      allowNull: true
+    },
+    postalCode: {
+      type: STRING,
+      allowNull: true
+    },
+    floor: {
+      type: STRING,
+      allowNull: true
+    },
+    unitNumber: {
+      type: STRING,
+      allowNull: true
+    },
+    pointOfContact: {
+      type: STRING,
+      allowNull:true
     }
   },
   {
