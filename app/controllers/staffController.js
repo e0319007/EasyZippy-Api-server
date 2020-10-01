@@ -48,6 +48,15 @@ module.exports = {
     }
   },
 
+  retrieveStaffRoles: async (req, res) => {
+    try {
+      const staffRoles = await StaffService.retrieveStaffRoles();
+      return res.status(200).send(staffRoles);
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
   updateStaff: async (req, res) => {
     try {
       const staffData = req.body;

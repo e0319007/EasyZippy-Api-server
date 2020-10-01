@@ -121,6 +121,7 @@ router.post('/product', Authenticator.merchantOnly, ProductController.createProd
 
 //Staff
 router.get('/staff/:id', Authenticator.staffOnly, StaffController.retrieveStaff);
+router.get('/staff/staffRoles', Authenticator.staffOnly, StaffController.retrieveStaffRoles);
 router.get('/staff', Authenticator.staffOnly, StaffController.retrieveAllStaff);
 router.put('/staff/:id/changePassword', Authenticator.staffOnly, StaffController.changePassword);
 router.put('/staff/:id', Authenticator.staffOnly, StaffController.updateStaff);
