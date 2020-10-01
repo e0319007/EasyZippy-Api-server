@@ -10,10 +10,9 @@ module.exports = {
       let lockerType;
       await sequelize.transaction(async (transaction) => {
         lockerType = await LockerTypeService.createLockerType(lockerTypeData, transaction);
-    });
+      });
       return res.status(200).send(lockerType);
     } catch(err) {
-      console.log(err);
       sendErrorResponse(res, err);
     }
   },
@@ -25,10 +24,9 @@ module.exports = {
       const { id } = req.params;
       await sequelize.transaction(async (transaction) => {
         lockerType = await LockerTypeService.updateLockerType(id, lockerTypeData, transaction);
-    });
+      });
       return res.status(200).send(lockerType);
     } catch(err) {
-      console.log(err);
       sendErrorResponse(res, err);
     }
   },
@@ -39,7 +37,6 @@ module.exports = {
       let lockerType = await LockerTypeService.retrieveLockerType(id);
       return res.status(200).send(lockerType);      
     } catch(err) {
-      console.log(err);
       sendErrorResponse(res, err);
     }
   },
@@ -62,7 +59,6 @@ module.exports = {
       })
       return res.status(200).send(lockerType);      
     } catch(err) {
-      console.log(err)
       sendErrorResponse(res, err);
     }
   },
@@ -71,7 +67,6 @@ module.exports = {
     try {
       let { id } = req.params;
       await LockerTypeService.deleteLockerType(id);
-      console.log(id)      
       return res.status(200).send();
     } catch(err) {
       sendErrorResponse(res, err);
