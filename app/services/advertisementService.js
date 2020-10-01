@@ -151,9 +151,9 @@ module.exports = {
       }
     }
     if(updateKeys.includes('amountPaid')) {
-      Checker.ifNotNumberThrowError(advertisementData.amountPaid, 'Amount paid ' + Constants.Error.MustBeNumber);
+      Checker.ifNotNumberThrowError(advertisementData.amountPaid, 'Amount paid ' + Constants.Error.XXXMustBeNumber);
       if (advertisementData.amountPaid < 0) {
-        throw new CustomError('Amount paid ' + Constants.Error.CannotBeNegative);
+        throw new CustomError('Amount paid ' + Constants.Error.XXXCannotBeNegative);
       }
     }
     if(updateKeys.includes('image')) {

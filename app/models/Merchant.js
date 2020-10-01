@@ -63,10 +63,6 @@ Merchant.init(
           min: 0.0
       }
     }, 
-    buildingAddress: {
-      type: STRING,
-      allowNull: true
-    },
     blk: {
       type: STRING,
       allowNull: true
