@@ -12,8 +12,8 @@ module.exports = {
   createProduct: async(productData, transaction) => {
     let {name, unitPrice, description, quantityAvailable, images, categoryId, merchantId} = productData;
 
-    Checker.ifNotNumberThrowError(unitPrice, 'Unit price ' + Constants.Error.MustBeNumber);
-    Checker.ifNotNumberThrowError(quantityAvailable, 'Quantity available ' + Constants.Error.MustBeNumber);
+    Checker.ifNotNumberThrowError(unitPrice, 'Unit price ' + Constants.Error.XXXMustBeNumber);
+    Checker.ifNotNumberThrowError(quantityAvailable, 'Quantity available ' + Constants.Error.XXXMustBeNumber);
 
     Checker.ifEmptyThrowError(name, Constants.Error.NameRequired);
     Checker.ifEmptyThrowError(images, Constants.Error.ImageRequired);
@@ -24,10 +24,10 @@ module.exports = {
     Checker.ifEmptyThrowError(await Merchant.findByPk(merchantId), Constants.Error.MerchantNotFound)
     Checker.ifEmptyThrowError(await Category.findByPk(categoryId), Constants.Error.CategoryNotFound)
     if(unitPrice <= 0) {
-      throw new CustomError("Unit price " + Constants.Error.CannotBeNegative);
+      throw new CustomError("Unit price " + Constants.Error.XXXCannotBeNegative);
     }
     if(quantityAvailable <= 0) {
-      throw new CustomError("Quantity available " + Constants.Error.CannotBeNegative);
+      throw new CustomError("Quantity available " + Constants.Error.XXXCannotBeNegative);
     }
     const product = await Product.create(productData, { transaction });
     
@@ -50,16 +50,16 @@ module.exports = {
     }
     if(updateKeys.includes('quantityAvailable')) {
       Checker.ifEmptyThrowError(quantityAvailable, Constants.Error.QuantityAvailableRequired);
-      Checker.ifNotNumberThrowError(quantityAvailable, 'Quantity available ' + Constants.Error.MustBeNumber);
+      Checker.ifNotNumberThrowError(quantityAvailable, 'Quantity available ' + Constants.Error.XXXMustBeNumber);
       if(quantityAvailable <= 0) {
-        throw new CustomError("Quantity available " + Constants.Error.CannotBeNegative);
+        throw new CustomError("Quantity available " + Constants.Error.XXXCannotBeNegative);
       }
     }
     if(updateKeys.includes('unitPrice')) {
       Checker.ifEmptyThrowError(unitPrice, Constants.Error.UnitPriceRequired);
-      Checker.ifNotNumberThrowError(unitPrice, 'Unit price ' + Constants.Error.MustBeNumber);
+      Checker.ifNotNumberThrowError(unitPrice, 'Unit price ' + Constants.Error.XXXMustBeNumber);
       if(unitPrice <= 0) {
-        throw new CustomError("Unit price " + Constants.Error.CannotBeNegative);
+        throw new CustomError("Unit price " + Constants.Error.XXXCannotBeNegative);
       }
     }
     if(updateKeys.includes('categoryId')) {

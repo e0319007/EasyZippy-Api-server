@@ -49,12 +49,22 @@ const changePasswordForResetPassword = async(id, newPassword, transaction) => {
 
 module.exports = {
   createMerchant: async (merchantData, transaction) => {
-    const { name, mobileNumber, password, email } = merchantData;
+    const { name, mobileNumber, password, email, blk, street, postalCode, unitNumber, floor, pointOfContact } = merchantData;
 
     Checker.ifEmptyThrowError(name, Constants.Error.NameRequired);
     Checker.ifEmptyThrowError(mobileNumber, Constants.Error.MobileNumberRequired);
     Checker.ifEmptyThrowError(password, Constants.Error.PasswordRequired);
     Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
+    Checker.ifEmptyThrowError(blk, 'Blk ' + Constants.Error.XXXIsRequired);
+    Checker.ifNotNumberThrowError(blk, 'Blk ' + Constants.Error.XXXMustBeNumber)
+    Checker.ifEmptyThrowError(street, 'Street ' + Constants.Error.XXXIsRequired);
+    Checker.ifEmptyThrowError(postalCode, 'Postal code ' + Constants.Error.XXXIsRequired);
+    Checker.ifNotNumberThrowError(postalCode, 'Postal code ' + Constants.Error.XXXMustBeNumber)
+    Checker.ifEmptyThrowError(unitNumber, 'Unit number ' + Constants.Error.XXXIsRequired);
+    Checker.ifNotNumberThrowError(unitNumber, 'Unit number ' + Constants.Error.XXXMustBeNumber)
+    Checker.ifEmptyThrowError(pointOfContact, 'Point of contact ' + Constants.Error.XXXIsRequired);
+    Checker.ifEmptyThrowError(floor, 'Floor ' + Constants.Error.XXXIsRequired);
+    Checker.ifNotNumberThrowError(floor, 'Floor ' + Constants.Error.XXXMustBeNumber)
 
     merchantData.email = merchantData.email.toLowerCase();
 
@@ -120,6 +130,28 @@ module.exports = {
         throw new CustomError(Constants.Error.MobileNumberNotUnique);
       }
     }
+    if(updateKeys.includes('blk')) {
+      Checker.ifEmptyThrowError(merchantData.blk, 'Blk number ' + Constants.Error.XXXIsRequired);
+      Checker.ifNotNumberThrowError(merchantData.blk, 'Blk ' + Constants.Error.XXXMustBeNumber)
+    }
+    if(updateKeys.includes('street')) {
+      Checker.ifEmptyThrowError(merchantData.street, 'Street ' + Constants.Error.XXXIsRequired);    
+    }
+    if(updateKeys.includes('postalCode')) {
+      Checker.ifNotNumberThrowError(merchantData.postalCode, 'Postal Code ' + Constants.Error.XXXMustBeNumber)
+      Checker.ifEmptyThrowError(merchantData.postalCode, 'Postal code ' + Constants.Error.XXXIsRequired);    
+    }
+    if(updateKeys.includes('unitNumber')) {
+      Checker.ifNotNumberThrowError(merchantData.unitNumber, 'Unit number ' + Constants.Error.XXXMustBeNumber)
+      Checker.ifEmptyThrowError(merchantData.unitNumber, 'Unit number ' + Constants.Error.XXXIsRequired);
+    }
+    if(updateKeys.includes('pointOfContact')) {
+      Checker.ifEmptyThrowError(merchantData.pointOfContact, 'Point of contact ' + Constants.Error.XXXIsRequired);
+    }
+    if(updateKeys.includes('floor')) {
+      Checker.ifEmptyThrowError(merchantData.floor, 'Floor ' + Constants.Error.XXXIsRequired);
+    }
+
     if(updateKeys.includes('email')) {
       Checker.ifEmptyThrowError(merchantData.email, Constants.Error.EmailRequired);
       const merchantWithEmail = await Merchant.findOne({ where: { email: merchantData.email } });
