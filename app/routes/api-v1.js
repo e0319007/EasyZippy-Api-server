@@ -120,8 +120,8 @@ router.post('/product/addImage', Authenticator.merchantOnly, Upload.preUploadChe
 router.post('/product', Authenticator.merchantOnly, ProductController.createProduct);
 
 //Staff
-router.get('/staff/:id', Authenticator.staffOnly, StaffController.retrieveStaff);
 router.get('/staff/staffRoles', Authenticator.staffOnly, StaffController.retrieveStaffRoles);
+router.get('/staff/:id', Authenticator.staffOnly, StaffController.retrieveStaff);
 router.get('/staff', Authenticator.staffOnly, StaffController.retrieveAllStaff);
 router.put('/staff/:id/changePassword', Authenticator.staffOnly, StaffController.changePassword);
 router.put('/staff/:id', Authenticator.staffOnly, StaffController.updateStaff);
