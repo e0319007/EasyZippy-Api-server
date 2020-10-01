@@ -40,7 +40,7 @@ module.exports = {
 
   //send notification to merchant of new order
   notificationNewOrder : async(orderId, merchantId) => {
-    let order = Order.findByPk(id);
+    let order = await Order.findByPk(id);
     Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound); 
 
     let title = 'New Order';
