@@ -8,6 +8,7 @@ const AnnouncementController = require('../controllers/announcementController');
 const CategoryController = require('../controllers/categoryController');
 const CustomerController = require('../controllers/customerController');
 const KioskController = require('../controllers/kioskController');
+const LockerTypeController = require('../controllers/lockerTypeController');
 const MerchantController = require('../controllers/merchantController');
 const NotificationController = require('../controllers/notificationController');
 const ProductController = require('../controllers/productController');
@@ -71,6 +72,12 @@ router.post('/kiosk', Authenticator.staffOnly, KioskController.createKiosk);
 router.delete('/kiosk/:id', Authenticator.staffOnly, KioskController.deleteKiosk);
 
 //Locker Type
+router.get('/lockerType/:id', LockerTypeController.retrieveLockerType);
+router.get('/lockerTypes', LockerTypeController.retrieveAllLockerTypes);
+router.put('/lockerType/:id', LockerTypeController.updateLockerType);
+router.put('/lockerType/toggleDisable', LockerTypeController.toggleDisableLockerType);
+router.post('/lockerType', LockerTypeController.createLockerType);
+
 
 //Merchant
 router.get('/merchant/:id', Authenticator.customerAndMerchantAndStaffOnly, MerchantController.retrieveMerchant);
