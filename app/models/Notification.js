@@ -3,8 +3,6 @@ const {
   INTEGER, STRING, DATE, BOOLEAN, Model
 } = Sequelize;
 const sequelize = require('../common/database');
-const Customer = require('./Customer');
-const Merchant = require('./Merchant');
 
 class Notification extends Model {
 }
@@ -34,6 +32,27 @@ Notification.init(
       type: DATE,
       allowNull: false,
       defaultValue: Sequelize.NOW
+    },
+    senderModel: {
+      type: STRING,
+      allowNull: true
+    },
+    senderId: {
+      type: INTEGER,
+      allowNull: true
+    },
+    receiverModel: {
+      type: STRING,
+      allowNull: true
+    },
+    receiverId: {
+      type: INTEGER,
+      allowNull: true
+    },
+    forStaff: {
+      type: BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     }
   },
   {
@@ -42,11 +61,5 @@ Notification.init(
     underscored: true
   }
 );
-
-Notification.belongsTo(Customer);
-Customer.hasMany(Notification);
-
-Notification.belongsTo(Merchant);
-Merchant.hasMany(Notification);
 
 module.exports = Notification;
