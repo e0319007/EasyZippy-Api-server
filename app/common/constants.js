@@ -64,7 +64,6 @@ module.exports = {
     AnnouncementCannotBeDeleted: 'Announcement cannot be deleted',
     AnnouncementTimeInvalid: 'Announcement sent time should be in the future',
     AccessDenied: 'Access denied',
-    CannotBeNegative: 'must be more than zero',
     CategoryNameExist: 'Category name exists',
     CategoryNameRequired: 'Category name is required',
     CategoryIdRequired: 'Category ID is required',
@@ -88,6 +87,7 @@ module.exports = {
     KioskAddressRequired: 'Kiosk address is required',
     KioskNotFound: 'Kiosk not found',
     LastNameRequired: 'Last name is required',
+    LockerTypeNotFound: 'Locker type not found',
     LockerNotFound: 'Locker is not found',
     MaintenanceActionNotFound: 'Maintenance action not found',
     MerchantIdRequired: 'Merchant ID is required',
@@ -122,6 +122,9 @@ module.exports = {
     TokenNotFound: 'Token not found',
     UnexpectedError: 'An unexpected error has occured',
     UnitPriceRequired: 'Unit Price is required',
-    UserUnauthorised: 'User is unauthorised'
+    UserUnauthorised: 'User is unauthorised',
+    XXXCannotBeNegative: 'must be more than zero',
+    XXXIsRequired:'is required',
+    XXXMustBeNumber: 'must be a number',
   }
 };
