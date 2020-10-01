@@ -8,12 +8,12 @@ const Checker = require('../common/checker');
 const Constants = require('../common/constants')
 module.exports = {
   //send notification when staff receives a new merchant application
-  notificationNewApplication: (id) => {
+  notificationNewApplication: async(id) => {
     let merchant = await Merchant.findByPk(id);
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
     
     let title = 'New Merchant Application';
-    let description = 'New merchant(' + merchant.name + ') waiting for approval.';
+    let description = 'Click to view application by ' + merchant.name + '.';
     
     let senderModel = Constants.ModelEnum.Merchant;
     let receiverModel = Constants.ModelEnum.Staff;
@@ -24,7 +24,7 @@ module.exports = {
   },
 
   //send notification to merchant after staff approves the merchant application
-  notificationAccountApproval: (id) => {
+  notificationAccountApproval: async(id) => {
     let merchant = await Merchant.findByPk(id);
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound); 
 
@@ -39,7 +39,7 @@ module.exports = {
   },
 
   //send notification to merchant of new order
-  notificationNewOrder : (orderId, merchantId) => {
+  notificationNewOrder : async(orderId, merchantId) => {
     let order = Order.findByPk(id);
     Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound); 
 
@@ -54,23 +54,23 @@ module.exports = {
   },
 
   //send notification to customers that booking time starting in 10 mins
-   notificationBookingStartingSoon : (bookingId, customerId) => {
+   notificationBookingStartingSoon: async(bookingId, customerId) => {
 
   },
   //send notification to customers that booking time started
-   notificationBookingStarted : (bookingId, customerId) => {
+   notificationBookingStarted: async(bookingId, customerId) => {
 
   },
   //send notification to customers that booking time reaching in 10 mins
-   notificationBookingReachingSoon : (bookingId, customerId) => {
+   notificationBookingReachingSoon: async(bookingId, customerId) => {
 
   },
   //send notification to customer that booking time reached
-   notificationBookingReached : (bookingId, customerId) => {
+   notificationBookingReached: async(bookingId, customerId) => {
 
   },
   //send notifications to merchants that customer has received the order
-   notificationOrderReceived : (orderId, merchantId) => {
+   notificationOrderReceived: async(orderId, merchantId) => {
 
   }
 }
