@@ -59,23 +59,6 @@ module.exports = {
     };
 
     let paymentData;
-
-    // const paymentExecutionFunction = util.promisify(paypal.payment.execute);
-    // await paymentExecutionFunction(paymentId, execute_payment_json)
-    //   .then((err, payment) => {
-    //     console.log('payment')
-    //     console.log(payment)
-    //   })
-    //   .catch(err => console.log(err))
-    // try {
-    //   console.log('pre call')
-    //   const x = await paymentExecutionFunction(paymentId, execute_payment_json);
-    //   console.log('post call')
-    //   console.log(x);
-    //   console.log('post x')  
-    // } catch (err) {
-    //   console.log('error: ' +err)
-    // }
       
     paypal.payment.execute(paymentId, execute_payment_json, (err, payment) => {
       if (err) {
