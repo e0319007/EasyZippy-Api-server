@@ -37,7 +37,7 @@ module.exports = {
     }
   },
 
-  //send a string with comma separating each image
+  //send an array of image strings
   addImageForProduct: async (req, res) => {
     try {
       let array = new Array();

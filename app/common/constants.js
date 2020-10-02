@@ -12,7 +12,8 @@ module.exports = {
     Cash: 'Cash',
     CreditCard: 'Credit Card',
     Paylah: 'Paylah',
-    Paynow: 'Paynow'
+    Paynow: 'Paynow',
+    Paypal: 'Paypal'
   },
   StaffRole: {
     Admin: 'Admin',
@@ -67,6 +68,7 @@ module.exports = {
     AdvertisementTitleRequired: 'Advertisement title is required',
     AdvertiserEmailRequired: 'Advertiser email required',
     AdvertiserMobileRequired: 'Advertiser mobile required',
+    AmountRequired: 'Amount is required',
     AnnouncementNotFound: 'Announcement not found',
     AnnouncementCannotBeDeleted: 'Announcement cannot be deleted',
     AnnouncementTimeInvalid: 'Announcement sent time should be in the future',
@@ -114,6 +116,8 @@ module.exports = {
     PasswordIncorrect: 'Password is incorrect',
     PasswordRequired: 'Password is required',
     PasswordWeak: 'Password requires at least 8 characters, 1 lowercase letter, 1 uppercase letter, 1 numeric digit, and 1 special character',
+    PayloadRequired: 'Payload is required',
+    PaymentIdRequired: 'Payment ID required',
     PdfFileRequired: 'PDF file is required',
     ProductDisableError: 'Only archived products can be disabled',
     ProductNotFound: 'Product not found',
