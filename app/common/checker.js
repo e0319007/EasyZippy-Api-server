@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const Constants = require('./constants');
 const CustomError = require('./error/customError');
 
 const isEmpty = (object) => {
@@ -19,6 +20,11 @@ module.exports = {
   },
   ifNotNumberThrowError: (object, errorMessage) => {
     if(isNaN(object)) {
+      throw new CustomError(errorMessage);
+    }
+  },
+  ifNegativeThrowError: (object, errorMessage) => {
+    if(!isNaN(object) && object <= 0) {
       throw new CustomError(errorMessage);
     }
   }

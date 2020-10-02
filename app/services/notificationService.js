@@ -14,14 +14,14 @@ module.exports = {
   retrieveAllNotificationByMerchantId: async(merchantId) => {
     Checker.ifEmptyThrowError(merchantId, Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(await Merchant.findByPk(merchantId), Constants.Error.MerchantNotFound);
-    const notifications = await Notification.findAll({ where: { merchantId } });
+    const notifications = await Notification.findAll({ where: { receiverId: merchantId, receiverModel: 'Merchant' } });
     return notifications;
   },
 
   retrieveAllNotificationByCustomerId: async(customerId) => {
     Checker.ifEmptyThrowError(customerId, Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(await Merchant.findByPk(customerId), Constants.Error.CustomerNotFound);
-    const notifications = await Notification.findAll({ where: { customerId } });
+    const notifications = await Notification.findAll({ where: { receiverId: customerId, receiverModel: 'Customer'} });
     return notifications;
   },
 

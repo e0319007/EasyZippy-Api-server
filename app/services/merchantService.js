@@ -12,7 +12,6 @@ const CustomError = require('../common/error/customError');
 const Merchant = require('../models/Merchant');
 const { ifEmptyThrowError, isEmpty } = require('../common/checker');
 
-const NotificationHelper = require('../common/notificationHelper');
 
 const retrieveMerchantByEmail = async(email) => {
   const merchant = await Merchant.findOne({ where : { email } });
@@ -86,7 +85,6 @@ module.exports = {
 
     const merchant = await Merchant.create(merchantData, { transaction });
 
-    NotificationHelper.notificationNewApplication(merchant.id)
     return merchant;
   },
 
@@ -189,7 +187,6 @@ module.exports = {
         id
       }
     , returning: true, transaction });
-    NotificationHelper.notificationAccountApproval(merchant[1][0].dataValues.id);
     return merchant;
   },
 

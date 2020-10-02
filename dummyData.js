@@ -18,8 +18,14 @@ const addDummyData = async () => {
   const merchantId = (await MerchantService.retrieveAllMerchants())[0].id;
   await CustomerService.activateCustomer(customerId);
   await MerchantService.approveMerchant(merchantId);
-  await AnnouncementService.createAnnouncement({ title: 'The Ez2keep system will be disabled for maintenance on 21 September 2020', staffId });
-  await NotificationService.createNotification({ title: 'Alice Ang made an order', merchantId });
+  await AnnouncementService.createAnnouncement({ title: 'Notice', description: 'The Ez2keep system will be disabled for maintenance on 21 September 2020', staffId });
+  await NotificationService.createNotification({ title: 'New Order', description: 'Alice Ang made an order', receiverId: merchantId, receiverModel: 'Merchant' });
+  await NotificationService.createNotification({ title: 'New Order',description: 'Alice Ong made an order', receiverId: merchantId, receiverModel: 'Merchant' });
+  await NotificationService.createNotification({ title: 'New Order',description: 'Alice Wong made an order', receiverId: merchantId, receiverModel: 'Merchant' });
+  await NotificationService.createNotification({ title: 'New Order',description: 'Alice Tan made an order', receiverId: merchantId, receiverModel: 'Merchant' });
+  await NotificationService.createNotification({ title: 'New Order',description: 'Alice Ng made an order', receiverId: merchantId, receiverModel: 'Merchant' });
+  await NotificationService.createNotification({ title: 'Notification 1',description: 'Customer notification 1', receiverId: customerId, receiverModel: 'Customer' });
+  await NotificationService.createNotification({ title: 'Notification 2',description: 'Customer notification 2', receiverId: customerId, receiverModel: 'Customer' });
   await Category.create({ name: 'Fashion & Apparel', description: 'Sample Description' });
   let kiosk = await Kiosk.create({ address: '1 Sengkang Square', description: 'Sample Description'})
   let lockerType = await LockerType.create({ name: 'BIG', height: 120, width: 40, length: 50, price: 3 });

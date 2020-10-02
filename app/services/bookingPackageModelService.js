@@ -1,0 +1,112 @@
+const Checker = require('../common/checker');
+const Constants = require('../common/constants');
+const CustomError = require('../common/error/customError');
+const BookingPackageModel = require('../models/BookingPackageModel');
+const LockerType = require('../models/LockerType');
+
+module.exports = {
+  createBookingPackageModel: async(bookingPackageModelData, transaction) => {
+    const { name, description, quota, price, duration, lockerTypeId } = bookingPackageModelData;
+    Checker.ifEmptyThrowError(name, Constants.Error.NameRequired);
+    Checker.ifEmptyThrowError(quota, 'Quota ' + Constants.Error.XXXIsRequired);
+    Checker.ifNotNumberThrowError(quota, 'Quota ' + Constants.Error.XXXMustBeNumber);
+    Checker.ifNegativeThrowError(quota, 'Quota ' + Constants.Error.XXXCannotBeNegative);  
+    Checker.ifEmptyThrowError(price, 'Price ' + Constants.Error.XXXIsRequired);
+    Checker.ifNotNumberThrowError(price, 'Price ' + Constants.Error.XXXMustBeNumber);
+    Checker.ifNegativeThrowError(price, 'Price ' + Constants.Error.XXXCannotBeNegative);  
+    Checker.ifEmptyThrowError(duration, 'Duration ' + Constants.Error.XXXIsRequired);
+    Checker.ifNotNumberThrowError(duration, 'Duration ' + Constants.Error.XXXMustBeNumber);
+    Checker.ifNegativeThrowError(duration, 'Duration ' + Constants.Error.XXXCannotBeNegative);
+    Checker.ifEmptyThrowError(lockerTypeId, 'Locker type id ' + Constants.Error.XXXIsRequired);
+    Checker.ifEmptyThrowError(await LockerType.findByPk(lockerTypeId), Constants.Error.LockerTypeNotFound);
+
+    const bookingPackageModel = await BookingPackageModel.create(bookingPackageModelData, { transaction });
+    return bookingPackageModel;
+  },
+
+  updateBookingPackageModel: async(id, bookingPackageModelData, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
+    let bookingPackageModel = await BookingPackageModel.findByPk(id);
+    Checker.ifEmptyThrowError(bookingPackageModel, Constants.Error.BookingPackageModelNotFound);
+
+    const updateKeys = Object.keys(bookingPackageModelData);
+    if(updateKeys.includes('name')) {
+      Checker.ifEmptyThrowError(bookingPackageModelData.name, Constants.Error.NameRequired);
+    }
+    if(updateKeys.includes('quota')) {
+      Checker.ifEmptyThrowError(bookingPackageModelData.quota, 'Quota ' + Constants.Error.XXXIsRequired);
+      Checker.ifNotNumberThrowError(bookingPackageModelData.quota, 'Quota ' + Constants.Error.XXXMustBeNumber);  
+      Checker.ifNegativeThrowError(bookingPackageModelData.quota, 'Quota ' + Constants.Error.XXXCannotBeNegative);  
+    }
+    if(updateKeys.includes('price')) {
+      Checker.ifEmptyThrowError(bookingPackageModelData.price, 'Price ' + Constants.Error.XXXIsRequired);
+      Checker.ifNotNumberThrowError(bookingPackageModelData.price, 'Price ' + Constants.Error.XXXMustBeNumber);  
+      Checker.ifNegativeThrowError(bookingPackageModelData.price, 'Price ' + Constants.Error.XXXCannotBeNegative);  
+    }
+    if(updateKeys.includes('duration')) {
+      Checker.ifEmptyThrowError(bookingPackageModelData.duration, 'Duration ' + Constants.Error.XXXIsRequired);
+      Checker.ifNotNumberThrowError(bookingPackageModelData.duration, 'Duration ' + Constants.Error.XXXMustBeNumber);  
+      Checker.ifNegativeThrowError(bookingPackageModelData.duration, 'Duration ' + Constants.Error.XXXCannotBeNegative);  
+    }
+    if(updateKeys.includes('lockerTypeId')) {
+      Checker.ifEmptyThrowError(bookingPackageModelData.lockerTypeId, 'Locker type id ' + Constants.Error.XXXIsRequired);
+      Checker.ifEmptyThrowError(await LockerType.findByPk(bookingPackageModelData.lockerTypeId), Constants.Error.LockerTypeNotFound);  
+    }
+
+    bookingPackageModel = await BookingPackageModel.update(bookingPackageModelData, { where : { id }, returning: true, transaction });
+    return bookingPackageModel;
+  },
+
+  toggleDisableBookingPackageModel: async(id, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
+    let curBpm = await BookingPackageModel.findByPk(id);
+    Checker.ifEmptyThrowError(curBpm, Constants.Error.BookingPackageModelNotFound);
+
+    if(curBpm.published) {
+      throw new CustomError(Constants.Error.BookingPackageModelCannotBeDisabled);
+    }
+    let bookingPackageModel = await BookingPackageModel.update({
+      disabled: !curBpm.disabled
+    }, {
+      where: {
+        id
+      }, returning: true, transaction });
+      return bookingPackageModel;
+  },
+
+  togglePublishBookingPackageModel: async(id, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
+    let curBpm = await BookingPackageModel.findByPk(id);
+    Checker.ifEmptyThrowError(curBpm, Constants.Error.BookingPackageModelNotFound);
+
+    if(curBpm.disabled) {
+      throw new CustomError(Constants.Error.BookingPackageModelIsDisabled);
+    }
+    let bookingPackageModel = await BookingPackageModel.update({
+      published: !curBpm.published
+    }, {
+      where: {
+        id
+      }, returning: true, transaction });
+      return bookingPackageModel;
+  },
+
+  retrieveAllBookingPackageModel: async(id) => {
+    return await BookingPackageModel.findAll();
+  },
+
+  retrieveBookingPackageModel: async(id) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
+    let bookingPackageModel = await BookingPackageModel.findByPk(id);
+    return bookingPackageModel;
+  },
+
+  deleteBookingPackageModel: async(id) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
+    let bookingPackageModel = await BookingPackageModel.findByPk(id);
+    if(bookingPackageModel.used) {
+      throw new CustomError(Constants.Error.BookingPackageModelAlreadyUsed);
+    }
+    BookingPackageModel.destroy({ where: { id } });
+  },
+}
