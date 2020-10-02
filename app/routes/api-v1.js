@@ -128,7 +128,7 @@ router.post('/product', Authenticator.merchantOnly, ProductController.createProd
 //Staff
 router.get('/staff/staffRoles', Authenticator.staffOnly, StaffController.retrieveStaffRoles);
 router.get('/staff/:id', Authenticator.staffOnly, StaffController.retrieveStaff);
-router.get('/staff', Authenticator.staffOnly, StaffController.retrieveAllStaff);
+router.get('/staff', Authenticator.staffAdminOnly, StaffController.retrieveAllStaff);
 router.put('/staff/staffRole/:id', Authenticator.staffAdminOnly, StaffController.updateStaffRole);
 router.put('/staff/:id/changePassword', Authenticator.staffOnly, StaffController.changePassword);
 router.put('/staff/:id', Authenticator.staffOnly, StaffController.updateStaff);
