@@ -121,6 +121,8 @@ module.exports = {
     PdfFileRequired: 'PDF file is required',
     ProductDisableError: 'Only archived products can be disabled',
     ProductNotFound: 'Product not found',
+    PromotionCannotBeDeleted: 'Promotion cannot be deleted since its already used',
+    PromotionNotFound: 'Promotion not found',
     QuantityAvailableRequired: 'Quantity available is required',
     StaffDisabled: 'Staff is disabled',
     StaffNotFound: 'Staff not found',
