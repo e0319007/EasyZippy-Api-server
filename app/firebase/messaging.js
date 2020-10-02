@@ -1,7 +1,9 @@
+const config = require('config');
+
 // Initialize the default app
 var admin = require("firebase-admin");
 // While the app the not on bluemix, rmb to update the local path to the file accordingly
-var serviceAccount = require("/Users/shizhan/Desktop/capstone/api-server/app/firebase/easy_zippy_reactnative_android_firebase_adminsdk_k9h7o_06a95c884e.json");
+var serviceAccount = require(config.get('private_key_file_path'));
 var app = admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: "https://easy-zippy-reactnative-android.firebaseio.com",

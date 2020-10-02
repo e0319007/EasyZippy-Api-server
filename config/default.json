@@ -12,5 +12,6 @@
   },
   "jwt": {
     "private_key": "private_key"
-  }
+  },
+  "private_key_file_path": ""
 }

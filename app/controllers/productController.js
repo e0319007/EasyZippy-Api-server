@@ -43,7 +43,7 @@ module.exports = {
       let array = new Array();
       let i = 0
       while(!Checker.isEmpty(req.files[i])) {
-        array.push('./app/assets/' + req.files[i].filename);
+        array.push(req.files[i].filename);
         i++;
       }
       return res.status(200).send(array);
