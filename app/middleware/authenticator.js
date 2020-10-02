@@ -39,6 +39,18 @@ module.exports = {
     }
   },
 
+  staffAdminOnly: async (req, res, next) => {
+    try {
+      const token = req.header('AuthToken');
+      if (await AuthService.staffAdminOnly(token)) {
+        return next();
+      }
+      return res.status(401).send(Constants.Error.AccessDenied);
+    } catch (err) {
+      sendErrorResponse(res, err, 401);
+    }
+  },
+
   customerOnly: async (req, res, next) => {
     try {
       const token = req.header('AuthToken');
