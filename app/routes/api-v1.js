@@ -39,6 +39,7 @@ router.get('/latestAnnouncement', Authenticator.customerAndMerchantAndStaffOnly,
 router.get('/announcements/:count', Authenticator.customerAndMerchantAndStaffOnly, AnnouncementController.retrieveLatestAnnouncementByLimit);
 router.put('/announcement/:id', Authenticator.customerAndMerchantAndStaffOnly, AnnouncementController.updateAnnouncement);
 router.post('/announcement', Authenticator.customerAndMerchantAndStaffOnly, AnnouncementController.createAnnouncement);
+router.post('/announcement/subscribe', AnnouncementController.subscribeDeviceToAnnouncements);
 router.delete('/announcement/:id', Authenticator.customerAndMerchantAndStaffOnly, AnnouncementController.deleteAnnouncement);
 
 //Category
