@@ -46,7 +46,7 @@ const changePasswordForResetPassword = async(id, newPassword, transaction) => {
 
 module.exports = {
   createStaff: async (staffData, transaction) => {
-    const { firstName, lastName, mobileNumber, password, email,  staffRoleEnum} = staffData;
+    const { firstName, lastName, mobileNumber, password, email,  staffRoleEnum } = staffData;
 
     Checker.ifEmptyThrowError(firstName, Constants.Error.FirstNameRequired);
     Checker.ifEmptyThrowError(lastName, Constants.Error.LastNameRequired);
@@ -142,6 +142,20 @@ module.exports = {
       }
     }
     staff = await staff.update(staffData, { returning: true, transaction });
+    return staff;
+  },
+
+  updateStaffRole: async(id, staffRole, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
+    let staff = await Staff.findByPk(id);
+    Checker.ifEmptyThrowError(staff, Constants.Error.StaffNotFound);
+
+    if(!_.includes(Constants.StaffRole, staffRole)) {
+      throw new CustomError(staffRole + Constants.Error.EnumDoesNotExist);
+    }
+
+    staff = await Staff.update({ staffRoleEnum: staffRole }, { where: { id }, transaction, returning: true });
+
     return staff;
   },
 

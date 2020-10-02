@@ -14,7 +14,6 @@ module.exports = {
 
       return res.status(200).send(staff);
     } catch (err) {
-      console.log(err);
       sendErrorResponse(res, err);
     }
   },
@@ -64,6 +63,20 @@ module.exports = {
       let staff;
       await sequelize.transaction(async (transaction) => {
         staff = await StaffService.updateStaff(id, staffData, transaction);
+      });
+      return res.status(200).send(staff);
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
+  updateStaffRole: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { staffRole } = req.body;
+      let staff;
+      await sequelize.transaction(async (transaction) => {
+        staff = await StaffService.updateStaffRole(id, staffRole, transaction);
       });
       return res.status(200).send(staff);
     } catch (err) {
@@ -127,7 +140,6 @@ module.exports = {
       await StaffService.checkValidToken(token, email);
       return res.status(200).send();
     } catch(err) {
-      console.log(err)
       sendErrorResponse(res, err);
     }
   },
