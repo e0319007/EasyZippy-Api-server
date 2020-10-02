@@ -2,7 +2,9 @@ const sequelize = require('../common/database');
 const MerchantService = require('../services/merchantService');
 const { sendErrorResponse } = require('../common/error/errorHandler');
 const merchantService = require('../services/merchantService');
-const NotificationHelper = require('../common/notificationHelper')
+const NotificationHelper = require('../common/notificationHelper');
+const EmailHelper = require('../common/emailHelper');
+
 module.exports = {
   registerMerchant: async (req, res) => {
     try {
@@ -83,7 +85,14 @@ module.exports = {
       await sequelize.transaction(async(transaction) => {
         merchant = await MerchantService.approveMerchant(id, transaction);
       })
-      await NotificationHelper.notificationAccountApproval(merchant[1][0].dataValues.id);
+      if(merchant[1][0].dataValues.approved) {
+        await NotificationHelper.notificationAccountApproval(merchant[1][0].dataValues.id);
+        await EmailHelper.sendEmailForMerchantApproval(merchant[1][0].dataValues.email);
+      } else {
+        await NotificationHelper.notificationAccountDisapproval(merchant[1][0].dataValues.id);
+        await EmailHelper.sendEmailForMerchantDisapproval(merchant[1][0].dataValues.email);
+
+      }
       return res.status(200).send(merchant);
     } catch (err) {
       sendErrorResponse(res, err);
