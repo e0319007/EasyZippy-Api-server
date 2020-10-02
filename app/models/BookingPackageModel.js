@@ -47,20 +47,15 @@ BookingPackageModel.init(
         min: 1
       }
     },
-    published: {
-      type: BOOLEAN,
-      allowNull: false,
-      defaultValue: false
-    },
     disabled: {
       type: BOOLEAN,
-      allowNull: false,
-      defaultValue: false
+      defaultValue: false,
+      allowNull: false
     },
-    used: {
+    deleted: {
       type: BOOLEAN,
-      allowNull: false,
-      defaultValue: false
+      defaultValue: false,
+      allowNull: false
     }
   },
   {

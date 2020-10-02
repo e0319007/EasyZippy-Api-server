@@ -59,7 +59,6 @@ module.exports = {
   Error: {
     AdvertisementOngoingCannotMarkExpire: 'Cannot mark an ongoing advertisement as expired',
     AdvertisementApprovedCannotMarkExpire : 'Cannot mark expire an advertisement waiting to be advertised',
-    AdvertisementApprovedCannotDelete : 'Cannot delete an approved advertisement',
     AdvertisementDisapproveError: 'Cannot disapprove an ongoing advertisement',
     AdvertisementExpired: 'Advertisement has expired',
     AdvertisementEndDateRequired: 'Advertisement end date is required',
@@ -125,7 +124,6 @@ module.exports = {
     PayloadRequired: 'Payload is required',
     PaymentIdRequired: 'Payment ID required',
     PdfFileRequired: 'PDF file is required',
-    ProductDisableError: 'Only archived products can be disabled',
     ProductNotFound: 'Product not found',
     QuantityAvailableRequired: 'Quantity available is required',
     StaffDisabled: 'Staff is disabled',

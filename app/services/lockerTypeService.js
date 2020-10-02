@@ -95,14 +95,16 @@ module.exports = {
     return lockerType;
   },
 
-  deleteLockerType: async(id) => {
+  deleteLockerType: async(id, transaction) => {
     // To check for associated lockers
     const lockerType = await LockerType.findByPk(id);
-    Checker.ifEmptyThrowError(LockerType, Constants.Error.LockerTypeNotFound);
-    await LockerType.destroy({
+    Checker.ifEmptyThrowError(lockerType, Constants.Error.LockerTypeNotFound);
+    await LockerType.update({
+      deleted: true
+    },{
       where: {
         id
-      }
+      }, transaction
     });
   }
 }

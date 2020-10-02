@@ -218,17 +218,33 @@ module.exports = {
       return advertisement;
   },
 
-  deleteAdvertisement: async(id) => {
+  toggleDisableAdvertisement: async(id, transaction) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
-    const advertisement = await Advertisement.findByPk(id);
+    let advertisement = await Advertisement.findByPk(id);
     if(advertisement.approved) {
       throw new CustomError(Constants.Error.AdvertisementApprovedCannotDelete);
     }
     Checker.ifEmptyThrowError(advertisement, Constants.Error.AdvertisementNotFound);
-    Advertisement.destroy({
+    let ad = Advertisement.update({
+      disabled : !advertisement.disabled
+    },{
       where: {
         id
-      }
+      }, transaction
+    });
+    return ad;
+  },
+
+  deleteAdvertisement: async(id, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
+    let advertisement = await Advertisement.findByPk(id);
+    Checker.ifEmptyThrowError(advertisement, Constants.Error.AdvertisementNotFound);
+    await Advertisement.update({
+      deleted : true
+    },{
+      where: {
+        id
+      }, transaction
     });
   },
 }

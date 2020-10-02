@@ -67,6 +67,16 @@ Promotion.init(
     promotionTypeEnum: {
       type: STRING,
       allowNull: false
+    },
+    disabled: {
+      type: BOOLEAN,
+      defaultValue: false,
+      allowNull: false
+    },
+    deleted: {
+      type: BOOLEAN,
+      defaultValue: false,
+      allowNull: false
     }
   },
   {

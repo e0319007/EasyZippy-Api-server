@@ -56,14 +56,17 @@ const Kiosk = require('../models/Kiosk');
       return kiosks;
     },
 
-    deleteKiosk: async(id) => {
+    deleteKiosk: async(id, transaction) => {
       console.log(id);
       const kiosk = await Kiosk.findByPk(id);
       Checker.ifEmptyThrowError(kiosk, Constants.Error.KioskNotFound);
-      await Kiosk.destroy({
+      //do a check on the list of lockers
+      await Kiosk.update({
+        deleted: true
+      },{
         where: {
           id
-        }
+        }, transaction
       });
     }
   }

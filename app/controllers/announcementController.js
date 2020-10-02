@@ -90,7 +90,9 @@ module.exports = {
   deleteAnnouncement: async(req, res) => {
     try {
       const { id } = req.params;
-      await AnnouncementService.deleteAnnouncement(id);
+      await sequelize.transaction(async (transaction) => {
+        await AnnouncementService.deleteAnnouncement(id, transaction);
+      });
       return res.status(200).send();
     } catch (err) {
       console.log(err)

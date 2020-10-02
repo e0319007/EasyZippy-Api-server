@@ -35,7 +35,7 @@ module.exports = {
     if(updateKeys.includes('name')) {
         Checker.ifEmptyThrowError(Constants.Error.NameRequired);
     }
-    category = Category.update(
+    category = await Category.update(
       categoryData,
       { returning: true, transaction, 
         where : {
@@ -46,11 +46,13 @@ module.exports = {
     return category;
   },
 
-  deleteCategory: async(id) => {
+  deleteCategory: async(id, transaction) => {
     // To check for associated products
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let category = await Category.findByPk(id);
     Checker.ifEmptyThrowError(category, Constants.Error.CategoryNotFound);
-    Category.destroy({ where: { id } });
+    await Category.update({
+      deleted: true
+    }, { where: { id }, transaction });
   }
 }

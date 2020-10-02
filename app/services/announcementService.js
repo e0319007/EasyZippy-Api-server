@@ -61,7 +61,7 @@ module.exports = {
     return announcement
   },
 
-  deleteAnnouncement: async(id) => {
+  deleteAnnouncement: async(id, transaction) => {
     //check if announcement is sent. Cannot delete sent announcement
     const announcement = await Announcement.findByPk(id);
     Checker.ifEmptyThrowError(announcement, Constants.Error.AnnouncementNotFound);
@@ -71,7 +71,7 @@ module.exports = {
     console.log('now :'+ now)
 
     if(then > now) {
-      await Announcement.destroy({ where: { id } });
+      await Announcement.update({ deleted: true }, { where: { id }, transaction });
     } else {
       throw new CustomError(Constants.Error.AnnouncementCannotBeDeleted);
     }

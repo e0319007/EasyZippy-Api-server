@@ -83,21 +83,17 @@ module.exports = {
   
   //merchants and customers cannot see product, only staff can see the product
   //only archived products can be disabled
-  setDisableProduct: async(id, transaction) => {
+  deleteProduct: async(id, transaction) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let curProduct = await Product.findByPk(id);
     Checker.ifEmptyThrowError(curProduct, Constants.Error.ProductNotFound);
-    if(!curProduct.archived) {
-      throw new CustomError(Constants.Error.ProductDisableError);
-    }
     await Product.update({
-      disabled: true,
+      deleted: true,
     }, { where: { id }, transaction, returning: true });
-    return await Product.findByPk(id);
   },
 
   //customers cannot see product, merchants and staff can see the product
-  toggleArchiveProduct: async(id, transaction) => {
+  toggleDisableProduct: async(id, transaction) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let curProduct = await Product.findByPk(id);
     Checker.ifEmptyThrowError(curProduct, Constants.Error.ProductNotFound);

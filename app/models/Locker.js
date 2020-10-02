@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, STRING, Model
+  INTEGER, BOOLEAN, STRING, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 
@@ -21,6 +21,16 @@ Locker.init(
     },
     lockerStatusEnum: {
       type: STRING,
+      allowNull: false
+    },
+    disabled: {
+      type: BOOLEAN,
+      defaultValue: false,
+      allowNull: false
+    },
+    deleted: {
+      type: BOOLEAN,
+      defaultValue: false,
       allowNull: false
     }
   },

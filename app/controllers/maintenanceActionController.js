@@ -57,7 +57,9 @@ module.exports = {
   deleteMaintenanceAction: async (req, res) => {
     try {
       let { id } = req.params;
-      await MaintenanceActionService.deleteMaintenanceAction(id);
+      await sequelize.transaction(async (transaction) => {
+        await MaintenanceActionService.deleteMaintenanceAction(id, transaction);
+      });
       return res.status(200).send();
     } catch (err) {
       sendErrorResponse(res, err);

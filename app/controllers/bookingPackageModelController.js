@@ -47,20 +47,6 @@ module.exports = {
     }
   },
 
-  togglePublishBookingPackageModel: async(req, res) => {
-    try {
-      const { id } = req.params;
-      let bookingPackageModel;
-      await sequelize.transaction(async (transaction) => {
-        bookingPackageModel = await BookingPackageModelService.togglePublishBookingPackageModel(id, transaction)
-      });
-      return res.status(200).send(bookingPackageModel);
-    } catch (err) {
-      console.log(err)
-      sendErrorResponse(res, err);
-    }
-  },
-
   retrieveAllBookingPackageModel: async(req, res) => {
     try {
       return res.status(200).send(await BookingPackageModelService.retrieveAllBookingPackageModel());
@@ -83,7 +69,9 @@ module.exports = {
   deleteBookingPackageModel: async(req, res) => {
     try {
       const { id } = req.params;
-      await BookingPackageModelService.deleteBookingPackageModel(id);
+      await sequelize.transaction(async (transaction) => {
+        await BookingPackageModelService.deleteBookingPackageModel(id, transaction);
+      });
       return res.status(200).send();
     } catch (err) {
       console.log(err)

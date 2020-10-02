@@ -74,23 +74,6 @@ module.exports = {
       return bookingPackageModel;
   },
 
-  togglePublishBookingPackageModel: async(id, transaction) => {
-    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
-    let curBpm = await BookingPackageModel.findByPk(id);
-    Checker.ifEmptyThrowError(curBpm, Constants.Error.BookingPackageModelNotFound);
-
-    if(curBpm.disabled) {
-      throw new CustomError(Constants.Error.BookingPackageModelIsDisabled);
-    }
-    let bookingPackageModel = await BookingPackageModel.update({
-      published: !curBpm.published
-    }, {
-      where: {
-        id
-      }, returning: true, transaction });
-      return bookingPackageModel;
-  },
-
   retrieveAllBookingPackageModel: async(id) => {
     return await BookingPackageModel.findAll();
   },
@@ -101,12 +84,12 @@ module.exports = {
     return bookingPackageModel;
   },
 
-  deleteBookingPackageModel: async(id) => {
+  deleteBookingPackageModel: async(id, transaction) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let bookingPackageModel = await BookingPackageModel.findByPk(id);
     if(bookingPackageModel.used) {
       throw new CustomError(Constants.Error.BookingPackageModelAlreadyUsed);
     }
-    BookingPackageModel.destroy({ where: { id } });
+    await BookingPackageModel.update({ deleted: true }, { where: { id }, transaction });
   },
 }

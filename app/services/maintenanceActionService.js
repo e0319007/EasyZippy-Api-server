@@ -44,9 +44,9 @@ module.exports = {
     return maintenanceActions;
   },
     
-  deleteMaintenanceAction: async(id) => {
+  deleteMaintenanceAction: async(id, transaction) => {
     const maintenanceAction = await MaintenanceAction.findByPk(id);
     Checker.ifEmptyThrowError(maintenanceAction, Constants.Error.MaintenanceActionNotFound);
-    await MaintenanceAction.destroy({ where: { id } });
+    await MaintenanceAction.update({ deleted: true }, { where: { id }, transaction });
   },
 }
