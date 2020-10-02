@@ -7,6 +7,7 @@ const NotificationService = require('./app/services/notificationService');
 const Locker = require('./app/models/Locker');
 const Kiosk = require('./app/models/Kiosk');
 const LockerType = require('./app/models/LockerType');
+const Advertisement = require('./app/models/Advertisement');
 
 const addDummyData = async () => {
   await StaffService.createStaff({ firstName: 'Alice', lastName: 'Ang', mobileNumber: '91234567', password: 'Password123!', email: 'alice@email.com', staffRoleEnum: 'Admin' });
@@ -23,6 +24,9 @@ const addDummyData = async () => {
   let kiosk = await Kiosk.create({ address: '1 Sengkang Square', description: 'Sample Description'})
   let lockerType = await LockerType.create({ name: 'BIG', height: 120, width: 40, length: 50, price: 3 });
   await Locker.create({ lockerStatusEnum: 'Open', kioskId: kiosk.id, lockerTypeId: lockerType.id});
+  await Advertisement.create({ image: '1601607853991.jpeg', title: 'Lazada sale', description: 'Lazada 50% off all items',  advertiserUrl: 'http://www.lazada.com', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '91111111', advertiserEmail: 'test1@email.com', approved: true })
+  await Advertisement.create({ image: '1601608444371.jpeg', title: 'Shopee sale', description: 'Shopee 50% off all electronic items',  advertiserUrl: 'http://www.shopee.com', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '92222222', advertiserEmail: 'test2@email.com', approved: true })
+  await Advertisement.create({ image: '1601608583950.jpeg', title: 'Qoo10 sale', description: 'Qoo10 50% off apparel items',  advertiserUrl: 'http://www.qoo10.com', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '93333333', advertiserEmail: 'test3@email.com', approved: true })
 };
 
 addDummyData();

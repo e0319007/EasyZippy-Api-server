@@ -12,6 +12,7 @@ const LockerTypeController = require('../controllers/lockerTypeController');
 const MaintenanceActionController = require('../controllers/maintenanceActionController');
 const MerchantController = require('../controllers/merchantController');
 const NotificationController = require('../controllers/notificationController');
+const PaymentController = require('../controllers/paymentController');
 const ProductController = require('../controllers/productController');
 const StaffController = require('../controllers/staffController');
 
@@ -107,6 +108,11 @@ router.get('/notification/merchant/:merchantId', Authenticator.merchantOnly, Not
 router.get('/notification/staff', Authenticator.staffOnly, NotificationController.retrieveStaffNotification);
 router.put('/readNotification/:id', Authenticator.customerAndMerchantOnly, NotificationController.readNotification);
 router.post('/notification/create', Authenticator.staffOnly, NotificationController.createNotification);
+
+//Payment
+router.get('/pay/:customerId/:amount', Authenticator.customerAndMerchantOnly, PaymentController.pay);
+router.get('/success', PaymentController.success);
+router.get('/cancel', PaymentController.cancel);
 
 //Product
 router.get('/product/:id', Authenticator.customerAndMerchantAndStaffOnly, ProductController.retrieveProduct);
