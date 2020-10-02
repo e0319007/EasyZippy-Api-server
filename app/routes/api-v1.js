@@ -105,7 +105,7 @@ router.post('/merchant/:id/uploadTenancyAgreement', Upload.preUploadCheck, Merch
 router.get('/notification/customer/:customerId', Authenticator.customerOnly, NotificationController.retrieveAllNotificationByCustomerId);
 router.get('/notification/merchant/:merchantId', Authenticator.merchantOnly, NotificationController.retrieveAllNotificationByMerchantId);
 router.get('/notification/staff', Authenticator.staffOnly, NotificationController.retrieveStaffNotification);
-router.put('/readNotification/:id', Authenticator.customerAndMerchantOnly, NotificationController.readNotification);
+router.put('/readNotification/:id', Authenticator.customerAndMerchantAndStaffOnly, NotificationController.readNotification);
 router.post('/notification/create', Authenticator.staffOnly, NotificationController.createNotification);
 
 //Product
