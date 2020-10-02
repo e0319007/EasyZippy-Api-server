@@ -1,0 +1,76 @@
+const Merchant = require("../models/Merchant");
+const Order = require("../models/Order");
+const Booking = require("../models/Booking");
+const Customer = require("../models/Customer");
+
+const NotificationService = require('../services/notificationService');
+const Checker = require('../common/checker');
+const Constants = require('../common/constants')
+module.exports = {
+  //send notification when staff receives a new merchant application
+  notificationNewApplication: async(id) => {
+    let merchant = await Merchant.findByPk(id);
+    Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
+    
+    let title = 'New Merchant Application';
+    let description = 'Click to view application by ' + merchant.name + '.';
+    
+    let senderModel = Constants.ModelEnum.Merchant;
+    let receiverModel = Constants.ModelEnum.Staff;
+    let senderId = id
+    let receiverId = null;
+    let forStaff = true;
+    NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId, forStaff });
+  },
+
+  //send notification to merchant after staff approves the merchant application
+  notificationAccountApproval: async(id) => {
+    let merchant = await Merchant.findByPk(id);
+    Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound); 
+
+    let title = 'Account Approved';
+    let description = 'Your account is approved, you can start posting products!';
+    
+    let senderModel = Constants.ModelEnum.Staff;
+    let receiverModel = Constants.ModelEnum.Merchant;
+    let senderId = null
+    let receiverId = id;
+    NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
+  },
+
+  //send notification to merchant of new order
+  notificationNewOrder : async(orderId, merchantId) => {
+    let order = await Order.findByPk(id);
+    Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound); 
+
+    let title = 'New Order';
+    let description = 'You have a new order';
+    
+    let senderModel = Constants.ModelEnum.Order;
+    let receiverModel = Constants.ModelEnum.Merchant;
+    let senderId = orderId;
+    let receiverId = merchantId;
+    NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
+  },
+
+  //send notification to customers that booking time starting in 10 mins
+   notificationBookingStartingSoon: async(bookingId, customerId) => {
+
+  },
+  //send notification to customers that booking time started
+   notificationBookingStarted: async(bookingId, customerId) => {
+
+  },
+  //send notification to customers that booking time reaching in 10 mins
+   notificationBookingReachingSoon: async(bookingId, customerId) => {
+
+  },
+  //send notification to customer that booking time reached
+   notificationBookingReached: async(bookingId, customerId) => {
+
+  },
+  //send notifications to merchants that customer has received the order
+   notificationOrderReceived: async(orderId, merchantId) => {
+
+  }
+}

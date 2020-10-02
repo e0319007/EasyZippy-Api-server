@@ -49,6 +49,13 @@ module.exports = {
     MallPromotion: 'Mall Promotion',
     MerchantPromotion: 'Merchant Promotion'
   },
+  ModelEnum: {
+    Merchant: 'Merchant',
+    Booking: 'Booking',
+    Order: 'Order',
+    Staff: 'Staff',
+    Customer: 'Customer'
+  },
   Error: {
     AdvertisementOngoingCannotMarkExpire: 'Cannot mark an ongoing advertisement as expired',
     AdvertisementApprovedCannotMarkExpire : 'Cannot mark expire an advertisement waiting to be advertised',
@@ -66,7 +73,6 @@ module.exports = {
     AnnouncementCannotBeDeleted: 'Announcement cannot be deleted',
     AnnouncementTimeInvalid: 'Announcement sent time should be in the future',
     AccessDenied: 'Access denied',
-    CannotBeNegative: 'must be more than zero',
     CategoryNameExist: 'Category name exists',
     CategoryNameRequired: 'Category name is required',
     CategoryIdRequired: 'Category ID is required',
@@ -90,6 +96,7 @@ module.exports = {
     KioskAddressRequired: 'Kiosk address is required',
     KioskNotFound: 'Kiosk not found',
     LastNameRequired: 'Last name is required',
+    LockerTypeNotFound: 'Locker type not found',
     LockerNotFound: 'Locker is not found',
     MaintenanceActionNotFound: 'Maintenance action not found',
     MerchantIdRequired: 'Merchant ID is required',
@@ -103,6 +110,7 @@ module.exports = {
     NameRequired: 'Name is required',
     NewPasswordRequired: 'New password required',
     NotificationNotFound: 'NotificationNotFound',
+    OrderNotFound: 'Order not found',
     OtpInvalid: 'OTP is invalid',
     PasswordCannotChange: 'Password cannot be changed',
     PasswordIncorrect: 'Password is incorrect',
@@ -125,6 +133,9 @@ module.exports = {
     TokenNotFound: 'Token not found',
     UnexpectedError: 'An unexpected error has occured',
     UnitPriceRequired: 'Unit Price is required',
-    UserUnauthorised: 'User is unauthorised'
+    UserUnauthorised: 'User is unauthorised',
+    XXXCannotBeNegative: 'must be more than zero',
+    XXXIsRequired:'is required',
+    XXXMustBeNumber: 'must be a number',
   }
 };

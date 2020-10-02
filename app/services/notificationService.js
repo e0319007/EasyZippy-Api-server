@@ -1,6 +1,5 @@
 const Checker = require("../common/checker");
 const Constants = require('../common/constants');
-const CustomError = require("../common/error/customError");
 const Merchant = require("../models/Merchant");
 
 const Notification = require('../models/Notification');
@@ -23,6 +22,11 @@ module.exports = {
     Checker.ifEmptyThrowError(customerId, Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(await Merchant.findByPk(customerId), Constants.Error.CustomerNotFound);
     const notifications = await Notification.findAll({ where: { customerId } });
+    return notifications;
+  },
+
+  retrieveStaffNotification: async() => {
+    const notifications = await Notification.findAll({ where: { forStaff: true } });
     return notifications;
   },
 

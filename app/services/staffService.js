@@ -104,6 +104,10 @@ module.exports = {
     return staffs;
   },
 
+  retrieveStaffRoles: async () => {
+    return Constants.StaffRole;
+  },
+
   updateStaff: async(id, staffData, transaction) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let staff = await Staff.findByPk(id);
