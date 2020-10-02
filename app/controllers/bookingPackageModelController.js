@@ -47,19 +47,33 @@ module.exports = {
     }
   },
 
-  viewAllBookingPackageModel: async(req, res) => {
+  togglePublishBookingPackageModel: async(req, res) => {
     try {
-      return res.status(200).send(await BookingPackageModelService.viewAllBookingPackageModel());
+      const { id } = req.params;
+      let bookingPackageModel;
+      await sequelize.transaction(async (transaction) => {
+        bookingPackageModel = await BookingPackageModelService.togglePublishBookingPackageModel(id, transaction)
+      });
+      return res.status(200).send(bookingPackageModel);
     } catch (err) {
       console.log(err)
       sendErrorResponse(res, err);
     }
   },
 
-  viewBookingPackageModel: async(req, res) => {
+  retrieveAllBookingPackageModel: async(req, res) => {
+    try {
+      return res.status(200).send(await BookingPackageModelService.retrieveAllBookingPackageModel());
+    } catch (err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  },
+
+  retrieveBookingPackageModel: async(req, res) => {
     try {
       const { id } = req.params;
-      return res.status(200).send(await BookingPackageModelService.viewBookingPackageModel(id));
+      return res.status(200).send(await BookingPackageModelService.retrieveBookingPackageModel(id));
     } catch (err) {
       console.log(err)
       sendErrorResponse(res, err);

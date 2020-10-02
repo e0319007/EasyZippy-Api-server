@@ -57,6 +57,11 @@ BookingPackageModel.init(
       allowNull: false,
       defaultValue: false
     },
+    used: {
+      type: BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    }
   },
   {
     sequelize,
