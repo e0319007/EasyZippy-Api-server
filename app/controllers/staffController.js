@@ -52,6 +52,7 @@ module.exports = {
       const staffRoles = await StaffService.retrieveStaffRoles();
       return res.status(200).send(staffRoles);
     } catch (err) {
+      console.log(err)
       sendErrorResponse(res, err);
     }
   },

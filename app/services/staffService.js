@@ -105,7 +105,7 @@ module.exports = {
   },
 
   retrieveStaffRoles: async () => {
-    return Constants.StaffRole;
+    return Object.values(Constants.StaffRole);
   },
 
   updateStaff: async(id, staffData, transaction) => {
@@ -113,7 +113,7 @@ module.exports = {
     let staff = await Staff.findByPk(id);
     Checker.ifEmptyThrowError(staff, Constants.Error.StaffNotFound);
 
-    const updateKeys = Object.keys('staffData');
+    const updateKeys = Object.keys(staffData);
 
     if(updateKeys.includes('password')) {
       throw new CustomError(Constants.Error.PasswordCannotChange);
