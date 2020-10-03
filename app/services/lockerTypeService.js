@@ -43,6 +43,9 @@ module.exports = {
     let lockerType = await LockerType.findByPk(id);
     Checker.ifEmptyThrowError(lockerType, Constants.Error.LockerTypeNotFound);
     const updateKeys = Object.keys(lockerTypeData);
+    if(lockerType.deleted) {
+      throw new CustomError(Constants.Error.LockerTypeDeleted);
+    }
 
     if(updateKeys.includes('width') && lockerTypeData.width < 0) {
       throw new CustomError('Width ' + Constants.Error.XXXCannotBeNegative);
@@ -75,17 +78,23 @@ module.exports = {
   retrieveLockerType: async(id) => {
     const lockerType = await LockerType.findByPk(id);
     Checker.ifEmptyThrowError(lockerType, Constants.Error.LockerTypeNotFound);
+    if(lockerType.deleted) {
+      throw new CustomError(Constants.Error.LockerTypeDeleted);
+    }
     return lockerType;
   },
 
   retrieveAllLockerType: async() => {
-    const lockerTypes = await LockerType.findAll();
+    const lockerTypes = await LockerType.findAll({where: { deleted: false } });
     return lockerTypes;
   },
 
   toggleDisableLockerType: async(id, transaction) => {
     const curLockerType = await LockerType.findByPk(id);
-    Checker.ifEmptyThrowError(curLockerType, Constants.Error.LockerTypeNotFound)
+    Checker.ifEmptyThrowError(curLockerType, Constants.Error.LockerTypeNotFound);
+    if(curLockerType.deleted) {
+      throw new CustomError(Constants.Error.LockerTypeDeleted);
+    }
     let lockerType = await LockerType.update({
       disabled: !curLockerType.disabled
     }, {
@@ -95,14 +104,16 @@ module.exports = {
     return lockerType;
   },
 
-  deleteLockerType: async(id) => {
+  deleteLockerType: async(id, transaction) => {
     // To check for associated lockers
     const lockerType = await LockerType.findByPk(id);
-    Checker.ifEmptyThrowError(LockerType, Constants.Error.LockerTypeNotFound);
-    await LockerType.destroy({
+    Checker.ifEmptyThrowError(lockerType, Constants.Error.LockerTypeNotFound);
+    await LockerType.update({
+      deleted: true
+    },{
       where: {
         id
-      }
+      }, transaction
     });
   }
 }

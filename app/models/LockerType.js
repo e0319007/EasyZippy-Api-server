@@ -49,8 +49,13 @@ LockerType.init(
     },
     disabled: {
       type: BOOLEAN,
-      allowNull: false,
-      defaultValue: false
+      defaultValue: false,
+      allowNull: false
+    },
+    deleted: {
+      type: BOOLEAN,
+      defaultValue: false,
+      allowNull: false
     }
   },
   {

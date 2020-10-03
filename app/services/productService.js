@@ -41,6 +41,10 @@ module.exports = {
 
     Checker.ifEmptyThrowError(product, Constants.Error.ProductNotFound)
 
+    if(product.deleted) {
+      throw new CustomError(Constants.Error.ProductDeleted)
+    }
+
     const updateKeys = Object.keys(productData);
     if(updateKeys.includes('name')) {
       Checker.ifEmptyThrowError(name, Constants.Error.NameRequired);
@@ -83,24 +87,23 @@ module.exports = {
   
   //merchants and customers cannot see product, only staff can see the product
   //only archived products can be disabled
-  setDisableProduct: async(id, transaction) => {
+  deleteProduct: async(id, transaction) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let curProduct = await Product.findByPk(id);
     Checker.ifEmptyThrowError(curProduct, Constants.Error.ProductNotFound);
-    if(!curProduct.archived) {
-      throw new CustomError(Constants.Error.ProductDisableError);
-    }
     await Product.update({
-      disabled: true,
+      deleted: true,
     }, { where: { id }, transaction, returning: true });
-    return await Product.findByPk(id);
   },
 
   //customers cannot see product, merchants and staff can see the product
-  toggleArchiveProduct: async(id, transaction) => {
+  toggleDisableProduct: async(id, transaction) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let curProduct = await Product.findByPk(id);
     Checker.ifEmptyThrowError(curProduct, Constants.Error.ProductNotFound);
+    if(curProduct.deleted) {
+      throw new CustomError(Constants.Error.ProductDeleted)
+    }
     await Product.update({
       archived: !curProduct.archived,
     }, { where: { id }, transaction, returning: true });
@@ -111,18 +114,22 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let product = await Product.findByPk(id);
     Checker.ifEmptyThrowError(product, Constants.Error.ProductNotFound);
+    if(product.deleted) {
+      throw new CustomError(Constants.Error.ProductDeleted)
+    }
     return product
   },
 
   retrieveAllProduct: async() => {
-    return await Product.findAll();
+    return await Product.findAll({ where: { deleted: false } });
   },
 
   retrieveProductByCategoryId: async(categoryId) => {
     Checker.ifEmptyThrowError(categoryId, 'Category ' + Constants.Error.IdRequired);
     return await Product.findAll({
       where: {
-        categoryId
+        categoryId,
+        deleted: false
       }
     });
   },
@@ -131,7 +138,8 @@ module.exports = {
     Checker.ifEmptyThrowError(merchantId, 'Merchant ' + Constants.Error.IdRequired);
     return await Product.findAll({
       where: {
-        merchantId
+        merchantId,
+        deleted: false
       }
     });
   }

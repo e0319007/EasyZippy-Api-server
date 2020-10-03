@@ -16,6 +16,9 @@ const Kiosk = require('../models/Kiosk');
       Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
       let kiosk = await Kiosk.findByPk(id);
       Checker.ifEmptyThrowError(kiosk, Constants.Error.KioskNotFound);
+      if(kiosk.deleted) {
+        throw new CustomError(Constants.Error.KioskDeleted);
+      }
 
       if(kiosk.disabled) {
         throw new CustomError(Constants.Error.KioskDisabled);
@@ -36,6 +39,9 @@ const Kiosk = require('../models/Kiosk');
       const curKiosk = await Kiosk.findByPk(id);
       Checker.ifEmptyThrowError(curKiosk, Constants.Error.KioskNotFound)
       console.log(curKiosk.disabled);
+      if(curKiosk.deleted) {
+        throw new CustomError(Constants.Error.KioskDeleted);
+      }
       let kiosk = await Kiosk.update({
         disabled: !curKiosk.disabled
       }, {
@@ -48,22 +54,28 @@ const Kiosk = require('../models/Kiosk');
     retrieveKiosk: async(id) => {
       const kiosk = await Kiosk.findByPk(id);
       Checker.ifEmptyThrowError(kiosk, Constants.Error.KioskNotFound);
+      if(kiosk.deleted) {
+        throw new CustomError(Constants.Error.KioskDeleted);
+      }
       return kiosk;
     },
 
     retrieveAllKiosks: async() => {
-      const kiosks = await Kiosk.findAll();
+      const kiosks = await Kiosk.findAll({where: { deleted: false } });
       return kiosks;
     },
 
-    deleteKiosk: async(id) => {
+    deleteKiosk: async(id, transaction) => {
       console.log(id);
       const kiosk = await Kiosk.findByPk(id);
       Checker.ifEmptyThrowError(kiosk, Constants.Error.KioskNotFound);
-      await Kiosk.destroy({
+      //do a check on the list of lockers
+      await Kiosk.update({
+        deleted: true
+      },{
         where: {
           id
-        }
+        }, transaction
       });
     }
   }

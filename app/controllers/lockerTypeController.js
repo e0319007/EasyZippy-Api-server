@@ -66,7 +66,9 @@ module.exports = {
   deleteLockerType: async(req, res) => {
     try {
       let { id } = req.params;
-      await LockerTypeService.deleteLockerType(id);
+      await sequelize.transaction(async (transaction) => {
+        await LockerTypeService.deleteLockerType(id, transaction);
+      });
       return res.status(200).send();
     } catch(err) {
       sendErrorResponse(res, err);

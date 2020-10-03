@@ -71,6 +71,9 @@ module.exports = {
 
   retrieveAdvertisementById: async(id) => {
     const advertisement = await Advertisement.findByPk(id);
+    if(advertisement.deleted) {
+      throw new CustomError(Constants.Error.AdvertisementDeleted);
+    }
     Checker.ifEmptyThrowError(advertisement, Constants.Error.AdvertisementNotFound);
     return advertisement;
   },
@@ -78,7 +81,8 @@ module.exports = {
   retrieveAdvertisementByMerchantId: async(merchantId) => {
     const advertisements = await Advertisement.findAll({
       where: {
-        merchantId
+        merchantId,
+        deleted: false
       }
     });
     return advertisements;
@@ -87,14 +91,15 @@ module.exports = {
   retrieveAdvertisementByStaffId: async(staffId) => {
     const advertisements = await Advertisement.findAll({
       where: {
-        staffId
+        staffId,
+        deleted: false
       }
     });
     return advertisements;
   },
 
   retrieveAllAdvertisement: async() => {
-    return await Advertisement.findAll();
+    return await Advertisement.findAll({ where: { deleted: false } });
   },
 
   //retrieve advertisemnt that can be shown
@@ -102,6 +107,7 @@ module.exports = {
     console.log(new Date())
     let advertisments = await Advertisement.findAll({
       where: {
+        deleted: false,
         approved: true,
         expired: false,
         // $or: [
@@ -124,6 +130,9 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let advertisement = await Advertisement.findByPk(id);
     Checker.ifEmptyThrowError(advertisement, Constants.Error.AdvertisementNotFound);
+    if(advertisement.deleted) {
+      throw new CustomError(Constants.Error.AdvertisementDeleted);
+    }
 
     const updateKeys = Object.keys(advertisementData);
 
@@ -168,6 +177,9 @@ module.exports = {
   toggleApproveAdvertisement: async(id, transaction) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let curAdvertisement = await Advertisement.findByPk(id);
+    if(curAdvertisement.deleted) {
+      throw new CustomError(Constants.Error.AdvertisementDeleted);
+    }
     Checker.ifEmptyThrowError(curAdvertisement, Constants.Error.AdvertisementNotFound);
     
     let curDateTime = new Date();
@@ -199,6 +211,9 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let curAdvertisement = await Advertisement.findByPk(id);
     Checker.ifEmptyThrowError(curAdvertisement, Constants.Error.AdvertisementNotFound);
+    if(curAdvertisement.deleted) {
+      throw new CustomError(Constants.Error.AdvertisementDeleted);
+    }
     
     let curDateTime = new Date();
     if(curAdvertisement.approved && curDateTime < curAdvertisement.endDate) {
@@ -218,17 +233,36 @@ module.exports = {
       return advertisement;
   },
 
-  deleteAdvertisement: async(id) => {
+  toggleDisableAdvertisement: async(id, transaction) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
-    const advertisement = await Advertisement.findByPk(id);
+    let advertisement = await Advertisement.findByPk(id);
+    if(advertisement.deleted) {
+      throw new CustomError(Constants.Error.AdvertisementDeleted);
+    }
     if(advertisement.approved) {
       throw new CustomError(Constants.Error.AdvertisementApprovedCannotDelete);
     }
     Checker.ifEmptyThrowError(advertisement, Constants.Error.AdvertisementNotFound);
-    Advertisement.destroy({
+    let ad = Advertisement.update({
+      disabled : !advertisement.disabled
+    },{
       where: {
         id
-      }
+      }, transaction
+    });
+    return ad;
+  },
+
+  deleteAdvertisement: async(id, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
+    let advertisement = await Advertisement.findByPk(id);
+    Checker.ifEmptyThrowError(advertisement, Constants.Error.AdvertisementNotFound);
+    await Advertisement.update({
+      deleted : true
+    },{
+      where: {
+        id
+      }, transaction
     });
   },
 }

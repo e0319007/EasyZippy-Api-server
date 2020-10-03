@@ -9,13 +9,15 @@ const Locker = require('./app/models/Locker');
 const Kiosk = require('./app/models/Kiosk');
 const LockerType = require('./app/models/LockerType');
 const Advertisement = require('./app/models/Advertisement');
+const Product = require('./app/models/Product');
 
 const addDummyData = async () => {
   const staff = await StaffService.createStaff({ firstName: 'Alice', lastName: 'Ang', mobileNumber: '91234567', email: 'alice@email.com', staffRoleEnum: 'Admin' });
   const hashedPassword = await Helper.hashPassword('Password123!');
   await staff.update({ password: hashedPassword });
   await CustomerService.createCustomer({ firstName: 'Ben', lastName: 'Bek', mobileNumber: '92345678', password: 'Password123!', email: 'ben@email.com' });
-  await MerchantService.createMerchant({ name: 'Nike', mobileNumber: '93456789', password: 'Password123!', email: 'nike@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '2', unitNumber: '5', pointOfContact: 'David' });
+  let nike = await MerchantService.createMerchant({ name: 'Nike', mobileNumber: '93456789', password: 'Password123!', email: 'nike@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '2', unitNumber: '5', pointOfContact: 'David' });
+  let toysRUs = await MerchantService.createMerchant({ name: 'Toys R\' Us', mobileNumber: '93456358', password: 'Password123!', email: 'toys@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '1', unitNumber: '9', pointOfContact: 'Don' });
   const staffId = (await StaffService.retrieveAllStaff())[0].id;
   const customerId = (await CustomerService.retrieveAllCustomers())[0].id;
   const merchantId = (await MerchantService.retrieveAllMerchants())[0].id;
@@ -29,7 +31,15 @@ const addDummyData = async () => {
   await NotificationService.createNotification({ title: 'New Order',description: 'Alice Ng made an order', receiverId: merchantId, receiverModel: 'Merchant' });
   await NotificationService.createNotification({ title: 'Notification 1',description: 'Customer notification 1', receiverId: customerId, receiverModel: 'Customer' });
   await NotificationService.createNotification({ title: 'Notification 2',description: 'Customer notification 2', receiverId: customerId, receiverModel: 'Customer' });
-  await Category.create({ name: 'Fashion & Apparel', description: 'Sample Description' });
+  let toyCategory = await Category.create({ name: 'Toys', description: 'Sample Description' });
+  let bagCategory = await Category.create({ name: 'Bags', description: 'Sample Description' });
+  let bottleCategory = await Category.create({ name: 'Water Bottles', description: 'Sample Description' });
+  await Product.create({ categoryId: bagCategory.id, merchantId: nike.id, name: 'Nike Venom Bag', unitPrice: 35.5, description: 'Black', quantityAvailable: 10, images: ['bag1.jpg'],  });
+  await Product.create({ categoryId: bagCategory.id, merchantId: nike.id, name: 'Nike Sports Duffel Bag', unitPrice: 50.2, description: 'Pink', quantityAvailable: 10, images: ['bag2.jpg'] });
+  await Product.create({ categoryId: bottleCategory.id, merchantId: nike.id, name: 'Nike Sports Bottle', unitPrice: 20, description: 'Transparent 1L', quantityAvailable: 10, images: ['bo1.jpg'] });
+  await Product.create({ categoryId: toyCategory.id, merchantId: toysRUs.id, name: 'Teddy Bear', unitPrice: 15, description: 'White Bear', quantityAvailable: 10, images: ['bear.jpg'] });
+  await Product.create({ categoryId: toyCategory.id, merchantId: toysRUs.id, name: 'Doll', unitPrice: 15, description: 'Blue Hair Doll', quantityAvailable: 10, images: ['doll.jpg'] });
+  await Product.create({ categoryId: toyCategory.id, merchantId: toysRUs.id, name: 'Car', unitPrice: 105.9, description: 'Red Car', quantityAvailable: 10, images: ['car.jpg'] });
   let kiosk = await Kiosk.create({ address: '1 Sengkang Square', description: 'Sample Description'})
   let lockerType = await LockerType.create({ name: 'BIG', height: 120, width: 40, length: 50, price: 3 });
   await Locker.create({ lockerStatusEnum: 'Open', kioskId: kiosk.id, lockerTypeId: lockerType.id});
