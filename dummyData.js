@@ -1,16 +1,19 @@
-const Category = require('./app/models/Category');
+const Helper = require('./app/common/helper');
 const CustomerService = require('./app/services/customerService');
 const MerchantService = require('./app/services/merchantService');
 const StaffService = require('./app/services/staffService');
 const AnnouncementService = require('./app/services/announcementService');
 const NotificationService = require('./app/services/notificationService');
+const Category = require('./app/models/Category');
 const Locker = require('./app/models/Locker');
 const Kiosk = require('./app/models/Kiosk');
 const LockerType = require('./app/models/LockerType');
 const Advertisement = require('./app/models/Advertisement');
 
 const addDummyData = async () => {
-  await StaffService.createStaff({ firstName: 'Alice', lastName: 'Ang', mobileNumber: '91234567', password: 'Password123!', email: 'alice@email.com', staffRoleEnum: 'Admin' });
+  const staff = await StaffService.createStaff({ firstName: 'Alice', lastName: 'Ang', mobileNumber: '91234567', email: 'alice@email.com', staffRoleEnum: 'Admin' });
+  const hashedPassword = await Helper.hashPassword('Password123!');
+  await staff.update({ password: hashedPassword });
   await CustomerService.createCustomer({ firstName: 'Ben', lastName: 'Bek', mobileNumber: '92345678', password: 'Password123!', email: 'ben@email.com' });
   await MerchantService.createMerchant({ name: 'Nike', mobileNumber: '93456789', password: 'Password123!', email: 'nike@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '2', unitNumber: '5', pointOfContact: 'David' });
   const staffId = (await StaffService.retrieveAllStaff())[0].id;
