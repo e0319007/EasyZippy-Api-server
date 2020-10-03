@@ -30,7 +30,7 @@ Announcement.init(
       allowNull: false,
       defaultValue: Sequelize.NOW
     },
-    delete: {
+    deleted: {
       type: BOOLEAN,
       allowNull: false,
       defaultValue: false

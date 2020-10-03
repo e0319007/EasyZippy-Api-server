@@ -12,10 +12,22 @@ const Advertisement = require('./app/models/Advertisement');
 const Product = require('./app/models/Product');
 
 const addDummyData = async () => {
-  const staff = await StaffService.createStaff({ firstName: 'Alice', lastName: 'Ang', mobileNumber: '91234567', email: 'alice@email.com', staffRoleEnum: 'Admin' });
-  const hashedPassword = await Helper.hashPassword('Password123!');
-  await staff.update({ password: hashedPassword });
-  await CustomerService.createCustomer({ firstName: 'Ben', lastName: 'Bek', mobileNumber: '92345678', password: 'Password123!', email: 'ben@email.com' });
+  const staff1 = await StaffService.createStaff({ firstName: 'Alice', lastName: 'Ang', mobileNumber: '91234567', email: 'alice@email.com', staffRoleEnum: 'Admin' });
+  const staff2 = await StaffService.createStaff({ firstName: 'Alan', lastName: 'Tan', mobileNumber: '91238467', email: 'alan@email.com', staffRoleEnum: 'Admin' });
+  const staff3 = await StaffService.createStaff({ firstName: 'Billy', lastName: 'Lim', mobileNumber: '91144567', email: 'billy@email.com', staffRoleEnum: 'Admin' });
+  const staff4 = await StaffService.createStaff({ firstName: 'Bryce', lastName: 'Toh', mobileNumber: '95334567', email: 'bryce@email.com', staffRoleEnum: 'Employee' });
+  const staff5 = await StaffService.createStaff({ firstName: 'Dave', lastName: 'Ang', mobileNumber: '81234567', email: 'dave@email.com', staffRoleEnum: 'Employee' });
+  const staff6 = await StaffService.createStaff({ firstName: 'Eddy', lastName: 'Sim', mobileNumber: '85334567', email: 'eddy@email.com', staffRoleEnum: 'Employee' });
+  await staff1.update({ password: await Helper.hashPassword('Password123!') });
+  await staff2.update({ password: await Helper.hashPassword('Password123!') });
+  await staff3.update({ password: await Helper.hashPassword('Password123!') });
+  await staff4.update({ password: await Helper.hashPassword('Password123!') });
+  await staff5.update({ password: await Helper.hashPassword('Password123!') });
+  await staff6.update({ password: await Helper.hashPassword('Password123!') });
+  await CustomerService.createCustomer({ firstName: 'Ben', lastName: 'Bek', mobileNumber: '92585678', password: 'Password123!', email: 'ben@email.com' });
+  await CustomerService.createCustomer({ firstName: 'Dan', lastName: 'Lim', mobileNumber: '92342448', password: 'Password123!', email: 'dan@email.com' });
+  await CustomerService.createCustomer({ firstName: 'Chris', lastName: 'Tan', mobileNumber: '94785678', password: 'Password123!', email: 'chris@email.com' });
+  await CustomerService.createCustomer({ firstName: 'Vivian', lastName: 'Toh', mobileNumber: '92638678', password: 'Password123!', email: 'vivian@email.com' });
   let nike = await MerchantService.createMerchant({ name: 'Nike', mobileNumber: '93456789', password: 'Password123!', email: 'nike@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '2', unitNumber: '5', pointOfContact: 'David' });
   let toysRUs = await MerchantService.createMerchant({ name: 'Toys R\' Us', mobileNumber: '93456358', password: 'Password123!', email: 'toys@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '1', unitNumber: '9', pointOfContact: 'Don' });
   const staffId = (await StaffService.retrieveAllStaff())[0].id;
@@ -24,6 +36,8 @@ const addDummyData = async () => {
   await CustomerService.activateCustomer(customerId);
   await MerchantService.approveMerchant(merchantId);
   await AnnouncementService.createAnnouncement({ title: 'Notice', description: 'The Ez2keep system will be disabled for maintenance on 21 September 2020', staffId });
+  await AnnouncementService.createAnnouncement({ title: 'COVID-19 notice', description: 'Please wear your masks and practice social distancing at all times', staffId });
+  await AnnouncementService.createAnnouncement({ title: 'Mall early closure', description: 'Compass One will be closed at 10:00pm on 25 December 2020', staffId });
   await NotificationService.createNotification({ title: 'New Order', description: 'Alice Ang made an order', receiverId: merchantId, receiverModel: 'Merchant' });
   await NotificationService.createNotification({ title: 'New Order',description: 'Alice Ong made an order', receiverId: merchantId, receiverModel: 'Merchant' });
   await NotificationService.createNotification({ title: 'New Order',description: 'Alice Wong made an order', receiverId: merchantId, receiverModel: 'Merchant' });
