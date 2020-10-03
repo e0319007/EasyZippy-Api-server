@@ -100,11 +100,11 @@ router.put('/maintenanceAction/:id', Authenticator.staffOnly, MaintenanceActionC
 router.post('/maintenanceAction', Authenticator.staffOnly, MaintenanceActionController.createMaintenanceAction);
 router.put('/deleteMaintenanceAction/:id', Authenticator.staffOnly, MaintenanceActionController.deleteMaintenanceAction);
 
-// Merchant
+//Merchant
 router.get('/merchant/:id', Authenticator.customerAndMerchantAndStaffOnly, MerchantController.retrieveMerchant);
 router.get('/merchants', Authenticator.customerAndMerchantAndStaffOnly, MerchantController.retrieveAllMerchants);
 router.put('/merchant/:id/toggleDisable', Authenticator.staffOnly, MerchantController.toggleDisableMerchant);
-router.put('/merchant/:id/approve', Authenticator.staffOnly, MerchantController.approveMerchant);
+router.put('/merchant/:id/approve', Authenticator.staffAdminOnly, MerchantController.approveMerchant);
 router.put('/merchant/:id/changePassword', Authenticator.merchantOnly, MerchantController.changePassword);
 router.put('/merchant/:id', Authenticator.merchantOnly, MerchantController.updateMerchant);
 router.post('/merchant/login', MerchantController.loginMerchant);
@@ -141,15 +141,16 @@ router.post('/product', Authenticator.merchantOnly, ProductController.createProd
 //Staff
 router.get('/staff/staffRoles', Authenticator.staffOnly, StaffController.retrieveStaffRoles);
 router.get('/staff/:id', Authenticator.staffOnly, StaffController.retrieveStaff);
-router.get('/staff', Authenticator.staffOnly, StaffController.retrieveAllStaff);
+router.get('/staff', Authenticator.staffAdminOnly, StaffController.retrieveAllStaff);
+router.put('/staff/staffRole/:id', Authenticator.staffAdminOnly, StaffController.updateStaffRole);
 router.put('/staff/:id/changePassword', Authenticator.staffOnly, StaffController.changePassword);
 router.put('/staff/:id', Authenticator.staffOnly, StaffController.updateStaff);
-router.put('/staff/:id/toggleDisable', Authenticator.staffOnly, StaffController.toggleDisableStaff);
+router.put('/staff/:id/toggleDisable', Authenticator.staffAdminOnly, StaffController.toggleDisableStaff);
 router.post('/staff/login', StaffController.loginStaff);
 router.post('/staff/email', Authenticator.staffOnly, StaffController.retrieveStaffByEmail);
 router.post('/staff/forgotPassword', StaffController.sendResetPasswordEmail);
 router.post('/staff/resetPassword/checkValidToken', StaffController.checkValidToken);
 router.post('/staff/resetPassword', StaffController.resetPassword);
-router.post('/staff', Authenticator.staffOnly, StaffController.registerStaff);
+router.post('/staff', Authenticator.staffAdminOnly, StaffController.registerStaff);
 
 module.exports = router;
