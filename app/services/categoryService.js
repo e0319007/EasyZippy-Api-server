@@ -8,7 +8,8 @@ module.exports = {
   createCategory: async(categoryData, transaction) => {
     const { name } = categoryData;
     Checker.ifEmptyThrowError(name, Constants.Error.NameRequired);
-    if(!Checker.isEmpty(await Category.findOne({ where : { name } }))) {
+    const c = await Category.findOne({ where : { name } });
+    if(!Checker.isEmpty(c) && !c.deleted) {
       throw new CustomError(Constants.Error.NameNotUnique);
     }
     const category = await Category.create(categoryData, { transaction })
@@ -17,13 +18,16 @@ module.exports = {
 
   retrieveCategory: async(id) => {
     const category = await Category.findByPk(id);
+    if(category.deleted) {
+      throw new CustomError(Constants.Error.CategoryDeleted);
+    }
 
     Checker.ifEmptyThrowError(category, Constants.Error.CategoryNotFound);
     return category;
   },
 
   retrieveAllCategory: async() => {
-    const categories = Category.findAll();
+    const categories = Category.findAll({where: { deleted: false } });
     return categories;
   },
 
@@ -31,9 +35,17 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let category = await Category.findByPk(id);
     Checker.ifEmptyThrowError(category, Constants.Error.CategoryNotFound);
+    if(category.deleted) {
+      throw new CustomError(Constants.Error.CategoryDeleted);
+    }
+
     const updateKeys = Object.keys(categoryData);
     if(updateKeys.includes('name')) {
-        Checker.ifEmptyThrowError(Constants.Error.NameRequired);
+      Checker.ifEmptyThrowError(Constants.Error.NameRequired);
+      const c = await Category.findOne({ where : { name } });
+      if(!Checker.isEmpty(c) && !c.deleted) {
+        throw new CustomError(Constants.Error.NameNotUnique);
+      }
     }
     category = await Category.update(
       categoryData,

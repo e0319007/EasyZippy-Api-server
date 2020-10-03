@@ -20,6 +20,9 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let maintenanceAction = await MaintenanceAction.findByPk(id);
     Checker.ifEmptyThrowError(maintenanceAction, Constants.Error.MaintenanceActionNotFound);
+    if(maintenanceAction.deleted) {
+      throw new CustomError(Constants.Error.MaintenanceActionDeleted);
+    }
 
     const updateKeys = Object.keys(maintenanceActionData);
     if(updateKeys.includes('maintenanceDate')) {
@@ -36,11 +39,15 @@ module.exports = {
   retrieveMaintenanceAction: async(id) => {
     const maintenanceAction = await MaintenanceAction.findByPk(id);
     Checker.ifEmptyThrowError(maintenanceAction, Constants.Error.MaintenanceActionNotFound);
+    if(maintenanceAction.deleted) {
+      throw new CustomError(Constants.Error.MaintenanceActionDeleted);
+    }
+
     return maintenanceAction;
   },
 
   retrieveAllMaintenanceAction: async() => {
-    const maintenanceActions = await MaintenanceAction.findAll();
+    const maintenanceActions = await MaintenanceAction.findAll({where: { deleted: false } });
     return maintenanceActions;
   },
     

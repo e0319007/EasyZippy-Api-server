@@ -28,6 +28,9 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let bookingPackageModel = await BookingPackageModel.findByPk(id);
     Checker.ifEmptyThrowError(bookingPackageModel, Constants.Error.BookingPackageModelNotFound);
+    if(bookingPackageModel.deleted) {
+      throw new CustomError(Constants.Error.BookingPackageModelDeleted);
+    }
 
     const updateKeys = Object.keys(bookingPackageModelData);
     if(updateKeys.includes('name')) {
@@ -61,10 +64,10 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let curBpm = await BookingPackageModel.findByPk(id);
     Checker.ifEmptyThrowError(curBpm, Constants.Error.BookingPackageModelNotFound);
-
-    if(curBpm.published) {
-      throw new CustomError(Constants.Error.BookingPackageModelCannotBeDisabled);
+    if(curBpm.deleted) {
+      throw new CustomError(Constants.Error.BookingPackageModelDeleted);
     }
+
     let bookingPackageModel = await BookingPackageModel.update({
       disabled: !curBpm.disabled
     }, {
@@ -75,12 +78,15 @@ module.exports = {
   },
 
   retrieveAllBookingPackageModel: async(id) => {
-    return await BookingPackageModel.findAll();
+    return await BookingPackageModel.findAll({ where: { deleted: false } });
   },
 
   retrieveBookingPackageModel: async(id) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let bookingPackageModel = await BookingPackageModel.findByPk(id);
+    if(bookingPackageModel.deleted) {
+      throw new CustomError(Constants.Error.BookingPackageModelDeleted);
+    }
     return bookingPackageModel;
   },
 
