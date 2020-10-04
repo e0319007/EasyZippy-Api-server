@@ -42,8 +42,8 @@ module.exports = {
     const updateKeys = Object.keys(categoryData);
     if(updateKeys.includes('name')) {
       Checker.ifEmptyThrowError(Constants.Error.NameRequired);
-      const c = await Category.findOne({ where : { name } });
-      if(!Checker.isEmpty(c) && !c.deleted) {
+      const c = await Category.findOne({ where : { name: categoryData.name } });
+      if(!Checker.isEmpty(c) && !c.deleted && c.id != id) {
         throw new CustomError(Constants.Error.NameNotUnique);
       }
     }
