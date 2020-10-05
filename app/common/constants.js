@@ -101,6 +101,7 @@ module.exports = {
     FirstNameRequired: 'First name is required',
     IdRequired: 'ID is required',
     ImageRequired: 'Image file required',
+    InsufficientCreditBalance: 'Insufficient credit balance',
     KioskDeleted: 'Kiosk is deleted',
     KioskDisabled: 'Kiosk is disabled',
     KioskAddressRequired: 'Kiosk address is required',

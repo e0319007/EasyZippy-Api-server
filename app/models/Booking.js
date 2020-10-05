@@ -5,6 +5,7 @@ const {
 const sequelize = require('../common/database');
 
 const BookingPackage = require('./BookingPackage');
+const CreditPaymentRecord = require('./CreditPaymentRecord');
 const Customer = require('./Customer');
 const Merchant = require('./Merchant');
 const Order = require('./Order');
@@ -52,6 +53,9 @@ Booking.init(
     underscored: true
   }
 );
+
+CreditPaymentRecord.hasOne(Booking);
+Booking.belongsTo(CreditPaymentRecord);
 
 Booking.belongsTo(Order);
 Order.hasOne(Booking);
