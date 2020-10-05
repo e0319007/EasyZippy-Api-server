@@ -71,10 +71,11 @@ module.exports = {
 
   retrieveAdvertisementById: async(id) => {
     const advertisement = await Advertisement.findByPk(id);
+    Checker.ifEmptyThrowError(advertisement, Constants.Error.AdvertisementNotFound);
     if(advertisement.deleted) {
       throw new CustomError(Constants.Error.AdvertisementDeleted);
     }
-    Checker.ifEmptyThrowError(advertisement, Constants.Error.AdvertisementNotFound);
+    
     return advertisement;
   },
 

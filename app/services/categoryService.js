@@ -18,16 +18,16 @@ module.exports = {
 
   retrieveCategory: async(id) => {
     const category = await Category.findByPk(id);
+    Checker.ifEmptyThrowError(category, Constants.Error.CategoryNotFound);
     if(category.deleted) {
       throw new CustomError(Constants.Error.CategoryDeleted);
     }
 
-    Checker.ifEmptyThrowError(category, Constants.Error.CategoryNotFound);
     return category;
   },
 
   retrieveAllCategory: async() => {
-    const categories = Category.findAll({where: { deleted: false } });
+    const categories = await Category.findAll({where: { deleted: false } });
     return categories;
   },
 
