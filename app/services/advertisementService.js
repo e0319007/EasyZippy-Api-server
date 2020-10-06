@@ -70,16 +70,16 @@ module.exports = {
   },
 
   retrieveAdvertisementById: async(id) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     const advertisement = await Advertisement.findByPk(id);
     Checker.ifEmptyThrowError(advertisement, Constants.Error.AdvertisementNotFound);
-    if(advertisement.deleted) {
-      throw new CustomError(Constants.Error.AdvertisementDeleted);
-    }
+    Checker.ifDeletedThrowError(advertisement, Constants.Error.AdvertisementDeleted);
     
     return advertisement;
   },
 
   retrieveAdvertisementByMerchantId: async(merchantId) => {
+    Checker.ifEmptyThrowError(merchantId, Constants.Error.IdRequired);
     const advertisements = await Advertisement.findAll({
       where: {
         merchantId,
@@ -90,6 +90,7 @@ module.exports = {
   },
   
   retrieveAdvertisementByStaffId: async(staffId) => {
+    Checker.ifEmptyThrowError(staffId, Constants.Error.IdRequired);
     const advertisements = await Advertisement.findAll({
       where: {
         staffId,
@@ -131,10 +132,8 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let advertisement = await Advertisement.findByPk(id);
     Checker.ifEmptyThrowError(advertisement, Constants.Error.AdvertisementNotFound);
-    if(advertisement.deleted) {
-      throw new CustomError(Constants.Error.AdvertisementDeleted);
-    }
-
+    Checker.ifDeletedThrowError(advertisement, Constants.Error.AdvertisementDeleted);
+    
     const updateKeys = Object.keys(advertisementData);
 
     if(updateKeys.includes('title')) {
@@ -178,10 +177,8 @@ module.exports = {
   toggleApproveAdvertisement: async(id, transaction) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let curAdvertisement = await Advertisement.findByPk(id);
-    if(curAdvertisement.deleted) {
-      throw new CustomError(Constants.Error.AdvertisementDeleted);
-    }
     Checker.ifEmptyThrowError(curAdvertisement, Constants.Error.AdvertisementNotFound);
+    Checker.ifDeletedThrowError(curAdvertisement, Constants.Error.AdvertisementDeleted);
     
     let curDateTime = new Date();
 
@@ -212,9 +209,7 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let curAdvertisement = await Advertisement.findByPk(id);
     Checker.ifEmptyThrowError(curAdvertisement, Constants.Error.AdvertisementNotFound);
-    if(curAdvertisement.deleted) {
-      throw new CustomError(Constants.Error.AdvertisementDeleted);
-    }
+    Checker.ifDeletedThrowError(curAdvertisement, Constants.Error.AdvertisementDeleted);
     
     let curDateTime = new Date();
     if(curAdvertisement.approved && curDateTime < curAdvertisement.endDate) {
@@ -237,13 +232,13 @@ module.exports = {
   toggleDisableAdvertisement: async(id, transaction) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let advertisement = await Advertisement.findByPk(id);
-    if(advertisement.deleted) {
-      throw new CustomError(Constants.Error.AdvertisementDeleted);
-    }
+
+    Checker.ifEmptyThrowError(advertisement, Constants.Error.AdvertisementNotFound);
+    Checker.ifDeletedThrowError(advertisement, Constants.Error.AdvertisementDeleted);
     if(advertisement.approved) {
       throw new CustomError(Constants.Error.AdvertisementApprovedCannotDelete);
     }
-    Checker.ifEmptyThrowError(advertisement, Constants.Error.AdvertisementNotFound);
+    
     let ad = Advertisement.update({
       disabled : !advertisement.disabled
     },{

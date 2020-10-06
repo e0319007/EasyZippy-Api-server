@@ -42,10 +42,8 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let lockerType = await LockerType.findByPk(id);
     Checker.ifEmptyThrowError(lockerType, Constants.Error.LockerTypeNotFound);
+    Checker.ifDeletedThrowError(lockerType, Constants.Error.LockerTypeDeleted);
     const updateKeys = Object.keys(lockerTypeData);
-    if(lockerType.deleted) {
-      throw new CustomError(Constants.Error.LockerTypeDeleted);
-    }
 
     if(updateKeys.includes('width') && lockerTypeData.width < 0) {
       throw new CustomError('Width ' + Constants.Error.XXXCannotBeNegative);
@@ -76,11 +74,11 @@ module.exports = {
   },
 
   retrieveLockerType: async(id) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     const lockerType = await LockerType.findByPk(id);
     Checker.ifEmptyThrowError(lockerType, Constants.Error.LockerTypeNotFound);
-    if(lockerType.deleted) {
-      throw new CustomError(Constants.Error.LockerTypeDeleted);
-    }
+    Checker.ifDeletedThrowError(lockerType, Constants.Error.LockerTypeDeleted);
+
     return lockerType;
   },
 
@@ -90,11 +88,11 @@ module.exports = {
   },
 
   toggleDisableLockerType: async(id, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     const curLockerType = await LockerType.findByPk(id);
     Checker.ifEmptyThrowError(curLockerType, Constants.Error.LockerTypeNotFound);
-    if(curLockerType.deleted) {
-      throw new CustomError(Constants.Error.LockerTypeDeleted);
-    }
+    Checker.ifDeletedThrowError(curLockerType, Constants.Error.LockerTypeDeleted);
+
     let lockerType = await LockerType.update({
       disabled: !curLockerType.disabled
     }, {
@@ -105,6 +103,7 @@ module.exports = {
   },
 
   deleteLockerType: async(id, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     // To check for associated lockers
     const lockerType = await LockerType.findByPk(id);
     Checker.ifEmptyThrowError(lockerType, Constants.Error.LockerTypeNotFound);

@@ -39,11 +39,8 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let product = await Product.findByPk(id);
 
-    Checker.ifEmptyThrowError(product, Constants.Error.ProductNotFound)
-
-    if(product.deleted) {
-      throw new CustomError(Constants.Error.ProductDeleted)
-    }
+    Checker.ifEmptyThrowError(product, Constants.Error.ProductNotFound);
+    Checker.ifDeletedThrowError(product, Constants.Error.ProductDeleted);
 
     const updateKeys = Object.keys(productData);
     if(updateKeys.includes('name')) {
@@ -100,9 +97,8 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let curProduct = await Product.findByPk(id);
     Checker.ifEmptyThrowError(curProduct, Constants.Error.ProductNotFound);
-    if(curProduct.deleted) {
-      throw new CustomError(Constants.Error.ProductDeleted)
-    }
+    Checker.ifDeletedThrowError(curProduct, Constants.Error.ProductDeleted);
+
     await Product.update({
       disabled: !curProduct.disabled,
     }, { where: { id }, transaction, returning: true });
@@ -113,9 +109,8 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let product = await Product.findByPk(id);
     Checker.ifEmptyThrowError(product, Constants.Error.ProductNotFound);
-    if(product.deleted) {
-      throw new CustomError(Constants.Error.ProductDeleted)
-    }
+    Checker.ifDeletedThrowError(product, Constants.Error.ProductDeleted);
+
     return product
   },
 
@@ -124,7 +119,7 @@ module.exports = {
   },
 
   retrieveProductByCategoryId: async(categoryId) => {
-    Checker.ifEmptyThrowError(categoryId, 'Category ' + Constants.Error.IdRequired);
+    Checker.ifEmptyThrowError(categoryId, Constants.Error.IdRequired);
     return await Product.findAll({
       where: {
         categoryId,
@@ -134,7 +129,7 @@ module.exports = {
   },
 
   retrieveProductByMerchantId: async(merchantId) => {
-    Checker.ifEmptyThrowError(merchantId, 'Merchant ' + Constants.Error.IdRequired);
+    Checker.ifEmptyThrowError(merchantId, Constants.Error.IdRequired);
     return await Product.findAll({
       where: {
         merchantId,
