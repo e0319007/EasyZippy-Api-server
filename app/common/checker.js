@@ -27,5 +27,13 @@ module.exports = {
     if(!isNaN(object) && object <= 0) {
       throw new CustomError(errorMessage);
     }
+  },
+  ifDeletedThrowError: (object, errorMessage) => {
+    if(_.isUndefined(object.deleted) || !_.isBoolean(object.deleted)) {
+      throw new Error(Constants.Error.CheckerCalledInappropriately)
+    }
+    if(object.deleted) {
+      throw new CustomError(errorMessage);
+    }
   }
 };

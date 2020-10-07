@@ -16,9 +16,7 @@ const Kiosk = require('../models/Kiosk');
       Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
       let kiosk = await Kiosk.findByPk(id);
       Checker.ifEmptyThrowError(kiosk, Constants.Error.KioskNotFound);
-      if(kiosk.deleted) {
-        throw new CustomError(Constants.Error.KioskDeleted);
-      }
+      Checker.ifDeletedThrowError(kiosk, Constants.Error.KioskDeleted);
 
       if(kiosk.disabled) {
         throw new CustomError(Constants.Error.KioskDisabled);
@@ -35,13 +33,12 @@ const Kiosk = require('../models/Kiosk');
     },
 
     toggleDisableKiosk: async(id, transaction) => {
+      Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
       // To disabled all associated lockers
       const curKiosk = await Kiosk.findByPk(id);
-      Checker.ifEmptyThrowError(curKiosk, Constants.Error.KioskNotFound)
-      console.log(curKiosk.disabled);
-      if(curKiosk.deleted) {
-        throw new CustomError(Constants.Error.KioskDeleted);
-      }
+      Checker.ifEmptyThrowError(curKiosk, Constants.Error.KioskNotFound);
+      Checker.ifDeletedThrowError(curKiosk, Constants.Error.KioskDeleted);
+
       let kiosk = await Kiosk.update({
         disabled: !curKiosk.disabled
       }, {
@@ -52,11 +49,11 @@ const Kiosk = require('../models/Kiosk');
     },
 
     retrieveKiosk: async(id) => {
+      Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
       const kiosk = await Kiosk.findByPk(id);
       Checker.ifEmptyThrowError(kiosk, Constants.Error.KioskNotFound);
-      if(kiosk.deleted) {
-        throw new CustomError(Constants.Error.KioskDeleted);
-      }
+      Checker.ifDeletedThrowError(kiosk, Constants.Error.KioskDeleted);
+
       return kiosk;
     },
 
@@ -66,7 +63,7 @@ const Kiosk = require('../models/Kiosk');
     },
 
     deleteKiosk: async(id, transaction) => {
-      console.log(id);
+      Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
       const kiosk = await Kiosk.findByPk(id);
       Checker.ifEmptyThrowError(kiosk, Constants.Error.KioskNotFound);
       //do a check on the list of lockers

@@ -17,17 +17,16 @@ module.exports = {
   },
 
   retrieveCategory: async(id) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     const category = await Category.findByPk(id);
-    if(category.deleted) {
-      throw new CustomError(Constants.Error.CategoryDeleted);
-    }
-
     Checker.ifEmptyThrowError(category, Constants.Error.CategoryNotFound);
+    Checker.ifDeletedThrowError(category, Constants.Error.CategoryDeleted);
+
     return category;
   },
 
   retrieveAllCategory: async() => {
-    const categories = Category.findAll({where: { deleted: false } });
+    const categories = await Category.findAll({where: { deleted: false } });
     return categories;
   },
 
@@ -35,9 +34,7 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let category = await Category.findByPk(id);
     Checker.ifEmptyThrowError(category, Constants.Error.CategoryNotFound);
-    if(category.deleted) {
-      throw new CustomError(Constants.Error.CategoryDeleted);
-    }
+    Checker.ifDeletedThrowError(category, Constants.Error.CategoryDeleted);
 
     const updateKeys = Object.keys(categoryData);
     if(updateKeys.includes('name')) {
