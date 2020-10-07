@@ -1,7 +1,6 @@
 const sequelize = require('../common/database');
 const { sendErrorResponse } = require('../common/error/errorHandler');
 
-
 const LockerTypeService = require('../services/lockerTypeService');
 module.exports = {
   createLockerType: async(req, res) => {
