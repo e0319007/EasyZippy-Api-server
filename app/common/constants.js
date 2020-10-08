@@ -34,8 +34,7 @@ module.exports = {
   },
   LockerStatus: {
     InUse: 'In Use',
-    Empty: 'Empty',
-    Disabled: 'Disabled'
+    Empty: 'Empty'
   },
   LockerAction: {
     Close: 'Close',
@@ -86,6 +85,7 @@ module.exports = {
     CategoryNameRequired: 'Category name is required',
     CategoryIdRequired: 'Category ID is required',
     CategoryNotFound: 'Category is not found',
+    CheckerCalledInappropriately: 'Checker was called inappropriately',
     CurrentPasswordRequired: 'Current password required',
     CustomerDisabled: 'Customer is disabled',
     CustomerNotActivated: 'Customer not activated',
@@ -107,6 +107,7 @@ module.exports = {
     KioskAddressRequired: 'Kiosk address is required',
     KioskNotFound: 'Kiosk not found',
     LastNameRequired: 'Last name is required',
+    LockerDeleted: 'Locker is deleted',
     LockerTypeDeleted: 'Locker type is deleted',
     LockerTypeNotFound: 'Locker type not found',
     LockerNotFound: 'Locker is not found',

@@ -20,9 +20,7 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let maintenanceAction = await MaintenanceAction.findByPk(id);
     Checker.ifEmptyThrowError(maintenanceAction, Constants.Error.MaintenanceActionNotFound);
-    if(maintenanceAction.deleted) {
-      throw new CustomError(Constants.Error.MaintenanceActionDeleted);
-    }
+    Checker.ifEmptyThrowError(maintenanceAction, Constants.Error.MaintenanceActionDeleted);
 
     const updateKeys = Object.keys(maintenanceActionData);
     if(updateKeys.includes('maintenanceDate')) {
@@ -37,11 +35,10 @@ module.exports = {
   },
 
   retrieveMaintenanceAction: async(id) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     const maintenanceAction = await MaintenanceAction.findByPk(id);
     Checker.ifEmptyThrowError(maintenanceAction, Constants.Error.MaintenanceActionNotFound);
-    if(maintenanceAction.deleted) {
-      throw new CustomError(Constants.Error.MaintenanceActionDeleted);
-    }
+    Checker.ifEmptyThrowError(maintenanceAction, Constants.Error.MaintenanceActionDeleted);
 
     return maintenanceAction;
   },
@@ -52,6 +49,7 @@ module.exports = {
   },
     
   deleteMaintenanceAction: async(id, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     const maintenanceAction = await MaintenanceAction.findByPk(id);
     Checker.ifEmptyThrowError(maintenanceAction, Constants.Error.MaintenanceActionNotFound);
     await MaintenanceAction.update({ deleted: true }, { where: { id }, transaction });
