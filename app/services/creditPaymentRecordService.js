@@ -13,8 +13,6 @@ module.exports = {
     Checker.ifEmptyThrowError(amountPaid, 'Amount paid ' + Constants.Error.XXXIsRequired);
     Checker.ifNotNumberThrowError(amountPaid, 'Amount paid ' + Constants.Error.XXXMustBeNumber);
     Checker.ifNegativeThrowError(amountPaid, 'Amount paid ' + Constants.Error.XXXCannotBeNegative);
-    
-    let creditPaymentRecord = await CreditPaymentRecord.create({ amount: 0 - amountPaid, customerId }, { transaction });
 
     let customer = await Customer.findByPk(customerId);
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
@@ -22,6 +20,9 @@ module.exports = {
       let newCreditAmount = customer.creditBalance -  amountPaid;
       await customer.update({ creditBalance: newCreditAmount }, { transaction });
     } else throw new CustomError(Constants.Error.InsufficientCreditBalance);
+    
+    let creditPaymentRecord = await CreditPaymentRecord.create({ amount: 0 - amountPaid, customerId }, { transaction });
+
     return creditPaymentRecord;
   },
 
@@ -32,15 +33,15 @@ module.exports = {
     Checker.ifNotNumberThrowError(amountPaid, 'Amount paid ' + Constants.Error.XXXMustBeNumber);
     Checker.ifNegativeThrowError(amountPaid, 'Amount paid ' + Constants.Error.XXXCannotBeNegative);
 
-    let creditPaymentRecord = await CreditPaymentRecord.create({ amount: 0 - amountPaid, merchantId }, { transaction });
-
     let merchant = await Merchant.findByPk(merchantId);
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
     if (amountPaid < merchant.creditBalance) {
       let newCreditAmount = merchant.creditBalance -  amountPaid;
       await merchant.update({ creditBalance: newCreditAmount }, { transaction });
     } else throw new CustomError(Constants.Error.InsufficientCreditBalance);
+
+    let creditPaymentRecord = await CreditPaymentRecord.create({ amount: 0 - amountPaid, merchantId }, { transaction });
+
     return creditPaymentRecord;
   }
-}
-    
+};

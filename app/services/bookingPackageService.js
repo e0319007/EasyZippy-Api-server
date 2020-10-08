@@ -31,9 +31,7 @@ module.exports = {
 
   createBookingPackageForMerchant: async(bookingPackageData, transaction) => {
     let { merchantId, bookingPackageModelId } = bookingPackageData;
-    if(Checker.isEmpty(merchantId)) {
-      throw new CustomError('Merchant ' + Constants.Error.IdRequired)
-    }
+    Checker.ifEmptyThrowError(merchantId, 'Merchant ' + Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(await Customer.findByPk(customerId), Constants.Error.CustomerNotFound);
     Checker.ifEmptyThrowError(bookingPackageModelId, 'Booking package model ' + Constants.Error.IdRequired)
     let bookingPackageModel = await BookingPackageModel.findByPk(bookingPackageModelId);
@@ -51,7 +49,7 @@ module.exports = {
   },
 
   retrieveAllBookingPackageByCustomerId: async(customerId) => {
-    Checker.ifEmptyThrowError(customerId);
+    Checker.ifEmptyThrowError(customerId, Constants.Error.IdRequired);
     const customer = await Customer.findByPk(customerId);
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
     
@@ -59,7 +57,7 @@ module.exports = {
   },
 
   retrieveAllBookingPackageByMerchantId: async(merchantId) => {
-    Checker.ifEmptyThrowError(merchantId);
+    Checker.ifEmptyThrowError(merchantId, Constants.Error.IdRequired);
     const merchant = await Merchant.findByPk(merchantId);
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
 
@@ -67,11 +65,10 @@ module.exports = {
   },
 
   retrieveBookingPackageByBookingPackageId: async(id) => {
-    Checker.ifEmptyThrowError(id);
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     const bookingPackage = await BookingPackage.findByPk(id);
     Checker.ifEmptyThrowError(bookingPackage, Constants.Error.BookingPackageNotFound);
 
     return bookingPackage;
-  },
-
-}
+  }
+};
