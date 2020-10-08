@@ -5,6 +5,7 @@ const Upload = require('../middleware/upload');
 
 const AdvertisementController = require('../controllers/advertisementController');
 const AnnouncementController = require('../controllers/announcementController');
+const BookingPackageController = require('../controllers/bookingPackageController');
 const BookingPackageModelController = require('../controllers/bookingPackageModelController');
 const CategoryController = require('../controllers/categoryController');
 const CustomerController = require('../controllers/customerController');
@@ -53,6 +54,12 @@ router.put('/bookingPackageModel/:id', Authenticator.staffOnly, BookingPackageMo
 router.post('/bookingPackageModel', Authenticator.staffOnly, BookingPackageModelController.createBookingPackageModel);
 router.put('/deleteBookingPackageModel/:id', Authenticator.staffOnly, BookingPackageModelController.deleteBookingPackageModel);
 
+//BookingPackage
+router.get('/bookingPackage/:id', /*Authenticator.customerAndMerchantAndStaffOnly,*/ BookingPackageController.retrieveBookingPackageByBookingPackageId);
+router.get('/customerBookingPackageModels/:customerId', /*Authenticator.customerAndMerchantAndStaffOnly,*/BookingPackageController.retrieveAllBookingPackageByCustomerId);
+router.get('/merchantBookingPackageModels/:merchantId', /*Authenticator.customerAndMerchantAndStaffOnly,*/BookingPackageController.retrieveAllBookingPackageByMerchantId);
+router.post('/bookingPackageCustomer', /*Authenticator.staffOnly,*/ BookingPackageController.buyBookingPackageForCustomer);
+router.post('/bookingPackageMerchant', /*Authenticator.staffOnly,*/ BookingPackageController.buyBookingPackageForMerchant);
 
 //Category
 router.get('/category/:id', Authenticator.customerAndMerchantAndStaffOnly, CategoryController.retrieveCategory);
