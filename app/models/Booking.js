@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, DATE, STRING, ENUM, Model
+  INTEGER, DATE, STRING, DECIMAL, ENUM, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 
@@ -11,6 +11,7 @@ const Merchant = require('./Merchant');
 const Order = require('./Order');
 const Locker = require('./Locker');
 const Constants = require('../common/constants');
+const LockerType = require('./LockerType');
 
 class Booking extends Model {
 }
@@ -38,6 +39,10 @@ Booking.init(
     endDate: {
       type: DATE,
       allowNull: false
+    },
+    bookingPrice: {
+      type: DECIMAL,
+      allowNull: true
     },
     bookingStatusEnum: {
       type: STRING,
@@ -76,5 +81,8 @@ BookingPackage.hasMany(Booking);
 
 Booking.belongsTo(Locker);
 Locker.hasMany(Booking);
+
+Booking.belongsTo(LockerType);
+LockerType.hasMany(Booking);
 
 module.exports = Booking;
