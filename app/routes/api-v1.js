@@ -5,10 +5,12 @@ const Upload = require('../middleware/upload');
 
 const AdvertisementController = require('../controllers/advertisementController');
 const AnnouncementController = require('../controllers/announcementController');
+const BookingPackageController = require('../controllers/bookingPackageController');
 const BookingPackageModelController = require('../controllers/bookingPackageModelController');
 const CategoryController = require('../controllers/categoryController');
 const CustomerController = require('../controllers/customerController');
 const KioskController = require('../controllers/kioskController');
+const LockerController = require('../controllers/lockerController');
 const LockerTypeController = require('../controllers/lockerTypeController');
 const MaintenanceActionController = require('../controllers/maintenanceActionController');
 const MerchantController = require('../controllers/merchantController');
@@ -52,6 +54,12 @@ router.put('/bookingPackageModel/:id', Authenticator.staffOnly, BookingPackageMo
 router.post('/bookingPackageModel', Authenticator.staffOnly, BookingPackageModelController.createBookingPackageModel);
 router.put('/deleteBookingPackageModel/:id', Authenticator.staffOnly, BookingPackageModelController.deleteBookingPackageModel);
 
+//BookingPackage
+router.get('/bookingPackage/:id', /*Authenticator.customerAndMerchantAndStaffOnly,*/ BookingPackageController.retrieveBookingPackageByBookingPackageId);
+router.get('/customerBookingPackageModels/:customerId', /*Authenticator.customerAndMerchantAndStaffOnly,*/BookingPackageController.retrieveAllBookingPackageByCustomerId);
+router.get('/merchantBookingPackageModels/:merchantId', /*Authenticator.customerAndMerchantAndStaffOnly,*/BookingPackageController.retrieveAllBookingPackageByMerchantId);
+router.post('/bookingPackageCustomer', /*Authenticator.staffOnly,*/ BookingPackageController.buyBookingPackageForCustomer);
+router.post('/bookingPackageMerchant', /*Authenticator.staffOnly,*/ BookingPackageController.buyBookingPackageForMerchant);
 
 //Category
 router.get('/category/:id', Authenticator.customerAndMerchantAndStaffOnly, CategoryController.retrieveCategory);
@@ -84,6 +92,16 @@ router.put('/kiosk/:id/toggleDisable', Authenticator.staffOnly, KioskController.
 router.put('/kiosk/:id', Authenticator.staffOnly, KioskController.updateKiosk);
 router.post('/kiosk', Authenticator.staffOnly, KioskController.createKiosk);
 router.put('/deleteKiosk/:id', Authenticator.staffOnly, KioskController.deleteKiosk);
+
+//Locker
+router.get('/locker/lockerType/:lockerTypeId', Authenticator.customerAndMerchantAndStaffOnly, LockerController.retrieveLockersByLockerType);
+router.get('/locker/kiosk/:kioskId', Authenticator.customerAndMerchantAndStaffOnly, LockerController.retrieveLockersByKiosk);
+router.get('/locker/:id', Authenticator.customerAndMerchantAndStaffOnly, LockerController.retrieveLocker);
+router.put('/locker/setEmpty/:id', Authenticator.customerAndMerchantAndStaffOnly, LockerController.setLockerEmpty);
+router.put('/locker/setInUse/:id', Authenticator.customerAndMerchantAndStaffOnly, LockerController.setLockerInUse);
+router.put('/locker/toggleDisable/:id', Authenticator.staffOnly, LockerController.toggleDisableLocker);
+router.put('/deleteLocker/:id', Authenticator.staffOnly, LockerController.deleteLocker);
+router.post('/locker', Authenticator.staffOnly, LockerController.createLocker);
 
 //Locker Type
 router.get('/lockerType/:id', Authenticator.customerAndMerchantAndStaffOnly, LockerTypeController.retrieveLockerType);
