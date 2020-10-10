@@ -19,16 +19,16 @@ module.exports = {
   },
 
   retrieveAnnouncement: async(id) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let announcement = await Announcement.findByPk(id);
     Checker.ifEmptyThrowError(announcement, Constants.Error.AnnouncementNotFound);
-    if(announcement.deleted) {
-      throw new CustomError(Constants.Error.AnnouncementDeleted);
-    }
+    Checker.ifDeletedThrowError(announcement, Constants.Error.AnnouncementDeleted);
+
     return announcement;
   },
 
   retrieveAnnouncementByStaffId: async(staffId) => {
-    Checker.ifEmptyThrowError(staffId, 'Staff ' + Constants.Error.IdRequired);
+    Checker.ifEmptyThrowError(staffId, Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(await Staff.findByPk(staffId), Constants.Error.StaffNotFound);
     return await Announcement.findAll({ where: { staffId, deleted: false } });
   },
@@ -54,9 +54,8 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let announcement = await Announcement.findByPk(id);
     Checker.ifEmptyThrowError(announcement, Constants.Error.AnnouncementNotFound);
-    if(announcement.deleted) {
-      throw new CustomError(Constants.Error.AnnouncementDeleted);
-    }
+    Checker.ifDeletedThrowError(announcement, Constants.Error.AnnouncementDeleted);
+
     const updateKeys = Object.keys(announcementData);
     if(updateKeys.includes('title')) {
       Checker.ifEmptyThrowError(announcementData.title, Constants.Error.TitleRequired);
@@ -67,6 +66,7 @@ module.exports = {
   },
 
   deleteAnnouncement: async(id, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     //check if announcement is sent. Cannot delete sent announcement
     const announcement = await Announcement.findByPk(id);
     Checker.ifEmptyThrowError(announcement, Constants.Error.AnnouncementNotFound);

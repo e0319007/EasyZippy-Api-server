@@ -28,9 +28,7 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let bookingPackageModel = await BookingPackageModel.findByPk(id);
     Checker.ifEmptyThrowError(bookingPackageModel, Constants.Error.BookingPackageModelNotFound);
-    if(bookingPackageModel.deleted) {
-      throw new CustomError(Constants.Error.BookingPackageModelDeleted);
-    }
+    Checker.ifDeletedThrowError(bookingPackageModel, Constants.Error.BookingPackageModelDeleted);
 
     const updateKeys = Object.keys(bookingPackageModelData);
     if(updateKeys.includes('name')) {
@@ -64,9 +62,7 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let curBpm = await BookingPackageModel.findByPk(id);
     Checker.ifEmptyThrowError(curBpm, Constants.Error.BookingPackageModelNotFound);
-    if(curBpm.deleted) {
-      throw new CustomError(Constants.Error.BookingPackageModelDeleted);
-    }
+    Checker.ifDeletedThrowError(curBpm, Constants.Error.BookingPackageModelDeleted);
 
     let bookingPackageModel = await BookingPackageModel.update({
       disabled: !curBpm.disabled
@@ -77,25 +73,25 @@ module.exports = {
       return bookingPackageModel;
   },
 
-  retrieveAllBookingPackageModel: async(id) => {
+  retrieveAllBookingPackageModel: async() => {
     return await BookingPackageModel.findAll({ where: { deleted: false } });
   },
 
   retrieveBookingPackageModel: async(id) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let bookingPackageModel = await BookingPackageModel.findByPk(id);
-    if(bookingPackageModel.deleted) {
-      throw new CustomError(Constants.Error.BookingPackageModelDeleted);
-    }
+    Checker.ifEmptyThrowError(bookingPackageModel, Constants.Error.BookingPackageModelNotFound);
+    Checker.ifDeletedThrowError(bookingPackageModel, Constants.Error.BookingPackageModelDeleted);
+
     return bookingPackageModel;
   },
 
   deleteBookingPackageModel: async(id, transaction) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let bookingPackageModel = await BookingPackageModel.findByPk(id);
-    if(bookingPackageModel.used) {
-      throw new CustomError(Constants.Error.BookingPackageModelAlreadyUsed);
-    }
+    Checker.ifEmptyThrowError(bookingPackageModel, Constants.Error.BookingPackageModelNotFound);
+    Checker.ifDeletedThrowError(bookingPackageModel, Constants.Error.BookingPackageModelDeleted);
+
     await BookingPackageModel.update({ deleted: true }, { where: { id }, transaction });
   },
 }
