@@ -9,6 +9,7 @@ const Customer = require('./Customer');
 const Merchant = require('./Merchant');
 const Order = require('./Order');
 const Locker = require('./Locker');
+const Constants = require('../common/constants');
 
 class Booking extends Model {
 }
@@ -39,7 +40,8 @@ Booking.init(
     },
     bookingStatusEnum: {
       type: STRING,
-      allowNull: false
+      allowNull: false,
+      defaultValue: Constants.BookingStatus.Unfufilled
     },
     bookingSourceEnum: {
       type: STRING,
@@ -68,7 +70,7 @@ Merchant.hasMany(Booking);
 Booking.belongsTo(BookingPackage);
 BookingPackage.hasMany(Booking);
 
-Booking.belongsTo(Locker, { foreignKey: { allowNull: false } });
+Booking.belongsTo(Locker);
 Locker.hasMany(Booking);
 
 module.exports = Booking;

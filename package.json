@@ -40,6 +40,7 @@
     "otp-generator": "^2.0.0",
     "paypal-rest-sdk": "^1.8.1",
     "pg": "^8.3.3",
+    "qrcode": "^1.4.4",
     "sequelize": "^6.3.4"
   }
 }
