@@ -3,7 +3,7 @@ const Constants = require('../common/constants');
 const CustomError = require('../common/error/customError');
 
 const LockerType = require('../models/LockerType');
-
+const Kiosk = require('../models/Kiosk');
 
 module.exports = {
   createLockerType: async(lockerTypeData, transaction) => {
@@ -80,6 +80,27 @@ module.exports = {
     Checker.ifDeletedThrowError(lockerType, Constants.Error.LockerTypeDeleted);
 
     return lockerType;
+  },
+
+  retrieveLockerTypesByKiosk: async(kioskId) => {
+    Checker.ifEmptyThrowError(kioskId, Constants.Error.IdRequired);
+    const kiosk = await Kiosk.findByPk(kioskId);
+    Checker.ifEmptyThrowError(kiosk, Constants.Error.KioskNotFound);
+    Checker.ifDeletedThrowError(kiosk, Constants.Error.KioskDeleted);
+
+    const lockers = await kiosk.getLockers();
+    const lockerTypeIds = new Set();
+    const lockerTypes = [];
+
+    for (const locker of lockers) {
+      lockerTypeIds.add((await locker.getLockerType()).id);
+    }
+
+    for (const lockerTypeId of lockerTypeIds) {
+      lockerTypes.push(await LockerType.findByPk(lockerTypeId));
+    }
+
+    return lockerTypes;
   },
 
   retrieveAllLockerType: async() => {
