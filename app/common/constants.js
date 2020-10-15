@@ -83,6 +83,7 @@ module.exports = {
     BookingPackageSoldOut: 'Booking package is sold out',
     BookingPackageReachedMaximumLockerCount: 'Booking package reached maximum locker count',
     BookingCannotBeCancelled: 'Booking cannot be cancelled',
+    BookingCannotBeMade: 'No free slots during the given start time and end time',
     BookingNotFound: 'Booking not found',
     CategoryDeleted: 'Category is deleted',
     CategoryNameExist: 'Category name exists',

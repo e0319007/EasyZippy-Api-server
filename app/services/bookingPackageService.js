@@ -34,9 +34,9 @@ module.exports = {
       for(let bp of bookingPackages) {
         if(bp.endDate > new Date()) availBookingPackage.push(bp);
       }
-      bookingPackageCount += availBookingPackage.length() * bpm.quota;
+      bookingPackageCount += availBookingPackage.length * bpm.quota;
     }
-    if (bookingPackageCount + bookingPackageModel.quota > (await Locker.findAll({ where: { lockerTypeId } })).length()) {
+    if (bookingPackageCount + bookingPackageModel.quota > (await Locker.findAll({ where: { lockerTypeId } })).length) {
       throw new CustomError(Constants.Error.BookingPackageSoldOut);
     }
     // end in check for overselling 
@@ -52,7 +52,7 @@ module.exports = {
   createBookingPackageForMerchant: async(bookingPackageData, transaction) => {
     let { merchantId, bookingPackageModelId } = bookingPackageData;
     Checker.ifEmptyThrowError(merchantId, 'Merchant ' + Constants.Error.IdRequired);
-    Checker.ifEmptyThrowError(await Customer.findByPk(customerId), Constants.Error.CustomerNotFound);
+    Checker.ifEmptyThrowError(await Customer.findByPk(merchantId), Constants.Error.CustomerNotFound);
     Checker.ifEmptyThrowError(bookingPackageModelId, 'Booking package model ' + Constants.Error.IdRequired)
     let bookingPackageModel = await BookingPackageModel.findByPk(bookingPackageModelId);
     let lockerTypeId = bookingPackageModel.lockerTypeId;
@@ -71,9 +71,9 @@ module.exports = {
       for(let bp of bookingPackages) {
         if(bp.endDate > new Date()) availBookingPackage.push(bp);
       }
-      bookingPackageCount += availBookingPackage.length() * bpm.quota;
+      bookingPackageCount += availBookingPackage.length * bpm.quota;
     }
-    if (bookingPackageCount + bookingPackageModel.quota > (await Locker.findAll({ where: { lockerTypeId } })).length()) {
+    if (bookingPackageCount + bookingPackageModel.quota > (await Locker.findAll({ where: { lockerTypeId } })).length) {
       throw new CustomError(Constants.Error.BookingPackageSoldOut);
     }
     // end in check for overselling 

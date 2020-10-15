@@ -27,11 +27,11 @@ module.exports = {
         + ' \n <This is a system generated email, Please do not reply>'
       });
 
-      console.log('Message sent: %s', info.messageId);
+      //console.log('Message sent: %s', info.messageId);
       // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 
       // Preview only available when sending through an Ethereal account
-      console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+      //console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
       // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
     } catch (err) {
       console.log(err)
@@ -68,7 +68,7 @@ module.exports = {
       console.log('Message sent: %s', info.messageId);
       // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
       // Preview only available when sending through an Ethereal account
-      console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+      //console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
       // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
     } catch (err) {
       console.log(err)
@@ -96,10 +96,10 @@ module.exports = {
         'Please contact Ez2Keep admin if you have any queries.\n' + ' \n <This is a system generated email, Please do not reply>'
       });
 
-      console.log('Message sent: %s', info.messageId);
+      //console.log('Message sent: %s', info.messageId);
       // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
       // Preview only available when sending through an Ethereal account
-      console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+      //console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
       // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
     } catch (err) {
       console.log(err)
@@ -126,10 +126,10 @@ module.exports = {
         text: `Dear staff,\n\nYour new account is ready for use.\n\nYou have been assigned a temporary password: ${password}\n\nPlease log in and change your password.\n\n<This is a system generated email, Please do not reply>`
       });
 
-      console.log('Message sent: %s', info.messageId);
+      //console.log('Message sent: %s', info.messageId);
       // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
       // Preview only available when sending through an Ethereal account
-      console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+      //console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
       // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
     } catch (err) {
       console.log(err)

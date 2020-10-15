@@ -72,5 +72,15 @@ module.exports = {
     } catch(err) {
       sendErrorResponse(res, err);
     }
+  },
+
+ retrieveAvailableLockerTypesByKioskId: async(req, res) => {
+    try {
+      let { kioskId } = req.params;
+      return res.status(200).send(await LockerTypeService.retrieveAvailableLockerTypesByKioskId(kioskId));
+    } catch(err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
   }
 }

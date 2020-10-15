@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, DATE, STRING, DECIMAL, ENUM, Model
+  INTEGER, DATE, STRING, DECIMAL, BOOLEAN, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 
@@ -52,6 +52,11 @@ Booking.init(
     bookingSourceEnum: {
       type: STRING,
       allowNull: false
+    },
+    cancelled: {
+      type: BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     }
   },
   {
@@ -68,10 +73,10 @@ Booking.belongsTo(Order);
 Order.hasOne(Booking);
 
 Booking.belongsTo(Customer, { as: 'collector' });
-Customer.hasMany(Booking, { as: 'secondaryBooking', foreignKey: 'secondaryBookingId' });
+//Customer.hasMany(Booking, { as: 'secondaryBooking', foreignKey: 'secondaryBookingId' });
 
-Booking.belongsTo(Customer, { as: 'primaryCustomer'});
-Customer.hasMany(Booking, { as: 'primaryBooking', foreignKey: 'primaryBookingId' });
+Booking.belongsTo(Customer);
+//Customer.hasMany(Booking, { as: 'primaryBooking', foreignKey: 'primaryBookingId' });
 
 Booking.belongsTo(Merchant);
 Merchant.hasMany(Booking);
@@ -82,7 +87,7 @@ BookingPackage.hasMany(Booking);
 Booking.belongsTo(Locker);
 Locker.hasMany(Booking);
 
-Booking.belongsTo(LockerType);
+Booking.belongsTo(LockerType, { foreignKey: { allowNull: false } });
 LockerType.hasMany(Booking);
 
 module.exports = Booking;

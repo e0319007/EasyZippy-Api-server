@@ -56,6 +56,57 @@ module.exports = {
     }
   },
 
+  tagOrderToBooking: async(req, res) => {
+    try{
+      const bookingId = req.body;
+      const orderId = req.body;
+      await sequelize.transaction(async (transaction) => {
+        booking = await BookingService.tagOrderToBooking(bookingId, orderId, transaction);
+      });
+      res.status(200).send(booking);
+    } catch(err) {
+      sendErrorResponse(res, err);
+    } 
+  },
+
+  addCollectorToBooking: async(req, res) => {
+    try{
+      const bookingId = req.body;
+      const collectorId = req.body;
+      await sequelize.transaction(async (transaction) => {
+        booking = await BookingService.addCollectorToBooking(bookingId, collectorId, transaction);
+      });
+      res.status(200).send(booking);
+    } catch(err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
+  removeCollectorToBooking: async(req, res) => {
+    try{
+      const bookingId = req.body;
+      await sequelize.transaction(async (transaction) => {
+        booking = await BookingService.addCollectorToBooking(bookingId, transaction);
+      });
+      res.status(200).send(booking);
+    } catch(err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
+  changeCollectorToBooking: async(req, res) => {
+    try{
+      const bookingId = req.body;
+      const collectorId = req.body;
+      await sequelize.transaction(async (transaction) => {
+        booking = await BookingService.addCollectorToBooking(bookingId, collectorId, transaction);
+      });
+      res.status(200).send(booking);
+    } catch(err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
   retrieveBookingById: async(req, res) => {
     try {
       let { id } = req.params;
@@ -70,6 +121,16 @@ module.exports = {
     try {
       let { customerId } = req.params;
       let bookings = await BookingService.retrieveBookingByCustomerId(customerId);  
+      return res.status(200).send(bookings);
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
+  retrieveBookingByCollectorId: async(req, res) => {
+    try {
+      let { collectorId } = req.params;
+      let bookings = await BookingService.retrieveBookingByCollectorId(collectorId);  
       return res.status(200).send(bookings);
     } catch (err) {
       sendErrorResponse(res, err);

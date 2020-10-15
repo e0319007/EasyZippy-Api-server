@@ -98,7 +98,7 @@ module.exports = {
   },
 
   retrieveCustomerByEmail: async (email) => {
-    const customer = await Customer.findOne({ where: { email } });
+    const customer = await Customer.findOne({ where: { email, disabled: false } });
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
     return customer;
   },
