@@ -86,7 +86,7 @@ router.post('/customer/verifyOtp', CustomerController.verifyOtp);
 router.post('/customer', CustomerController.registerCustomer);
 
 //Kiosk
-router.get('/kiosks', Authenticator.staffOnly, KioskController.retrieveAllKiosks);
+router.get('/kiosks', Authenticator.customerAndMerchantAndStaffOnly, KioskController.retrieveAllKiosks);
 router.get('/kiosk/:id', Authenticator.staffOnly, KioskController.retrieveKiosk);
 router.put('/kiosk/:id/toggleDisable', Authenticator.staffOnly, KioskController.toggleDisableKiosk);
 router.put('/kiosk/:id', Authenticator.staffOnly, KioskController.updateKiosk);
@@ -104,6 +104,7 @@ router.put('/deleteLocker/:id', Authenticator.staffOnly, LockerController.delete
 router.post('/locker', Authenticator.staffOnly, LockerController.createLocker);
 
 //Locker Type
+router.get('/lockerType/kiosk/:kioskId', Authenticator.customerAndMerchantAndStaffOnly, LockerTypeController.retrieveLockerTypesByKiosk);
 router.get('/lockerType/:id', Authenticator.customerAndMerchantAndStaffOnly, LockerTypeController.retrieveLockerType);
 router.get('/lockerTypes', Authenticator.customerAndMerchantAndStaffOnly, LockerTypeController.retrieveAllLockerTypes);
 router.put('/lockerType/toggleDisable/:id', Authenticator.staffOnly, LockerTypeController.toggleDisableLockerType);
