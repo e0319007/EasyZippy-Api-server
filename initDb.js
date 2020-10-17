@@ -22,7 +22,6 @@ const Promotion = require('./app/models/Promotion');
 const Staff = require('./app/models/Staff');
 
 const sequelize = require('./app/common/database');
-const scheduleHelper = require('./app/common/scheduleHelper'); 
 
 const initialiseDatabase = async () => {
   await sequelize.drop()
@@ -35,12 +34,6 @@ const initialiseDatabase = async () => {
   
   await sequelize.close();
 };
-
-const initialiseScheduler = async () => {
-  scheduleHelper.scheduleSetExpiredAdvertisement();
-  scheduleHelper.scheduleSetExpiredBookingPackage();
-  scheduleHelper.scheduleSetExpiredPromotion();
-}
 
 initialiseDatabase();
 console.log('Database initialised');
