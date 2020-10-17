@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, DATE, Model
+  INTEGER, DATE, BOOLEAN, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 
@@ -36,6 +36,11 @@ BookingPackage.init(
     endDate: {
       type: DATE,
       allowNull: false
+    },
+    expired: {
+      type: BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     }
   },
   {
