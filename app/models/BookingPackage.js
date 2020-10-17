@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, DATE, Model
+  INTEGER, DATE, BOOLEAN, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 
@@ -8,7 +8,6 @@ const Customer = require('./Customer');
 const Merchant = require('./Merchant');
 const BookingPackageModel = require('./BookingPackageModel');
 const CreditPaymentRecord = require('./CreditPaymentRecord');
-const { BOOLEAN } = require('sequelize');
 
 class BookingPackage extends Model {
 }
