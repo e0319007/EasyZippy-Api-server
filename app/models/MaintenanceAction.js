@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, DATE, STRING, Model
+  INTEGER, DATE, BOOLEAN, STRING, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 
@@ -25,6 +25,11 @@ MaintenanceAction.init(
       type: DATE,
       allowNull: false,
       defaultValue: Sequelize.NOW
+    },
+    deleted: {
+      type: BOOLEAN,
+      defaultValue: false,
+      allowNull: false
     }
   },
   {

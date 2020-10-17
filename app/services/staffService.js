@@ -2,6 +2,7 @@ const emailValidator = require('email-validator');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const _ = require('lodash');
+const generator = require('generate-password');
 
 const Helper = require('../common/helper');
 const EmailHelper = require('../common/emailHelper');
@@ -46,12 +47,11 @@ const changePasswordForResetPassword = async(id, newPassword, transaction) => {
 
 module.exports = {
   createStaff: async (staffData, transaction) => {
-    const { firstName, lastName, mobileNumber, password, email,  staffRoleEnum} = staffData;
+    const { firstName, lastName, mobileNumber, email, staffRoleEnum } = staffData;
 
     Checker.ifEmptyThrowError(firstName, Constants.Error.FirstNameRequired);
     Checker.ifEmptyThrowError(lastName, Constants.Error.LastNameRequired);
     Checker.ifEmptyThrowError(mobileNumber, Constants.Error.MobileNumberRequired);
-    Checker.ifEmptyThrowError(password, Constants.Error.PasswordRequired);
     Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
     Checker.ifEmptyThrowError(staffRoleEnum, 'StaffRoleEnum' + Constants.Error.EnumRequired);
 
@@ -66,17 +66,24 @@ module.exports = {
     if(!Checker.isEmpty(await Staff.findOne({ where: { email } }))) {
       throw new CustomError(Constants.Error.EmailNotUnique);
     }
-    if (!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/).test(password)) {
-      throw new CustomError(Constants.Error.PasswordWeak);
-    }
 
     if(!_.includes(Constants.StaffRole, staffRoleEnum)) {
       throw new CustomError(staffRoleEnum + Constants.Error.EnumDoesNotExist);
     }
 
-    staffData.password = await Helper.hashPassword(password);
+    const generatedPassword = generator.generate({
+      length: 8,
+      numbers: true,
+      symbols: true,
+      uppercase: true,
+      lowercase: true
+    });
+
+    staffData.password = await Helper.hashPassword(generatedPassword);
 
     const staff = await Staff.create(staffData, { transaction });
+
+    await EmailHelper.sendEmailForNewStaffAccount(email, generatedPassword);
 
     return staff;
   },
@@ -105,7 +112,7 @@ module.exports = {
   },
 
   retrieveStaffRoles: async () => {
-    return Constants.StaffRole;
+    return Object.values(Constants.StaffRole);
   },
 
   updateStaff: async(id, staffData, transaction) => {
@@ -113,7 +120,7 @@ module.exports = {
     let staff = await Staff.findByPk(id);
     Checker.ifEmptyThrowError(staff, Constants.Error.StaffNotFound);
 
-    const updateKeys = Object.keys('staffData');
+    const updateKeys = Object.keys(staffData);
 
     if(updateKeys.includes('password')) {
       throw new CustomError(Constants.Error.PasswordCannotChange);
@@ -142,6 +149,20 @@ module.exports = {
       }
     }
     staff = await staff.update(staffData, { returning: true, transaction });
+    return staff;
+  },
+
+  updateStaffRole: async(id, staffRole, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
+    let staff = await Staff.findByPk(id);
+    Checker.ifEmptyThrowError(staff, Constants.Error.StaffNotFound);
+
+    if(!_.includes(Constants.StaffRole, staffRole)) {
+      throw new CustomError(staffRole + Constants.Error.EnumDoesNotExist);
+    }
+
+    staff = await Staff.update({ staffRoleEnum: staffRole }, { where: { id }, transaction, returning: true });
+
     return staff;
   },
 
@@ -184,7 +205,8 @@ module.exports = {
     const token = jwt.sign(
       {
         id: staff.id,
-        accountType: Constants.AccountType.Staff
+        accountType: Constants.AccountType.Staff,
+        staffRole: staff.staffRoleEnum
       },
       config.get('jwt.private_key'),
       { expiresIn: '1d' }

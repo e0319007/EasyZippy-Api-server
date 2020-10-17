@@ -1,7 +1,6 @@
 const sequelize = require('../common/database');
 const { sendErrorResponse } = require('../common/error/errorHandler');
 
-
 const LockerTypeService = require('../services/lockerTypeService');
 module.exports = {
   createLockerType: async(req, res) => {
@@ -34,8 +33,16 @@ module.exports = {
   retrieveLockerType: async(req, res) => {
     try {
       const { id } = req.params;
-      let lockerType = await LockerTypeService.retrieveLockerType(id);
-      return res.status(200).send(lockerType);      
+      return res.status(200).send(await LockerTypeService.retrieveLockerType(id));      
+    } catch(err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
+  retrieveLockerTypesByKiosk: async(req, res) => {
+    try {
+      const { kioskId } = req.params;
+      return res.status(200).send(await LockerTypeService.retrieveLockerTypesByKiosk(kioskId));
     } catch(err) {
       sendErrorResponse(res, err);
     }
@@ -66,7 +73,9 @@ module.exports = {
   deleteLockerType: async(req, res) => {
     try {
       let { id } = req.params;
-      await LockerTypeService.deleteLockerType(id);
+      await sequelize.transaction(async (transaction) => {
+        await LockerTypeService.deleteLockerType(id, transaction);
+      });
       return res.status(200).send();
     } catch(err) {
       sendErrorResponse(res, err);

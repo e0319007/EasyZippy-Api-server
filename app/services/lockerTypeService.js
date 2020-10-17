@@ -3,7 +3,7 @@ const Constants = require('../common/constants');
 const CustomError = require('../common/error/customError');
 
 const LockerType = require('../models/LockerType');
-
+const Kiosk = require('../models/Kiosk');
 
 module.exports = {
   createLockerType: async(lockerTypeData, transaction) => {
@@ -42,6 +42,7 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let lockerType = await LockerType.findByPk(id);
     Checker.ifEmptyThrowError(lockerType, Constants.Error.LockerTypeNotFound);
+    Checker.ifDeletedThrowError(lockerType, Constants.Error.LockerTypeDeleted);
     const updateKeys = Object.keys(lockerTypeData);
 
     if(updateKeys.includes('width') && lockerTypeData.width < 0) {
@@ -73,19 +74,46 @@ module.exports = {
   },
 
   retrieveLockerType: async(id) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     const lockerType = await LockerType.findByPk(id);
     Checker.ifEmptyThrowError(lockerType, Constants.Error.LockerTypeNotFound);
+    Checker.ifDeletedThrowError(lockerType, Constants.Error.LockerTypeDeleted);
+
     return lockerType;
   },
 
+  retrieveLockerTypesByKiosk: async(kioskId) => {
+    Checker.ifEmptyThrowError(kioskId, Constants.Error.IdRequired);
+    const kiosk = await Kiosk.findByPk(kioskId);
+    Checker.ifEmptyThrowError(kiosk, Constants.Error.KioskNotFound);
+    Checker.ifDeletedThrowError(kiosk, Constants.Error.KioskDeleted);
+
+    const lockers = await kiosk.getLockers();
+    const lockerTypeIds = new Set();
+    const lockerTypes = [];
+
+    for (const locker of lockers) {
+      lockerTypeIds.add((await locker.getLockerType()).id);
+    }
+
+    for (const lockerTypeId of lockerTypeIds) {
+      lockerTypes.push(await LockerType.findByPk(lockerTypeId));
+    }
+
+    return lockerTypes;
+  },
+
   retrieveAllLockerType: async() => {
-    const lockerTypes = await LockerType.findAll();
+    const lockerTypes = await LockerType.findAll({where: { deleted: false } });
     return lockerTypes;
   },
 
   toggleDisableLockerType: async(id, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     const curLockerType = await LockerType.findByPk(id);
-    Checker.ifEmptyThrowError(curLockerType, Constants.Error.LockerTypeNotFound)
+    Checker.ifEmptyThrowError(curLockerType, Constants.Error.LockerTypeNotFound);
+    Checker.ifDeletedThrowError(curLockerType, Constants.Error.LockerTypeDeleted);
+
     let lockerType = await LockerType.update({
       disabled: !curLockerType.disabled
     }, {
@@ -95,14 +123,17 @@ module.exports = {
     return lockerType;
   },
 
-  deleteLockerType: async(id) => {
+  deleteLockerType: async(id, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     // To check for associated lockers
     const lockerType = await LockerType.findByPk(id);
-    Checker.ifEmptyThrowError(LockerType, Constants.Error.LockerTypeNotFound);
-    await LockerType.destroy({
+    Checker.ifEmptyThrowError(lockerType, Constants.Error.LockerTypeNotFound);
+    await LockerType.update({
+      deleted: true
+    },{
       where: {
         id
-      }
+      }, transaction
     });
   }
 }

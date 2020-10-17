@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, STRING, Model
+  INTEGER, BOOLEAN, STRING, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 
@@ -22,6 +22,11 @@ Category.init(
     description: {
       type: STRING,
       allowNull: true
+    },
+    deleted: {
+      type: BOOLEAN,
+      defaultValue: false,
+      allowNull: false
     }
   },
   {

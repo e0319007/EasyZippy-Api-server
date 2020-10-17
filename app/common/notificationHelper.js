@@ -38,6 +38,21 @@ module.exports = {
     NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
   },
 
+  //send notification to merchant after staff approves the merchant application
+  notificationAccountDisapproval: async(id) => {
+    let merchant = await Merchant.findByPk(id);
+    Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound); 
+
+    let title = 'Account Disapproved';
+    let description = 'Your account is disapproved, please contact admin!';
+    
+    let senderModel = Constants.ModelEnum.Staff;
+    let receiverModel = Constants.ModelEnum.Merchant;
+    let senderId = null
+    let receiverId = id;
+    NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
+  },
+
   //send notification to merchant of new order
   notificationNewOrder : async(orderId, merchantId) => {
     let order = await Order.findByPk(id);

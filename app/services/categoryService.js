@@ -8,7 +8,8 @@ module.exports = {
   createCategory: async(categoryData, transaction) => {
     const { name } = categoryData;
     Checker.ifEmptyThrowError(name, Constants.Error.NameRequired);
-    if(!Checker.isEmpty(await Category.findOne({ where : { name } }))) {
+    const c = await Category.findOne({ where : { name } });
+    if(!Checker.isEmpty(c) && !c.deleted) {
       throw new CustomError(Constants.Error.NameNotUnique);
     }
     const category = await Category.create(categoryData, { transaction })
@@ -16,14 +17,16 @@ module.exports = {
   },
 
   retrieveCategory: async(id) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     const category = await Category.findByPk(id);
-
     Checker.ifEmptyThrowError(category, Constants.Error.CategoryNotFound);
+    Checker.ifDeletedThrowError(category, Constants.Error.CategoryDeleted);
+
     return category;
   },
 
   retrieveAllCategory: async() => {
-    const categories = Category.findAll();
+    const categories = await Category.findAll({where: { deleted: false } });
     return categories;
   },
 
@@ -31,11 +34,17 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let category = await Category.findByPk(id);
     Checker.ifEmptyThrowError(category, Constants.Error.CategoryNotFound);
+    Checker.ifDeletedThrowError(category, Constants.Error.CategoryDeleted);
+
     const updateKeys = Object.keys(categoryData);
     if(updateKeys.includes('name')) {
-        Checker.ifEmptyThrowError(Constants.Error.NameRequired);
+      Checker.ifEmptyThrowError(Constants.Error.NameRequired);
+      const c = await Category.findOne({ where : { name: categoryData.name } });
+      if(!Checker.isEmpty(c) && !c.deleted && c.id != id) {
+        throw new CustomError(Constants.Error.NameNotUnique);
+      }
     }
-    category = Category.update(
+    category = await Category.update(
       categoryData,
       { returning: true, transaction, 
         where : {
@@ -46,11 +55,13 @@ module.exports = {
     return category;
   },
 
-  deleteCategory: async(id) => {
+  deleteCategory: async(id, transaction) => {
     // To check for associated products
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let category = await Category.findByPk(id);
     Checker.ifEmptyThrowError(category, Constants.Error.CategoryNotFound);
-    Category.destroy({ where: { id } });
+    await Category.update({
+      deleted: true
+    }, { where: { id }, transaction });
   }
 }

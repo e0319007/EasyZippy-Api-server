@@ -52,7 +52,9 @@ module.exports = {
   deleteCategory: async(req, res) => {
     try {
       const { id } = req.params;
-      CategoryService.deleteCategory(id);
+      await sequelize.transaction(async (transaction) => {
+        await CategoryService.deleteCategory(id, transaction);
+      });
       return res.status(200).send();
     } catch (err) {
       sendErrorResponse(res, err);

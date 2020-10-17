@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, STRING, DECIMAL, Model
+  INTEGER, STRING, BOOLEAN, DECIMAL, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 
@@ -46,6 +46,16 @@ BookingPackageModel.init(
       validate: {
         min: 1
       }
+    },
+    disabled: {
+      type: BOOLEAN,
+      defaultValue: false,
+      allowNull: false
+    },
+    deleted: {
+      type: BOOLEAN,
+      defaultValue: false,
+      allowNull: false
     }
   },
   {

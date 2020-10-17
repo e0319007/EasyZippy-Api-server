@@ -43,7 +43,7 @@ module.exports = {
       let array = new Array();
       let i = 0
       while(!Checker.isEmpty(req.files[i])) {
-        array.push('./app/assets/' + req.files[i].filename);
+        array.push(req.files[i].filename);
         i++;
       }
       return res.status(200).send(array);
@@ -79,14 +79,14 @@ module.exports = {
     }
   },
 
-  setDisableProduct: async(req, res) => {
+  deleteProduct: async(req, res) => {
     try {
       let product;
       const { id } = req.params;
       await sequelize.transaction(async (transaction) => {
-        product = await ProductService.setDisableProduct(id, transaction);
+        product = await ProductService.deleteProduct(id, transaction);
       });
-      return res.status(200).send(product);
+      return res.status(200).send();
     } catch(err) {
       console.log(err)
       sendErrorResponse(res, err);
@@ -94,12 +94,12 @@ module.exports = {
   },
 
 
-  toggleArchiveProduct: async(req, res) => {
+  toggleDisableProduct: async(req, res) => {
     try {
       let product;
       const { id } = req.params;
       await sequelize.transaction(async (transaction) => {
-        product = await ProductService.toggleArchiveProduct(id, transaction);
+        product = await ProductService.toggleDisableProduct(id, transaction);
       });
       console.log(product)
       return res.status(200).send(product);
