@@ -39,6 +39,10 @@ Order.init(
     orderStatusEnum: {
       type: STRING,
       allowNull: false
+    },
+    collectionMethodEnum: {
+      type: STRING,
+      allowNull: false
     }
   },
   {

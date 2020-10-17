@@ -64,6 +64,11 @@ Promotion.init(
       type: STRING,
       allowNull: false
     },
+    expired: {
+      type: BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
     deleted: {
       type: BOOLEAN,
       defaultValue: false,
