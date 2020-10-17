@@ -19,21 +19,21 @@ LockerType.init(
       type: STRING,
       allowNull: false
     },
-    height: {
+    lockerHeight: {
       type: DOUBLE,
       allowNull: false,
       validate: {
         min: 0.0
       }
     },
-    width: {
+    lockerWidth: {
       type: DOUBLE,
       allowNull: false,
       validate: {
         min: 0.0
       }
     },
-    length: {
+    lockerLength: {
       type: DOUBLE,
       allowNull: false,
       validate: {
