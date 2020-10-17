@@ -80,6 +80,7 @@ module.exports = {
     BookingPackageModelIsDisabled: 'Booking package model is disabled',
     BookingPackageModelNotFound: 'Booking package model not found',
     BookingPackageNotFound: 'Booking package not found',
+    BookingNotFound: 'Booking not found',
     CategoryDeleted: 'Category is deleted',
     CategoryNameExist: 'Category name exists',
     CategoryNameRequired: 'Category name is required',
