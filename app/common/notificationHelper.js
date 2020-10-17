@@ -7,6 +7,9 @@ const NotificationService = require('../services/notificationService');
 const Checker = require('../common/checker');
 const Constants = require('../common/constants')
 module.exports = {
+  /**
+   * SEND NOTI ABOUT MERCHANT APPLICATION
+   */
   //send notification when staff receives a new merchant application
   notificationNewApplication: async(id) => {
     console.log('In notificationNewApplication')
@@ -53,23 +56,6 @@ module.exports = {
     let receiverId = id;
     NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
   },
-
-  //send notification to merchant of new order
-  notificationNewOrder : async(orderId, merchantId) => {
-    let order = await Order.findByPk(id);
-    Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound); 
-
-    let title = 'New Order';
-    let description = 'You have a new order';
-    
-    let senderModel = Constants.ModelEnum.Order;
-    let receiverModel = Constants.ModelEnum.Merchant;
-    let senderId = orderId;
-    let receiverId = merchantId;
-    NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
-  },
-
-
 
   /**
    * SEND NOTI TO CUSTOMER ABOUT BOOKING
@@ -220,9 +206,42 @@ module.exports = {
   /**
    * SEND NOTI ABOUT ORDER
    */
+
+  //send notification to merchant of new order
+  notificationNewOrder : async(orderId, merchantId) => {
+    let order = await Order.findByPk(id);
+    Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound); 
+
+    let merchant = await Customer.findByPk(merchantId);
+    Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
+
+    let title = 'New Order';
+    let description = 'You have a new order';
+    
+    let senderModel = Constants.ModelEnum.Order;
+    let receiverModel = Constants.ModelEnum.Merchant;
+    let senderId = orderId;
+    let receiverId = merchantId;
+    NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
+  },
   //send notifications to merchants that customer has received the order
    notificationOrderReceivedMerchant: async(orderId, merchantId) => {
+    let order = await Order.findByPk(id);
+    Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound); 
 
+    let merchant = await Customer.findByPk(merchantId);
+    Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
+
+    let title = 'Order received by customer';
+    let description = 'Order with ID: ' + orderId + ' is collected by customer';
+    
+    let senderModel = Constants.ModelEnum.Order;
+    let receiverModel = Constants.ModelEnum.Merchant;
+    let senderId = orderId;
+    let receiverId = merchantId;
+    NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
   },
-
+  //send notifications to customer that the order is ready
+  
+  //send notification to customer that the order is in the kiosk
 }
