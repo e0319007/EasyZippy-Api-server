@@ -8,6 +8,7 @@ const Customer = require('./Customer');
 const Merchant = require('./Merchant');
 const BookingPackageModel = require('./BookingPackageModel');
 const CreditPaymentRecord = require('./CreditPaymentRecord');
+const { BOOLEAN } = require('sequelize');
 
 class BookingPackage extends Model {
 }
@@ -36,6 +37,11 @@ BookingPackage.init(
     endDate: {
       type: DATE,
       allowNull: false
+    },
+    expired: {
+      type: BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     }
   },
   {
