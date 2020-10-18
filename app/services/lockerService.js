@@ -103,7 +103,7 @@ module.exports = {
 
   scanOpenLocker: async(qrCode, transaction) => {
     let booking = await Booking.findOne( { where: { qrCode } });
-    
+    //OPEN LOCKER FOR THE FIRST TIME
     if(booking.bookingStatusEnum === Constants.BookingStatus.Unfufilled) {
       //call open locker api
       
@@ -112,7 +112,8 @@ module.exports = {
       let locker = await Locker.findOne( { where: { lockerTypeId: booking.lockerTypeId, lockerStatusEnum: Constants.LockerStatus.Empty } });
       locker = await locker.update( { lockerStatusEnum: Constants.LockerStatus.InUse }, { transaction }); 
       await assignLockersToBookings(booking.id, locker.id, transaction);
-    
+      
+    //OPEN LOCKER FOR THE SECOND TIME
     } else if (booking.bookingStatusEnum === Constants.BookingStatus.Active) {
       let extraDuration = new Date() - booking.endTime;
       let extraPrice;

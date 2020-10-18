@@ -13,8 +13,6 @@ const Locker = require('../models/Locker');
 const LockerType = require('../models/LockerType');
 const CreditPaymentRecordService = require('./creditPaymentRecordService');
 const Order = require('../models/Order');
-const { order } = require('paypal-rest-sdk');
-const { copySync } = require('fs-extra');
 const cons = require('consolidate');
 
 const checkBookingAvailable = async(startDate, endDate, lockerTypeId) => {

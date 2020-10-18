@@ -1,7 +1,8 @@
 const { sendErrorResponse } = require('../common/error/errorHandler');
 const sequelize = require('../common/database');
 const BookingService = require('../services/bookingService');
-
+const ScheduleHelper = require('../common/scheduleHelper'); 
+const NotificationHelper = require('../common/notificationHelper'); 
 
 module.exports = {
   createBookingByCustomer: async(req, res) => {
@@ -11,6 +12,12 @@ module.exports = {
       await sequelize.transaction(async (transaction) => {
           booking = await BookingService.createBookingByCustomer(bookingData, transaction);
       });
+      let startDate = booking.startDate;
+      let endDate = booking.endDate;
+      ScheduleHelper.scheduleEvent(new Date(startDate.getTime() - 10 * 60 * 1000), NotificationHelper.notificationBookingStartingSoon)
+      ScheduleHelper.scheduleEvent(startDate, NotificationHelper.notificationBookingStarted)
+      ScheduleHelper.scheduleEvent(new Date(endDate.getTime() - 10 * 60 * 1000), NotificationHelper.notificationBookingReachingSoon)
+      ScheduleHelper.scheduleEvent(endDate, NotificationHelper.notificationBookingReached)
       return res.status(200).send(booking);
     } catch (err) {
       sendErrorResponse(res, err);
@@ -24,6 +31,12 @@ module.exports = {
       await sequelize.transaction(async (transaction) => {
           booking = await BookingService.createBookingByMerchant(bookingData, transaction);
       });
+      let startDate = booking.startDate;
+      let endDate = booking.endDate;
+      ScheduleHelper.scheduleEvent(new Date(startDate.getTime() - 10 * 60 * 1000), NotificationHelper.notificationBookingStartingSoonMerchant)
+      ScheduleHelper.scheduleEvent(startDate, NotificationHelper.notificationBookingStartedMerchant)
+      ScheduleHelper.scheduleEvent(new Date(endDate.getTime() - 10 * 60 * 1000), NotificationHelper.notificationBookingReachingSoonMerchant)
+      ScheduleHelper.scheduleEvent(endDate, NotificationHelper.notificationBookingReachedMerchant)
       return res.status(200).send(booking);
     } catch (err) {
       sendErrorResponse(res, err);
@@ -37,6 +50,12 @@ module.exports = {
       await sequelize.transaction(async (transaction) => {
           booking = await BookingService.createBookingWithBookingPackageByCustomer(bookingData, transaction);
       });
+      let startDate = booking.startDate;
+      let endDate = booking.endDate;
+      ScheduleHelper.scheduleEvent(new Date(startDate.getTime() - 10 * 60 * 1000), NotificationHelper.notificationBookingStartingSoon)
+      ScheduleHelper.scheduleEvent(startDate, NotificationHelper.notificationBookingStarted)
+      ScheduleHelper.scheduleEvent(new Date(endDate.getTime() - 10 * 60 * 1000), NotificationHelper.notificationBookingReachingSoon)
+      ScheduleHelper.scheduleEvent(endDate, NotificationHelper.notificationBookingReached)
       return res.status(200).send(booking);
     } catch (err) {
       sendErrorResponse(res, err);
@@ -50,6 +69,12 @@ module.exports = {
       await sequelize.transaction(async (transaction) => {
           booking = await BookingService.createBookingWithBookingPackageByMerchant(bookingData, transaction);
       });
+      let startDate = booking.startDate;
+      let endDate = booking.endDate;
+      ScheduleHelper.scheduleEvent(new Date(startDate.getTime() - 10 * 60 * 1000), NotificationHelper.notificationBookingStartingSoonMerchant)
+      ScheduleHelper.scheduleEvent(startDate, NotificationHelper.notificationBookingStartedMerchant)
+      ScheduleHelper.scheduleEvent(new Date(endDate.getTime() - 10 * 60 * 1000), NotificationHelper.notificationBookingReachingSoonMerchant)
+      ScheduleHelper.scheduleEvent(endDate, NotificationHelper.notificationBookingReachedMerchant)
       return res.status(200).send(booking);
     } catch (err) {
       sendErrorResponse(res, err);
