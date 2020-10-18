@@ -4,6 +4,42 @@ module.exports = {
     Merchant: 'Merchant',
     Staff: 'Staff'
   },
+  BookingStatus: {
+    Unfufilled: 'Unfufilled',
+    Active: 'Active',
+    Fufilled: 'Fufilled',
+    Cancelled: 'Cancelled'
+  },
+  BookingSource: {
+    Mobile: 'Mobile',
+    Kiosk: 'Kiosk'
+  },
+  CollectionMethod: {
+    InStall: 'In Stall',
+    Kiosk: 'Kiosk'
+  },
+  LockerStatus: {
+    InUse: 'In Use',
+    Empty: 'Empty'
+  },
+  LockerAction: {
+    Close: 'Close',
+    Open: 'Open'
+  },
+  ModelEnum: {
+    Merchant: 'Merchant',
+    Booking: 'Booking',
+    Order: 'Order',
+    Staff: 'Staff',
+    Customer: 'Customer'
+  },
+  OrderStatus: {
+    PendingPayment: 'Pending Payment',
+    Processing: 'Processing',
+    ReadyForCollection: 'Ready For Collection',
+    Cancelled: 'Cancelled',
+    Refund: 'Refund'
+  },
   PaymentStatus: {
     Cancelled: 'Cancelled',
     Paid: 'Paid'
@@ -15,45 +51,13 @@ module.exports = {
     Paynow: 'Paynow',
     Paypal: 'Paypal'
   },
-  StaffRole: {
-    Admin: 'Admin',
-    Employee: 'Employee'
-  },
-  OrderStatus: {
-    PendingPayment: 'Pending Payment',
-    Processing: 'Processing',
-    ReadyForCollection: 'Ready For Collection',
-    Cancelled: 'Cancelled',
-    Refund: 'Refund'
-  },
-  BookingStatus: {
-    Unfufilled: 'Unfufilled',
-    Active: 'Active',
-    Fufilled: 'Fufilled',
-    Cancelled: 'Cancelled'
-  },
-  LockerStatus: {
-    InUse: 'In Use',
-    Empty: 'Empty'
-  },
-  LockerAction: {
-    Close: 'Close',
-    Open: 'Open'
-  },
-  BookingSource: {
-    Mobile: 'Mobile',
-    Kiosk: 'Kiosk'
-  },
   PromotionType: {
     MallPromotion: 'Mall Promotion',
     MerchantPromotion: 'Merchant Promotion'
   },
-  ModelEnum: {
-    Merchant: 'Merchant',
-    Booking: 'Booking',
-    Order: 'Order',
-    Staff: 'Staff',
-    Customer: 'Customer'
+  StaffRole: {
+    Admin: 'Admin',
+    Employee: 'Employee'
   },
   Error: {
     AdvertisementOngoingCannotMarkExpire: 'Cannot mark an ongoing advertisement as expired',

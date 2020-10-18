@@ -26,6 +26,7 @@ module.exports = {
   },
 
   retrieveLocker: async(id) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     const locker = await Locker.findByPk(id);
     Checker.ifEmptyThrowError(locker, Constants.Error.LockerNotFound);
     Checker.ifDeletedThrowError(locker, Constants.Error.LockerDeleted);
@@ -38,6 +39,7 @@ module.exports = {
   },
 
   retrieveLockersByLockerType: async(lockerTypeId) => {
+    Checker.ifEmptyThrowError(lockerTypeId, Constants.Error.IdRequired);
     const lockerType = await LockerType.findByPk(lockerTypeId);
     Checker.ifEmptyThrowError(lockerType, Constants.Error.LockerTypeNotFound);
     Checker.ifDeletedThrowError(lockerType, Constants.Error.LockerTypeDeleted);
@@ -46,14 +48,16 @@ module.exports = {
   },
 
   retrieveLockersByKiosk: async(kioskId) => {
+    Checker.ifEmptyThrowError(kioskId, Constants.Error.IdRequired);
     const kiosk = await Kiosk.findByPk(kioskId);
-    Checker.ifEmptyThrowError(lockerType, Constants.Error.KioskNotFound);
+    Checker.ifEmptyThrowError(kiosk, Constants.Error.KioskNotFound);
     Checker.ifDeletedThrowError(kiosk, Constants.Error.KioskDeleted);
 
     return await kiosk.getLockers();
   },
 
   setLockerEmpty: async(id, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     const locker = await Locker.findByPk(id);
     Checker.ifEmptyThrowError(locker, Constants.Error.LockerNotFound);
     Checker.ifDeletedThrowError(locker, Constants.Error.LockerDeleted);
@@ -62,6 +66,7 @@ module.exports = {
   },
 
   setLockerInUse: async(id, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     const locker = await Locker.findByPk(id);
     Checker.ifEmptyThrowError(locker, Constants.Error.LockerNotFound);
     Checker.ifDeletedThrowError(locker, Constants.Error.LockerDeleted);
@@ -70,6 +75,7 @@ module.exports = {
   },
 
   toggleDisableLocker: async(id, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     const locker = await Locker.findByPk(id);
     Checker.ifEmptyThrowError(locker, Constants.Error.LockerNotFound);
     Checker.ifDeletedThrowError(locker, Constants.Error.LockerDeleted);
@@ -78,6 +84,7 @@ module.exports = {
   },
 
   deleteLocker: async(id, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     const locker = await Locker.findByPk(id);
     Checker.ifEmptyThrowError(locker, Constants.Error.LockerNotFound);
 

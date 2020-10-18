@@ -33,8 +33,16 @@ module.exports = {
   retrieveLockerType: async(req, res) => {
     try {
       const { id } = req.params;
-      let lockerType = await LockerTypeService.retrieveLockerType(id);
-      return res.status(200).send(lockerType);      
+      return res.status(200).send(await LockerTypeService.retrieveLockerType(id));      
+    } catch(err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
+  retrieveLockerTypesByKiosk: async(req, res) => {
+    try {
+      const { kioskId } = req.params;
+      return res.status(200).send(await LockerTypeService.retrieveLockerTypesByKiosk(kioskId));
     } catch(err) {
       sendErrorResponse(res, err);
     }

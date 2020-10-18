@@ -103,7 +103,7 @@ router.post('/customer/verifyOtp', CustomerController.verifyOtp);
 router.post('/customer', CustomerController.registerCustomer);
 
 //Kiosk
-router.get('/kiosks', Authenticator.staffOnly, KioskController.retrieveAllKiosks);
+router.get('/kiosks', Authenticator.customerAndMerchantAndStaffOnly, KioskController.retrieveAllKiosks);
 router.get('/kiosk/:id', Authenticator.staffOnly, KioskController.retrieveKiosk);
 router.put('/kiosk/:id/toggleDisable', Authenticator.staffOnly, KioskController.toggleDisableKiosk);
 router.put('/kiosk/:id', Authenticator.staffOnly, KioskController.updateKiosk);
@@ -114,6 +114,7 @@ router.put('/deleteKiosk/:id', Authenticator.staffOnly, KioskController.deleteKi
 router.get('/locker/lockerType/:lockerTypeId', Authenticator.customerAndMerchantAndStaffOnly, LockerController.retrieveLockersByLockerType);
 router.get('/locker/kiosk/:kioskId', Authenticator.customerAndMerchantAndStaffOnly, LockerController.retrieveLockersByKiosk);
 router.get('/locker/:id', Authenticator.customerAndMerchantAndStaffOnly, LockerController.retrieveLocker);
+router.get('/lockers', Authenticator.customerAndMerchantAndStaffOnly, LockerController.retrieveAllLockers);
 router.put('/locker/setEmpty/:id', Authenticator.customerAndMerchantAndStaffOnly, LockerController.setLockerEmpty);
 router.put('/locker/setInUse/:id', Authenticator.customerAndMerchantAndStaffOnly, LockerController.setLockerInUse);
 router.put('/locker/toggleDisable/:id', Authenticator.staffOnly, LockerController.toggleDisableLocker);
@@ -121,6 +122,7 @@ router.put('/deleteLocker/:id', Authenticator.staffOnly, LockerController.delete
 router.post('/locker', Authenticator.staffOnly, LockerController.createLocker);
 
 //Locker Type
+router.get('/lockerType/kiosk/:kioskId', Authenticator.customerAndMerchantAndStaffOnly, LockerTypeController.retrieveLockerTypesByKiosk);
 router.get('/lockerType/:id', Authenticator.customerAndMerchantAndStaffOnly, LockerTypeController.retrieveLockerType);
 router.get('/lockerTypes', Authenticator.customerAndMerchantAndStaffOnly, LockerTypeController.retrieveAllLockerTypes);
 router.get('/AvailablelockerTypes/:kioskId', LockerTypeController.retrieveAvailableLockerTypesByKioskId)

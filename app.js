@@ -9,6 +9,7 @@ const engines = require('consolidate');
 const moment = require('moment-timezone');
 
 const routes = require('./app/routes');
+const scheduleHelper = require('./app/common/scheduleHelper'); 
 
 const isoDateRegex = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*))(?:Z|(\+|-)([\d|:]*))?$/;
 const msAjaxDateRegex = /^\/Date\((d|-|.*)\)[\/|\\]$/;
@@ -28,6 +29,12 @@ const storage = multer.diskStorage({
     i++;
   },
 });
+
+const initialiseScheduler = async () => {
+  scheduleHelper.scheduleSetExpiredAdvertisement();
+  scheduleHelper.scheduleSetExpiredBookingPackage();
+  scheduleHelper.scheduleSetExpiredPromotion();
+}
 
 app.use(cors());
 app.options('*', cors());
@@ -53,6 +60,7 @@ app.set('json replacer', (key, value) => {
   }
   return value;
 });
+
 
 if (app.get('env') === 'development') {
   app.locals.pretty = true;

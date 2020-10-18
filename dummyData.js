@@ -49,7 +49,7 @@ const addDummyData = async () => {
 
   await CustomerService.activateCustomer(customerId);
   await MerchantService.approveMerchant(merchantId);
-/*
+
   await AnnouncementService.createAnnouncement({ title: 'Notice', description: 'The Ez2keep system will be disabled for maintenance on 21 September 2020', staffId });
   await AnnouncementService.createAnnouncement({ title: 'COVID-19 notice', description: 'Please wear your masks and practice social distancing at all times', staffId });
   await AnnouncementService.createAnnouncement({ title: 'Mall early closure', description: 'Compass One will be closed at 10:00pm on 25 December 2020', staffId });
@@ -60,7 +60,7 @@ const addDummyData = async () => {
   await NotificationService.createNotification({ title: 'New Order',description: 'Jack Ng made an order', receiverId: toysRUs.id, receiverModel: 'Merchant' });
   await NotificationService.createNotification({ title: 'Notification 1',description: 'Customer notification 1', receiverId: customerId, receiverModel: 'Customer' });
   await NotificationService.createNotification({ title: 'Notification 2',description: 'Customer notification 2', receiverId: customerId, receiverModel: 'Customer' });
-*/
+
   let toyCategory = await Category.create({ name: 'Toys', description: 'Sample Description' });
   let bagCategory = await Category.create({ name: 'Bags', description: 'Sample Description' });
   let bottleCategory = await Category.create({ name: 'Water Bottles', description: 'Sample Description' });

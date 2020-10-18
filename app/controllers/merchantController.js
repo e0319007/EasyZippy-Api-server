@@ -14,7 +14,8 @@ module.exports = {
       await sequelize.transaction(async (transaction) => {
         merchant = await MerchantService.createMerchant(merchantData, transaction);
       });
-      await NotificationHelper.notificationNewApplication(merchant.id)
+
+      await NotificationHelper.notificationNewApplication(merchant.id);
       return res.status(200).send(merchant);
     } catch (err) {
       console.log(err)
@@ -84,15 +85,13 @@ module.exports = {
       let merchant;
       await sequelize.transaction(async(transaction) => {
         merchant = await MerchantService.approveMerchant(id, transaction);
-      })
+      });
       if(merchant[1][0].dataValues.approved) {
-        await NotificationHelper.notificationAccountApproval(merchant[1][0].dataValues.id);
         await EmailHelper.sendEmailForMerchantApproval(merchant[1][0].dataValues.email);
+        await NotificationHelper.notificationAccountApproval(merchant[1][0].dataValues.id, transaction);
       } else {
-        await NotificationHelper.notificationAccountDisapproval(merchant[1][0].dataValues.id);
         await EmailHelper.sendEmailForMerchantDisapproval(merchant[1][0].dataValues.email);
-
-      }
+        await NotificationHelper.notificationAccountDisapproval(merchant[1][0].dataValues.id, transaction);}
       return res.status(200).send(merchant);
     } catch (err) {
       sendErrorResponse(res, err);

@@ -10,23 +10,23 @@ const Locker = require('../models/Locker');
 
 module.exports = {
   createLockerType: async(lockerTypeData, transaction) => {
-    let { name, height, width, length, price } = lockerTypeData;
+    let { name, lockerHeight, lockerWidth, lockerLength, price } = lockerTypeData;
     Checker.ifEmptyThrowError(name, Constants.Error.NameRequired);
-    Checker.ifEmptyThrowError(height, 'Height ' + Constants.Error.XXXIsRequired);
-    Checker.ifEmptyThrowError(width, 'Width ' + Constants.Error.XXXIsRequired);
-    Checker.ifEmptyThrowError(length, 'Length ' + Constants.Error.XXXIsRequired);
+    Checker.ifEmptyThrowError(lockerHeight, 'Height ' + Constants.Error.XXXIsRequired);
+    Checker.ifEmptyThrowError(lockerWidth, 'Width ' + Constants.Error.XXXIsRequired);
+    Checker.ifEmptyThrowError(lockerLength, 'Length ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(price, 'Price '  + Constants.Error.XXXIsRequired);
-    Checker.ifNotNumberThrowError(lockerTypeData.width, 'Width ' + Constants.Error.XXXMustBeNumber);
-    Checker.ifNotNumberThrowError(lockerTypeData.height, 'Height ' + Constants.Error.XXXMustBeNumber);
-    Checker.ifNotNumberThrowError(lockerTypeData.length, 'Length ' + Constants.Error.XXXMustBeNumber);
+    Checker.ifNotNumberThrowError(lockerTypeData.lockerWidth, 'Width ' + Constants.Error.XXXMustBeNumber);
+    Checker.ifNotNumberThrowError(lockerTypeData.lockerHeight, 'Height ' + Constants.Error.XXXMustBeNumber);
+    Checker.ifNotNumberThrowError(lockerTypeData.lockerLength, 'Length ' + Constants.Error.XXXMustBeNumber);
     Checker.ifNotNumberThrowError(lockerTypeData.price, 'Price ' + Constants.Error.XXXMustBeNumber);
-    if (height < 0) {
+    if (lockerHeight < 0) {
       throw new CustomError('Height ' + Constants.Error.XXXCannotBeNegative);
     }
-    if (width < 0) {
+    if (lockerWidth < 0) {
       throw new CustomError('Width ' + Constants.Error.XXXCannotBeNegative);
     }
-    if (length < 0) {
+    if (lockerLength < 0) {
       throw new CustomError('Length ' + Constants.Error.XXXCannotBeNegative);
     }
     if (price < 0) {
@@ -48,13 +48,13 @@ module.exports = {
     Checker.ifDeletedThrowError(lockerType, Constants.Error.LockerTypeDeleted);
     const updateKeys = Object.keys(lockerTypeData);
 
-    if(updateKeys.includes('width') && lockerTypeData.width < 0) {
+    if(updateKeys.includes('lockerWidth') && lockerTypeData.lockerWidth < 0) {
       throw new CustomError('Width ' + Constants.Error.XXXCannotBeNegative);
     }
-    if(updateKeys.includes('height') && lockerTypeData.height < 0) {
+    if(updateKeys.includes('lockerHeight') && lockerTypeData.lockerHeight < 0) {
       throw new CustomError('Height ' + Constants.Error.XXXCannotBeNegative);
     }
-    if(updateKeys.includes('length') && lockerTypeData.length < 0) {
+    if(updateKeys.includes('lockerLength') && lockerTypeData.lockerLength < 0) {
       throw new CustomError('Length ' + Constants.Error.XXXCannotBeNegative);
     }
     if(updateKeys.includes('price') && lockerTypeData.price < 0) {
@@ -67,9 +67,9 @@ module.exports = {
         throw new CustomError(Constants.Error.NameNotUnique);
       }
     }
-    Checker.ifNotNumberThrowError(lockerTypeData.width, 'Width ' + Constants.Error.XXXMustBeNumber);
-    Checker.ifNotNumberThrowError(lockerTypeData.height, 'Height ' + Constants.Error.XXXMustBeNumber);
-    Checker.ifNotNumberThrowError(lockerTypeData.length, 'Length ' + Constants.Error.XXXMustBeNumber);
+    Checker.ifNotNumberThrowError(lockerTypeData.lockerWidth, 'Width ' + Constants.Error.XXXMustBeNumber);
+    Checker.ifNotNumberThrowError(lockerTypeData.lockerHeight, 'Height ' + Constants.Error.XXXMustBeNumber);
+    Checker.ifNotNumberThrowError(lockerTypeData.lockerLength, 'Length ' + Constants.Error.XXXMustBeNumber);
     Checker.ifNotNumberThrowError(lockerTypeData.price, 'Price ' + Constants.Error.XXXMustBeNumber);
 
     lockerType = await lockerType.update(lockerTypeData, { returning: true, transaction })
@@ -83,6 +83,27 @@ module.exports = {
     Checker.ifDeletedThrowError(lockerType, Constants.Error.LockerTypeDeleted);
 
     return lockerType;
+  },
+
+  retrieveLockerTypesByKiosk: async(kioskId) => {
+    Checker.ifEmptyThrowError(kioskId, Constants.Error.IdRequired);
+    const kiosk = await Kiosk.findByPk(kioskId);
+    Checker.ifEmptyThrowError(kiosk, Constants.Error.KioskNotFound);
+    Checker.ifDeletedThrowError(kiosk, Constants.Error.KioskDeleted);
+
+    const lockers = await kiosk.getLockers();
+    const lockerTypeIds = new Set();
+    const lockerTypes = [];
+
+    for (const locker of lockers) {
+      lockerTypeIds.add((await locker.getLockerType()).id);
+    }
+
+    for (const lockerTypeId of lockerTypeIds) {
+      lockerTypes.push(await LockerType.findByPk(lockerTypeId));
+    }
+
+    return lockerTypes;
   },
 
   retrieveAllLockerType: async() => {
