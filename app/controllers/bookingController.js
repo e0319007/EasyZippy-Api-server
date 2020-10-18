@@ -83,8 +83,7 @@ module.exports = {
 
   tagOrderToBooking: async(req, res) => {
     try{
-      const bookingId = req.body;
-      const orderId = req.body;
+      const { bookingId, orderId } = req.body;
       await sequelize.transaction(async (transaction) => {
         booking = await BookingService.tagOrderToBooking(bookingId, orderId, transaction);
       });
@@ -96,8 +95,7 @@ module.exports = {
 
   addCollectorToBooking: async(req, res) => {
     try{
-      const bookingId = req.body;
-      const collectorId = req.body;
+      const { bookingId, collectorId }= req.body;
       await sequelize.transaction(async (transaction) => {
         booking = await BookingService.addCollectorToBooking(bookingId, collectorId, transaction);
       });
@@ -121,8 +119,7 @@ module.exports = {
 
   changeCollectorToBooking: async(req, res) => {
     try{
-      const bookingId = req.body;
-      const collectorId = req.body;
+      const { bookingId, collectorId }= req.body;
       await sequelize.transaction(async (transaction) => {
         booking = await BookingService.addCollectorToBooking(bookingId, collectorId, transaction);
       });
