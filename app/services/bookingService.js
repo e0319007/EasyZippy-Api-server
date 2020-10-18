@@ -217,7 +217,7 @@ module.exports = {
 
 
   createBookingWithBookingPackageByCustomer: async(bookingData, transaction) => {
-    let { promoIdUsed, startDate, endDate, bookingSourceEnum, customerId, bookingPackageId} = bookingData;
+    let { startDate, endDate, bookingSourceEnum, customerId, bookingPackageId} = bookingData;
     let booking;
 
     /* CHECK WHAT FORMAT DATE IS PASSED IN FIRST */
@@ -245,10 +245,6 @@ module.exports = {
       return availSlots;
     }
 
-    //PROMOTION
-    if(!Checker.isEmpty(promoIdUsed)) {
-      bookingPrice = await applyPromoId(promoIdUsed)
-    } 
     bookingPrice = bookingPrice.toFixed(2);
 
     //QR CODE
@@ -268,7 +264,7 @@ module.exports = {
 
 
   createBookingWithBookingPackageByMerchant: async(bookingData, transaction) => {
-    let { promoIdUsed, startDate, endDate, bookingSourceEnum, merchantId, bookingPackageId} = bookingData;
+    let { startDate, endDate, bookingSourceEnum, merchantId, bookingPackageId} = bookingData;
     let booking;
     /* CHECK WHAT FORMAT DATE IS PASSED IN FIRST */
     // startDate = Date.parse(startDate);
@@ -296,10 +292,7 @@ module.exports = {
     } else if (availSlots[0].startDate.getTime() != startDate.getTime() || availSlots[0].endDate.getTime() != endDate.getTime()) {
       return availSlots;
     }
-    //PROMOTION
-    if(!Checker.isEmpty(promoIdUsed)) {
-      bookingPrice = await applyPromoId(promoIdUsed)
-    } 
+  
     bookingPrice = bookingPrice.toFixed(2);
 
     //QRCODE
