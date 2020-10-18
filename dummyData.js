@@ -17,7 +17,6 @@ const Constants = require('./app/common/constants');
 const BookingPackageService = require('./app/services/bookingPackageService');
 const BookingService = require('./app/services/bookingService');
 const sequelize = require('./app/common/database');
-const cons = require('consolidate');
 
 const addDummyData = async () => {
   const staff1 = await StaffService.createStaff({ firstName: 'Alice', lastName: 'Ang', mobileNumber: '91234567', email: 'alice@email.com', staffRoleEnum: 'Admin' });
@@ -73,9 +72,9 @@ const addDummyData = async () => {
   await Product.create({ categoryId: toyCategory.id, merchantId: toysRUs.id, name: 'Car', unitPrice: 105.9, description: 'Red Car', quantityAvailable: 10, images: ['car.jpg'] });
 
   let kiosk = await Kiosk.create({ address: '1 Sengkang Square', description: 'Sample Description'})
-  let lockerType1 = await LockerType.create({ name: 'BIG', height: 120, width: 40, length: 50, price: 3 });
-  let lockerType2 = await LockerType.create({ name: 'MEDIUM', height: 80, width: 30, length: 50, price: 2 });
-  let lockerType3 = await LockerType.create({ name: 'SMALL', height: 30, width: 20, length: 50, price: 1 });
+  let lockerType1 = await LockerType.create({ name: 'BIG', lockerHeight: 120, lockerWidth: 40, lockerLength: 50, price: 3 });
+  let lockerType2 = await LockerType.create({ name: 'MEDIUM', lockerHeight: 80, lockerWidth: 30, lockerLength: 50, price: 2 });
+  let lockerType3 = await LockerType.create({ name: 'SMALL', lockerHeight: 30, lockerWidth: 20, lockerLength: 50, price: 1 });
 
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType1.id});
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType1.id});
@@ -150,7 +149,7 @@ const addDummyData = async () => {
 
   let bookingData5 = {
     promoIdUsed: null, 
-    startDate: new Date(2020,09,15,20,40), 
+    startDate: new Date(2020,09,16,20,40), 
     endDate: new Date(2020,09,16,23,20), 
     bookingSourceEnum: Constants.BookingSource.Mobile, 
     merchantId: 1, 
