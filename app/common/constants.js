@@ -149,6 +149,7 @@ module.exports = {
     StaffRoleRequired: 'Staff role is required',
     TenancyAgreementRequired: 'Tenancy agreement is required',
     TitleRequired: 'Title is required',
+    TimeCannotExceed24H: 'Booking time cannot exceed 24h',
     TokenExpired: 'Token is expired',
     TokenRequired: 'Token is required',
     TokenNotFound: 'Token not found',

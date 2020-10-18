@@ -145,6 +145,7 @@ module.exports = {
     // startDate = Date.parse(startDate);
     // endDate = Date.parse(endDate);
     if(startDate > endDate) throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
+    if(endDate.getTime() - startDate.getTime() > 24 * 60 * 60 * 1000) throw new CustomError(Constants.Error.TimeCannotExceed24H);
     Checker.ifEmptyThrowError(customerId, 'Customer ' + Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(await Customer.findByPk(customerId), Constants.Error.CustomerNotFound);
     Checker.ifEmptyThrowError(bookingSourceEnum, 'Booking Source ' + Constants.Error.XXXIsRequired);
@@ -183,6 +184,7 @@ module.exports = {
     // startDate = Date.parse(startDate);
     // endDate = Date.parse(endDate);
     if(startDate > endDate) throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
+    if(endDate.getTime() - startDate.getTime() > 24 * 60 * 60 * 1000) throw new CustomError(Constants.Error.TimeCannotExceed24H);
     Checker.ifEmptyThrowError(merchantId, 'Merchant ' + Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(await Merchant.findByPk(merchantId), Constants.Error.MerchantNotFound);
     Checker.ifEmptyThrowError(bookingSourceEnum, 'Booking Source ' + Constants.Error.XXXIsRequired);
@@ -224,6 +226,7 @@ module.exports = {
     // startDate = Date.parse(startDate);
     // endDate = Date.parse(endDate);
     if(startDate > endDate) throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
+    if(endDate.getTime() - startDate.getTime() > 24 * 60 * 60 * 1000) throw new CustomError(Constants.Error.TimeCannotExceed24H);
     Checker.ifEmptyThrowError(customerId, 'Customer ' + Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(await Customer.findByPk(customerId), Constants.Error.CustomerNotFound);
     Checker.ifEmptyThrowError(bookingSourceEnum, 'Booking Source ' + Constants.Error.XXXIsRequired);
@@ -271,6 +274,7 @@ module.exports = {
     // endDate = Date.parse(endDate);
 
     if(startDate > endDate) throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
+    if(endDate.getTime() - startDate.getTime() > 24 * 60 * 60 * 1000) throw new CustomError(Constants.Error.TimeCannotExceed24H);
     Checker.ifEmptyThrowError(merchantId, 'Merchant ' + Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(await Merchant.findByPk(merchantId), Constants.Error.MerchantNotFound);
     Checker.ifEmptyThrowError(bookingSourceEnum, 'Booking Source ' + Constants.Error.XXXIsRequired);
@@ -405,6 +409,8 @@ module.exports = {
       console.log(new Date(new Date() - 30 * 60000).getTime())
       throw new CustomError(Constants.Error.BookingCannotBeCancelled)
     }
+
+    //ADD REFUND IF NEEDED
 
     booking = await Booking.update({ 
     bookingStatusEnum: Constants.BookingStatus.Cancelled 
