@@ -35,7 +35,7 @@ module.exports = {
   retrieveLockersByKiosk: async(kioskId) => {
     Checker.ifEmptyThrowError(kioskId, Constants.Error.IdRequired);
     const kiosk = await Kiosk.findByPk(kioskId);
-    Checker.ifEmptyThrowError(lockerType, Constants.Error.KioskNotFound);
+    Checker.ifEmptyThrowError(kiosk, Constants.Error.KioskNotFound);
     Checker.ifDeletedThrowError(kiosk, Constants.Error.KioskDeleted);
 
     return await kiosk.getLockers();

@@ -47,6 +47,7 @@ module.exports = {
       const { kioskId } = req.params;
       return res.status(200).send(await LockerService.retrieveLockersByKiosk(kioskId));
     } catch(err) {
+      console.log(err)
       sendErrorResponse(res, err);
     }
   },
