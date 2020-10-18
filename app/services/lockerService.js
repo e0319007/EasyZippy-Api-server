@@ -6,8 +6,13 @@ const Locker = require('../models/Locker');
 const LockerType = require('../models/LockerType');
 
 module.exports = {
-  createLocker: async(transaction) => {
-    return await Locker.create({}, { transaction });
+  createLocker: async(lockerData, transaction) => {
+    const { lockerTypeId, kioskId } = lockerData;
+    Checker.ifEmptyThrowError(lockerTypeId, 'Locker type ' + Constants.Error.IdRequired)
+    Checker.ifEmptyThrowError(kioskId, 'Kiosk ' + Constants.Error.IdRequired)
+    Checker.ifEmptyThrowError(await Kiosk.findByPk(kioskId), Constants.Error.KioskNotFound)
+    Checker.ifEmptyThrowError(await Kiosk.findByPk(lockerTypeId), Constants.Error.LockerTypeNotFound)
+    return await Locker.create(lockerData, { transaction });
   },
 
   retrieveLocker: async(id) => {
