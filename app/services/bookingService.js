@@ -257,7 +257,7 @@ module.exports = {
     let creditPaymentRecord = await CreditPaymentRecordService.payCreditCustomer(customerId, bookingPrice, transaction);
     let creditPaymentRecordId = creditPaymentRecord.id;
     bookingPackage = await BookingPackage.update({ lockerCount: ++bookingPackage.lockerCount }, { where: { id: bookingPackageId }, transaction });
-    booking = await Booking.create({ promoIdUsed, startDate, endDate, bookingSourceEnum, customerId, qrCode, bookingPackageId, lockerTypeId: bookingPackageModel.lockerTypeId, bookingPrice, creditPaymentRecordId}, { transaction });
+    booking = await Booking.create({ startDate, endDate, bookingSourceEnum, customerId, qrCode, bookingPackageId, lockerTypeId: bookingPackageModel.lockerTypeId, bookingPrice, creditPaymentRecordId}, { transaction });
 
     return booking;
   },
@@ -306,7 +306,7 @@ module.exports = {
     let creditPaymentRecordId = creditPaymentRecord.id;
 
     bookingPackage = await BookingPackage.update({ lockerCount: ++bookingPackage.lockerCount }, { where: { id: bookingPackageId }, transaction });
-    booking = await Booking.create({ promoIdUsed, startDate, endDate, bookingSourceEnum, merchantId, qrCode, bookingPackageId, lockerTypeId: bookingPackageModel.lockerTypeId, bookingPrice, creditPaymentRecordId }, { transaction });
+    booking = await Booking.create({ startDate, endDate, bookingSourceEnum, merchantId, qrCode, bookingPackageId, lockerTypeId: bookingPackageModel.lockerTypeId, bookingPrice, creditPaymentRecordId }, { transaction });
 
     return booking;
   },
