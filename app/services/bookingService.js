@@ -138,11 +138,8 @@ module.exports = {
 
   createBookingByCustomer: async(bookingData, transaction) => {
     let { promoIdUsed, startDate, endDate, bookingSourceEnum, customerId, lockerTypeId} = bookingData;
-    /* CHECK WHAT FORMAT DATE IS PASSED IN FIRST */
-    console.log(startDate);
-    startDate = Date.parse(startDate);
-    endDate = Date.parse(endDate);
-    console.log(startDate);
+    startDate = new Date(startDate);
+    endDate = new Date(endDate);
     if(startDate.getTime() > endDate.getTime()) throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     if(endDate.getTime() - startDate.getTime() > 24 * 60 * 60 * 1000) throw new CustomError(Constants.Error.TimeCannotExceed24H);
     Checker.ifEmptyThrowError(customerId, 'Customer ' + Constants.Error.IdRequired);
@@ -179,9 +176,8 @@ module.exports = {
   
   createBookingByMerchant: async(bookingData, transaction) => {
     let { promoIdUsed, startDate, endDate, bookingSourceEnum, merchantId, lockerTypeId} = bookingData;
-    /* CHECK WHAT FORMAT DATE IS PASSED IN FIRST */
-    // startDate = Date.parse(startDate);
-    // endDate = Date.parse(endDate);
+    startDate = new Date(startDate);
+    endDate = new Date(endDate);
     if(startDate > endDate) throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     if(endDate.getTime() - startDate.getTime() > 24 * 60 * 60 * 1000) throw new CustomError(Constants.Error.TimeCannotExceed24H);
     Checker.ifEmptyThrowError(merchantId, 'Merchant ' + Constants.Error.IdRequired);
@@ -220,10 +216,8 @@ module.exports = {
   createBookingWithBookingPackageByCustomer: async(bookingData, transaction) => {
     let { startDate, endDate, bookingSourceEnum, customerId, bookingPackageId} = bookingData;
     let booking;
-
-    /* CHECK WHAT FORMAT DATE IS PASSED IN FIRST */
-    // startDate = Date.parse(startDate);
-    // endDate = Date.parse(endDate);
+    startDate = new Date(startDate);
+    endDate = new Date(endDate);
     if(startDate > endDate) throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     if(endDate.getTime() - startDate.getTime() > 24 * 60 * 60 * 1000) throw new CustomError(Constants.Error.TimeCannotExceed24H);
     Checker.ifEmptyThrowError(customerId, 'Customer ' + Constants.Error.IdRequired);
@@ -257,10 +251,8 @@ module.exports = {
   createBookingWithBookingPackageByMerchant: async(bookingData, transaction) => {
     let { startDate, endDate, bookingSourceEnum, merchantId, bookingPackageId} = bookingData;
     let booking;
-    /* CHECK WHAT FORMAT DATE IS PASSED IN FIRST */
-    // startDate = Date.parse(startDate);
-    // endDate = Date.parse(endDate);
-
+    startDate = new Date(startDate);
+    endDate = new Date(endDate);
     if(startDate > endDate) throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     if(endDate.getTime() - startDate.getTime() > 24 * 60 * 60 * 1000) throw new CustomError(Constants.Error.TimeCannotExceed24H);
     Checker.ifEmptyThrowError(merchantId, 'Merchant ' + Constants.Error.IdRequired);
