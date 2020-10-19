@@ -11,6 +11,8 @@ const LockerType = require('./app/models/LockerType');
 const Advertisement = require('./app/models/Advertisement');
 const Product = require('./app/models/Product');
 const BookingPackageModel = require('./app/models/BookingPackageModel');
+const LockerActionRecord = require('./app/models/LockerActionRecord');
+const Constants = require('./app/common/constants');
 
 const addDummyData = async () => {
   const staff1 = await StaffService.createStaff({ firstName: 'Alice', lastName: 'Ang', mobileNumber: '91234567', email: 'alice@email.com', staffRoleEnum: 'Admin' });
@@ -67,6 +69,11 @@ const addDummyData = async () => {
   await Advertisement.create({ image: '1601608583950.jpeg', title: 'Qoo10 sale', description: 'Qoo10 50% off apparel items',  advertiserUrl: 'http://www.qoo10.com', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '93333333', advertiserEmail: 'test3@email.com', approved: true })
 
   await BookingPackageModel.create({ name: 'Booking Package 1', description: 'Booking pacakge 1 description', quota: 2, price: 39, duration: 30, lockerTypeId: 1});
+  
+  await LockerActionRecord.create({ timestamp: new Date(), lockerActionEnum: Constants.LockerAction.Open, lockerId: 1})
+  await LockerActionRecord.create({ timestamp: new Date(), lockerActionEnum: Constants.LockerAction.Close, lockerId: 1})
+  await LockerActionRecord.create({ timestamp: new Date(), lockerActionEnum: Constants.LockerAction.Open, lockerId: 2})
+  await LockerActionRecord.create({ timestamp: new Date(), lockerActionEnum: Constants.LockerAction.Close, lockerId: 2})
 };
 
 addDummyData();
