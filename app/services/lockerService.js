@@ -11,7 +11,7 @@ const LockerType = require('../models/LockerType');
 const CreditPaymentRecordService = require('./creditPaymentRecordService');
 
 const assignLockersToBookings = async(bookingId, lockerId, transaction) => {
-  await Locker.update( { lockerStatusEnum: 'Empty' }, { where: { id: lockerId }, transaction });
+  await Locker.update( { lockerStatusEnum: Constants.LockerStatus.InUse }, { where: { id: lockerId }, transaction });
   await Booking.update( { lockerId, bookingStatusEnum: Constants.BookingStatus.Active }, { where: {id: bookingId }, transaction });
 };
 
@@ -92,11 +92,11 @@ module.exports = {
   },
 
   retrieveAvailableLockers: async() => {
-    return await Locker.findAll({ where: { lockerStatusEnum: 'Empty' } });
+    return await Locker.findAll({ where: { lockerStatusEnum: Constants.LockerStatus.Empty } });
   },
 
   retrieveAvailableLockersByLockerType: async(lockerTypeId) => {
-    return await Locker.findAll({ where: { lockerTypeId, lockerStatusEnum: 'Empty' } });
+    return await Locker.findAll({ where: { lockerTypeId, lockerStatusEnum: Constants.LockerStatus.Empty } });
   },
 
   

@@ -139,19 +139,4 @@ module.exports = {
       }, transaction
     });
   },
-
-  retrieveAvailableLockerTypesByKioskId: async(kioskId) => {
-    Checker.ifEmptyThrowError(kioskId, Constants.Error.IdRequired);
-    Checker.ifEmptyThrowError(await Kiosk.findByPk(kioskId), Constants.Error.KioskNotFound);
-
-    const allLockersInKiosk = await Locker.findAll( { where: { kioskId } });
-    const availLockerTypes = new Array();
-    for(const l of allLockersInKiosk) {
-      if(!availLockerTypes.includes(l.lockerTypeId)) {
-        availLockerTypes.push(l.lockerTypeId);
-      }
-    }
-
-    return availLockerTypes;
-  }
 }

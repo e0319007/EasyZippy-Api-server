@@ -83,7 +83,7 @@ const checkBookingAvailable = async(startDate, endDate, lockerTypeId) => {
   let i = 0;
   let j = 0;
   while(i < emptyTimes.length) {
-    let availableStartDate = null
+    let availableStartDate;
     let availableEndDate;
     let duration = 0;
     j = i;
@@ -112,7 +112,10 @@ const checkBookingAvailable = async(startDate, endDate, lockerTypeId) => {
 
 const calculatePrice = async(startDate, endDate, lockerTypeId) => {
   let pricePerMilliSecond = (await LockerType.findByPk(lockerTypeId)).price / 1800000;
-  let duration = endDate - startDate;
+  let duration = endDate - startDate - 1800000;
+  if(duration < 0) {
+    return 0;
+  }
   return duration * pricePerMilliSecond;
 }
 
@@ -422,7 +425,7 @@ module.exports = {
     let booking = await Booking.findByPk(id);
     Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound);
     
-    if(booking.bookingStatusEnum != 'Unfufilled' || booking.startDate.getTime() - 30 * 60000 <= new Date().getTime()) {
+    if(booking.bookingStatusEnum != Constants.BookingStatus.Unfufilled || booking.startDate.getTime() - 30 * 60000 <= new Date().getTime()) {
       console.log(booking.startDate)
       console.log(booking.startDate.getTime())
       console.log(new Date(new Date() - 30 * 60000))
@@ -430,7 +433,16 @@ module.exports = {
       throw new CustomError(Constants.Error.BookingCannotBeCancelled)
     }
 
-    //ADD REFUND IF NEEDED
+    const customer = await booking.getCustomer();
+    const merchant = await booking.getMerchant();
+    
+    if(!Checker.isEmpty(customer)) {
+      await CreditPaymentRecordService.payCreditCustomer(customer.id, 0 - booking.bookingPrice, transaction);
+    }
+
+    if(!Checker.isEmpty(merchant)) {
+      await CreditPaymentRecordService.payCreditMerchant(merchant.id, 0 - booking.bookingPrice, transaction);
+    }
 
     booking = await Booking.update({ 
     bookingStatusEnum: Constants.BookingStatus.Cancelled 
