@@ -147,7 +147,7 @@ router.put('/merchant/:id/approve', Authenticator.staffAdminOnly, MerchantContro
 router.put('/merchant/:id/changePassword', Authenticator.merchantOnly, MerchantController.changePassword);
 router.put('/merchant/:id', Authenticator.merchantOnly, MerchantController.updateMerchant);
 router.post('/merchant/login', MerchantController.loginMerchant);
-router.post('/merchant/email', Authenticator.customerAndMerchantAndStaffOnly, MerchantController.retrieveMerchantByEmail);
+router.post('/merchant/email', MerchantController.retrieveMerchantByEmail);
 router.post('/merchant/forgotPassword', MerchantController.sendResetPasswordEmail);
 router.post('/merchant/resetPassword/checkValidToken', MerchantController.checkValidToken);
 router.post('/merchant/resetPassword', MerchantController.resetPassword);
