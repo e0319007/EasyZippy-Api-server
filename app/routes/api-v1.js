@@ -106,8 +106,8 @@ router.put('/deleteLocker/:id', Authenticator.staffOnly, LockerController.delete
 router.post('/locker', Authenticator.staffOnly, LockerController.createLocker);
 
 //Locker Action Record
-router.get('/lockerActionRecords', /*Authenticator.staffOnly, */lockerActionRecordController.retrieveAllLockerActions);
-router.get('/lockerActions/:lockerId',/* Authenticator.staffOnly, */lockerActionRecordController.retrieveLockerActionsByLockerId);
+router.get('/lockerActionRecords', Authenticator.staffOnly, lockerActionRecordController.retrieveAllLockerActions);
+router.get('/lockerActions/:lockerId',Authenticator.staffOnly, lockerActionRecordController.retrieveLockerActionsByLockerId);
 
 //Locker Type
 router.get('/lockerType/kiosk/:kioskId', Authenticator.customerAndMerchantAndStaffOnly, LockerTypeController.retrieveLockerTypesByKiosk);
