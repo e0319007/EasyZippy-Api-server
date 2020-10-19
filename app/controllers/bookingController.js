@@ -179,6 +179,24 @@ module.exports = {
     }
   },
 
+  retrieveAllBookingsByCustomer: async(req, res) => {
+    try {
+      let bookings = await BookingService.retrieveAllBookingsByCustomer();  
+      return res.status(200).send(bookings);
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
+  retrieveAllBookingsByMerchant: async(req, res) => {
+    try {
+      let bookings = await BookingService.retrieveAllBookingsByMerchant();  
+      return res.status(200).send(bookings);
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
   cancelBooking: async(req, res) => {
     try {
       const { id } = req.params;

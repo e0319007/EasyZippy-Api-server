@@ -373,6 +373,28 @@ module.exports = {
     return booking;
   }, 
 
+  retrieveAllBookingsByCustomer: async() => {
+    const bookings = await Booking.findAll();
+    const customerBookings;
+    for(let b of bookings) {
+      if(b.merchantId === null) {
+        customerBookings.push(b);
+      }
+    }
+    return customerBookings;
+  },
+
+  retrieveAllBookingsByMerchant: async() => {
+    const bookings = await Booking.findAll();
+    const merchantBookings;
+    for(let b of bookings) {
+      if(b.merchantId !== null) {
+        merchantBookings.push(b);
+      }
+    }
+    return merchantBookings;
+  },
+
   retrieveBookingById: async(id) => {
     let booking = await Booking.findByPk(id);
     Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound);
