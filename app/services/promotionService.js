@@ -17,6 +17,9 @@ module.exports = {
     if(startDate > endDate) {
       throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     }
+    if(!Checker.isEmpty(await Promotion.findOne({ where: { promoCode, expired: false } }))) {
+      throw new CustomError(Constants.Error.PromoCodeNotUnique);
+    }
     promotionType = Constants.PromotionType.MerchantPromotion;
     
     if(Checker.isEmpty(percentageDiscount) && Checker.isEmpty(flatDiscount)) {
@@ -37,6 +40,9 @@ module.exports = {
     if(startDate > endDate) {
       throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     }
+    if(!Checker.isEmpty(await Promotion.findOne({ where: { promoCode, expired: false } }))) {
+      throw new CustomError(Constants.Error.PromoCodeNotUnique);
+    }
     promotionType = Constants.PromotionType.MallPromotion;
     
     if(Checker.isEmpty(percentageDiscount) && Checker.isEmpty(flatDiscount)) {
@@ -50,9 +56,14 @@ module.exports = {
     let { promoCode, startDate, endDate, description, termsAndConditions, percentageDiscount, flatDiscount, usageLimit} = promotionData;
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let promotion = await Promotion.findByPk(id);
+    Checker.ifDeletedThrowError(promotion, 'Promotion ' + Constants.Error.PromotionDeleted);
     Checker.ifEmptyThrowError(promotion, Constants.Error.PromotionNotFound);
     if(updateKeys.includes('promoCode')) {
       Checker.ifEmptyThrowError(promoCode, 'Promo Code' + Constants.Error.XXXIsRequired);
+      let p = await Promotion.findOne({ where: { promoCode, expired: false } });
+      if(!Checker.isEmpty(p) && p.id != id) {
+        throw new CustomError(Constants.Error.PromoCodeNotUnique);
+      }
     }
     if(updateKeys.includes('startDate')) {
       Checker.ifEmptyThrowError(startDate, 'Start date' + Constants.Error.XXXIsRequired);
@@ -73,20 +84,26 @@ module.exports = {
   },
 
   retrieveMallPromotion: async() => {
-    return await Promotion.findAll({ where: { promotionType: Constants.PromotionType.MallPromotion } });
+    return await Promotion.findAll({ where: { promotionType: Constants.PromotionType.MallPromotion, deleted: false } });
   },
   
   retrieveMerchantPromotionByMerchantId: async(id) => {
     Checker.ifEmptyThrowError(merchantId, 'Merchant ID' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(await Merchant.findByPk(merchantId), Constants.Error.MerchantNotFound);
-    return await Promotion.findAll({ where: { merchantId: id, promotionType: Constants.PromotionType.MerchantPromotion } })
+    return await Promotion.findAll({ where: { merchantId: id, promotionType: Constants.PromotionType.MerchantPromotion, deleted: false } })
+  },
+
+  retrievePromotionByPromoCode: async(promocode) => {
+    Checker.ifEmptyThrowError(promocode, 'Promotion Code' + Constants.Error.XXXIsRequired);
+    let promotion = await Promotion.findOne()
+    Checker.ifEmptyThrowError(promocode, 'Promotion Code' + Constants.Error.XXXIsRequired);
   },
 
   deletePromotion: async(id, transaction) => {
     Checker.ifEmptyThrowError(id);
     let promotion = await Promotion.findByPk(id);
     Checker.ifEmptyThrowError(promotion, Constants.Error.ProductNotFound);
-    if(promotion.used) {
+    if(promotion.usageCount > 0) {
       throw new CustomError(Constants.Error.PromotionCannotBeDeleted);
     }
     await Promotion.update({ deleted: true }, { where: { id }, transaction });

@@ -141,6 +141,8 @@ module.exports = {
     ProductDeleted: 'Product is deleted',
     ProductNotFound: 'Product not found',
     PromotionCannotBeDeleted: 'Promotion cannot be deleted since its already used',
+    PromoCodeNotUnique: 'Promotion code not unique',
+    PromotionDeleted: 'Promotion is deleted',
     PromotionNotFound: 'Promotion not found',
     QuantityAvailableRequired: 'Quantity available is required',
     StaffDisabled: 'Staff is disabled',
