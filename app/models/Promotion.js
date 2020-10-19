@@ -64,6 +64,14 @@ Promotion.init(
       type: STRING,
       allowNull: false
     },
+    minimumSpend: {
+      type: FLOAT,
+      allowNull: true,
+      validate: {
+        min: 0
+      },
+      defaultValue: 0
+    },
     expired: {
       type: BOOLEAN,
       allowNull: false,

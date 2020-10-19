@@ -7,7 +7,7 @@ const Staff = require('../models/Staff');
 
 module.exports = {
   createMerchantPromotion: async(promotionData, transaction) => {
-    let { promoCode, startDate, endDate, description, termsAndConditions, percentageDiscount, flatDiscount, usageLimit, merchantId, promotionType} = promotionData;
+    let { promoCode, startDate, endDate, description, termsAndConditions, percentageDiscount, flatDiscount, usageLimit, merchantId, minimumSpend } = promotionData;
     Checker.ifEmptyThrowError(promoCode, 'Promo Code' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(startDate, 'Start date' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(endDate, 'End date' + Constants.Error.XXXIsRequired);
@@ -20,17 +20,20 @@ module.exports = {
     if(!Checker.isEmpty(await Promotion.findOne({ where: { promoCode, expired: false } }))) {
       throw new CustomError(Constants.Error.PromoCodeNotUnique);
     }
-    promotionType = Constants.PromotionType.MerchantPromotion;
+    if(startDate.getTime() < new Date().getTime()) {
+      throw new CustomError(Constants.Error.InvalidDate)
+    }
+    let promotionTypeEnum = Constants.PromotionType.MerchantPromotion;
     
     if(Checker.isEmpty(percentageDiscount) && Checker.isEmpty(flatDiscount)) {
       throw new CustomError('Percentage discount or flat discount ' + Constants.Error.XXXIsRequired);
     }
-    let promotion = await Promotion.create(promotionData, { transaction });
+    let promotion = await Promotion.create({ promoCode, startDate, endDate, description, termsAndConditions, percentageDiscount, flatDiscount, usageLimit, promotionTypeEnum, merchantId, minimumSpend }, { transaction });
     return promotion;
   },
 
   createMallPromotion: async(promotionData, transaction) => {
-    let { promoCode, startDate, endDate, description, termsAndConditions, percentageDiscount, flatDiscount, usageLimit, staffId, promotionType} = promotionData;
+    let { promoCode, startDate, endDate, description, termsAndConditions, percentageDiscount, flatDiscount, usageLimit, staffId, minimumSpend } = promotionData;
     Checker.ifEmptyThrowError(promoCode, 'Promo Code' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(startDate, 'Start date' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(endDate, 'End date' + Constants.Error.XXXIsRequired);
@@ -40,24 +43,28 @@ module.exports = {
     if(startDate > endDate) {
       throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     }
+    if(startDate.getTime() < new Date().getTime()) {
+      throw new CustomError(Constants.Error.InvalidDate)
+    }
     if(!Checker.isEmpty(await Promotion.findOne({ where: { promoCode, expired: false } }))) {
       throw new CustomError(Constants.Error.PromoCodeNotUnique);
     }
-    promotionType = Constants.PromotionType.MallPromotion;
+    let promotionTypeEnum = Constants.PromotionType.MallPromotion;
     
     if(Checker.isEmpty(percentageDiscount) && Checker.isEmpty(flatDiscount)) {
       throw new CustomError('Percentage discount or flat discount ' + Constants.Error.XXXIsRequired);
     }
-    let promotion = await Promotion.create(promotionData, { transaction });
+    let promotion = await Promotion.create({ promoCode, startDate, endDate, description, termsAndConditions, percentageDiscount, flatDiscount, usageLimit, staffId, promotionTypeEnum, minimumSpend }, { transaction });
     return promotion;
   },
 
   updatePromotion: async(id, promotionData, transaction) => {
-    let { promoCode, startDate, endDate, description, termsAndConditions, percentageDiscount, flatDiscount, usageLimit} = promotionData;
+    let { promoCode, startDate, endDate, description, termsAndConditions, percentageDiscount, flatDiscount, usageLimit, minimumSpend} = promotionData;
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let promotion = await Promotion.findByPk(id);
     Checker.ifDeletedThrowError(promotion, 'Promotion ' + Constants.Error.PromotionDeleted);
     Checker.ifEmptyThrowError(promotion, Constants.Error.PromotionNotFound);
+    let updateKeys = Object.keys(promotionData);
     if(updateKeys.includes('promoCode')) {
       Checker.ifEmptyThrowError(promoCode, 'Promo Code' + Constants.Error.XXXIsRequired);
       let p = await Promotion.findOne({ where: { promoCode, expired: false } });
@@ -70,6 +77,9 @@ module.exports = {
       if(startDate > endDate) {
         throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
       }
+      if(startDate.getTime() < new Date().getTime()) {
+        throw new CustomError(Constants.Error.InvalidDate)
+      }
     }
     if(updateKeys.includes('endDate')) {
       Checker.ifEmptyThrowError(endDate, 'End date' + Constants.Error.XXXIsRequired);
@@ -80,29 +90,40 @@ module.exports = {
     if(updateKeys.includes('usageLimit')) {
     Checker.ifEmptyThrowError(usageLimit, 'Usage Limit' + Constants.Error.XXXIsRequired);
     }
-    promotion = await Promotion.update(promotionData, { transaction, where: { id } });
+    promotion = await Promotion.update(promotionData, { transaction, where: { id }, returning: true });
+    return promotion;
   },
 
   retrieveMallPromotion: async() => {
-    return await Promotion.findAll({ where: { promotionType: Constants.PromotionType.MallPromotion, deleted: false } });
-  },
-  
-  retrieveMerchantPromotionByMerchantId: async(id) => {
-    Checker.ifEmptyThrowError(merchantId, 'Merchant ID' + Constants.Error.XXXIsRequired);
-    Checker.ifEmptyThrowError(await Merchant.findByPk(merchantId), Constants.Error.MerchantNotFound);
-    return await Promotion.findAll({ where: { merchantId: id, promotionType: Constants.PromotionType.MerchantPromotion, deleted: false } })
+    return await Promotion.findAll({ where: { promotionTypeEnum: Constants.PromotionType.MallPromotion, deleted: false } });
   },
 
-  retrievePromotionByPromoCode: async(promocode) => {
-    Checker.ifEmptyThrowError(promocode, 'Promotion Code' + Constants.Error.XXXIsRequired);
-    let promotion = await Promotion.findOne()
-    Checker.ifEmptyThrowError(promocode, 'Promotion Code' + Constants.Error.XXXIsRequired);
+  retrieveMerchantPromotion: async() => {
+    return await Promotion.findAll({ where: { promotionTypeEnum: Constants.PromotionType.MerchantPromotion, deleted: false } });
+  },
+  
+  retrieveMerchantPromotionByMerchantId: async(merchantId) => {
+    Checker.ifEmptyThrowError(merchantId, 'Merchant ID' + Constants.Error.XXXIsRequired);
+    Checker.ifEmptyThrowError(await Merchant.findByPk(merchantId), Constants.Error.MerchantNotFound);
+    return await Promotion.findAll({ where: { merchantId, promotionTypeEnum: Constants.PromotionType.MerchantPromotion, deleted: false, expired: false } })
+  },
+
+  retrievePromotionByPromoCode: async(promoCode) => {
+    Checker.ifEmptyThrowError(promoCode, 'Promotion Code' + Constants.Error.XXXIsRequired);
+    let promotion = await Promotion.findAll({ where: { expired: false, promoCode } })
+    Checker.ifEmptyThrowError(promotion, 'Promotion Code' + Constants.Error.XXXIsRequired);
+    return promotion;
+  },
+
+  retrieveAllPromotions: async() => {
+    return await Promotion.findAll({ where: { deleted: false } });
   },
 
   deletePromotion: async(id, transaction) => {
     Checker.ifEmptyThrowError(id);
     let promotion = await Promotion.findByPk(id);
     Checker.ifEmptyThrowError(promotion, Constants.Error.ProductNotFound);
+    Checker.ifDeletedThrowError(promotion, Constants.Error.PromotionDeleted);
     if(promotion.usageCount > 0) {
       throw new CustomError(Constants.Error.PromotionCannotBeDeleted);
     }

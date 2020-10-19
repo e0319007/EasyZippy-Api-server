@@ -33,8 +33,9 @@ module.exports = {
     try {
       const promoData = req.body;
       let promotion;
+      let { id } = req.params;
       await sequelize.transaction(async (transaction) => {
-        promotion = await PromotionService.updatePromotion(promoData, transaction);
+        promotion = await PromotionService.updatePromotion(id, promoData, transaction);
       });
       return res.status(200).send(promotion);
     } catch (err) {
@@ -52,10 +53,38 @@ module.exports = {
     }
   },
 
+  retrieveMerchantPromotion: async(req, res) => {
+    try {
+      return res.status(200).send(await PromotionService.retrieveMerchantPromotion());
+    } catch (err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  },
+
+  retrieveAllPromotions: async(req, res) => {
+    try {
+      return res.status(200).send(await PromotionService.retrieveAllPromotions());
+    } catch (err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  },
+
   retrieveMerchantPromotionByMerchantId: async(req, res) => {
     try {
       const { id } = req.params
       return res.status(200).send(await PromotionService.retrieveMerchantPromotionByMerchantId(id));
+    } catch (err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  },
+
+  retrievePromotionByPromoCode: async(req, res) => {
+    try {
+      const { promoCode } = req.params
+      return res.status(200).send(await PromotionService.retrievePromotionByPromoCode(promoCode));
     } catch (err) {
       console.log(err)
       sendErrorResponse(res, err);
