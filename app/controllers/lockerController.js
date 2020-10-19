@@ -7,8 +7,9 @@ module.exports = {
   createLocker: async(req, res) => {
     try {
       let locker;
+      let lockerData = req.body;
       await sequelize.transaction(async (transaction) => {
-        locker = await LockerService.createLocker(transaction);
+        locker = await LockerService.createLocker(lockerData, transaction);
       });
       return res.status(200).send(locker);
     } catch(err) {
@@ -47,6 +48,7 @@ module.exports = {
       const { kioskId } = req.params;
       return res.status(200).send(await LockerService.retrieveLockersByKiosk(kioskId));
     } catch(err) {
+      console.log(err)
       sendErrorResponse(res, err);
     }
   },

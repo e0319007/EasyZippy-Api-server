@@ -30,6 +30,12 @@ const storage = multer.diskStorage({
   },
 });
 
+const initialiseScheduler = async () => {
+  scheduleHelper.scheduleSetExpiredAdvertisement();
+  scheduleHelper.scheduleSetExpiredBookingPackage();
+  scheduleHelper.scheduleSetExpiredPromotion();
+}
+
 app.use(cors());
 app.options('*', cors());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -55,11 +61,6 @@ app.set('json replacer', (key, value) => {
   return value;
 });
 
-const initialiseScheduler = async () => {
-  scheduleHelper.scheduleSetExpiredAdvertisement();
-  scheduleHelper.scheduleSetExpiredBookingPackage();
-  scheduleHelper.scheduleSetExpiredPromotion();
-}
 
 if (app.get('env') === 'development') {
   app.locals.pretty = true;
