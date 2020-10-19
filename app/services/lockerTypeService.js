@@ -1,22 +1,25 @@
 const Checker = require('../common/checker');
 const Constants = require('../common/constants');
 const CustomError = require('../common/error/customError');
+const sequelize = require('../common/database');
 
 const LockerType = require('../models/LockerType');
 const Kiosk = require('../models/Kiosk');
+const Locker = require('../models/Locker');
+
 
 module.exports = {
   createLockerType: async(lockerTypeData, transaction) => {
-    let { name, lockerHeight, lockerWidth, lockerLength, price } = lockerTypeData;
+    let { name, lockerHeight, lockerWidth, lockerLength, pricePerHalfHour } = lockerTypeData;
     Checker.ifEmptyThrowError(name, Constants.Error.NameRequired);
     Checker.ifEmptyThrowError(lockerHeight, 'Height ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(lockerWidth, 'Width ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(lockerLength, 'Length ' + Constants.Error.XXXIsRequired);
-    Checker.ifEmptyThrowError(price, 'Price '  + Constants.Error.XXXIsRequired);
+    Checker.ifEmptyThrowError(pricePerHalfHour, 'Price '  + Constants.Error.XXXIsRequired);
     Checker.ifNotNumberThrowError(lockerTypeData.lockerWidth, 'Width ' + Constants.Error.XXXMustBeNumber);
     Checker.ifNotNumberThrowError(lockerTypeData.lockerHeight, 'Height ' + Constants.Error.XXXMustBeNumber);
     Checker.ifNotNumberThrowError(lockerTypeData.lockerLength, 'Length ' + Constants.Error.XXXMustBeNumber);
-    Checker.ifNotNumberThrowError(lockerTypeData.price, 'Price ' + Constants.Error.XXXMustBeNumber);
+    Checker.ifNotNumberThrowError(lockerTypeData.pricePerHalfHour, 'Price ' + Constants.Error.XXXMustBeNumber);
     if (lockerHeight < 0) {
       throw new CustomError('Height ' + Constants.Error.XXXCannotBeNegative);
     }
@@ -26,7 +29,7 @@ module.exports = {
     if (lockerLength < 0) {
       throw new CustomError('Length ' + Constants.Error.XXXCannotBeNegative);
     }
-    if (price < 0) {
+    if (pricePerHalfHour < 0) {
       throw new CustomError('Price ' + Constants.Error.XXXCannotBeNegative);
     }
 
@@ -54,7 +57,7 @@ module.exports = {
     if(updateKeys.includes('lockerLength') && lockerTypeData.lockerLength < 0) {
       throw new CustomError('Length ' + Constants.Error.XXXCannotBeNegative);
     }
-    if(updateKeys.includes('price') && lockerTypeData.price < 0) {
+    if(updateKeys.includes('pricePerHalfHour') && lockerTypeData.pricePerHalfHour < 0) {
       throw new CustomError('Price ' + Constants.Error.XXXCannotBeNegative);
     }
     if(updateKeys.includes('name')) {
@@ -67,7 +70,7 @@ module.exports = {
     Checker.ifNotNumberThrowError(lockerTypeData.lockerWidth, 'Width ' + Constants.Error.XXXMustBeNumber);
     Checker.ifNotNumberThrowError(lockerTypeData.lockerHeight, 'Height ' + Constants.Error.XXXMustBeNumber);
     Checker.ifNotNumberThrowError(lockerTypeData.lockerLength, 'Length ' + Constants.Error.XXXMustBeNumber);
-    Checker.ifNotNumberThrowError(lockerTypeData.price, 'Price ' + Constants.Error.XXXMustBeNumber);
+    Checker.ifNotNumberThrowError(lockerTypeData.pricePerHalfHour, 'Price ' + Constants.Error.XXXMustBeNumber);
 
     lockerType = await lockerType.update(lockerTypeData, { returning: true, transaction })
     return lockerType;
@@ -135,5 +138,5 @@ module.exports = {
         id
       }, transaction
     });
-  }
+  },
 }
