@@ -40,7 +40,7 @@ LockerType.init(
         min: 0.0
       }
     },
-    price: {
+    pricePerHalfHour: {
       type: DECIMAL,
       allowNull: false,
       validate: {

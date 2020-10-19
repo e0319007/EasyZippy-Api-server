@@ -7,6 +7,7 @@ const BookingPackage = require('../models/BookingPackage');
 const Kiosk = require('../models/Kiosk');
 
 const Locker = require('../models/Locker');
+const LockerActionRecord = require('../models/LockerActionRecord');
 const LockerType = require('../models/LockerType');
 const CreditPaymentRecordService = require('./creditPaymentRecordService');
 
@@ -105,11 +106,13 @@ module.exports = {
     let booking = await Booking.findOne( { where: { qrCode } });
     //OPEN LOCKER FOR THE FIRST TIME
     if(booking.bookingStatusEnum === Constants.BookingStatus.Unfufilled) {
-      //call open locker api
+      //call open locker api, create locker action record after integrating to hardware
       
       booking = await booking.update({ bookingStatusEnum: Constants.BookingStatus.Active }, { transaction });
 
       let locker = await Locker.findOne( { where: { lockerTypeId: booking.lockerTypeId, lockerStatusEnum: Constants.LockerStatus.Empty } });
+      // let lockerAction = await LockerActionRecord.create({ lockerId: locker.id, LockerActionEnum: Constant.LockerAction.Open}) ;
+
       locker = await locker.update( { lockerStatusEnum: Constants.LockerStatus.InUse }, { transaction }); 
       await assignLockersToBookings(booking.id, locker.id, transaction);
       
@@ -118,7 +121,7 @@ module.exports = {
       let extraDuration = new Date() - booking.endTime;
       let extraPrice;
       let passHalfAnHourDuration = extraDuration - 1800000;
-      let price = await LockerType.findByPk(locker.lockerTypeId).price;
+      let price = await LockerType.findByPk(locker.lockerTypeId).pricePerHalfHour;
       if (passHalfAnHourDuration > 0) {
         extraPrice = passHalfAnHourDuration * (price / 180000) * 2 + price;
       } else extraprice = extraDuration * (price / 180000)

@@ -22,20 +22,16 @@ const checkBookingAvailable = async(startDate, endDate, lockerTypeId) => {
   let bookingPackageModels = await BookingPackageModel.findAll({ where: { lockerTypeId } });
   let bookingPackageCount = 0;
 
-  /*
-  CURRENTLY FIRST COME FIRST SERVE
-  ADD LOGIC TO PUT CONSTRAINT -->
   for(const bpm of bookingPackageModels) {
     //let bookingPackage = await BookingPackage.findAll({ where: { bookingPackageModelId: bpm.id } });
     let bookingPackages = await bpm.getBookingPackages();
     let availBookingPackage = new Array();
     //check for non-expired booking packages only
     for(let bp of bookingPackages) {
-      if(bp.endDate > new Date()) availBookingPackage.push(bp);
+      if(bp.endDate.getTime() > new Date().getTime()) availBookingPackage.push(bp);
     }
     bookingPackageCount += availBookingPackage.length * bpm.quota;
   }
-  */
 
   //determine quota of instant bookings
   let availLockersOfType = lockers.length - bookingPackageCount;
@@ -111,7 +107,7 @@ const checkBookingAvailable = async(startDate, endDate, lockerTypeId) => {
 }
 
 const calculatePrice = async(startDate, endDate, lockerTypeId) => {
-  let pricePerMilliSecond = (await LockerType.findByPk(lockerTypeId)).price / 1800000;
+  let pricePerMilliSecond = (await LockerType.findByPk(lockerTypeId)).pricePerHalfHour / 1800000;
   let duration = endDate - startDate - 1800000;
   if(duration < 0) {
     return 0;
@@ -119,7 +115,7 @@ const calculatePrice = async(startDate, endDate, lockerTypeId) => {
   return duration * pricePerMilliSecond;
 }
 
-const applyPromoId = async(promoIdUsed) => {
+const applyPromoId = async(promoIdUsed, bookingPrice) => {
   if(!Checker.isEmpty(promoIdUsed)) {
     let promotion = await Promotion.findByPk(promoIdUsed);
     Checker.ifEmptyThrowError(promotion, Constants.Error.PromotionNotFound);
@@ -143,9 +139,11 @@ module.exports = {
   createBookingByCustomer: async(bookingData, transaction) => {
     let { promoIdUsed, startDate, endDate, bookingSourceEnum, customerId, lockerTypeId} = bookingData;
     /* CHECK WHAT FORMAT DATE IS PASSED IN FIRST */
-    // startDate = Date.parse(startDate);
-    // endDate = Date.parse(endDate);
-    if(startDate > endDate) throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
+    console.log(startDate);
+    startDate = Date.parse(startDate);
+    endDate = Date.parse(endDate);
+    console.log(startDate);
+    if(startDate.getTime() > endDate.getTime()) throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     if(endDate.getTime() - startDate.getTime() > 24 * 60 * 60 * 1000) throw new CustomError(Constants.Error.TimeCannotExceed24H);
     Checker.ifEmptyThrowError(customerId, 'Customer ' + Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(await Customer.findByPk(customerId), Constants.Error.CustomerNotFound);
@@ -161,7 +159,7 @@ module.exports = {
 
     //PROMOTION
     if(!Checker.isEmpty(promoIdUsed)) {
-      bookingPrice = await applyPromoId(promoIdUsed)
+      bookingPrice = await applyPromoId(promoIdUsed, bookingPrice);
     } 
     bookingPrice = bookingPrice.toFixed(2);
 
@@ -200,7 +198,7 @@ module.exports = {
 
     //PROMOTION
     if(!Checker.isEmpty(promoIdUsed)) {
-      bookingPrice = await applyPromoId(promoIdUsed)
+      bookingPrice = await applyPromoId(promoIdUsed, bookingPrice);
     } 
     bookingPrice = bookingPrice.toFixed(2);
     
@@ -234,22 +232,13 @@ module.exports = {
     
     Checker.ifEmptyThrowError(bookingPackageId, 'Booking package ' + Constants.Error.IdRequired);
     //Check if booking package belongs to the customer
-    let bookingPackage = await BookingPackage.findOne({ where: { id: bookingPackageId, customerId } });
-    Checker.ifEmptyThrowError(bookingPackage, 'Booking package ' + Constants.Error.IdRequired);
+    let bookingPackage = await BookingPackage.findOne({ where: { id: bookingPackageId, expired: false, customerId } });
+    Checker.ifEmptyThrowError(bookingPackage, Constants.Error.BookingPackageNotFound);
     let bookingPackageModel = await BookingPackageModel.findByPk(bookingPackage.bookingPackageModelId);
     //Check booking package availability
     if(bookingPackage.lockerCount >= bookingPackageModel.quota) {
       throw new CustomError(Constants.Error.BookingPackageReachedMaximumLockerCount);
     }
-    let bookingPrice = await calculatePrice(startDate, endDate, bookingPackageModel.lockerTypeId);
-    let availSlots = await checkBookingAvailable(startDate, endDate, bookingPackageModel.lockerTypeId);
-    if(Checker.isEmpty(availSlots)) {
-      throw new CustomError(Constants.Error.BookingCannotBeMade)
-    } else if (availSlots[0].startDate.getTime() != startDate.getTime() || availSlots[0].endDate.getTime() != endDate.getTime()) {
-      return availSlots;
-    }
-
-    bookingPrice = bookingPrice.toFixed(2);
 
     //QR CODE
     let qrCode = Math.random().toString(36).substring(2);
@@ -257,11 +246,9 @@ module.exports = {
       qrCode = Math.random().toString(36).substring(2);
     }
 
-    //CREDIT PAYMENT
-    let creditPaymentRecord = await CreditPaymentRecordService.payCreditCustomer(customerId, bookingPrice, transaction);
-    let creditPaymentRecordId = creditPaymentRecord.id;
+    //BOOKING PACKAGE UPDATE
     bookingPackage = await BookingPackage.update({ lockerCount: ++bookingPackage.lockerCount }, { where: { id: bookingPackageId }, transaction });
-    booking = await Booking.create({ startDate, endDate, bookingSourceEnum, customerId, qrCode, bookingPackageId, lockerTypeId: bookingPackageModel.lockerTypeId, bookingPrice, creditPaymentRecordId}, { transaction });
+    booking = await Booking.create({ startDate, endDate, bookingSourceEnum, customerId, qrCode, bookingPackageId, lockerTypeId: bookingPackageModel.lockerTypeId }, { transaction });
 
     return booking;
   },
@@ -282,23 +269,13 @@ module.exports = {
 
     Checker.ifEmptyThrowError(bookingPackageId, 'Booking package ' + Constants.Error.IdRequired);
     //Check if booking package belongs to the merchant
-    let bookingPackage = await BookingPackage.findOne({ where: { id: bookingPackageId, merchantId } });
-    Checker.ifEmptyThrowError(bookingPackage, 'Booking package ' + Constants.Error.IdRequired);
+    let bookingPackage = await BookingPackage.findOne({ where: { id: bookingPackageId, expired: false, merchantId } });
+    Checker.ifEmptyThrowError(bookingPackage, Constants.Error.BookingPackageNotFound);
     let bookingPackageModel = await BookingPackageModel.findByPk(bookingPackage.bookingPackageModelId);
     //Check booking package availability
     if(bookingPackage.lockerCount >= bookingPackageModel.quota) {
       throw new CustomError(Constants.Error.BookingPackageReachedMaximumLockerCount);
     }
-
-    let bookingPrice = await calculatePrice(startDate, endDate, bookingPackageModel.lockerTypeId);
-    let availSlots = await checkBookingAvailable(startDate, endDate, bookingPackageModel.lockerTypeId);
-    if(Checker.isEmpty(availSlots)) {
-      throw new CustomError(Constants.Error.BookingCannotBeMade)
-    } else if (availSlots[0].startDate.getTime() != startDate.getTime() || availSlots[0].endDate.getTime() != endDate.getTime()) {
-      return availSlots;
-    }
-  
-    bookingPrice = bookingPrice.toFixed(2);
 
     //QRCODE
     let qrCode = Math.random().toString(36).substring(2);
@@ -306,12 +283,9 @@ module.exports = {
       qrCode = Math.random().toString(36).substring(2);
     }    
     
-    //CREDIT PAYMENT
-    let creditPaymentRecord = await CreditPaymentRecordService.payCreditCustomer(merchantId, bookingPrice, transaction);
-    let creditPaymentRecordId = creditPaymentRecord.id;
-
+    //BOOKING PACKAGE UPDATE
     bookingPackage = await BookingPackage.update({ lockerCount: ++bookingPackage.lockerCount }, { where: { id: bookingPackageId }, transaction });
-    booking = await Booking.create({ startDate, endDate, bookingSourceEnum, merchantId, qrCode, bookingPackageId, lockerTypeId: bookingPackageModel.lockerTypeId, bookingPrice, creditPaymentRecordId }, { transaction });
+    booking = await Booking.create({ startDate, endDate, bookingSourceEnum, merchantId, qrCode, bookingPackageId, lockerTypeId: bookingPackageModel.lockerTypeId }, { transaction });
 
     return booking;
   },
