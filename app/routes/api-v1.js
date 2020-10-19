@@ -159,15 +159,15 @@ router.post('/product/addImage', Authenticator.merchantOnly, Upload.preUploadChe
 router.post('/product', Authenticator.merchantOnly, ProductController.createProduct);
 
 //Promotion
-router.get('/promotion/mall', /*Authenticator.customerAndMerchantAndStaffOnly,*/ PromotionController.retrieveMallPromotion);
-router.get('/promotion/merchant', /*Authenticator.customerAndMerchantAndStaffOnly,*/ PromotionController.retrieveMerchantPromotion);
-router.get('/promotion/merchant/:id', /*Authenticator.customerAndMerchantAndStaffOnly,*/ PromotionController.retrieveMerchantPromotionByMerchantId);
-router.get('/promotion/promoCode/:promoCode', /*Authenticator.customerAndMerchantAndStaffOnly,*/ PromotionController.retrievePromotionByPromoCode);
-router.get('/promotions', /*Authenticator.customerAndMerchantAndStaffOnly,*/ PromotionController.retrieveAllPromotions);
-router.put('/promotion/:id', /*Authenticator.customerAndMerchantAndStaffOnly,*/ PromotionController.updatePromotion);
-router.put('/deletePromotion/:id', /*Authenticator.customerAndMerchantAndStaffOnly,*/ PromotionController.deletePromotion);
-router.post('/promotion/merchant', /*Authenticator.customerAndMerchantAndStaffOnly,*/ PromotionController.createMerchantPromotion);
-router.post('/promotion/mall', /*Authenticator.customerAndMerchantAndStaffOnly,*/ PromotionController.createMallPromotion);
+router.get('/promotion/mall', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveMallPromotion);
+router.get('/promotion/merchant', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveMerchantPromotion);
+router.get('/promotion/merchant/:id', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveMerchantPromotionByMerchantId);
+router.get('/promotion/promoCode/:promoCode', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrievePromotionByPromoCode);
+router.get('/promotions', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveAllPromotions);
+router.put('/promotion/:id', Authenticator.merchantAndStaffOnly, PromotionController.updatePromotion);
+router.put('/deletePromotion/:id', Authenticator.merchantAndStaffOnly, PromotionController.deletePromotion);
+router.post('/promotion/merchant', Authenticator.merchantOnly, PromotionController.createMerchantPromotion);
+router.post('/promotion/mall', Authenticator.staffOnly, PromotionController.createMallPromotion);
 
 //Staff
 router.get('/staff/staffRoles', Authenticator.staffOnly, StaffController.retrieveStaffRoles);
