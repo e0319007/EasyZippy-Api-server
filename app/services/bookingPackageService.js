@@ -17,6 +17,12 @@ module.exports = {
       throw new CustomError('Customer ' + Constants.Error.IdRequired)
     }
     Checker.ifEmptyThrowError(await Customer.findByPk(customerId), Constants.Error.CustomerNotFound);
+
+    // ONLY CAN BUY ONE BOOKING PACKAGE
+    if(!Checker.isEmpty(await BookingPackage.findAll({ merchantId, expired: false }))) {
+      throw new CustomError(Constants.Error.BookingPackageCannotBeSold);
+    }
+
     Checker.ifEmptyThrowError(bookingPackageModelId, 'Booking package model ' + Constants.Error.IdRequired)
     let bookingPackageModel = await BookingPackageModel.findByPk(bookingPackageModelId);
     let lockerTypeId = bookingPackageModel.lockerTypeId;
@@ -53,6 +59,12 @@ module.exports = {
     let { merchantId, bookingPackageModelId } = bookingPackageData;
     Checker.ifEmptyThrowError(merchantId, 'Merchant ' + Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(await Customer.findByPk(merchantId), Constants.Error.CustomerNotFound);
+
+    // ONLY CAN BUY ONE BOOKING PACKAGE
+    if(!Checker.isEmpty(await BookingPackage.findAll({ merchantId, expired: false }))) {
+      throw new CustomError(Constants.Error.BookingPackageCannotBeSold);
+    }
+
     Checker.ifEmptyThrowError(bookingPackageModelId, 'Booking package model ' + Constants.Error.IdRequired)
     let bookingPackageModel = await BookingPackageModel.findByPk(bookingPackageModelId);
     let lockerTypeId = bookingPackageModel.lockerTypeId;
@@ -94,12 +106,28 @@ module.exports = {
     return await BookingPackage.findAll({ where: { customerId } });
   },
 
+  retrieveCurrentBookingPackageByCustomerId: async(customerId) => {
+    Checker.ifEmptyThrowError(customerId, Constants.Error.IdRequired);
+    const customer = await Customer.findByPk(customerId);
+    Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
+    
+    return await BookingPackage.findOne({ where: { customerId, expired: false } });
+  },
+
   retrieveAllBookingPackageByMerchantId: async(merchantId) => {
     Checker.ifEmptyThrowError(merchantId, Constants.Error.IdRequired);
     const merchant = await Merchant.findByPk(merchantId);
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
 
     return await BookingPackage.findAll({ where: { merchantId } });
+  },
+
+  retrieveCurrentBookingPackageByMerchantId: async(merchantId) => {
+    Checker.ifEmptyThrowError(merchantId, Constants.Error.IdRequired);
+    const merchant = await Merchant.findByPk(merchantId);
+    Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
+
+    return await BookingPackage.findAll({ where: { merchantId, expired: false } });
   },
 
   retrieveBookingPackageByBookingPackageId: async(id) => {
