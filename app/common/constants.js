@@ -145,6 +145,8 @@ module.exports = {
     PdfFileRequired: 'PDF file is required',
     ProductDeleted: 'Product is deleted',
     ProductNotFound: 'Product not found',
+    ProductVariationDeleted: 'Product variation is deleted',
+    ProductVariationNotFound: 'Product variation not found',
     PromotionNotFound: 'Promotion not found',
     QuantityAvailableRequired: 'Quantity available is required',
     StaffDisabled: 'Staff is disabled',

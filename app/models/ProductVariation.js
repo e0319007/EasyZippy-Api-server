@@ -39,14 +39,9 @@ ProductVariation.init(
         min: 0
       }
     },
-    listDate: {
-      type: DATE,
-      allowNull: false,
-      defaultValue: Sequelize.NOW
-    },
     image: {
       type: TEXT,
-      allowNull: false
+      allowNull: true
     },
     disabled: {
       type: BOOLEAN,
@@ -61,7 +56,7 @@ ProductVariation.init(
   },
   {
     sequelize,
-    modelName: 'product',
+    modelName: 'productVariation',
     underscored: true
   }
 );
