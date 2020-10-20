@@ -84,6 +84,7 @@ module.exports = {
     BookingPackageModelIsDisabled: 'Booking package model is disabled',
     BookingPackageModelNotFound: 'Booking package model not found',
     BookingPackageNotFound: 'Booking package not found',
+    BookingPackageCannotBeSold: 'You already have an active booking package',
     BookingPackageSoldOut: 'Booking package is sold out',
     BookingPackageReachedMaximumLockerCount: 'Booking package reached maximum locker count',
     BookingCannotBeCancelled: 'Booking cannot be cancelled',
