@@ -6,10 +6,12 @@ const Merchant = require('../models/Merchant');
 const BookingPackage = require('../models/BookingPackage');
 const BookingPackageModel = require('../models/BookingPackageModel');
 const CreditPaymentRecordService = require('../services/creditPaymentRecordService');
+const Locker = require('../models/Locker');
 
 module.exports = {
   createBookingPackageForCustomer: async(bookingPackageData, transaction) => {
     let { customerId, bookingPackageModelId } = bookingPackageData;
+
     if(Checker.isEmpty(customerId)) {
       console.log(bookingPackageData)
       throw new CustomError('Customer ' + Constants.Error.IdRequired)
@@ -17,10 +19,28 @@ module.exports = {
     Checker.ifEmptyThrowError(await Customer.findByPk(customerId), Constants.Error.CustomerNotFound);
     Checker.ifEmptyThrowError(bookingPackageModelId, 'Booking package model ' + Constants.Error.IdRequired)
     let bookingPackageModel = await BookingPackageModel.findByPk(bookingPackageModelId);
+    let lockerTypeId = bookingPackageModel.lockerTypeId;
     Checker.ifEmptyThrowError(bookingPackageModel, Constants.Error.BookingPackageModelNotFound);
     let creditPaymentRecord = await CreditPaymentRecordService.payCreditCustomer(customerId, bookingPackageModel.price, transaction);
     let creditPaymentRecordId = creditPaymentRecord.id;
     
+    // add in check for overselling 
+    let bookingPackageModels = await BookingPackageModel.findAll({ where: { lockerTypeId } });
+    let bookingPackageCount = 0;
+    for(const bpm of bookingPackageModels) {
+      //let bookingPackage = await BookingPackage.findAll({ where: { bookingPackageModelId: bpm.id } });
+      let bookingPackages = await bpm.getBookingPackages();
+      let availBookingPackage = new Array();
+      for(let bp of bookingPackages) {
+        if(bp.endDate > new Date()) availBookingPackage.push(bp);
+      }
+      bookingPackageCount += availBookingPackage.length * bpm.quota;
+    }
+    if (bookingPackageCount + bookingPackageModel.quota > (await Locker.findAll({ where: { lockerTypeId } })).length) {
+      throw new CustomError(Constants.Error.BookingPackageSoldOut);
+    }
+    // end in check for overselling 
+
     let startDate = new Date();
     let endDate = new Date(startDate)
     endDate.setDate(startDate.getDate() + bookingPackageModel.duration);
@@ -32,13 +52,31 @@ module.exports = {
   createBookingPackageForMerchant: async(bookingPackageData, transaction) => {
     let { merchantId, bookingPackageModelId } = bookingPackageData;
     Checker.ifEmptyThrowError(merchantId, 'Merchant ' + Constants.Error.IdRequired);
-    Checker.ifEmptyThrowError(await Customer.findByPk(customerId), Constants.Error.CustomerNotFound);
+    Checker.ifEmptyThrowError(await Customer.findByPk(merchantId), Constants.Error.CustomerNotFound);
     Checker.ifEmptyThrowError(bookingPackageModelId, 'Booking package model ' + Constants.Error.IdRequired)
     let bookingPackageModel = await BookingPackageModel.findByPk(bookingPackageModelId);
+    let lockerTypeId = bookingPackageModel.lockerTypeId;
     Checker.ifEmptyThrowError(bookingPackageModel, Constants.Error.BookingPackageModelNotFound);
     
     let creditPaymentRecord = await CreditPaymentRecordService.payCreditMerchant(merchantId, bookingPackageModel.price, transaction);
     let creditPaymentRecordId = creditPaymentRecord.id;
+
+    // add in check for overselling 
+    let bookingPackageModels = await BookingPackageModel.findAll({ where: { lockerTypeId } });
+    let bookingPackageCount = 0;
+    for(const bpm of bookingPackageModels) {
+      //let bookingPackage = await BookingPackage.findAll({ where: { bookingPackageModelId: bpm.id } });
+      let bookingPackages = await bpm.getBookingPackages();
+      let availBookingPackage = new Array();
+      for(let bp of bookingPackages) {
+        if(bp.endDate > new Date()) availBookingPackage.push(bp);
+      }
+      bookingPackageCount += availBookingPackage.length * bpm.quota;
+    }
+    if (bookingPackageCount + bookingPackageModel.quota > (await Locker.findAll({ where: { lockerTypeId } })).length) {
+      throw new CustomError(Constants.Error.BookingPackageSoldOut);
+    }
+    // end in check for overselling 
 
     let startDate = new Date();
     let endDate = new Date(startDate)

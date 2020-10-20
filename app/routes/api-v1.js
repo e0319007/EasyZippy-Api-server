@@ -5,6 +5,7 @@ const Upload = require('../middleware/upload');
 
 const AdvertisementController = require('../controllers/advertisementController');
 const AnnouncementController = require('../controllers/announcementController');
+const BookingController = require('../controllers/bookingController');
 const BookingPackageController = require('../controllers/bookingPackageController');
 const BookingPackageModelController = require('../controllers/bookingPackageModelController');
 const CategoryController = require('../controllers/categoryController');
@@ -55,11 +56,29 @@ router.post('/bookingPackageModel', Authenticator.staffOnly, BookingPackageModel
 router.put('/deleteBookingPackageModel/:id', Authenticator.staffOnly, BookingPackageModelController.deleteBookingPackageModel);
 
 //BookingPackage
-router.get('/bookingPackage/:id', /*Authenticator.customerAndMerchantAndStaffOnly,*/ BookingPackageController.retrieveBookingPackageByBookingPackageId);
-router.get('/customerBookingPackageModels/:customerId', /*Authenticator.customerAndMerchantAndStaffOnly,*/BookingPackageController.retrieveAllBookingPackageByCustomerId);
-router.get('/merchantBookingPackageModels/:merchantId', /*Authenticator.customerAndMerchantAndStaffOnly,*/BookingPackageController.retrieveAllBookingPackageByMerchantId);
-router.post('/bookingPackageCustomer', /*Authenticator.staffOnly,*/ BookingPackageController.buyBookingPackageForCustomer);
-router.post('/bookingPackageMerchant', /*Authenticator.staffOnly,*/ BookingPackageController.buyBookingPackageForMerchant);
+router.get('/bookingPackage/:id', Authenticator.customerAndMerchantAndStaffOnly, BookingPackageController.retrieveBookingPackageByBookingPackageId);
+router.get('/customerBookingPackageModels/:customerId', Authenticator.customerAndStaffOnly,BookingPackageController.retrieveAllBookingPackageByCustomerId);
+router.get('/merchantBookingPackageModels/:merchantId', Authenticator.customerAndMerchantAndStaffOnly,BookingPackageController.retrieveAllBookingPackageByMerchantId);
+router.post('/bookingPackageCustomer', Authenticator.customerOnly, BookingPackageController.buyBookingPackageForCustomer);
+router.post('/bookingPackageMerchant', Authenticator.merchantOnly, BookingPackageController.buyBookingPackageForMerchant);
+
+//Booking
+router.get('/customerBooking/:id', Authenticator.customerAndStaffOnly, BookingController.retrieveBookingByCustomerId);
+router.get('/merchantBooking/:id', Authenticator.merchantAndStaffOnly, BookingController.retrieveBookingByMerchantId);
+router.get('/bookingByOrder/:id', Authenticator.customerAndMerchantAndStaffOnly, BookingController.retrieveBookingByOrderId);
+router.get('/booking/:id', Authenticator.customerAndMerchantAndStaffOnly, BookingController.retrieveBookingById);
+router.get('/customerBookings', Authenticator.staffOnly, BookingController.retrieveAllBookingsByCustomer);
+router.get('/merchantBookings', Authenticator.staffOnly, BookingController.retrieveAllBookingsByMerchant);
+router.put('/booking/:id', Authenticator.customerAndMerchantAndStaffOnly, BookingController.cancelBooking);
+router.put('/tagOrderToBooking', Authenticator.merchantAndStaffOnly, BookingController.tagBookingToOrder);
+router.put('/addCollectorToBooking', Authenticator.customerAndMerchantAndStaffOnly, BookingController.addCollectorToBooking);
+router.put('/removeCollectorToBooking', Authenticator.customerAndMerchantAndStaffOnly, BookingController.removeCollectorToBooking);
+router.put('/changeCollectorToBooking', Authenticator.customerAndMerchantAndStaffOnly, BookingController.changeCollectorToBooking);
+router.post('/booking/customer', Authenticator.customerAndMerchantAndStaffOnly, BookingController.createBookingByCustomer);
+router.post('/booking/merchant', Authenticator.customerAndMerchantAndStaffOnly, BookingController.createBookingByMerchant);
+router.post('/booking/bookingPackage/customer', Authenticator.customerAndMerchantAndStaffOnly, BookingController.createBookingWithBookingPackageByCustomer);
+router.post('/booking/bookingPackage/merchant', Authenticator.customerAndMerchantAndStaffOnly, BookingController.createBookingWithBookingPackageByMerchant);
+
 
 //Category
 router.get('/category/:id', Authenticator.customerAndMerchantAndStaffOnly, CategoryController.retrieveCategory);
