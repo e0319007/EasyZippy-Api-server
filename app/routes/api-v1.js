@@ -18,6 +18,7 @@ const MerchantController = require('../controllers/merchantController');
 const NotificationController = require('../controllers/notificationController');
 const PaymentController = require('../controllers/paymentController');
 const ProductController = require('../controllers/productController');
+const ProductVariationController = require('../controllers/productVariationController');
 const StaffController = require('../controllers/staffController');
 
 //Advertisement
@@ -125,7 +126,7 @@ router.put('/locker/toggleDisable/:id', Authenticator.staffOnly, LockerControlle
 router.put('/deleteLocker/:id', Authenticator.staffOnly, LockerController.deleteLocker);
 router.post('/locker', Authenticator.staffOnly, LockerController.createLocker);
 
-//Locker Type
+//LockerType
 router.get('/lockerType/kiosk/:kioskId', Authenticator.customerAndMerchantAndStaffOnly, LockerTypeController.retrieveLockerTypesByKiosk);
 router.get('/lockerType/:id', Authenticator.customerAndMerchantAndStaffOnly, LockerTypeController.retrieveLockerType);
 router.get('/lockerTypes', Authenticator.customerAndMerchantAndStaffOnly, LockerTypeController.retrieveAllLockerTypes);
@@ -178,6 +179,17 @@ router.put('/product/toggleDisable/:id', Authenticator.merchantAndStaffOnly, Pro
 router.put('/product/:id', Authenticator.merchantOnly, ProductController.updateProduct);
 router.post('/product/addImage', Authenticator.merchantOnly, Upload.preUploadCheckForImg, ProductController.addImageForProduct);
 router.post('/product', Authenticator.merchantOnly, ProductController.createProduct);
+
+
+//ProductVariation
+router.get('/productVariations/:id', /*Authenticator.customerAndMerchantAndStaffOnly, */ ProductVariationController.retrieveProductVariationsByProductId);
+router.get('/productVariationsIncludingDisabled/:id', /*Authenticator.customerAndMerchantAndStaffOnly, */ ProductVariationController.retrieveProductVariationsByProductIdIncludingDisabled);
+router.put('/productVariations/toggleDisable/:id', /*Authenticator.customerAndMerchantAndStaffOnly, */ ProductVariationController.toggleDisableProductVariation);
+router.put('/productVariations/:id', /*Authenticator.customerAndMerchantAndStaffOnly, */ ProductVariationController.updateProductVariation);
+router.put('/deleteProductVariations/:id', /*Authenticator.customerAndMerchantAndStaffOnly, */ ProductVariationController.deleteProductVariation);
+router.post('/productVariation/addImage', /*Authenticator.merchantOnly,*/ Upload.preUploadCheckForImg, ProductVariationController.addImageForProductVariation);
+router.post('/productVariation', /*Authenticator.customerAndMerchantAndStaffOnly, */ ProductVariationController.createProductVariation);
+
 
 //Staff
 router.get('/staff/staffRoles', Authenticator.staffOnly, StaffController.retrieveStaffRoles);
