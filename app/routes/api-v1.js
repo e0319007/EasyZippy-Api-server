@@ -161,7 +161,7 @@ router.post('/product', Authenticator.merchantOnly, ProductController.createProd
 
 //Promotion
 router.get('/promotion/mall', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveAllMallPromotions);
-router.get('/promotion/merchant', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveAllMerchantPromotionsotion);
+router.get('/promotion/merchant', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveAllMerchantPromotions);
 router.get('/promotion/merchant/:id', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveMerchantPromotionByMerchantId);
 router.get('/promotion/promoCode/:promoCode', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrievePromotionByPromoCode);
 router.get('/promotions', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveAllPromotions);
