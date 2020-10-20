@@ -8,11 +8,11 @@ const Staff = require('../models/Staff');
 module.exports = {
   createMerchantPromotion: async(promotionData, transaction) => {
     let { promoCode, startDate, endDate, description, termsAndConditions, percentageDiscount, flatDiscount, usageLimit, merchantId, minimumSpend } = promotionData;
-    Checker.ifEmptyThrowError(promoCode, 'Promo Code' + Constants.Error.XXXIsRequired);
-    Checker.ifEmptyThrowError(startDate, 'Start date' + Constants.Error.XXXIsRequired);
-    Checker.ifEmptyThrowError(endDate, 'End date' + Constants.Error.XXXIsRequired);
-    Checker.ifEmptyThrowError(usageLimit, 'End date' + Constants.Error.XXXIsRequired);
-    Checker.ifEmptyThrowError(merchantId, 'Merchant ID' + Constants.Error.XXXIsRequired);
+    Checker.ifEmptyThrowError(promoCode, 'Promo code ' + Constants.Error.XXXIsRequired);
+    Checker.ifEmptyThrowError(startDate, 'Start date ' + Constants.Error.XXXIsRequired);
+    Checker.ifEmptyThrowError(endDate, 'End date ' + Constants.Error.XXXIsRequired);
+    Checker.ifEmptyThrowError(usageLimit, 'Usage limit ' + Constants.Error.XXXIsRequired);
+    Checker.ifEmptyThrowError(merchantId, 'Merchant ID ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(await Merchant.findByPk(merchantId), Constants.Error.MerchantNotFound);
     if(startDate > endDate) {
       throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
@@ -34,11 +34,11 @@ module.exports = {
 
   createMallPromotion: async(promotionData, transaction) => {
     let { promoCode, startDate, endDate, description, termsAndConditions, percentageDiscount, flatDiscount, usageLimit, staffId, minimumSpend } = promotionData;
-    Checker.ifEmptyThrowError(promoCode, 'Promo Code' + Constants.Error.XXXIsRequired);
-    Checker.ifEmptyThrowError(startDate, 'Start date' + Constants.Error.XXXIsRequired);
-    Checker.ifEmptyThrowError(endDate, 'End date' + Constants.Error.XXXIsRequired);
-    Checker.ifEmptyThrowError(usageLimit, 'Usage Limit' + Constants.Error.XXXIsRequired);
-    Checker.ifEmptyThrowError(staffId, 'Staff ID' + Constants.Error.XXXIsRequired);
+    Checker.ifEmptyThrowError(promoCode, 'Promo code ' + Constants.Error.XXXIsRequired);
+    Checker.ifEmptyThrowError(startDate, 'Start date ' + Constants.Error.XXXIsRequired);
+    Checker.ifEmptyThrowError(endDate, 'End date ' + Constants.Error.XXXIsRequired);
+    Checker.ifEmptyThrowError(usageLimit, 'Usage limit ' + Constants.Error.XXXIsRequired);
+    Checker.ifEmptyThrowError(staffId, 'Staff ID ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(await Staff.findByPk(staffId), Constants.Error.StaffNotFound);
     if(startDate > endDate) {
       throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
@@ -66,14 +66,14 @@ module.exports = {
     Checker.ifEmptyThrowError(promotion, Constants.Error.PromotionNotFound);
     let updateKeys = Object.keys(promotionData);
     if(updateKeys.includes('promoCode')) {
-      Checker.ifEmptyThrowError(promoCode, 'Promo Code' + Constants.Error.XXXIsRequired);
+      Checker.ifEmptyThrowError(promoCode, 'Promo Code ' + Constants.Error.XXXIsRequired);
       let p = await Promotion.findOne({ where: { promoCode, expired: false } });
       if(!Checker.isEmpty(p) && p.id != id) {
         throw new CustomError(Constants.Error.PromoCodeNotUnique);
       }
     }
     if(updateKeys.includes('startDate')) {
-      Checker.ifEmptyThrowError(startDate, 'Start date' + Constants.Error.XXXIsRequired);
+      Checker.ifEmptyThrowError(startDate, 'Start date ' + Constants.Error.XXXIsRequired);
       if(startDate > endDate) {
         throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
       }
@@ -82,36 +82,36 @@ module.exports = {
       }
     }
     if(updateKeys.includes('endDate')) {
-      Checker.ifEmptyThrowError(endDate, 'End date' + Constants.Error.XXXIsRequired);
+      Checker.ifEmptyThrowError(endDate, 'End date ' + Constants.Error.XXXIsRequired);
       if(startDate > endDate) {
         throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
       }
     }
     if(updateKeys.includes('usageLimit')) {
-    Checker.ifEmptyThrowError(usageLimit, 'Usage Limit' + Constants.Error.XXXIsRequired);
+    Checker.ifEmptyThrowError(usageLimit, 'Usage Limit ' + Constants.Error.XXXIsRequired);
     }
     promotion = await Promotion.update(promotionData, { transaction, where: { id }, returning: true });
     return promotion;
   },
 
-  retrieveMallPromotion: async() => {
+  retrieveAllMallPromotions: async() => {
     return await Promotion.findAll({ where: { promotionTypeEnum: Constants.PromotionType.MallPromotion, deleted: false } });
   },
 
-  retrieveMerchantPromotion: async() => {
+  retrieveAllMerchantPromotions: async() => {
     return await Promotion.findAll({ where: { promotionTypeEnum: Constants.PromotionType.MerchantPromotion, deleted: false } });
   },
   
   retrieveMerchantPromotionByMerchantId: async(merchantId) => {
-    Checker.ifEmptyThrowError(merchantId, 'Merchant ID' + Constants.Error.XXXIsRequired);
+    Checker.ifEmptyThrowError(merchantId, 'Merchant ID ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(await Merchant.findByPk(merchantId), Constants.Error.MerchantNotFound);
-    return await Promotion.findAll({ where: { merchantId, promotionTypeEnum: Constants.PromotionType.MerchantPromotion, deleted: false, expired: false } })
+    return await Promotion.findAll({ where: { merchantId, promotionTypeEnum: Constants.PromotionType.MerchantPromotion, deleted: false } });
   },
 
   retrievePromotionByPromoCode: async(promoCode) => {
-    Checker.ifEmptyThrowError(promoCode, 'Promotion Code' + Constants.Error.XXXIsRequired);
-    let promotion = await Promotion.findAll({ where: { expired: false, promoCode } })
-    Checker.ifEmptyThrowError(promotion, 'Promotion Code' + Constants.Error.XXXIsRequired);
+    Checker.ifEmptyThrowError(promoCode, 'Promotion Code ' + Constants.Error.XXXIsRequired);
+    let promotion = await Promotion.findAll({ where: { deleted: false, expired: false, promoCode } });
+    Checker.ifEmptyThrowError(promotion, Constants.Error.PromotionNotFound);
     return promotion;
   },
 

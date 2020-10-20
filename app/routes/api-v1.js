@@ -160,8 +160,8 @@ router.post('/product/addImage', Authenticator.merchantOnly, Upload.preUploadChe
 router.post('/product', Authenticator.merchantOnly, ProductController.createProduct);
 
 //Promotion
-router.get('/promotion/mall', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveMallPromotion);
-router.get('/promotion/merchant', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveMerchantPromotion);
+router.get('/promotion/mall', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveAllMallPromotions);
+router.get('/promotion/merchant', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveAllMerchantPromotionsotion);
 router.get('/promotion/merchant/:id', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveMerchantPromotionByMerchantId);
 router.get('/promotion/promoCode/:promoCode', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrievePromotionByPromoCode);
 router.get('/promotions', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveAllPromotions);

@@ -44,18 +44,18 @@ module.exports = {
     }
   },
 
-  retrieveMallPromotion: async(req, res) => {
+  retrieveAllMallPromotions: async(req, res) => {
     try {
-      return res.status(200).send(await PromotionService.retrieveMallPromotion());
+      return res.status(200).send(await PromotionService.retrieveAllMallPromotions());
     } catch (err) {
       console.log(err)
       sendErrorResponse(res, err);
     }
   },
 
-  retrieveMerchantPromotion: async(req, res) => {
+  retrieveAllMerchantPromotions: async(req, res) => {
     try {
-      return res.status(200).send(await PromotionService.retrieveMerchantPromotion());
+      return res.status(200).send(await PromotionService.retrieveAllMerchantPromotions());
     } catch (err) {
       console.log(err)
       sendErrorResponse(res, err);
