@@ -344,7 +344,7 @@ module.exports = {
 
   retrieveAllBookingsByCustomer: async() => {
     const bookings = await Booking.findAll();
-    let customerBookings;
+    let customerBookings = new Array();
     for(let b of bookings) {
       if(b.merchantId === null) {
         customerBookings.push(b);
@@ -355,7 +355,7 @@ module.exports = {
 
   retrieveAllBookingsByMerchant: async() => {
     const bookings = await Booking.findAll();
-    let merchantBookings;
+    let merchantBookings = new Array();
     for(let b of bookings) {
       if(b.merchantId !== null) {
         merchantBookings.push(b);
@@ -387,7 +387,7 @@ module.exports = {
   },
 
   retrieveUpcomingBookingsByCustomerId: async(customerId) => {
-    return await Booking.findAll({ where: { customerId, bookingStatusEnum: Constants.BookingStatus.Unfufilled }});
+    return await Booking.findAll({ where: { customerId, bookingStatusEnum: Constants.BookingStatus.Unfulfilled }});
   },
 
   retrieveOngoingBookingsByCustomerId: async(customerId) => {
@@ -396,7 +396,7 @@ module.exports = {
   },
 
   retrieveUpcomingBookingsByMerchantId: async(merchantId) => {
-    return await Booking.findAll({ where: { merchantId, bookingStatusEnum: Constants.BookingStatus.Unfufilled }});
+    return await Booking.findAll({ where: { merchantId, bookingStatusEnum: Constants.BookingStatus.Unfulfilled }});
   },
 
   retrieveOngoingBookingsByMerchantId: async(merchantId) => {
@@ -408,7 +408,7 @@ module.exports = {
     let booking = await Booking.findByPk(id);
     Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound);
     
-    if(booking.bookingStatusEnum != Constants.BookingStatus.Unfufilled || booking.startDate.getTime() - 30 * 60000 <= new Date().getTime()) {
+    if(booking.bookingStatusEnum != Constants.BookingStatus.Unfulfilled || booking.startDate.getTime() - 30 * 60000 <= new Date().getTime()) {
       console.log(booking.startDate)
       console.log(booking.startDate.getTime())
       console.log(new Date(new Date() - 30 * 60000))
