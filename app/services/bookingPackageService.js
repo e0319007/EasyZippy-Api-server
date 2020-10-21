@@ -19,7 +19,7 @@ module.exports = {
     Checker.ifEmptyThrowError(await Customer.findByPk(customerId), Constants.Error.CustomerNotFound);
 
     // ONLY CAN BUY ONE BOOKING PACKAGE
-    if(!Checker.isEmpty(await BookingPackage.findAll({ customerId, expired: false }))) {
+    if(!Checker.isEmpty(await BookingPackage.findOne({ where:{ customerId, expired: false } }))) {
       throw new CustomError(Constants.Error.BookingPackageCannotBeSold);
     }
 
@@ -61,7 +61,7 @@ module.exports = {
     Checker.ifEmptyThrowError(await Customer.findByPk(merchantId), Constants.Error.CustomerNotFound);
 
     // ONLY CAN BUY ONE BOOKING PACKAGE
-    if(!Checker.isEmpty(await BookingPackage.findAll({ merchantId, expired: false }))) {
+    if(!Checker.isEmpty(await BookingPackage.findAll({ where: { merchantId, expired: false } }))) {
       throw new CustomError(Constants.Error.BookingPackageCannotBeSold);
     }
 
