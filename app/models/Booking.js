@@ -47,7 +47,7 @@ Booking.init(
     bookingStatusEnum: {
       type: STRING,
       allowNull: false,
-      defaultValue: Constants.BookingStatus.Unfufilled
+      defaultValue: Constants.BookingStatus.Unfulfilled
     },
     bookingSourceEnum: {
       type: STRING,

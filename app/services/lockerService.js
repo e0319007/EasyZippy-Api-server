@@ -105,7 +105,7 @@ module.exports = {
   scanOpenLocker: async(qrCode, transaction) => {
     let booking = await Booking.findOne( { where: { qrCode } });
     //OPEN LOCKER FOR THE FIRST TIME
-    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfufilled) {
+    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfulfilled) {
       //call open locker api, create locker action record after integrating to hardware
       
       booking = await booking.update({ bookingStatusEnum: Constants.BookingStatus.Active }, { transaction });
@@ -131,7 +131,7 @@ module.exports = {
          creditPaymentRecord = await CreditPaymentRecordService.payCreditCustomer(booking.customerId, extraPrice, transaction);
       } else creditPaymentRecord = await CreditPaymentRecordService.payCreditMerchant(booking.merchantId, extraPrice, transaction);
 
-      booking = await booking.update({ bookingStatusEnum: Constants.BookingStatus.Fufilled, bookingPrice: booking.bookingPrice + extraPrice }, { transaction });
+      booking = await booking.update({ bookingStatusEnum: Constants.BookingStatus.Unfulfilled, bookingPrice: booking.bookingPrice + extraPrice }, { transaction });
       let locker = await Locker.findByPk(booking.lockerId);
       locker = await locker.update( { lockerStatusEnum: Constants.LockerStatus.Empty }, { transaction }); 
       
