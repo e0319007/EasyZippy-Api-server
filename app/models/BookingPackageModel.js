@@ -66,5 +66,6 @@ BookingPackageModel.init(
 );
 
 BookingPackageModel.belongsTo(LockerType, { foreignKey: { allowNull: false } });
+LockerType.hasMany(BookingPackageModel);
 
 module.exports = BookingPackageModel;

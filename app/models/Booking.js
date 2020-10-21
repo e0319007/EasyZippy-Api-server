@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, DATE, STRING, ENUM, Model
+  INTEGER, DATE, STRING, DECIMAL, BOOLEAN, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 
@@ -10,6 +10,8 @@ const Customer = require('./Customer');
 const Merchant = require('./Merchant');
 const Order = require('./Order');
 const Locker = require('./Locker');
+const Constants = require('../common/constants');
+const LockerType = require('./LockerType');
 
 class Booking extends Model {
 }
@@ -38,13 +40,23 @@ Booking.init(
       type: DATE,
       allowNull: false
     },
+    bookingPrice: {
+      type: DECIMAL,
+      allowNull: true
+    },
     bookingStatusEnum: {
       type: STRING,
-      allowNull: false
+      allowNull: false,
+      defaultValue: Constants.BookingStatus.Unfufilled
     },
     bookingSourceEnum: {
       type: STRING,
       allowNull: false
+    },
+    cancelled: {
+      type: BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     }
   },
   {
@@ -61,10 +73,10 @@ Booking.belongsTo(Order);
 Order.hasOne(Booking);
 
 Booking.belongsTo(Customer, { as: 'collector' });
-Customer.hasMany(Booking, { as: 'secondaryBooking', foreignKey: 'secondaryBookingId' });
+Customer.hasMany(Booking, { as: 'secondaryBooking'/*, foreignKey: 'secondaryBookingId'*/ });
 
-Booking.belongsTo(Customer, { as: 'primaryCustomer'});
-Customer.hasMany(Booking, { as: 'primaryBooking', foreignKey: 'primaryBookingId' });
+Booking.belongsTo(Customer);
+Customer.hasMany(Booking, { as: 'primaryBooking'/*, foreignKey: 'primaryBookingId' */});
 
 Booking.belongsTo(Merchant);
 Merchant.hasMany(Booking);
@@ -72,7 +84,10 @@ Merchant.hasMany(Booking);
 Booking.belongsTo(BookingPackage);
 BookingPackage.hasMany(Booking);
 
-Booking.belongsTo(Locker, { foreignKey: { allowNull: false } });
+Booking.belongsTo(Locker);
 Locker.hasMany(Booking);
+
+Booking.belongsTo(LockerType, { foreignKey: { allowNull: false } });
+LockerType.hasMany(Booking);
 
 module.exports = Booking;
