@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, STRING, DATE, FLOAT, BOOLEAN, Model
+  INTEGER, STRING, BOOLEAN, DATE, FLOAT, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 
@@ -63,6 +63,14 @@ Promotion.init(
     promotionTypeEnum: {
       type: STRING,
       allowNull: false
+    },
+    minimumSpend: {
+      type: FLOAT,
+      allowNull: true,
+      validate: {
+        min: 0
+      },
+      defaultValue: 0
     },
     expired: {
       type: BOOLEAN,

@@ -3,7 +3,9 @@ const CustomerService = require('./app/services/customerService');
 const MerchantService = require('./app/services/merchantService');
 const StaffService = require('./app/services/staffService');
 const AnnouncementService = require('./app/services/announcementService');
+const sequelize = require('./app/common/database');
 const NotificationService = require('./app/services/notificationService');
+const PromotionService = require('./app/services/promotionService');
 const Category = require('./app/models/Category');
 const Locker = require('./app/models/Locker');
 const Kiosk = require('./app/models/Kiosk');
@@ -16,7 +18,6 @@ const BookingPackage = require('./app/models/BookingPackage');
 const Constants = require('./app/common/constants');
 const BookingPackageService = require('./app/services/bookingPackageService');
 const BookingService = require('./app/services/bookingService');
-const sequelize = require('./app/common/database');
 
 const addDummyData = async () => {
   const staff1 = await StaffService.createStaff({ firstName: 'Alice', lastName: 'Ang', mobileNumber: '91234567', email: 'alice@email.com', staffRoleEnum: 'Admin' });
@@ -91,6 +92,48 @@ const addDummyData = async () => {
   await Advertisement.create({ image: '1601607853991.jpeg', title: 'Lazada sale', description: 'Lazada 50% off all items',  advertiserUrl: 'http://www.lazada.com', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '91111111', advertiserEmail: 'test1@email.com', approved: true })
   await Advertisement.create({ image: '1601608444371.jpeg', title: 'Shopee sale', description: 'Shopee 50% off all electronic items',  advertiserUrl: 'http://www.shopee.com', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '92222222', advertiserEmail: 'test2@email.com', approved: true })
   await Advertisement.create({ image: '1601608583950.jpeg', title: 'Qoo10 sale', description: 'Qoo10 50% off apparel items',  advertiserUrl: 'http://www.qoo10.com', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '93333333', advertiserEmail: 'test3@email.com', approved: true })
+
+  const promoData1 = {
+    promoCode: "PROMOCODE1", 
+    startDate: new Date(new Date().getTime() + 30 * 1000 * 60), 
+    endDate: new Date(new Date().getTime() + 24 * 30 * 1000 * 60), 
+    description: "save on spending!", 
+    termsAndConditions: "terms and conditions", 
+    percentageDiscount: null, 
+    flatDiscount: 10, 
+    usageLimit: 20, 
+    merchantId: 1
+  }
+
+  const promoData2 = {
+    promoCode: "PROMOCODE2", 
+    startDate: new Date(new Date().getTime() + 30 * 1000 * 60), 
+    endDate: new Date(new Date().getTime() + 24 * 30 * 1000 * 60), 
+    description: "save on spending a second time!", 
+    termsAndConditions: "terms and conditions", 
+    percentageDiscount: 0.1, 
+    flatDiscount: null, 
+    usageLimit: 20, 
+    merchantId: 1
+  }
+
+  const promoData3 = {
+    promoCode: "PROMOCODEMALL1", 
+    startDate: new Date(new Date().getTime() + 30 * 1000 * 60), 
+    endDate: new Date(new Date().getTime() + 24 * 30 * 1000 * 60), 
+    description: "save on spending a second time!", 
+    termsAndConditions: "terms and conditions", 
+    percentageDiscount: 0.1, 
+    flatDiscount: null, 
+    usageLimit: 20, 
+    staffId: 1
+  }
+
+  await sequelize.transaction(async (transaction) => {
+    await PromotionService.createMerchantPromotion(promoData1, transaction);
+    await PromotionService.createMerchantPromotion(promoData2, transaction);
+    await PromotionService.createMallPromotion(promoData3, transaction);
+  });
 
   await BookingPackageModel.create({ name: 'BIG Booking Package', description: 'Booking package for BIG lockers', quota: 1, price: 39, duration: 30, lockerTypeId: 1});
   await BookingPackageModel.create({ name: 'MEDIUM Booking Package', description: 'Booking package for MEDIUM lockers', quota: 1, price: 29, duration: 30, lockerTypeId: 2});

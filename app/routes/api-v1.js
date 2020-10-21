@@ -18,6 +18,7 @@ const MerchantController = require('../controllers/merchantController');
 const NotificationController = require('../controllers/notificationController');
 const PaymentController = require('../controllers/paymentController');
 const ProductController = require('../controllers/productController');
+const PromotionController = require('../controllers/promotionController');
 const StaffController = require('../controllers/staffController');
 
 //Advertisement
@@ -183,6 +184,17 @@ router.put('/product/toggleDisable/:id', Authenticator.merchantAndStaffOnly, Pro
 router.put('/product/:id', Authenticator.merchantOnly, ProductController.updateProduct);
 router.post('/product/addImage', Authenticator.merchantOnly, Upload.preUploadCheckForImg, ProductController.addImageForProduct);
 router.post('/product', Authenticator.merchantOnly, ProductController.createProduct);
+
+//Promotion
+router.get('/promotion/mall', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveAllMallPromotions);
+router.get('/promotion/merchant', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveAllMerchantPromotions);
+router.get('/promotion/merchant/:id', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveMerchantPromotionByMerchantId);
+router.get('/promotion/promoCode/:promoCode', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrievePromotionByPromoCode);
+router.get('/promotions', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveAllPromotions);
+router.put('/promotion/:id', Authenticator.merchantAndStaffOnly, PromotionController.updatePromotion);
+router.put('/deletePromotion/:id', Authenticator.merchantAndStaffOnly, PromotionController.deletePromotion);
+router.post('/promotion/merchant', Authenticator.merchantOnly, PromotionController.createMerchantPromotion);
+router.post('/promotion/mall', Authenticator.staffOnly, PromotionController.createMallPromotion);
 
 //Staff
 router.get('/staff/staffRoles', Authenticator.staffOnly, StaffController.retrieveStaffRoles);
