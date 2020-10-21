@@ -5,9 +5,9 @@ module.exports = {
     Staff: 'Staff'
   },
   BookingStatus: {
-    Unfufilled: 'Unfufilled',
+    Unfulfilled: 'Unfulfilled',
     Active: 'Active',
-    Fufilled: 'Fufilled',
+    Fulfilled: 'Fulfilled',
     Cancelled: 'Cancelled'
   },
   BookingSource: {

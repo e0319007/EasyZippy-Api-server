@@ -69,7 +69,7 @@ module.exports = {
     let booking = await Booking.findByPk(bookingId);
     Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound); 
 
-    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfufilled) {
+    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfulfilled) {
       let title = 'Booking Starting';
       let description = 'Your booking with ID: ' + bookingId + ' is starting in 10 minutes';
       
@@ -87,7 +87,7 @@ module.exports = {
 
     let booking = await Booking.findByPk(bookingId);
     Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound); 
-    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfufilled) {
+    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfulfilled) {
       let title = 'Booking Started';
       let description = 'Your booking with ID: ' + bookingId + ' has started';
       
@@ -149,7 +149,7 @@ module.exports = {
     let booking = await Booking.findByPk(bookingId);
     Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound); 
 
-    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfufilled) {
+    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfulfilled) {
       let title = 'Booking Starting';
       let description = 'Your booking with ID: ' + bookingId + ' is starting in 10 minutes';
       
@@ -168,7 +168,7 @@ module.exports = {
     let booking = await Booking.findByPk(bookingId);
     Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound); 
 
-    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfufilled) {
+    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfulfilled) {
       let title = 'Booking Starting';
       let description = 'Your booking with ID: ' + bookingId + ' has started';
       
