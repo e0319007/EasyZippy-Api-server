@@ -1,12 +1,13 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, DATE, Model
+  INTEGER, DATE, BOOLEAN, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 
 const Customer = require('./Customer');
 const Merchant = require('./Merchant');
 const BookingPackageModel = require('./BookingPackageModel');
+const CreditPaymentRecord = require('./CreditPaymentRecord');
 
 class BookingPackage extends Model {
 }
@@ -27,17 +28,19 @@ BookingPackage.init(
       },
       defaultValue: 0
     },
-    promoIdUsed: {
-      type: INTEGER,
-      allowNull: true
-    },
     startDate: {
       type: DATE,
-      allowNull: false
+      allowNull: false,
+      defaultValue: Sequelize.NOW
     },
     endDate: {
       type: DATE,
       allowNull: false
+    },
+    expired: {
+      type: BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     }
   },
   {
@@ -47,12 +50,16 @@ BookingPackage.init(
   }
 );
 
+BookingPackage.belongsTo(CreditPaymentRecord, { foreignKey: { allowNull: false } });
+CreditPaymentRecord.hasOne(BookingPackage);
+
 BookingPackage.belongsTo(Customer);
 Customer.hasMany(BookingPackage);
 
 BookingPackage.belongsTo(Merchant);
 Merchant.hasMany(BookingPackage);
 
-BookingPackage.hasOne(BookingPackageModel, { foreignKey: { allowNull: false } })
+BookingPackage.belongsTo(BookingPackageModel, { foreignKey: { allowNull: false } });
+BookingPackageModel.hasMany(BookingPackage);
 
 module.exports = BookingPackage;

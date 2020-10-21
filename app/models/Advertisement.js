@@ -66,6 +66,16 @@ Advertisement.init(
       type: BOOLEAN,
       allowNull: false,
       defaultValue: false
+    },
+    disabled: {
+      type: BOOLEAN,
+      defaultValue: false,
+      allowNull: false
+    },
+    deleted: {
+      type: BOOLEAN,
+      defaultValue: false,
+      allowNull: false
     }
   },
   {

@@ -2,6 +2,10 @@ const { sendErrorResponse } = require('../common/error/errorHandler');
 const sequelize = require('../common/database');
 
 const AnnouncementService = require('../services/announcementService');
+const {
+  subscribeDeviceToAnnouncementsTopic,
+  sendMessageToAnnouncementsTopic,
+} = require("../firebase/messaging");
 
 module.exports = {
   createAnnouncement: async(req, res) => {
@@ -11,6 +15,7 @@ module.exports = {
       await sequelize.transaction(async (transaction) => {
         announcement = await AnnouncementService.createAnnouncement(announcementData, transaction)
       });
+      sendMessageToAnnouncementsTopic(announcementData.title, announcementData.description);
       return res.status(200).send(announcement);
     } catch (err) {
       console.log(err)
@@ -85,11 +90,23 @@ module.exports = {
   deleteAnnouncement: async(req, res) => {
     try {
       const { id } = req.params;
-      await AnnouncementService.deleteAnnouncement(id);
+      await sequelize.transaction(async (transaction) => {
+        await AnnouncementService.deleteAnnouncement(id, transaction);
+      });
       return res.status(200).send();
     } catch (err) {
       console.log(err)
       sendErrorResponse(res, err);
     }
-  }
+  },
+
+  subscribeDeviceToAnnouncements: async (req, res) => {
+    try {
+      const { registrationToken } = req.body;
+      subscribeDeviceToAnnouncementsTopic(registrationToken);
+        return res.status(200).send();
+    } catch (err) {
+        sendErrorResponse(res, err);
+    }
+  },
 }

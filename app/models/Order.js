@@ -5,6 +5,7 @@ const {
 const sequelize = require('../common/database');
 
 const Customer = require('./Customer');
+const CreditPaymentRecord = require('./CreditPaymentRecord');
 const LineItem = require('./LineItem');
 const Merchant = require('./Merchant');
 
@@ -38,6 +39,10 @@ Order.init(
     orderStatusEnum: {
       type: STRING,
       allowNull: false
+    },
+    collectionMethodEnum: {
+      type: STRING,
+      allowNull: false
     }
   },
   {
@@ -46,6 +51,9 @@ Order.init(
     underscored: true
   }
 );
+
+Order.belongsTo(CreditPaymentRecord, { foreignKey: { allowNull: false } });
+CreditPaymentRecord.hasOne(Order);
 
 Order.belongsTo(Customer, { foreignKey: { allowNull: false } });
 Customer.hasMany(Order);

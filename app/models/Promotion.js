@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, STRING, DATE, FLOAT, Model
+  INTEGER, STRING, BOOLEAN, DATE, FLOAT, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 
@@ -60,12 +60,26 @@ Promotion.init(
         min: 0
       }
     },
-    imageUrl: {
-      type: STRING,
-      allowNull: true
-    },
     promotionTypeEnum: {
       type: STRING,
+      allowNull: false
+    },
+    minimumSpend: {
+      type: FLOAT,
+      allowNull: true,
+      validate: {
+        min: 0
+      },
+      defaultValue: 0
+    },
+    expired: {
+      type: BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
+    deleted: {
+      type: BOOLEAN,
+      defaultValue: false,
       allowNull: false
     }
   },

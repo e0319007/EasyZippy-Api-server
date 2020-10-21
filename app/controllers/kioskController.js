@@ -67,7 +67,9 @@ module.exports = {
         //to disallow deletion if there are associated lockers
         try {
             let { id } = req.params;
-            await KioskService.deleteKiosk(id);
+            await sequelize.transaction(async (transaction) => {
+                await KioskService.deleteKiosk(id, transaction);
+            });
             console.log(id)
             return res.status(200).send();
         } catch(err) {

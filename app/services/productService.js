@@ -11,6 +11,10 @@ const fs = require('fs-extra');
 module.exports = {
   createProduct: async(productData, transaction) => {
     let {name, unitPrice, description, quantityAvailable, images, categoryId, merchantId} = productData;
+
+    Checker.ifNotNumberThrowError(unitPrice, 'Unit price ' + Constants.Error.XXXMustBeNumber);
+    Checker.ifNotNumberThrowError(quantityAvailable, 'Quantity available ' + Constants.Error.XXXMustBeNumber);
+
     Checker.ifEmptyThrowError(name, Constants.Error.NameRequired);
     Checker.ifEmptyThrowError(images, Constants.Error.ImageRequired);
     Checker.ifEmptyThrowError(quantityAvailable, Constants.Error.QuantityAvailableRequired);
@@ -20,10 +24,10 @@ module.exports = {
     Checker.ifEmptyThrowError(await Merchant.findByPk(merchantId), Constants.Error.MerchantNotFound)
     Checker.ifEmptyThrowError(await Category.findByPk(categoryId), Constants.Error.CategoryNotFound)
     if(unitPrice <= 0) {
-      throw new CustomError("Unit price " + Constants.Error.CannotBeNegative);
+      throw new CustomError("Unit price " + Constants.Error.XXXCannotBeNegative);
     }
     if(quantityAvailable <= 0) {
-      throw new CustomError("Quantity available " + Constants.Error.CannotBeNegative);
+      throw new CustomError("Quantity available " + Constants.Error.XXXCannotBeNegative);
     }
     const product = await Product.create(productData, { transaction });
     
@@ -35,7 +39,8 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let product = await Product.findByPk(id);
 
-    Checker.ifEmptyThrowError(product, Constants.Error.ProductNotFound)
+    Checker.ifEmptyThrowError(product, Constants.Error.ProductNotFound);
+    Checker.ifDeletedThrowError(product, Constants.Error.ProductDeleted);
 
     const updateKeys = Object.keys(productData);
     if(updateKeys.includes('name')) {
@@ -46,14 +51,16 @@ module.exports = {
     }
     if(updateKeys.includes('quantityAvailable')) {
       Checker.ifEmptyThrowError(quantityAvailable, Constants.Error.QuantityAvailableRequired);
+      Checker.ifNotNumberThrowError(quantityAvailable, 'Quantity available ' + Constants.Error.XXXMustBeNumber);
       if(quantityAvailable <= 0) {
-        throw new CustomError("Quantity available " + Constants.Error.CannotBeNegative);
+        throw new CustomError("Quantity available " + Constants.Error.XXXCannotBeNegative);
       }
     }
     if(updateKeys.includes('unitPrice')) {
       Checker.ifEmptyThrowError(unitPrice, Constants.Error.UnitPriceRequired);
+      Checker.ifNotNumberThrowError(unitPrice, 'Unit price ' + Constants.Error.XXXMustBeNumber);
       if(unitPrice <= 0) {
-        throw new CustomError("Unit price " + Constants.Error.CannotBeNegative);
+        throw new CustomError("Unit price " + Constants.Error.XXXCannotBeNegative);
       }
     }
     if(updateKeys.includes('categoryId')) {
@@ -64,7 +71,7 @@ module.exports = {
     }
 
     while(!Checker.isEmpty(product.images)) {
-      fs.remove(product.image.pop());
+      fs.remove(product.images.pop());
     } 
 
     Checker.ifEmptyThrowError(await Merchant.findByPk(merchantId), Constants.Error.MerchantNotFound)
@@ -76,27 +83,24 @@ module.exports = {
   },
   
   //merchants and customers cannot see product, only staff can see the product
-  //only archived products can be disabled
-  setDisableProduct: async(id, transaction) => {
+  deleteProduct: async(id, transaction) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let curProduct = await Product.findByPk(id);
     Checker.ifEmptyThrowError(curProduct, Constants.Error.ProductNotFound);
-    if(!curProduct.archived) {
-      throw new CustomError(Constants.Error.ProductDisableError);
-    }
     await Product.update({
-      disabled: true,
+      deleted: true,
     }, { where: { id }, transaction, returning: true });
-    return await Product.findByPk(id);
   },
 
   //customers cannot see product, merchants and staff can see the product
-  toggleArchiveProduct: async(id, transaction) => {
+  toggleDisableProduct: async(id, transaction) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let curProduct = await Product.findByPk(id);
     Checker.ifEmptyThrowError(curProduct, Constants.Error.ProductNotFound);
+    Checker.ifDeletedThrowError(curProduct, Constants.Error.ProductDeleted);
+
     await Product.update({
-      archived: !curProduct.archived,
+      disabled: !curProduct.disabled,
     }, { where: { id }, transaction, returning: true });
     return await Product.findByPk(id);
   },
@@ -105,27 +109,31 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let product = await Product.findByPk(id);
     Checker.ifEmptyThrowError(product, Constants.Error.ProductNotFound);
+    Checker.ifDeletedThrowError(product, Constants.Error.ProductDeleted);
+
     return product
   },
 
   retrieveAllProduct: async() => {
-    return await Product.findAll();
+    return await Product.findAll({ where: { deleted: false } });
   },
 
   retrieveProductByCategoryId: async(categoryId) => {
-    Checker.ifEmptyThrowError(categoryId, 'Category ' + Constants.Error.IdRequired);
+    Checker.ifEmptyThrowError(categoryId, Constants.Error.IdRequired);
     return await Product.findAll({
       where: {
-        categoryId
+        categoryId,
+        deleted: false
       }
     });
   },
 
   retrieveProductByMerchantId: async(merchantId) => {
-    Checker.ifEmptyThrowError(merchantId, 'Merchant ' + Constants.Error.IdRequired);
+    Checker.ifEmptyThrowError(merchantId, Constants.Error.IdRequired);
     return await Product.findAll({
       where: {
-        merchantId
+        merchantId,
+        deleted: false
       }
     });
   }

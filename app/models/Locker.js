@@ -1,12 +1,13 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, STRING, Model
+  INTEGER, BOOLEAN, STRING, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 
 const Kiosk = require('./Kiosk');
 const LockerActionRecord = require('./LockerActionRecord');
 const LockerType = require('./LockerType');
+const Constants = require('../common/constants');
 
 class Locker extends Model {
 }
@@ -21,7 +22,18 @@ Locker.init(
     },
     lockerStatusEnum: {
       type: STRING,
-      allowNull: false
+      allowNull: false,
+      defaultValue: Constants.LockerStatus.Empty
+    },
+    disabled: {
+      type: BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
+    deleted: {
+      type: BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     }
   },
   {

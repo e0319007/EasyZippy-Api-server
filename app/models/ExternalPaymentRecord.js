@@ -30,10 +30,6 @@ ExternalPaymentRecord.init(
         min: 0.0
       }
     },
-    code: {
-      type: DECIMAL,
-      allowNull: true
-    },
     payload: {
       type: JSON,
       allowNull: true

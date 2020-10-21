@@ -63,6 +63,24 @@ module.exports = {
     }
   },
 
+  staffAdminOnly: async (token) => {
+    try {
+      Checker.ifEmptyThrowError(token, Constants.Error.TokenRequired)
+
+      const decodedToken = jwt.verify(token, config.get('jwt.private_key'));
+      const staff = await Staff.findByPk(decodedToken.id);
+
+      Checker.ifEmptyThrowError(staff, Constants.Error.StaffNotFound);
+      if (decodedToken.accountType !== Constants.AccountType.Staff || decodedToken.staffRole !== Constants.StaffRole.Admin) {
+        throw new CustomError(Constants.Error.UserUnauthorised);
+      }
+
+      return true;
+    } catch (err) {
+      return false;
+    }
+  },
+
   customerAndMerchantOnly: async (token) => {
     try {
       Checker.ifEmptyThrowError(token, Constants.Error.TokenRequired)

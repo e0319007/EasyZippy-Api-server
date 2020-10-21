@@ -55,7 +55,7 @@ Product.init(
       defaultValue: false,
       allowNull: false
     },
-    archived: {
+    deleted: {
       type: BOOLEAN,
       defaultValue: false,
       allowNull: false

@@ -156,10 +156,25 @@ module.exports = {
     }
   },
 
+  toggleDisableAdvertisement: async(req, res) => {
+    try {
+      const { id } = req.params;
+      let advertisement;
+      await sequelize.transaction(async (transaction) => {
+        advertisement = await AdvertisementService.toggleDisableAdvertisement(id, transaction)
+      });
+      return res.status(200).send(advertisement);
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
   deleteAdvertisement: async(req, res) => {
     try {  
       const { id } = req.params;
-      await AdvertisementService.deleteAdvertisement(id);
+      await sequelize.transaction(async (transaction) => {
+        await AdvertisementService.deleteAdvertisement(id, transaction)
+      });
       return res.status(200).send();
     } catch (err) {
       sendErrorResponse(res, err);

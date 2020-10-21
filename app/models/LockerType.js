@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER,STRING, DOUBLE, DECIMAL, Model
+  INTEGER,STRING, DOUBLE, BOOLEAN, DECIMAL, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 
@@ -19,33 +19,43 @@ LockerType.init(
       type: STRING,
       allowNull: false
     },
-    height: {
+    lockerHeight: {
       type: DOUBLE,
       allowNull: false,
       validate: {
         min: 0.0
-    }
+      }
     },
-    width: {
+    lockerWidth: {
       type: DOUBLE,
       allowNull: false,
       validate: {
         min: 0.0
-    }
+      }
     },
-    length: {
+    lockerLength: {
       type: DOUBLE,
       allowNull: false,
       validate: {
         min: 0.0
-    }
+      }
     },
-    price: {
+    pricePerHalfHour: {
       type: DECIMAL,
       allowNull: false,
       validate: {
           min: 0.0
       }
+    },
+    disabled: {
+      type: BOOLEAN,
+      defaultValue: false,
+      allowNull: false
+    },
+    deleted: {
+      type: BOOLEAN,
+      defaultValue: false,
+      allowNull: false
     }
   },
   {

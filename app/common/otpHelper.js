@@ -16,8 +16,8 @@ module.exports = {
 
     client.sendMessage({
       dstno: mobile,
-      msg: 'Your verification code is ' + otp +  '. Thank you for registering for the Easy Zippy service.',
-      sendid: 'EasyZippy',
+      msg: 'Your verification code is ' + otp +  '. Thank you for registering for the Ez2Keep service.',
+      sendid: 'Ez2Keep',
       agreedterm: 'YES',
       type: 1
       }, (err, data) => {

@@ -39,6 +39,15 @@ module.exports = {
       sendErrorResponse(res, err);
     }
   },
+
+  retrieveStaffNotification: async(req, res) => {
+    try {
+      let notifications = await NotificationService.retrieveStaffNotification();
+      return res.status(200).send(notifications);
+    } catch(err) {
+      sendErrorResponse(res, err);
+    }
+  },
   
   readNotification: async(req, res) => {
     try {
