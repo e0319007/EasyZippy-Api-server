@@ -344,7 +344,7 @@ module.exports = {
 
   retrieveAllBookingsByCustomer: async() => {
     const bookings = await Booking.findAll();
-    let customerBookings;
+    let customerBookings = new Array();
     for(let b of bookings) {
       if(b.merchantId === null) {
         customerBookings.push(b);
@@ -355,7 +355,7 @@ module.exports = {
 
   retrieveAllBookingsByMerchant: async() => {
     const bookings = await Booking.findAll();
-    let merchantBookings;
+    let merchantBookings = new Array();
     for(let b of bookings) {
       if(b.merchantId !== null) {
         merchantBookings.push(b);
