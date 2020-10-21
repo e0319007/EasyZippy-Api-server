@@ -65,12 +65,17 @@ router.post('/bookingPackageCustomer', Authenticator.customerOnly, BookingPackag
 router.post('/bookingPackageMerchant', Authenticator.merchantOnly, BookingPackageController.buyBookingPackageForMerchant);
 
 //Booking
+router.get('/customerBooking/upcoming/:id', Authenticator.customerAndStaffOnly, BookingController.retrieveUpcomingBookingsByCustomerId);
+router.get('/customerBooking/ongoing/:id', Authenticator.customerAndStaffOnly, BookingController.retrieveOngoingBookingsByCustomerId);
 router.get('/customerBooking/:id', Authenticator.customerAndStaffOnly, BookingController.retrieveBookingByCustomerId);
+router.get('/merchantBooking/upcoming/:id', Authenticator.merchantAndStaffOnly, BookingController.retrieveUpcomingBookingsByMerchantId);
+router.get('/merchantBooking/ongoing/:id', Authenticator.merchantAndStaffOnly, BookingController.retrieveOngoingBookingsByMerchantId);
 router.get('/merchantBooking/:id', Authenticator.merchantAndStaffOnly, BookingController.retrieveBookingByMerchantId);
-router.get('/bookingByOrder/:id', Authenticator.customerAndMerchantAndStaffOnly, BookingController.retrieveBookingByOrderId);
+router.get('/bookingByOrder/:orderId', Authenticator.customerAndMerchantAndStaffOnly, BookingController.retrieveBookingByOrderId);
 router.get('/booking/:id', Authenticator.customerAndMerchantAndStaffOnly, BookingController.retrieveBookingById);
 router.get('/customerBookings', Authenticator.staffOnly, BookingController.retrieveAllBookingsByCustomer);
 router.get('/merchantBookings', Authenticator.staffOnly, BookingController.retrieveAllBookingsByMerchant);
+router.get('/collectorBooking/:collectorId', Authenticator.customerAndMerchantAndStaffOnly, BookingController.retrieveBookingByCollectorId);
 router.put('/booking/:id', Authenticator.customerAndMerchantAndStaffOnly, BookingController.cancelBooking);
 router.put('/tagOrderToBooking', Authenticator.merchantAndStaffOnly, BookingController.tagBookingToOrder);
 router.put('/addCollectorToBooking', Authenticator.customerAndMerchantAndStaffOnly, BookingController.addCollectorToBooking);

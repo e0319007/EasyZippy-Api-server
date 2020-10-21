@@ -386,6 +386,23 @@ module.exports = {
     return await Booking.findAll({ where: { orderId } });
   },
 
+  retrieveUpcomingBookingsByCustomerId: async(customerId) => {
+    return await Booking.findAll({ where: { customerId, bookingStatusEnum: Constants.BookingStatus.Unfufilled }});
+  },
+
+  retrieveOngoingBookingsByCustomerId: async(customerId) => {
+    return await Booking.findAll({ where: { customerId, bookingStatusEnum: Constants.BookingStatus.Active }});
+    
+  },
+
+  retrieveUpcomingBookingsByMerchantId: async(merchantId) => {
+    return await Booking.findAll({ where: { merchantId, bookingStatusEnum: Constants.BookingStatus.Unfufilled }});
+  },
+
+  retrieveOngoingBookingsByMerchantId: async(merchantId) => {
+    return await Booking.findAll({ where: { merchantId, bookingStatusEnum: Constants.BookingStatus.Active }});
+  },
+
   cancelBooking: async(id, transaction) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired)
     let booking = await Booking.findByPk(id);
