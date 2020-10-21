@@ -141,10 +141,11 @@ module.exports = {
 
   retrieveBookingByCustomerId: async(req, res) => {
     try {
-      let { customerId } = req.params;
-      let bookings = await BookingService.retrieveBookingByCustomerId(customerId);  
+      let { id } = req.params;
+      let bookings = await BookingService.retrieveBookingByCustomerId(id);  
       return res.status(200).send(bookings);
     } catch (err) {
+      console.log(err)
       sendErrorResponse(res, err);
     }
   },
@@ -161,8 +162,8 @@ module.exports = {
 
   retrieveBookingByMerchantId: async(req, res) => {
     try {
-      let { merchantId } = req.params;
-      let bookings = await BookingService.retrieveBookingByMerchantId(merchantId);  
+      let { id } = req.params;
+      let bookings = await BookingService.retrieveBookingByMerchantId(id);  
       return res.status(200).send(bookings);
     } catch (err) {
       sendErrorResponse(res, err);
@@ -184,6 +185,28 @@ module.exports = {
       let bookings = await BookingService.retrieveAllBookingsByCustomer();  
       return res.status(200).send(bookings);
     } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
+  retrieveOngoingBookingsByCustomerId: async(req, res) => {
+    try {
+      let { id } = req.params;
+      let bookings = await BookingService.retrieveOngoingBookingsByCustomerId(id);  
+      return res.status(200).send(bookings);
+    } catch (err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  },
+
+  retrieveOngoingBookingsByMerchantId: async(req, res) => {
+    try {
+      let { id } = req.params;
+      let bookings = await BookingService.retrieveOngoingBookingsByMerchantId(id);  
+      return res.status(200).send(bookings);
+    } catch (err) {
+      console.log(err)
       sendErrorResponse(res, err);
     }
   },

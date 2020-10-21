@@ -386,6 +386,24 @@ module.exports = {
     return await Booking.findAll({ where: { orderId } });
   },
 
+  retrieveOngoingBookingsByCustomerId: async(customerId) => {
+    let bookings = await Booking.findAll({ where: { customerId }})
+    let ongoingBookings = new Array();
+    for(let b of bookings) {
+      if (b.bookingStatusEnum === Constants.BookingStatus.Unfufilled || b.bookingStatusEnum === Constants.BookingStatus.Active) ongoingBookings.push(b);
+    }
+    return ongoingBookings;
+  },
+
+  retrieveOngoingBookingsByMerchantId: async(merchantId) => {
+    let bookings = await Booking.findAll({ where: { merchantId }})
+    let ongoingBookings = new Array();
+    for(let b of bookings) {
+      if (b.bookingStatusEnum === Constants.BookingStatus.Unfufilled || b.bookingStatusEnum === Constants.BookingStatus.Active) ongoingBookings.push(b);
+    }
+    return ongoingBookings;
+  },
+
   cancelBooking: async(id, transaction) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired)
     let booking = await Booking.findByPk(id);

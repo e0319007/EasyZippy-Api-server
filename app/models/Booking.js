@@ -73,10 +73,10 @@ Booking.belongsTo(Order);
 Order.hasOne(Booking);
 
 Booking.belongsTo(Customer, { as: 'collector' });
-//Customer.hasMany(Booking, { as: 'secondaryBooking', foreignKey: 'secondaryBookingId' });
+Customer.hasMany(Booking, { as: 'secondaryBooking'/*, foreignKey: 'secondaryBookingId'*/ });
 
 Booking.belongsTo(Customer);
-//Customer.hasMany(Booking, { as: 'primaryBooking', foreignKey: 'primaryBookingId' });
+Customer.hasMany(Booking, { as: 'primaryBooking'/*, foreignKey: 'primaryBookingId' */});
 
 Booking.belongsTo(Merchant);
 Merchant.hasMany(Booking);

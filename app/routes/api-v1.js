@@ -66,7 +66,9 @@ router.post('/bookingPackageCustomer', Authenticator.customerOnly, BookingPackag
 router.post('/bookingPackageMerchant', Authenticator.merchantOnly, BookingPackageController.buyBookingPackageForMerchant);
 
 //Booking
+router.get('/customerBooking/ongoing/:id', Authenticator.customerAndStaffOnly, BookingController.retrieveOngoingBookingsByCustomerId);
 router.get('/customerBooking/:id', Authenticator.customerAndStaffOnly, BookingController.retrieveBookingByCustomerId);
+router.get('/merchantBooking/ongoing/:id', Authenticator.merchantAndStaffOnly, BookingController.retrieveOngoingBookingsByMerchantId);
 router.get('/merchantBooking/:id', Authenticator.merchantAndStaffOnly, BookingController.retrieveBookingByMerchantId);
 router.get('/bookingByOrder/:id', Authenticator.customerAndMerchantAndStaffOnly, BookingController.retrieveBookingByOrderId);
 router.get('/booking/:id', Authenticator.customerAndMerchantAndStaffOnly, BookingController.retrieveBookingById);
