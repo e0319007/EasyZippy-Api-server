@@ -9,13 +9,13 @@ module.exports = {
     try {
       return res.status(200).send(req.files[0].filename);
     } catch (err) {
-      console.log(err)
+      console.log(err);
       sendErrorResponse(res, err);
     }
   },
 
   createProductVariation: async(req, res) => {
-    const { image } = req.body.image;
+    const image = req.body.image;
     try {
       const productVariationData = req.body;
       await sequelize.transaction(async (transaction) => {
@@ -24,7 +24,7 @@ module.exports = {
       return res.status(200).send(productVariation);
     } catch (err) {
       fs.remove(image);
-      console.log(err)
+      console.log(err);
       sendErrorResponse(res, err);
     }
   },
@@ -32,8 +32,9 @@ module.exports = {
   updateProductVariation: async(req, res) => {
     const productVariationData = req.body;
     const updateKeys = Object.keys(productData);
+    let image;
     if(updateKeys.includes('image')) {
-      const { image } = req.body.image;
+      image = req.body.image;
     }
     
     try {
@@ -44,7 +45,7 @@ module.exports = {
       return res.status(200).send(productVariation);
     } catch (err) {
       fs.remove(image);
-      console.log(err)
+      console.log(err);
       sendErrorResponse(res, err);
     }
   },
@@ -57,7 +58,7 @@ module.exports = {
       }); 
       return res.status(200).send(productVariation);
     } catch (err) {
-      console.log(err)
+      console.log(err);
       sendErrorResponse(res, err);
     }
   },
@@ -68,7 +69,7 @@ module.exports = {
       productVariations = await ProductVariationService.retrieveProductVariationsByProductId(id);
       return res.status(200).send(productVariations);
     } catch (err) {
-      console.log(err)
+      console.log(err);
       sendErrorResponse(res, err);
     }
   },
@@ -79,11 +80,10 @@ module.exports = {
       productVariations = await ProductVariationService.retrieveProductVariationsByProductIdIncludingDisabled(id);
       return res.status(200).send(productVariations);
     } catch (err) {
-      console.log(err)
+      console.log(err);
       sendErrorResponse(res, err);
     }
   },
-
 
   deleteProductVariation: async(req, res) => {
     try {
@@ -93,7 +93,7 @@ module.exports = {
       });
       return res.status(200).send();
     } catch (err) {
-      console.log(err)
+      console.log(err);
       sendErrorResponse(res, err);
     }
   },
