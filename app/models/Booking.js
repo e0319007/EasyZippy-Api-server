@@ -53,11 +53,6 @@ Booking.init(
     bookingSourceEnum: {
       type: STRING,
       allowNull: false
-    },
-    cancelled: {
-      type: BOOLEAN,
-      allowNull: false,
-      defaultValue: false
     }
   },
   {

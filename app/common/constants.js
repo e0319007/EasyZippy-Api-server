@@ -8,7 +8,8 @@ module.exports = {
     Unfulfilled: 'Unfulfilled',
     Active: 'Active',
     Fulfilled: 'Fulfilled',
-    Cancelled: 'Cancelled'
+    Cancelled: 'Cancelled',
+    Expired: 'Expired'
   },
   BookingSource: {
     Mobile: 'Mobile',

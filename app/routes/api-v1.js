@@ -87,6 +87,7 @@ router.post('/booking/customer', Authenticator.customerAndMerchantAndStaffOnly, 
 router.post('/booking/merchant', Authenticator.customerAndMerchantAndStaffOnly, BookingController.createBookingByMerchant);
 router.post('/booking/bookingPackage/customer', Authenticator.customerAndMerchantAndStaffOnly, BookingController.createBookingWithBookingPackageByCustomer);
 router.post('/booking/bookingPackage/merchant', Authenticator.customerAndMerchantAndStaffOnly, BookingController.createBookingWithBookingPackageByMerchant);
+router.post('/checkBookingAllowed', Authenticator.customerAndMerchantAndStaffOnly, BookingController.checkBookingAllowed);
 
 
 //Category

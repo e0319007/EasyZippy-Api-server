@@ -10,6 +10,16 @@ rule.second = 00;
 rule.dayOfWeek = new schedule.Range(0,6);
 
 module.exports = {
+  scheduleNotification: async(date, sender, receiver, func) => {
+    console.log('Now: ' + new Date().toLocaleString('en-SG'));
+    console.log('Notification scheduled')
+    schedule.scheduleJob(date, async(y) => {
+      console.log('Sending notification at: ' + date.toLocaleString('en-SG'))
+      await func(sender, receiver);
+      console.log('Notification sent')
+    });
+  },
+
   scheduleEvent: async(date, func) => {
     console.log('Now: ' + new Date().toLocaleString('en-SG'));
     console.log('Event scheduled')

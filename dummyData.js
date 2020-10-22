@@ -78,11 +78,19 @@ const addDummyData = async () => {
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType1.id});
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType1.id});
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType1.id});
+  await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType1.id});
 
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType2.id});
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType2.id});
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType2.id});
+  await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType2.id});
+  await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType2.id});
+  await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType2.id});
   
+  await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType3.id});
+  await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType3.id});
+  await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType3.id});
+  await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType3.id});
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType3.id});
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType3.id});
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType3.id});
@@ -183,7 +191,6 @@ const addDummyData = async () => {
     bookingSourceEnum: Constants.BookingSource.Kiosk, 
     customerId: 1, 
     bookingPackageId: 1,
-    kioskId: 1
   }
 
   let bookingData4 = {
@@ -193,16 +200,63 @@ const addDummyData = async () => {
     bookingSourceEnum: Constants.BookingSource.Mobile, 
     merchantId: 1, 
     bookingPackageId: 2,
-    kioskId: 1
   }
 
   let bookingData5 = {
     promoIdUsed: null, 
-    startDate: new Date(2020,09,16,20,40), 
-    endDate: new Date(2020,09,16,23,20), 
+    startDate: new Date(2020,09,26,20,40), 
+    endDate: new Date(2020,09,26,23,20), 
     bookingSourceEnum: Constants.BookingSource.Mobile, 
     merchantId: 1, 
     bookingPackageId: 2,
+  }
+
+  //ADDITIONAL
+
+  let bookingData6 = {
+    promoIdUsed: null, 
+    startDate: new Date(2020,09,24,20,40), 
+    endDate: new Date(2020,09,24,23,20), 
+    bookingSourceEnum: Constants.BookingSource.Kiosk, 
+    customerId: 1, 
+    bookingPackageId: 1,
+  }
+
+  let bookingData7 = {
+    promoIdUsed: null, 
+    startDate: new Date(2020,09,24,21,40), 
+    endDate: new Date(2020,09,24,23,20), 
+    bookingSourceEnum: Constants.BookingSource.Kiosk, 
+    customerId: 1, 
+    bookingPackageId: 1,
+  }
+
+  let bookingData8 = {
+    promoIdUsed: null, 
+    startDate: new Date(2020,09,24,21,40), 
+    endDate: new Date(2020,09,24,23,20), 
+    bookingSourceEnum: Constants.BookingSource.Kiosk, 
+    customerId: 1, 
+    bookingPackageId: 1,
+  }
+
+  let bookingData9 = {
+    promoIdUsed: null, 
+    startDate: new Date(2020,09,24,11,40), 
+    endDate: new Date(2020,09,24,14,00), 
+    bookingSourceEnum: Constants.BookingSource.Mobile, 
+    customerId: 1, 
+    lockerTypeId: 1,
+    kioskId: 1
+  }
+
+  let bookingData10 = {
+    promoIdUsed: null, 
+    startDate: new Date(2020,09,23,15,06), 
+    endDate: new Date(2020,09,23,15,07), 
+    bookingSourceEnum: Constants.BookingSource.Mobile, 
+    customerId: 1, 
+    lockerTypeId: 1,
     kioskId: 1
   }
 
@@ -216,6 +270,19 @@ const addDummyData = async () => {
     await BookingService.createBookingWithBookingPackageByMerchant(bookingData4, transaction);
     console.log('Pass 4')
     await BookingService.createBookingWithBookingPackageByMerchant(bookingData5, transaction);
+
+    console.log('*Pass 1')
+    await BookingService.createBookingWithBookingPackageByCustomer(bookingData6, transaction);
+    console.log('*Pass 2')
+    await BookingService.createBookingWithBookingPackageByCustomer(bookingData7, transaction);
+    console.log('*Pass 3')
+    await BookingService.createBookingWithBookingPackageByCustomer(bookingData8, transaction);
+
+    console.log('*Pass 4')
+    await BookingService.createBookingByCustomer(bookingData9, transaction);
+    console.log('*Pass 5')
+    await BookingService.createBookingByCustomer(bookingData10, transaction);
+
   });
 
   // await sequelize.transaction(async (transaction) => {
