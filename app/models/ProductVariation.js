@@ -1,7 +1,6 @@
-const { TEXT } = require('sequelize');
 const Sequelize = require('sequelize');
 const {
-  INTEGER, STRING, DECIMAL, ARRAY, BOOLEAN, DATE, Model
+  INTEGER, STRING, DECIMAL, ARRAY, BOOLEAN, DATE, TEXT, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 const Product = require('./Product');
