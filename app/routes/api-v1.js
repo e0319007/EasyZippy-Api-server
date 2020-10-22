@@ -104,6 +104,7 @@ router.get('/customers', Authenticator.customerAndMerchantAndStaffOnly, Customer
 router.put('/customer/changePassword', Authenticator.customerOnly, CustomerController.changePassword);
 router.put('/customer/:id/toggleDisable', Authenticator.staffOnly, CustomerController.toggleDisableCustomer);
 router.put('/customer/:id/activate',  Authenticator.customerOnly, CustomerController.activateCustomer);
+router.put('/customer/referral', Authenticator.customerOnly, CustomerController.addReferrer);
 router.put('/customer/:id', Authenticator.customerOnly, CustomerController.updateCustomer);
 router.post('/customer/login', CustomerController.loginCustomer);
 router.post('/customer/email', Authenticator.customerAndMerchantAndStaffOnly, CustomerController.retrieveCustomerByEmail);

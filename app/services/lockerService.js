@@ -128,8 +128,8 @@ module.exports = {
       
       let creditPaymentRecord
       if(!Checker.isEmpty(booking.customerId)) {
-         creditPaymentRecord = await CreditPaymentRecordService.payCreditCustomer(booking.customerId, extraPrice, transaction);
-      } else creditPaymentRecord = await CreditPaymentRecordService.payCreditMerchant(booking.merchantId, extraPrice, transaction);
+         creditPaymentRecord = await CreditPaymentRecordService.payCreditCustomer(booking.customerId, extraPrice, Constants.CreditPaymentType.BookingOvertimeCharge, transaction);
+      } else creditPaymentRecord = await CreditPaymentRecordService.payCreditMerchant(booking.merchantId, extraPrice, Constants.CreditPaymentType.BookingOvertimeCharge, transaction);
 
       booking = await booking.update({ bookingStatusEnum: Constants.BookingStatus.Unfulfilled, bookingPrice: booking.bookingPrice + extraPrice }, { transaction });
       let locker = await Locker.findByPk(booking.lockerId);

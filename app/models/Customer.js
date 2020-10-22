@@ -50,6 +50,14 @@ Customer.init(
           min: 0.0
       }
     },
+    referralCreditMarker: {
+      type: DECIMAL,
+      allowNull: false,
+      defaultValue: 0.0,
+      validate: {
+          min: 0.0
+      }
+    },
     disabled: {
       type: BOOLEAN,
       defaultValue: false,
@@ -66,7 +74,7 @@ Customer.init(
     oneTimePin: {
       type: STRING,
       allowNull: true
-    }
+    },
   },
   {
     sequelize,
@@ -75,4 +83,6 @@ Customer.init(
   }
 );
 
+Customer.belongsTo(Customer, { as: 'referrer' });
+Customer.hasMany(Customer, { as: 'referee' });
 module.exports = Customer;
