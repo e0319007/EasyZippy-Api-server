@@ -139,12 +139,14 @@ const addDummyData = async () => {
 
   let bookingPackageData1 = {
     customerId: 1, 
-    bookingPackageModelId: 1
+    bookingPackageModelId: 1,
+    kioskId: 1
   }
 
   let bookingPackageData2 = {
     merchantId: 1, 
-    bookingPackageModelId: 2
+    bookingPackageModelId: 2,
+    kioskId: 1
   }
 
   await sequelize.transaction(async (transaction) => {
@@ -152,13 +154,16 @@ const addDummyData = async () => {
     await BookingPackageService.createBookingPackageForMerchant(bookingPackageData2, transaction)
   });
 
+  console.log('Initializing booking')
+
   let bookingData1 = {
     promoIdUsed: null, 
     startDate: new Date(2020,10,3,12,10), 
     endDate: new Date(2020,10,3,13,20), 
     bookingSourceEnum: Constants.BookingSource.Mobile, 
     customerId: 2, 
-    lockerTypeId: 1
+    lockerTypeId: 1,
+    kioskId: 1
   }
 
   let bookingData2 = {
@@ -167,7 +172,8 @@ const addDummyData = async () => {
     endDate: new Date(2020,10,4,17,20), 
     bookingSourceEnum: Constants.BookingSource.Kiosk, 
     merchantId: 2, 
-    lockerTypeId: 2
+    lockerTypeId: 2,
+    kioskId: 1
   }
 
   let bookingData3 = {
@@ -177,6 +183,7 @@ const addDummyData = async () => {
     bookingSourceEnum: Constants.BookingSource.Kiosk, 
     customerId: 1, 
     bookingPackageId: 1,
+    kioskId: 1
   }
 
   let bookingData4 = {
@@ -185,7 +192,8 @@ const addDummyData = async () => {
     endDate: new Date(2020,10,4,07,20), 
     bookingSourceEnum: Constants.BookingSource.Mobile, 
     merchantId: 1, 
-    bookingPackageId: 2
+    bookingPackageId: 2,
+    kioskId: 1
   }
 
   let bookingData5 = {
@@ -194,7 +202,8 @@ const addDummyData = async () => {
     endDate: new Date(2020,09,16,23,20), 
     bookingSourceEnum: Constants.BookingSource.Mobile, 
     merchantId: 1, 
-    bookingPackageId: 2
+    bookingPackageId: 2,
+    kioskId: 1
   }
 
   await sequelize.transaction(async (transaction) => {

@@ -14,10 +14,11 @@ const LockerType = require('../models/LockerType');
 const CreditPaymentRecordService = require('./creditPaymentRecordService');
 const Order = require('../models/Order');
 const cons = require('consolidate');
+const Kiosk = require('../models/Kiosk');
 
-const checkBookingAvailable = async(startDate, endDate, lockerTypeId) => {
-  let bookings = await Booking.findAll({ where: { lockerTypeId } });
-  let lockers = await Locker.findAll({ where: { lockerTypeId } });
+const checkBookingAvailable = async(startDate, endDate, lockerTypeId, kioskId) => {
+  let bookings = await Booking.findAll({ where: { lockerTypeId, kioskId } });
+  let lockers = await Locker.findAll({ where: { lockerTypeId, kioskId } });
 
   let bookingPackageModels = await BookingPackageModel.findAll({ where: { lockerTypeId } });
   let bookingPackageCount = 0;
@@ -28,7 +29,7 @@ const checkBookingAvailable = async(startDate, endDate, lockerTypeId) => {
     let availBookingPackage = new Array();
     //check for non-expired booking packages only
     for(let bp of bookingPackages) {
-      if(bp.endDate.getTime() > new Date().getTime()) availBookingPackage.push(bp);
+      if(bp.kioskId === kioskId && bp.endDate.getTime() > new Date().getTime()) availBookingPackage.push(bp);
     }
     bookingPackageCount += availBookingPackage.length * bpm.quota;
   }
@@ -137,7 +138,7 @@ module.exports = {
   // after scan, map back to the string and send to backend to open locker,
 
   createBookingByCustomer: async(bookingData, transaction) => {
-    let { promoIdUsed, startDate, endDate, bookingSourceEnum, customerId, lockerTypeId} = bookingData;
+    let { promoIdUsed, startDate, endDate, bookingSourceEnum, customerId, lockerTypeId, kioskId} = bookingData;
     startDate = new Date(startDate);
     endDate = new Date(endDate);
     if(startDate.getTime() > endDate.getTime()) throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
@@ -145,9 +146,11 @@ module.exports = {
     Checker.ifEmptyThrowError(customerId, 'Customer ' + Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(await Customer.findByPk(customerId), Constants.Error.CustomerNotFound);
     Checker.ifEmptyThrowError(bookingSourceEnum, 'Booking Source ' + Constants.Error.XXXIsRequired);
+    Checker.ifEmptyThrowError(kioskId, 'Kiosk ' + Constants.Error.IdRequired);
+    Checker.ifEmptyThrowError(await Kiosk.findByPk(kioskId), 'Kiosk ' + Constants.Error.KioskNotFound);
 
     let bookingPrice = await calculatePrice(startDate, endDate, lockerTypeId);
-    let availSlots = await checkBookingAvailable(startDate, endDate, lockerTypeId);
+    let availSlots = await checkBookingAvailable(startDate, endDate, lockerTypeId, kioskId);
     if(Checker.isEmpty(availSlots)) {
       throw new CustomError(Constants.Error.BookingCannotBeMade)
     } else if (availSlots[0].startDate.getTime() != startDate.getTime() || availSlots[0].endDate.getTime() != endDate.getTime()) {
@@ -170,12 +173,12 @@ module.exports = {
     let creditPaymentRecord = await CreditPaymentRecordService.payCreditCustomer(customerId, bookingPrice, transaction);
     let creditPaymentRecordId = creditPaymentRecord.id;
 
-    let booking = await Booking.create({ promoIdUsed, startDate, endDate, bookingSourceEnum, customerId, qrCode, lockerTypeId, bookingPrice, creditPaymentRecordId }, { transaction })
+    let booking = await Booking.create({ promoIdUsed, startDate, endDate, bookingSourceEnum, customerId, qrCode, lockerTypeId, kioskId, bookingPrice, creditPaymentRecordId }, { transaction })
     return booking;
   },
   
   createBookingByMerchant: async(bookingData, transaction) => {
-    let { promoIdUsed, startDate, endDate, bookingSourceEnum, merchantId, lockerTypeId} = bookingData;
+    let { promoIdUsed, startDate, endDate, bookingSourceEnum, merchantId, lockerTypeId, kioskId} = bookingData;
     startDate = new Date(startDate);
     endDate = new Date(endDate);
     if(startDate > endDate) throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
@@ -183,9 +186,11 @@ module.exports = {
     Checker.ifEmptyThrowError(merchantId, 'Merchant ' + Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(await Merchant.findByPk(merchantId), Constants.Error.MerchantNotFound);
     Checker.ifEmptyThrowError(bookingSourceEnum, 'Booking Source ' + Constants.Error.XXXIsRequired);
+    Checker.ifEmptyThrowError(kioskId, 'Kiosk ' + Constants.Error.IdRequired);
+    Checker.ifEmptyThrowError(await Kiosk.findByPk(kioskId), 'Kiosk ' + Constants.Error.KioskNotFound);
 
     let bookingPrice = await calculatePrice(startDate, endDate, lockerTypeId);
-    let availSlots = await checkBookingAvailable(startDate, endDate, lockerTypeId);
+    let availSlots = await checkBookingAvailable(startDate, endDate, lockerTypeId, kioskId);
     if(Checker.isEmpty(availSlots)) {
       throw new CustomError(Constants.Error.BookingCannotBeMade)
     } else if (availSlots[0].startDate.getTime() != startDate.getTime() || availSlots[0].endDate.getTime() != endDate.getTime()) {
@@ -208,7 +213,7 @@ module.exports = {
     let creditPaymentRecord = await CreditPaymentRecordService.payCreditMerchant(merchantId, bookingPrice, transaction);
     let creditPaymentRecordId = creditPaymentRecord.id;
 
-    let booking = await Booking.create({ promoIdUsed, startDate, endDate, bookingSourceEnum, merchantId, qrCode, lockerTypeId, bookingPrice, creditPaymentRecordId, bookingPrice }, { transaction });
+    let booking = await Booking.create({ promoIdUsed, startDate, endDate, bookingSourceEnum, merchantId, qrCode, lockerTypeId, kioskId, bookingPrice, creditPaymentRecordId, bookingPrice }, { transaction });
     return booking;
   },
 
@@ -241,8 +246,11 @@ module.exports = {
     }
 
     //BOOKING PACKAGE UPDATE
-    bookingPackage = await BookingPackage.update({ lockerCount: ++bookingPackage.lockerCount }, { where: { id: bookingPackageId }, transaction });
-    booking = await Booking.create({ startDate, endDate, bookingSourceEnum, customerId, qrCode, bookingPackageId, lockerTypeId: bookingPackageModel.lockerTypeId }, { transaction });
+    await BookingPackage.update({ lockerCount: ++bookingPackage.lockerCount }, { where: { id: bookingPackageId }, transaction });
+
+    let kioskId = bookingPackage.kioskId;
+
+    booking = await Booking.create({ startDate, endDate, bookingSourceEnum, customerId, qrCode, bookingPackageId, lockerTypeId: bookingPackageModel.lockerTypeId, kioskId }, { transaction });
 
     return booking;
   },
@@ -276,8 +284,12 @@ module.exports = {
     }    
     
     //BOOKING PACKAGE UPDATE
-    bookingPackage = await BookingPackage.update({ lockerCount: ++bookingPackage.lockerCount }, { where: { id: bookingPackageId }, transaction });
-    booking = await Booking.create({ startDate, endDate, bookingSourceEnum, merchantId, qrCode, bookingPackageId, lockerTypeId: bookingPackageModel.lockerTypeId }, { transaction });
+    await BookingPackage.update({ lockerCount: ++bookingPackage.lockerCount }, { where: { id: bookingPackageId }, transaction });
+
+    let kioskId = bookingPackage.kioskId;
+
+
+    booking = await Booking.create({ startDate, endDate, bookingSourceEnum, merchantId, qrCode, bookingPackageId, lockerTypeId: bookingPackageModel.lockerTypeId, kioskId }, { transaction });
 
     return booking;
   },
