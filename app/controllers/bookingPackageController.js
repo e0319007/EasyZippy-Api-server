@@ -44,6 +44,18 @@ module.exports = {
     }
   },  
 
+  retrieveCurrentBookingPackageByCustomerId: async(req, res) => {
+    try { 
+      const { customerId } = req.params;
+      let bookingPackage = await BookingPackageService.retrieveCurrentBookingPackageByCustomerId(customerId);
+      
+      return res.status(200).send(bookingPackage);
+    } catch (err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  },  
+
   retrieveAllBookingPackageByMerchantId: async(req, res) => {
     try { 
       const { merchantId } = req.params;
@@ -55,6 +67,18 @@ module.exports = {
       sendErrorResponse(res, err);
     }
   },  
+
+  retrieveCurrentBookingPackageByMerchantId: async(req, res) => {
+    try { 
+      const { merchantId } = req.params;
+      let bookingPackage = await BookingPackageService.retrieveCurrentBookingPackageByMerchantId(merchantId);
+      
+      return res.status(200).send(bookingPackage);
+    } catch (err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  }, 
 
   retrieveBookingPackageByBookingPackageId: async(req, res) => {
     try { 

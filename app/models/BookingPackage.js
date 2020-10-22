@@ -8,6 +8,7 @@ const Customer = require('./Customer');
 const Merchant = require('./Merchant');
 const BookingPackageModel = require('./BookingPackageModel');
 const CreditPaymentRecord = require('./CreditPaymentRecord');
+const Kiosk = require('./Kiosk');
 
 class BookingPackage extends Model {
 }
@@ -61,5 +62,8 @@ Merchant.hasMany(BookingPackage);
 
 BookingPackage.belongsTo(BookingPackageModel, { foreignKey: { allowNull: false } });
 BookingPackageModel.hasMany(BookingPackage);
+
+BookingPackage.belongsTo(Kiosk);
+Kiosk.hasMany(BookingPackage);
 
 module.exports = BookingPackage;

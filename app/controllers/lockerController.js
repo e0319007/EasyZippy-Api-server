@@ -7,7 +7,7 @@ module.exports = {
   createLocker: async(req, res) => {
     try {
       let locker;
-      let lockerData = req.body;
+      const lockerData = req.body;
       await sequelize.transaction(async (transaction) => {
         locker = await LockerService.createLocker(lockerData, transaction);
       });
