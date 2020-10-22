@@ -114,8 +114,8 @@ module.exports = {
     customer2 = await Customer.findByPk(customer2Id);
     Checker.ifEmptyThrowError(customer1, Constants.Error.CustomerNotFound)
     Checker.ifEmptyThrowError(customer2, Constants.Error.CustomerNotFound)
-    await Customer.update({ creditBalance: customer1.creditBalance + bonus, referralCreditMarker: customer1.creditBalance + bonus }, { transaction });
-    await Customer.update({ creditBalance: customer2.creditBalance + bonus, referralCreditMarker: customer2.creditBalance + bonus }, { transaction });
+    await Customer.update({ creditBalance: customer1.creditBalance + bonus, referralCreditMarker: customer1.creditBalance + bonus }, { where: { id: customer1Id }, transaction });
+    await Customer.update({ creditBalance: customer2.creditBalance + bonus, referralCreditMarker: customer2.creditBalance + bonus }, { where: { id: customer2Id }, transaction });
     await CreditPaymentRecord.create({ amount: bonus, customerId: customer1Id, creditPaymentTypeEnum }, { transaction });
     await CreditPaymentRecord.create({ amount: bonus, customerId: customer2Id, creditPaymentTypeEnum }, { transaction });
 
