@@ -7,19 +7,22 @@ const BookingPackage = require('../models/BookingPackage');
 const BookingPackageModel = require('../models/BookingPackageModel');
 const CreditPaymentRecordService = require('../services/creditPaymentRecordService');
 const Locker = require('../models/Locker');
+const Kiosk = require('../models/Kiosk');
 
 module.exports = {
   createBookingPackageForCustomer: async(bookingPackageData, transaction) => {
-    let { customerId, bookingPackageModelId } = bookingPackageData;
+    let { customerId, bookingPackageModelId, kioskId } = bookingPackageData;
 
     if(Checker.isEmpty(customerId)) {
       console.log(bookingPackageData)
       throw new CustomError('Customer ' + Constants.Error.IdRequired)
     }
     Checker.ifEmptyThrowError(await Customer.findByPk(customerId), Constants.Error.CustomerNotFound);
+    Checker.ifEmptyThrowError(kioskId, 'Kiosk ' + Constants.Error.IdRequired);
+    Checker.ifEmptyThrowError(await Kiosk.findByPk(kioskId), 'Kiosk ' + Constants.Error.KioskNotFound);
 
     // ONLY CAN BUY ONE BOOKING PACKAGE
-    if(!Checker.isEmpty(await BookingPackage.findAll({ customerId, expired: false }))) {
+    if(!Checker.isEmpty(await BookingPackage.findOne({ where:{ customerId, expired: false } }))) {
       throw new CustomError(Constants.Error.BookingPackageCannotBeSold);
     }
 
@@ -51,17 +54,19 @@ module.exports = {
     let endDate = new Date(startDate)
     endDate.setDate(startDate.getDate() + bookingPackageModel.duration);
    
-    let bookingPackage = await BookingPackage.create({ customerId, creditPaymentRecordId, bookingPackageModelId, startDate, endDate }, { transaction });
+    let bookingPackage = await BookingPackage.create({ customerId, creditPaymentRecordId, bookingPackageModelId, startDate, endDate, kioskId }, { transaction });
     return bookingPackage;
   },
 
   createBookingPackageForMerchant: async(bookingPackageData, transaction) => {
-    let { merchantId, bookingPackageModelId } = bookingPackageData;
+    let { merchantId, bookingPackageModelId, kioskId } = bookingPackageData;
     Checker.ifEmptyThrowError(merchantId, 'Merchant ' + Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(await Customer.findByPk(merchantId), Constants.Error.CustomerNotFound);
+    Checker.ifEmptyThrowError(kioskId, 'Kiosk ' + Constants.Error.IdRequired);
+    Checker.ifEmptyThrowError(await Kiosk.findByPk(kioskId), 'Kiosk ' + Constants.Error.KioskNotFound);
 
     // ONLY CAN BUY ONE BOOKING PACKAGE
-    if(!Checker.isEmpty(await BookingPackage.findAll({ merchantId, expired: false }))) {
+    if(!Checker.isEmpty(await BookingPackage.findAll({ where: { merchantId, expired: false } }))) {
       throw new CustomError(Constants.Error.BookingPackageCannotBeSold);
     }
 
@@ -94,7 +99,7 @@ module.exports = {
     let endDate = new Date(startDate)
     endDate.setDate(startDate.getDate() + bookingPackageModel.duration);
 
-    let bookingPackage = await BookingPackage.create({ merchantId, creditPaymentRecordId, bookingPackageModelId, startDate, endDate }, { transaction });
+    let bookingPackage = await BookingPackage.create({ merchantId, creditPaymentRecordId, bookingPackageModelId, startDate, endDate, kioskId }, { transaction });
     return bookingPackage;
   },
 
