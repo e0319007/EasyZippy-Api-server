@@ -148,6 +148,8 @@ module.exports = {
     PdfFileRequired: 'PDF file is required',
     ProductDeleted: 'Product is deleted',
     ProductNotFound: 'Product not found',
+    ProductVariationDeleted: 'Product variation is deleted',
+    ProductVariationNotFound: 'Product variation not found',
     PromotionCannotBeDeleted: 'Promotion cannot be deleted since its already used',
     PromoCodeNotUnique: 'Promotion code not unique',
     PromotionDeleted: 'Promotion is deleted',
