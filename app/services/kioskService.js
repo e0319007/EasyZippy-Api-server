@@ -18,12 +18,8 @@ module.exports = {
     Checker.ifEmptyThrowError(kiosk, Constants.Error.KioskNotFound);
     Checker.ifDeletedThrowError(kiosk, Constants.Error.KioskDeleted);
 
-    if(kiosk.disabled) {
-      throw new CustomError(Constants.Error.KioskDisabled);
-    }
-
     const updateKeys = Object.keys(kioskData);
-    if(updateKeys.includes('address') ) {
+    if(updateKeys.includes('address')) {
         Checker.ifEmptyThrowError(kioskData.address, Constants.Error.KioskAddressRequired);
     }
 
