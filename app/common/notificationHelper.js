@@ -6,6 +6,7 @@ const Customer = require("../models/Customer");
 const NotificationService = require('../services/notificationService');
 const Checker = require('../common/checker');
 const Constants = require('../common/constants')
+
 module.exports = {
   /**
    * SEND NOTI ABOUT MERCHANT APPLICATION
@@ -69,7 +70,7 @@ module.exports = {
     let booking = await Booking.findByPk(bookingId);
     Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound); 
 
-    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfufilled) {
+    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfulfilled) {
       let title = 'Booking Starting';
       let description = 'Your booking with ID: ' + bookingId + ' is starting in 10 minutes';
       
@@ -87,7 +88,7 @@ module.exports = {
 
     let booking = await Booking.findByPk(bookingId);
     Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound); 
-    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfufilled) {
+    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfulfilled) {
       let title = 'Booking Started';
       let description = 'Your booking with ID: ' + bookingId + ' has started';
       
@@ -137,6 +138,29 @@ module.exports = {
     }
   },
 
+  notificationBookingExpired: async(bookingId, customerId) => {
+    let customer = await Customer.findByPk(customerId);
+    Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound); 
+
+    let booking = await Booking.findByPk(bookingId);
+    Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound); 
+
+    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfulfilled) {
+      let title = 'Your booking has expired';
+      let description = 'Your booking with ID: ' + bookingId + ' has expired. Credits will not be refunded';
+      
+      let senderModel = Constants.ModelEnum.Booking;
+      let receiverModel = Constants.ModelEnum.Customer;
+      let senderId = bookingId;
+      let receiverId = customerId;
+
+      await booking.update({ bookingStatusEnum: Constants.BookingStatus.Expired });
+
+      NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
+
+    }
+  },
+
 
   /**
    * SEND NOTI TO MERCHANT ABOUT BOOKING
@@ -149,7 +173,7 @@ module.exports = {
     let booking = await Booking.findByPk(bookingId);
     Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound); 
 
-    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfufilled) {
+    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfulfilled) {
       let title = 'Booking Starting';
       let description = 'Your booking with ID: ' + bookingId + ' is starting in 10 minutes';
       
@@ -168,7 +192,7 @@ module.exports = {
     let booking = await Booking.findByPk(bookingId);
     Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound); 
 
-    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfufilled) {
+    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfulfilled) {
       let title = 'Booking Starting';
       let description = 'Your booking with ID: ' + bookingId + ' has started';
       

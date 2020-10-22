@@ -5,6 +5,15 @@ const ScheduleHelper = require('../common/scheduleHelper');
 const NotificationHelper = require('../common/notificationHelper'); 
 
 module.exports = {
+  checkBookingAllowed: async(req, res) => {
+    try {
+      const bookingData = req.body;
+      return res.status(200).send(await BookingService.checkBookingAllowed(bookingData));
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
   createBookingByCustomer: async(req, res) => {
     try {
       const bookingData = req.body;
@@ -14,10 +23,13 @@ module.exports = {
       });
       let startDate = booking.startDate;
       let endDate = booking.endDate;
-      ScheduleHelper.scheduleEvent(new Date(startDate.getTime() - 10 * 60 * 1000), NotificationHelper.notificationBookingStartingSoon)
-      ScheduleHelper.scheduleEvent(startDate, NotificationHelper.notificationBookingStarted)
-      ScheduleHelper.scheduleEvent(new Date(endDate.getTime() - 10 * 60 * 1000), NotificationHelper.notificationBookingReachingSoon)
-      ScheduleHelper.scheduleEvent(endDate, NotificationHelper.notificationBookingReached)
+      let sender = booking.id;
+      let receiver = booking.customerId;
+      ScheduleHelper.scheduleNotification(new Date(startDate.getTime() - 10 * 60 * 1000), sender, receiver, NotificationHelper.notificationBookingStartingSoon)
+      ScheduleHelper.scheduleNotification(startDate, sender, receiver, NotificationHelper.notificationBookingStarted)
+      ScheduleHelper.scheduleNotification(new Date(endDate.getTime() - 10 * 60 * 1000), sender, receiver, NotificationHelper.notificationBookingReachingSoon)
+      ScheduleHelper.scheduleNotification(endDate, sender, receiver, NotificationHelper.notificationBookingReached)
+      ScheduleHelper.scheduleNotification(endDate, sender, receiver, NotificationHelper.notificationBookingExpired)
       return res.status(200).send(booking);
     } catch (err) {
       sendErrorResponse(res, err);
@@ -33,10 +45,13 @@ module.exports = {
       });
       let startDate = booking.startDate;
       let endDate = booking.endDate;
-      ScheduleHelper.scheduleEvent(new Date(startDate.getTime() - 10 * 60 * 1000), NotificationHelper.notificationBookingStartingSoonMerchant)
-      ScheduleHelper.scheduleEvent(startDate, NotificationHelper.notificationBookingStartedMerchant)
-      ScheduleHelper.scheduleEvent(new Date(endDate.getTime() - 10 * 60 * 1000), NotificationHelper.notificationBookingReachingSoonMerchant)
-      ScheduleHelper.scheduleEvent(endDate, NotificationHelper.notificationBookingReachedMerchant)
+      let sender = booking.id;
+      let receiver = booking.merchantId;
+      ScheduleHelper.scheduleNotification(new Date(startDate.getTime() - 10 * 60 * 1000), sender, receiver, NotificationHelper.notificationBookingStartingSoon)
+      ScheduleHelper.scheduleNotification(startDate, sender, receiver, NotificationHelper.notificationBookingStarted)
+      ScheduleHelper.scheduleNotification(new Date(endDate.getTime() - 10 * 60 * 1000), sender, receiver, NotificationHelper.notificationBookingReachingSoon)
+      ScheduleHelper.scheduleNotification(endDate, sender, receiver, NotificationHelper.notificationBookingReached)    
+      ScheduleHelper.scheduleNotification(endDate, sender, receiver, NotificationHelper.notificationBookingExpired)
       return res.status(200).send(booking);
     } catch (err) {
       sendErrorResponse(res, err);
@@ -52,10 +67,13 @@ module.exports = {
       });
       let startDate = booking.startDate;
       let endDate = booking.endDate;
-      ScheduleHelper.scheduleEvent(new Date(startDate.getTime() - 10 * 60 * 1000), NotificationHelper.notificationBookingStartingSoon)
-      ScheduleHelper.scheduleEvent(startDate, NotificationHelper.notificationBookingStarted)
-      ScheduleHelper.scheduleEvent(new Date(endDate.getTime() - 10 * 60 * 1000), NotificationHelper.notificationBookingReachingSoon)
-      ScheduleHelper.scheduleEvent(endDate, NotificationHelper.notificationBookingReached)
+      let sender = booking.id;
+      let receiver = booking.customerId;
+      ScheduleHelper.scheduleNotification(new Date(startDate.getTime() - 10 * 60 * 1000), sender, receiver, NotificationHelper.notificationBookingStartingSoon)
+      ScheduleHelper.scheduleNotification(startDate, sender, receiver, NotificationHelper.notificationBookingStarted)
+      ScheduleHelper.scheduleNotification(new Date(endDate.getTime() - 10 * 60 * 1000), sender, receiver, NotificationHelper.notificationBookingReachingSoon)
+      ScheduleHelper.scheduleNotification(endDate, sender, receiver, NotificationHelper.notificationBookingReached)
+      ScheduleHelper.scheduleNotification(endDate, sender, receiver, NotificationHelper.notificationBookingExpired)
       return res.status(200).send(booking);
     } catch (err) {
       sendErrorResponse(res, err);
@@ -71,10 +89,13 @@ module.exports = {
       });
       let startDate = booking.startDate;
       let endDate = booking.endDate;
-      ScheduleHelper.scheduleEvent(new Date(startDate.getTime() - 10 * 60 * 1000), NotificationHelper.notificationBookingStartingSoonMerchant)
-      ScheduleHelper.scheduleEvent(startDate, NotificationHelper.notificationBookingStartedMerchant)
-      ScheduleHelper.scheduleEvent(new Date(endDate.getTime() - 10 * 60 * 1000), NotificationHelper.notificationBookingReachingSoonMerchant)
-      ScheduleHelper.scheduleEvent(endDate, NotificationHelper.notificationBookingReachedMerchant)
+      let sender = booking.id;
+      let receiver = booking.merchantId;
+      ScheduleHelper.scheduleNotification(new Date(startDate.getTime() - 10 * 60 * 1000), sender, receiver, NotificationHelper.notificationBookingStartingSoon)
+      ScheduleHelper.scheduleNotification(startDate, sender, receiver, NotificationHelper.notificationBookingStarted)
+      ScheduleHelper.scheduleNotification(new Date(endDate.getTime() - 10 * 60 * 1000), sender, receiver, NotificationHelper.notificationBookingReachingSoon)
+      ScheduleHelper.scheduleNotification(endDate, sender, receiver, NotificationHelper.notificationBookingReached)
+      ScheduleHelper.scheduleNotification(endDate, sender, receiver, NotificationHelper.notificationBookingExpired)
       return res.status(200).send(booking);
     } catch (err) {
       sendErrorResponse(res, err);
@@ -216,6 +237,50 @@ module.exports = {
       let bookings = await BookingService.retrieveAllBookingsByMerchant();  
       return res.status(200).send(bookings);
     } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
+  retrieveUpcomingBookingsByCustomerId: async(req, res) => {
+    try {
+      let { id } = req.params;
+      let bookings = await BookingService.retrieveUpcomingBookingsByCustomerId(id);  
+      return res.status(200).send(bookings);
+    } catch (err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  },
+
+  retrieveOngoingBookingsByCustomerId: async(req, res) => {
+    try {
+      let { id } = req.params;
+      let bookings = await BookingService.retrieveOngoingBookingsByCustomerId(id);  
+      return res.status(200).send(bookings);
+    } catch (err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  },
+
+  retrieveUpcomingBookingsByMerchantId: async(req, res) => {
+    try {
+      let { id } = req.params;
+      let bookings = await BookingService.retrieveUpcomingBookingsByMerchantId(id);  
+      return res.status(200).send(bookings);
+    } catch (err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  },
+
+  retrieveOngoingBookingsByMerchantId: async(req, res) => {
+    try {
+      let { id } = req.params;
+      let bookings = await BookingService.retrieveOngoingBookingsByMerchantId(id);  
+      return res.status(200).send(bookings);
+    } catch (err) {
+      console.log(err)
       sendErrorResponse(res, err);
     }
   },

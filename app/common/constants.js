@@ -5,10 +5,11 @@ module.exports = {
     Staff: 'Staff'
   },
   BookingStatus: {
-    Unfufilled: 'Unfufilled',
+    Unfulfilled: 'Unfulfilled',
     Active: 'Active',
-    Fufilled: 'Fufilled',
-    Cancelled: 'Cancelled'
+    Fulfilled: 'Fulfilled',
+    Cancelled: 'Cancelled',
+    Expired: 'Expired'
   },
   BookingSource: {
     Mobile: 'Mobile',
@@ -111,6 +112,7 @@ module.exports = {
     FirstNameRequired: 'First name is required',
     IdRequired: 'ID is required',
     ImageRequired: 'Image file required',
+    InvalidDate: 'Invalid date',
     InsufficientCreditBalance: 'Insufficient credit balance',
     KioskDeleted: 'Kiosk is deleted',
     KioskDisabled: 'Kiosk is disabled',
@@ -148,6 +150,9 @@ module.exports = {
     ProductNotFound: 'Product not found',
     ProductVariationDeleted: 'Product variation is deleted',
     ProductVariationNotFound: 'Product variation not found',
+    PromotionCannotBeDeleted: 'Promotion cannot be deleted since its already used',
+    PromoCodeNotUnique: 'Promotion code not unique',
+    PromotionDeleted: 'Promotion is deleted',
     PromotionNotFound: 'Promotion not found',
     QuantityAvailableRequired: 'Quantity available is required',
     StaffDisabled: 'Staff is disabled',

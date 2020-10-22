@@ -24,7 +24,7 @@ module.exports = {
     }
   },
   ifNegativeThrowError: (object, errorMessage) => {
-    if(!isNaN(object) && object <= 0) {
+    if(!isNaN(object) && object < 0) {
       throw new CustomError(errorMessage);
     }
   },

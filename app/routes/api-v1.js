@@ -11,6 +11,7 @@ const BookingPackageModelController = require('../controllers/bookingPackageMode
 const CategoryController = require('../controllers/categoryController');
 const CustomerController = require('../controllers/customerController');
 const KioskController = require('../controllers/kioskController');
+const lockerActionRecordController = require('../controllers/lockerActionRecordController');
 const LockerController = require('../controllers/lockerController');
 const LockerTypeController = require('../controllers/lockerTypeController');
 const MaintenanceActionController = require('../controllers/maintenanceActionController');
@@ -19,6 +20,7 @@ const NotificationController = require('../controllers/notificationController');
 const PaymentController = require('../controllers/paymentController');
 const ProductController = require('../controllers/productController');
 const ProductVariationController = require('../controllers/productVariationController');
+const PromotionController = require('../controllers/promotionController');
 const StaffController = require('../controllers/staffController');
 
 //Advertisement
@@ -66,23 +68,28 @@ router.post('/bookingPackageCustomer', Authenticator.customerOnly, BookingPackag
 router.post('/bookingPackageMerchant', Authenticator.merchantOnly, BookingPackageController.buyBookingPackageForMerchant);
 
 //Booking
+router.get('/customerBooking/upcoming/:id', Authenticator.customerAndStaffOnly, BookingController.retrieveUpcomingBookingsByCustomerId);
 router.get('/customerBooking/ongoing/:id', Authenticator.customerAndStaffOnly, BookingController.retrieveOngoingBookingsByCustomerId);
 router.get('/customerBooking/:id', Authenticator.customerAndStaffOnly, BookingController.retrieveBookingByCustomerId);
+router.get('/merchantBooking/upcoming/:id', Authenticator.merchantAndStaffOnly, BookingController.retrieveUpcomingBookingsByMerchantId);
 router.get('/merchantBooking/ongoing/:id', Authenticator.merchantAndStaffOnly, BookingController.retrieveOngoingBookingsByMerchantId);
 router.get('/merchantBooking/:id', Authenticator.merchantAndStaffOnly, BookingController.retrieveBookingByMerchantId);
-router.get('/bookingByOrder/:id', Authenticator.customerAndMerchantAndStaffOnly, BookingController.retrieveBookingByOrderId);
+router.get('/bookingByOrder/:orderId', Authenticator.customerAndMerchantAndStaffOnly, BookingController.retrieveBookingByOrderId);
 router.get('/booking/:id', Authenticator.customerAndMerchantAndStaffOnly, BookingController.retrieveBookingById);
 router.get('/customerBookings', Authenticator.staffOnly, BookingController.retrieveAllBookingsByCustomer);
 router.get('/merchantBookings', Authenticator.staffOnly, BookingController.retrieveAllBookingsByMerchant);
+router.get('/collectorBooking/:collectorId', Authenticator.customerAndMerchantAndStaffOnly, BookingController.retrieveBookingByCollectorId);
 router.put('/booking/:id', Authenticator.customerAndMerchantAndStaffOnly, BookingController.cancelBooking);
 router.put('/tagOrderToBooking', Authenticator.merchantAndStaffOnly, BookingController.tagBookingToOrder);
 router.put('/addCollectorToBooking', Authenticator.customerAndMerchantAndStaffOnly, BookingController.addCollectorToBooking);
 router.put('/removeCollectorToBooking', Authenticator.customerAndMerchantAndStaffOnly, BookingController.removeCollectorToBooking);
 router.put('/changeCollectorToBooking', Authenticator.customerAndMerchantAndStaffOnly, BookingController.changeCollectorToBooking);
+router.put('/cancelBooking/:id', Authenticator.customerAndMerchantOnly, BookingController.cancelBooking);
 router.post('/booking/customer', Authenticator.customerAndMerchantAndStaffOnly, BookingController.createBookingByCustomer);
 router.post('/booking/merchant', Authenticator.customerAndMerchantAndStaffOnly, BookingController.createBookingByMerchant);
 router.post('/booking/bookingPackage/customer', Authenticator.customerAndMerchantAndStaffOnly, BookingController.createBookingWithBookingPackageByCustomer);
 router.post('/booking/bookingPackage/merchant', Authenticator.customerAndMerchantAndStaffOnly, BookingController.createBookingWithBookingPackageByMerchant);
+router.post('/checkBookingAllowed', Authenticator.customerAndMerchantAndStaffOnly, BookingController.checkBookingAllowed);
 
 
 //Category
@@ -128,7 +135,11 @@ router.put('/locker/toggleDisable/:id', Authenticator.staffOnly, LockerControlle
 router.put('/deleteLocker/:id', Authenticator.staffOnly, LockerController.deleteLocker);
 router.post('/locker', Authenticator.staffOnly, LockerController.createLocker);
 
-//LockerType
+//Locker Action Record
+router.get('/lockerActionRecords', Authenticator.staffOnly, lockerActionRecordController.retrieveAllLockerActions);
+router.get('/lockerActions/:lockerId',Authenticator.staffOnly, lockerActionRecordController.retrieveLockerActionsByLockerId);
+
+//Locker Type
 router.get('/lockerType/kiosk/:kioskId', Authenticator.customerAndMerchantAndStaffOnly, LockerTypeController.retrieveLockerTypesByKiosk);
 router.get('/lockerType/:id', Authenticator.customerAndMerchantAndStaffOnly, LockerTypeController.retrieveLockerType);
 router.get('/lockerTypes', Authenticator.customerAndMerchantAndStaffOnly, LockerTypeController.retrieveAllLockerTypes);
@@ -137,7 +148,7 @@ router.put('/lockerType/:id', Authenticator.staffOnly, LockerTypeController.upda
 router.put('/deleteLockerType/:id', Authenticator.staffOnly, LockerTypeController.deleteLockerType);
 router.post('/lockerType', Authenticator.staffOnly, LockerTypeController.createLockerType);
 
-//MaintenanceAction
+//Maintenance Action
 router.get('/maintenanceAction/:id', Authenticator.staffOnly, MaintenanceActionController.retrieveMaintenanceAction);
 router.get('/maintenanceActions', Authenticator.staffOnly, MaintenanceActionController.retrieveAllMaintenanceAction);
 router.put('/maintenanceAction/:id', Authenticator.staffOnly, MaintenanceActionController.updateMaintenanceAction);
@@ -183,7 +194,7 @@ router.post('/product/addImage', Authenticator.merchantOnly, Upload.preUploadChe
 router.post('/product', Authenticator.merchantOnly, ProductController.createProduct);
 
 
-//ProductVariation
+//Product Variation
 router.get('/productVariations/:id', /*Authenticator.customerAndMerchantAndStaffOnly, */ ProductVariationController.retrieveProductVariationsByProductId);
 router.get('/productVariationsIncludingDisabled/:id', /*Authenticator.customerAndMerchantAndStaffOnly, */ ProductVariationController.retrieveProductVariationsByProductIdIncludingDisabled);
 router.put('/productVariations/toggleDisable/:id', /*Authenticator.customerAndMerchantAndStaffOnly, */ ProductVariationController.toggleDisableProductVariation);
@@ -192,6 +203,16 @@ router.put('/deleteProductVariations/:id', /*Authenticator.customerAndMerchantAn
 router.post('/productVariation/addImage', /*Authenticator.merchantOnly,*/ Upload.preUploadCheckForImg, ProductVariationController.addImageForProductVariation);
 router.post('/productVariation', /*Authenticator.customerAndMerchantAndStaffOnly, */ ProductVariationController.createProductVariation);
 
+//Promotion
+router.get('/promotion/mall', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveAllMallPromotions);
+router.get('/promotion/merchant', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveAllMerchantPromotions);
+router.get('/promotion/merchant/:id', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveMerchantPromotionByMerchantId);
+router.get('/promotion/promoCode/:promoCode', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrievePromotionByPromoCode);
+router.get('/promotions', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveAllPromotions);
+router.put('/promotion/:id', Authenticator.merchantAndStaffOnly, PromotionController.updatePromotion);
+router.put('/deletePromotion/:id', Authenticator.merchantAndStaffOnly, PromotionController.deletePromotion);
+router.post('/promotion/merchant', Authenticator.merchantOnly, PromotionController.createMerchantPromotion);
+router.post('/promotion/mall', Authenticator.staffOnly, PromotionController.createMallPromotion);
 
 //Staff
 router.get('/staff/staffRoles', Authenticator.staffOnly, StaffController.retrieveStaffRoles);
