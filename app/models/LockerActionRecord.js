@@ -3,6 +3,7 @@ const {
   INTEGER, DATE, STRING, Model
 } = Sequelize;
 const sequelize = require('../common/database');
+const Locker = require('./Locker');
 
 class LockerActionRecord extends Model {
 }
@@ -31,5 +32,7 @@ LockerActionRecord.init(
     underscored: true
   }
 );
+LockerActionRecord.belongsTo(Locker, { foreignKey: {allowNull: false } });
+Locker.hasMany(LockerActionRecord);
 
 module.exports = LockerActionRecord;

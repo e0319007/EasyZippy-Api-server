@@ -11,6 +11,7 @@ const BookingPackageModelController = require('../controllers/bookingPackageMode
 const CategoryController = require('../controllers/categoryController');
 const CustomerController = require('../controllers/customerController');
 const KioskController = require('../controllers/kioskController');
+const lockerActionRecordController = require('../controllers/lockerActionRecordController');
 const LockerController = require('../controllers/lockerController');
 const LockerTypeController = require('../controllers/lockerTypeController');
 const MaintenanceActionController = require('../controllers/maintenanceActionController');
@@ -132,6 +133,10 @@ router.put('/locker/setInUse/:id', Authenticator.customerAndMerchantAndStaffOnly
 router.put('/locker/toggleDisable/:id', Authenticator.staffOnly, LockerController.toggleDisableLocker);
 router.put('/deleteLocker/:id', Authenticator.staffOnly, LockerController.deleteLocker);
 router.post('/locker', Authenticator.staffOnly, LockerController.createLocker);
+
+//Locker Action Record
+router.get('/lockerActionRecords', Authenticator.staffOnly, lockerActionRecordController.retrieveAllLockerActions);
+router.get('/lockerActions/:lockerId',Authenticator.staffOnly, lockerActionRecordController.retrieveLockerActionsByLockerId);
 
 //Locker Type
 router.get('/lockerType/kiosk/:kioskId', Authenticator.customerAndMerchantAndStaffOnly, LockerTypeController.retrieveLockerTypesByKiosk);
