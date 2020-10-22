@@ -419,12 +419,12 @@ module.exports = {
     const customer = await booking.getCustomer();
     const merchant = await booking.getMerchant();
     
-    if(!Checker.isEmpty(customer)) {
-      await CreditPaymentRecordService.payCreditCustomer(customer.id, 0 - booking.bookingPrice, transaction);
+    if(!Checker.isEmpty(customer) && booking.bookingPrice !== null && booking.bookingPrice !== 0) {
+      await CreditPaymentRecordService.refundCreditCustomer(customer.id, booking.bookingPrice, transaction);
     }
 
-    if(!Checker.isEmpty(merchant)) {
-      await CreditPaymentRecordService.payCreditMerchant(merchant.id, 0 - booking.bookingPrice, transaction);
+    if(!Checker.isEmpty(merchant) && booking.bookingPrice !== null && booking.bookingPrice !== 0) {
+      await CreditPaymentRecordService.refundCreditMerchant(merchant.id, booking.bookingPrice, transaction);
     }
 
     booking = await Booking.update({ 
