@@ -23,7 +23,7 @@ module.exports = {
     Checker.ifEmptyThrowError(kioskId, 'Kiosk ' + Constants.Error.IdRequired)
     Checker.ifEmptyThrowError(await Kiosk.findByPk(kioskId), Constants.Error.KioskNotFound)
     console.log(lockerTypeId)
-    Checker.ifEmptyThrowError(await Locker.findByPk(lockerTypeId), Constants.Error.LockerTypeNotFound)
+    Checker.ifEmptyThrowError(await LockerType.findByPk(lockerTypeId), Constants.Error.LockerTypeNotFound)
     return await Locker.create(lockerData, { transaction });
   },
 
