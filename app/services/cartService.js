@@ -57,7 +57,7 @@ module.exports = {
       let pv; 
       if(!Checker.isEmpty(li.productId)) p = await Product.findByPk(li.productId);
       else pv = await ProductVariation.findByPk(li.productVariationId);
-      if (!p.disabled && !p.deleted) {
+      if ((!Checker.isEmpty(p) && !p.disabled && !p.deleted) || (!Checker.isEmpty(pv) && !pv.disabled && !pv.deleted)) {
         temp.push({
           product: p,
           productVariation: pv,

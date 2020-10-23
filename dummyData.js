@@ -112,7 +112,7 @@ const addDummyData = async () => {
   await sequelize.transaction(async (transaction) => {
     await CartService.saveItemsToCart(1, { lineItems }, transaction);
   });
-  console.log(await CartService.retrieveCartByCustomerId(1));
+  console.log((await CartService.retrieveCartByCustomerId(1)).length);
 
   let kiosk = await Kiosk.create({ address: '1 Sengkang Square', description: 'Sample Description'});
   let lockerType1 = await LockerType.create({ name: 'BIG', lockerHeight: 120, lockerWidth: 40, lockerLength: 50, pricePerHalfHour: 3 });
