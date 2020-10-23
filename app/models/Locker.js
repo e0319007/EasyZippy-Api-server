@@ -5,7 +5,6 @@ const {
 const sequelize = require('../common/database');
 
 const Kiosk = require('./Kiosk');
-const LockerActionRecord = require('./LockerActionRecord');
 const LockerType = require('./LockerType');
 const Constants = require('../common/constants');
 
@@ -46,7 +45,6 @@ Locker.init(
 Locker.belongsTo(LockerType, { foreignKey: { allowNull: false } });
 LockerType.hasMany(Locker);
 
-Locker.hasMany(LockerActionRecord);
 
 Locker.belongsTo(Kiosk, { foreignKey: { allowNull: false } });
 Kiosk.hasMany(Locker);

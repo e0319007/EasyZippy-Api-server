@@ -6,6 +6,7 @@ const Customer = require("../models/Customer");
 const NotificationService = require('../services/notificationService');
 const Checker = require('../common/checker');
 const Constants = require('../common/constants')
+
 module.exports = {
   /**
    * SEND NOTI ABOUT MERCHANT APPLICATION
@@ -134,6 +135,29 @@ module.exports = {
       let senderId = bookingId;
       let receiverId = customerId;
       NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
+    }
+  },
+
+  notificationBookingExpired: async(bookingId, customerId) => {
+    let customer = await Customer.findByPk(customerId);
+    Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound); 
+
+    let booking = await Booking.findByPk(bookingId);
+    Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound); 
+
+    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfulfilled) {
+      let title = 'Your booking has expired';
+      let description = 'Your booking with ID: ' + bookingId + ' has expired. Credits will not be refunded';
+      
+      let senderModel = Constants.ModelEnum.Booking;
+      let receiverModel = Constants.ModelEnum.Customer;
+      let senderId = bookingId;
+      let receiverId = customerId;
+
+      await booking.update({ bookingStatusEnum: Constants.BookingStatus.Expired });
+
+      NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
+
     }
   },
 

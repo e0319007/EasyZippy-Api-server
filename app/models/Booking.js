@@ -12,6 +12,7 @@ const Order = require('./Order');
 const Locker = require('./Locker');
 const Constants = require('../common/constants');
 const LockerType = require('./LockerType');
+const Kiosk = require('./Kiosk');
 
 class Booking extends Model {
 }
@@ -52,11 +53,6 @@ Booking.init(
     bookingSourceEnum: {
       type: STRING,
       allowNull: false
-    },
-    cancelled: {
-      type: BOOLEAN,
-      allowNull: false,
-      defaultValue: false
     }
   },
   {
@@ -89,5 +85,8 @@ Locker.hasMany(Booking);
 
 Booking.belongsTo(LockerType, { foreignKey: { allowNull: false } });
 LockerType.hasMany(Booking);
+
+Booking.belongsTo(Kiosk, { foreignKey: { allowNull: false } })
+Kiosk.hasMany(Booking)
 
 module.exports = Booking;

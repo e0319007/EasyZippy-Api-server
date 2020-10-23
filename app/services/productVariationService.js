@@ -57,8 +57,20 @@ module.exports = {
         throw new CustomError("Unit price " + Constants.Error.XXXCannotBeNegative);
       }
     }
-    productVariation = await Product.update(productVariationData, { where: { id }, transaction, returning: true })
+    productVariation = await ProductVariation.update(productVariationData, { where: { id }, transaction, returning: true })
     return productVariation;
+  },
+
+  toggleDisableProductVariation: async(id, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
+    let curProductVariation = await ProductVariation.findByPk(id);
+    Checker.ifEmptyThrowError(curProductVariation, Constants.Error.ProductVariationNotFound);
+    Checker.ifDeletedThrowError(curProductVariation, Constants.Error.ProductVariationDeleted);
+
+    await ProductVariation.update({
+      disabled: !curProductVariation.disabled,
+    }, { where: { id }, transaction, returning: true });
+    return await ProductVariation.findByPk(id);
   },
 
   retrieveProductVariationsByProductId: async(id) => {
@@ -66,7 +78,7 @@ module.exports = {
     let product = await Product.findByPk(id);
     Checker.ifEmptyThrowError(product, Constants.Error.ProductNotFound);
     Checker.ifDeletedThrowError(product, Constants.Error.ProductDeleted); 
-    return ProductVariation.findAll({ where: { deleted: false, disabled: false, productId: false } });
+    return ProductVariation.findAll({ where: { deleted: false, disabled: false, productId: id } });
   },
 
   retrieveProductVariationsByProductIdIncludingDisabled: async(id) => {
@@ -74,7 +86,7 @@ module.exports = {
     let product = await Product.findByPk(id);
     Checker.ifEmptyThrowError(product, Constants.Error.ProductNotFound);
     Checker.ifDeletedThrowError(product, Constants.Error.ProductDeleted); 
-    return ProductVariation.findAll({ where: { deleted: false, productId: false } });
+    return ProductVariation.findAll({ where: { deleted: false, productId: id } });
   },
 
   deleteProductVariation: async(id, transaction) => {
@@ -85,4 +97,4 @@ module.exports = {
       deleted: true,
     }, { where: { id }, transaction, returning: true });
   },
-} 
+}

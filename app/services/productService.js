@@ -115,6 +115,10 @@ module.exports = {
   },
 
   retrieveAllProduct: async() => {
+    return await Product.findAll({ where: { deleted: false, disabled: false } });
+  },
+
+  retrieveAllProductIncludingDisabled: async() => {
     return await Product.findAll({ where: { deleted: false } });
   },
 
