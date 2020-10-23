@@ -180,4 +180,20 @@ module.exports = {
       sendErrorResponse(res, err);
     }
   },
+
+  retrieveApprovedAdvertisement: async(req, res) => {
+    try {  
+        return res.status(200).send(await AdvertisementService.retrieveApprovedAdvertisement());
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
+  retrieveUnapprovedAdvertisement: async(req, res) => {
+    try {  
+        return res.status(200).send(await AdvertisementService.retrieveUnapprovedAdvertisement());
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
 }

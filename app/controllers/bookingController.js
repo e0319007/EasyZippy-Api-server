@@ -128,9 +128,9 @@ module.exports = {
 
   removeCollectorToBooking: async(req, res) => {
     try{
-      const bookingId = req.body;
+      const bookingId = req.body.bookingId;
       await sequelize.transaction(async (transaction) => {
-        booking = await BookingService.addCollectorToBooking(bookingId, transaction);
+        booking = await BookingService.removeCollectorToBooking(bookingId, transaction);
       });
       res.status(200).send(booking);
     } catch(err) {
