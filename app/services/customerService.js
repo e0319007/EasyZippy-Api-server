@@ -11,6 +11,7 @@ const OtpHelper = require('../common/otpHelper');
 
 
 const Customer = require('../models/Customer');
+const Cart = require('../models/Cart');
 
 const retrieveCustomerByEmail = async(email) => {
   const customer = await Customer.findOne({ where : { email } });
@@ -80,9 +81,9 @@ module.exports = {
           throw new CustomError(Constants.Error.EmailNotUnique);
         }
       }
-  
-      const customer = await Customer.create(customerData, { transaction });
-  
+
+      let customer = await Customer.create(customerData, { transaction });
+      let cart = await Cart.create({customerId: customer.id}, { transaction });
       return customer;
   },
 

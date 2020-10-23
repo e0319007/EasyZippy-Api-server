@@ -9,11 +9,16 @@ module.exports = {
       let customer;
 
       await sequelize.transaction(async (transaction) => {
-        customer = await CustomerService.createCustomer(customerData, transaction);
-      });
+        console.log('before transaction');
 
+        customer = await CustomerService.createCustomer(customerData, transaction);
+        console.log('after transaction');
+
+        console.log('customer cart id: ' + customer.cartId);
+      });
       return res.status(200).send(customer);
     } catch (err) {
+      console.log(err)
       sendErrorResponse(res, err);
     }
   },
