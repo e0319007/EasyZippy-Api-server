@@ -115,10 +115,14 @@ const addDummyData = async () => {
   console.log((await CartService.retrieveCartByCustomerId(1)).length);
 
   let kiosk = await Kiosk.create({ address: '1 Sengkang Square', description: 'Sample Description'});
+  let kiosk2 = await Kiosk.create({ address: 'Clementi', description: 'Sample Description'});
   let lockerType1 = await LockerType.create({ name: 'BIG', lockerHeight: 120, lockerWidth: 40, lockerLength: 50, pricePerHalfHour: 3 });
   let lockerType2 = await LockerType.create({ name: 'MEDIUM', lockerHeight: 80, lockerWidth: 30, lockerLength: 50, pricePerHalfHour: 2 });
   let lockerType3 = await LockerType.create({ name: 'SMALL', lockerHeight: 30, lockerWidth: 20, lockerLength: 50, pricePerHalfHour: 1 });
+  let lockerType4 = await LockerType.create({ name: 'TINY', lockerHeight: 10, lockerWidth: 10, lockerLength: 50, pricePerHalfHour: 1 });
 
+  await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk2.id, lockerTypeId: lockerType4.id});
+  
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType1.id});
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType1.id});
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType1.id});
@@ -193,6 +197,7 @@ const addDummyData = async () => {
   await BookingPackageModel.create({ name: 'BIG Booking Package', description: 'Booking package for BIG lockers', quota: 1, price: 39, duration: 30, lockerTypeId: 1});
   await BookingPackageModel.create({ name: 'MEDIUM Booking Package', description: 'Booking package for MEDIUM lockers', quota: 1, price: 29, duration: 30, lockerTypeId: 2});
   await BookingPackageModel.create({ name: 'SMALL Booking Package', description: 'Booking package for SMALL lockers', quota: 1, price: 25, duration: 30, lockerTypeId: 3});
+  await BookingPackageModel.create({ name: 'TINY Booking Package', description: 'Booking package for TINY lockers', quota: 1, price: 25, duration: 30, lockerTypeId: 4});
 
   let bookingPackageData1 = {
     customerId: 1, 

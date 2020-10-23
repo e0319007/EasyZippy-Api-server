@@ -91,6 +91,7 @@ module.exports = {
     BookingCannotBeCancelled: 'Booking cannot be cancelled',
     BookingCannotBeMade: 'No free slots during the given start time and end time',
     BookingNotFound: 'Booking not found',
+    BookingStartDateAfterPackageEndDate: 'Booking start date is after the booking package\'s end date',
     CategoryDeleted: 'Category is deleted',
     CategoryNameExist: 'Category name exists',
     CategoryNameRequired: 'Category name is required',
