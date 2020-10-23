@@ -240,14 +240,17 @@ module.exports = {
 
   createBookingByCustomer: async(bookingData, transaction) => {
     let { promoIdUsed, startDate, endDate, bookingSourceEnum, customerId, lockerTypeId, kioskId, bookingPackageId } = bookingData;
-    if(!Checker.isEmpty(bookingPackageId)) {
-      const bookingPackage = await BookingPackage.findByPk(bookingPackageId);
-      Checker.ifEmptyThrowError(bookingPackage, Constants.Error.BookingPackageNotFound);
+    
+    const customer = await Customer.findByPk(customerId);
+    Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
+    for(const bookingPackage of await customer.getBookingPackages()) {
       const bookingPackageModel = await bookingPackage.getBookingPackageModel();
-      if((await bookingPackageModel.getLockerType()).id === lockerTypeId) {
+      const bookingPackageModelLockerType = await bookingPackageModel.getLockerType();
+      if(!bookingPackage.expired && bookingPackageModelLockerType.id === lockerTypeId && bookingPackage.lockerCount > bookingPackageModel.quota) {
         return await createBookingWithBookingPackageByCustomer(bookingData, transaction);
       }
     }
+    
     startDate = new Date(startDate);
     endDate = new Date(endDate);
     if(startDate.getTime() + 300000 < (new Date()).getTime()) throw new CustomError(Constants.Error.InvalidDate)
