@@ -260,6 +260,8 @@ module.exports = {
       qrCode = Math.random().toString(36).substring(2);
     }
 
+    //CHECK PREBOOKING INSIDE BOOKING PKG OR NOT
+
     //BOOKING PACKAGE UPDATE
     await BookingPackage.update({ lockerCount: ++bookingPackage.lockerCount }, { where: { id: bookingPackageId }, transaction });
 

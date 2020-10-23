@@ -3,8 +3,10 @@ const {
   INTEGER, Model
 } = Sequelize;
 const sequelize = require('../common/database');
+const Cart = require('./Cart');
 
 const Product = require('./Product');
+const ProductVariation = require('./ProductVariation');
 
 class LineItem extends Model {
 }
@@ -32,6 +34,11 @@ LineItem.init(
   }
 );
 
-LineItem.belongsTo(Product, { foreignKey: { allowNull: false } });
+LineItem.belongsTo(Product);
+
+LineItem.belongsTo(ProductVariation);
+
+Cart.hasMany(LineItem);
+LineItem.belongsTo(Cart);
 
 module.exports = LineItem;
