@@ -53,6 +53,7 @@ router.put('/deleteAnnouncement/:id', Authenticator.staffOnly, AnnouncementContr
 //BookingPackageModel
 router.get('/bookingPackageModel/:id', Authenticator.customerAndMerchantAndStaffOnly, BookingPackageModelController.retrieveBookingPackageModel);
 router.get('/bookingPackageModels', Authenticator.customerAndMerchantAndStaffOnly, BookingPackageModelController.retrieveAllBookingPackageModel);
+router.get('/bookingPackageModels/:kioskId', Authenticator.customerAndMerchantAndStaffOnly, BookingPackageModelController.retrieveBookingPackageModelsByKioskId);
 router.put('/bookingPackageModel/toggleDisable/:id', Authenticator.staffOnly, BookingPackageModelController.toggleDisableBookingPackageModel);
 router.put('/bookingPackageModel/:id', Authenticator.staffOnly, BookingPackageModelController.updateBookingPackageModel);
 router.post('/bookingPackageModel', Authenticator.staffOnly, BookingPackageModelController.createBookingPackageModel);

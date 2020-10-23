@@ -66,6 +66,16 @@ module.exports = {
     }
   },
 
+  retrieveBookingPackageModelsByKioskId: async(req, res) => {
+    try {
+      const { kioskId } = req.params;
+      return res.status(200).send(await BookingPackageModelService.retrieveBookingPackageModelsByKioskId(kioskId));
+    } catch (err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  },
+
   deleteBookingPackageModel: async(req, res) => {
     try {
       const { id } = req.params;
