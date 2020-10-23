@@ -51,6 +51,7 @@ module.exports = {
     // end in check for overselling 
 
     let startDate = new Date();
+    startDate.setSeconds(0,0);
     let endDate = new Date(startDate)
     endDate.setDate(startDate.getDate() + bookingPackageModel.duration);
    

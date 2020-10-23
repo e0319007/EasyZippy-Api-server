@@ -21,7 +21,7 @@ module.exports = {
     Checker.ifEmptyThrowError(await Staff.findByPk(staffId), Constants.Error.StaffNotFound);
     Checker.ifEmptyThrowError(image, Constants.Error.ImageRequired);
     const advertisement = await Advertisement.create({
-      title, description, imageUrl, startDate, endDate, staffId },
+      title, description, imageUrl, startDate, endDate, staffId, approved: true },
       { transaction });
     return advertisement;
   },
@@ -260,5 +260,13 @@ module.exports = {
         id
       }, transaction
     });
+  },
+
+  retrieveApprovedAdvertisement: async() => {
+    return await Advertisement.findAll({ where: { approved: true } });
+  },
+
+  retrieveUnapprovedAdvertisement: async() => {
+    return await Advertisement.findAll({ where: { approved: false } });
   },
 }
