@@ -247,7 +247,7 @@ module.exports = {
       const bookingPackageModel = await bookingPackage.getBookingPackageModel();
       const bookingPackageModelLockerType = await bookingPackageModel.getLockerType();
       if(!bookingPackage.expired && bookingPackageModelLockerType.id === lockerTypeId && bookingPackage.lockerCount < bookingPackageModel.quota) {
-        return await createBookingWithBookingPackageByCustomer(bookingData, transaction);
+        return await createBookingWithBookingPackageByCustomer({ ...bookingData, bookingPackageId: bookingPackage.id }, transaction);
       }
     }
     
