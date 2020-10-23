@@ -35,7 +35,7 @@ module.exports = {
 
     let customer = await Customer.findByPk(customerId);
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
-    await customer.update({ creditBalance: customer.creditBalance + amountPaid }, { transaction });
+    await customer.update({ creditBalance: Number(customer.creditBalance) + Number(amountPaid) }, { transaction });
     let creditPaymentRecord = await CreditPaymentRecord.create({ amount: amountPaid, customerId }, { transaction });
 
     return creditPaymentRecord;
@@ -69,7 +69,7 @@ module.exports = {
 
     let merchant = await Merchant.findByPk(merchantId);
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
-    await merchant.update({ creditBalance: merchant.creditBalance + amountPaid }, { transaction });
+    await merchant.update({ creditBalance: Number(merchant.creditBalance) + Number(amountPaid) }, { transaction });
     
     let creditPaymentRecord = await CreditPaymentRecord.create({ amount: amountPaid, merchantId }, { transaction });
 
