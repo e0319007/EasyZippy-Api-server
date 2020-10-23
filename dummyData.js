@@ -17,6 +17,7 @@ const LockerActionRecord = require('./app/models/LockerActionRecord');
 const Constants = require('./app/common/constants');
 const BookingPackageService = require('./app/services/bookingPackageService');
 const BookingService = require('./app/services/bookingService');
+const cons = require('consolidate');
 
 const addDummyData = async () => {
   const staff1 = await StaffService.createStaff({ firstName: 'Alice', lastName: 'Ang', mobileNumber: '91234567', email: 'alice@email.com', staffRoleEnum: 'Admin' });
@@ -33,7 +34,7 @@ const addDummyData = async () => {
   await staff5.update({ password: await Helper.hashPassword('Password123!') });
   await staff6.update({ password: await Helper.hashPassword('Password123!') });
 
-  await CustomerService.createCustomer({ firstName: 'Ben', lastName: 'Bek', mobileNumber: '92585678', password: 'Password123!', email: 'ben@email.com', creditBalance: 1000 });
+  await CustomerService.createCustomer({ firstName: 'Ben', lastName: 'Bek', mobileNumber: '92585678', password: 'Password123!', email: 'ben@email.com', creditBalance: 10000 });
   await CustomerService.createCustomer({ firstName: 'Dan', lastName: 'Lim', mobileNumber: '92342448', password: 'Password123!', email: 'dan@email.com', creditBalance: 1000 });
   await CustomerService.createCustomer({ firstName: 'Chris', lastName: 'Tan', mobileNumber: '94785678', password: 'Password123!', email: 'chris@email.com', creditBalance: 1000 });
   await CustomerService.createCustomer({ firstName: 'Vivian', lastName: 'Toh', mobileNumber: '92638678', password: 'Password123!', email: 'vivian@email.com', creditBalance: 1000 });
@@ -151,7 +152,7 @@ const addDummyData = async () => {
     await PromotionService.createMallPromotion(promoData3, transaction);
   });
 
-  await BookingPackageModel.create({ name: 'BIG Booking Package', description: 'Booking package for BIG lockers', quota: 1, price: 39, duration: 2, lockerTypeId: 1});
+  await BookingPackageModel.create({ name: 'BIG Booking Package', description: 'Booking package for BIG lockers', quota: 1, price: 39, duration: 7, lockerTypeId: 1});
   await BookingPackageModel.create({ name: 'MEDIUM Booking Package', description: 'Booking package for MEDIUM lockers', quota: 1, price: 29, duration: 30, lockerTypeId: 2});
   await BookingPackageModel.create({ name: 'SMALL Booking Package', description: 'Booking package for SMALL lockers', quota: 1, price: 25, duration: 30, lockerTypeId: 3});
   await BookingPackageModel.create({ name: 'TINY Booking Package', description: 'Booking package for TINY lockers', quota: 1, price: 25, duration: 30, lockerTypeId: 4});
@@ -168,9 +169,12 @@ const addDummyData = async () => {
     kioskId: 1
   };
 
+  let bookingPackage1;
+  let bookingPackage2;
+
   await sequelize.transaction(async (transaction) => {
-    await BookingPackageService.createBookingPackageForCustomer(bookingPackageData1, transaction)
-    await BookingPackageService.createBookingPackageForMerchant(bookingPackageData2, transaction)
+    bookingPackage1 = await BookingPackageService.createBookingPackageForCustomer(bookingPackageData1, transaction)
+    bookingPackage2 = await BookingPackageService.createBookingPackageForMerchant(bookingPackageData2, transaction)
   });
 
   console.log('Initializing booking');
@@ -197,8 +201,8 @@ const addDummyData = async () => {
 
   let bookingData3 = {
     promoIdUsed: null, 
-    startDate: new Date(2020,10,3,10,00), 
-    endDate: new Date(2020,10,3,10,20), 
+    startDate: new Date(2020,09,30,10,00), 
+    endDate: new Date(2020,09,30,10,20), 
     bookingSourceEnum: Constants.BookingSource.Kiosk, 
     customerId: 1, 
     bookingPackageId: 1,
@@ -206,8 +210,8 @@ const addDummyData = async () => {
 
   let bookingData4 = {
     promoIdUsed: null, 
-    startDate: new Date(2020,10,3,12,10), 
-    endDate: new Date(2020,10,4,07,20), 
+    startDate: new Date(2020,09,29,12,10), 
+    endDate: new Date(2020,09,30,07,20), 
     bookingSourceEnum: Constants.BookingSource.Mobile, 
     merchantId: 1, 
     bookingPackageId: 2,
@@ -263,13 +267,24 @@ const addDummyData = async () => {
 
   let bookingData10 = {
     promoIdUsed: null, 
-    startDate: new Date(2020,09,23,15,06), 
-    endDate: new Date(2020,09,23,15,07), 
-    bookingSourceEnum: Constants.BookingSource.Mobile, 
+    startDate : new Date(2020,09,30,17,00,00),
+    endDate : new Date(2020,09,30,19,00,00),
+    bookingSourceEnum: Constants.BookingSource.Kiosk, 
     customerId: 1, 
-    lockerTypeId: 1,
-    kioskId: 1
+    bookingPackageId: 1,
   };
+
+  bookingData = {
+    startDate : new Date(2020,09,30,17,00,00),
+    endDate : new Date(2020,09,30,19,0,00),
+    lockerTypeId : 1,
+    kioskId : 1,
+    bookingPackageId : 1
+  }
+
+  console.log(bookingPackage1.endDate.toLocaleString());
+  let times = await BookingService.checkBookingAllowed(bookingData);
+  console.log(times)
 
   await sequelize.transaction(async (transaction) => {
     await BookingService.createBookingByCustomer(bookingData1, transaction);
@@ -292,7 +307,7 @@ const addDummyData = async () => {
     console.log('*Pass 4')
     await BookingService.createBookingByCustomer(bookingData9, transaction);
     console.log('*Pass 5')
-    await BookingService.createBookingByCustomer(bookingData10, transaction);
+    await BookingService.createBookingWithBookingPackageByCustomer(bookingData10, transaction);
 
   });
 
