@@ -15,6 +15,8 @@ const CreditPaymentRecordService = require('./creditPaymentRecordService');
 const Order = require('../models/Order');
 const cons = require('consolidate');
 const Kiosk = require('../models/Kiosk');
+const ScheduleHelper = require('../common/scheduleHelper')
+const NotificationHelper = require('../common/notificationHelper')
 
 const checkBookingAvailable = async(startDate, endDate, lockerTypeId, kioskId) => {
   let bookings = await Booking.findAll({ where: { lockerTypeId, kioskId } });
@@ -137,10 +139,21 @@ module.exports = {
   // front end retrieve the string and make it into a qr code,
   // after scan, map back to the string and send to backend to open locker,
 
+  checkBookingAllowed: async(bookingData) => {
+    let { startDate, endDate, lockerTypeId, kioskId } = bookingData;
+    let availSlots = await checkBookingAvailable(startDate, endDate, lockerTypeId, kioskId);
+    if(Checker.isEmpty(availSlots)) {
+      return false;
+    } else if (availSlots[0].startDate.getTime() != startDate.getTime() || availSlots[0].endDate.getTime() != endDate.getTime()) {
+      return availSlots;
+    } else return true;
+  },
+
   createBookingByCustomer: async(bookingData, transaction) => {
-    let { promoIdUsed, startDate, endDate, bookingSourceEnum, customerId, lockerTypeId, kioskId} = bookingData;
+    let { promoIdUsed, startDate, endDate, bookingSourceEnum, customerId, lockerTypeId, kioskId } = bookingData;
     startDate = new Date(startDate);
     endDate = new Date(endDate);
+    if(startDate < new Date()) throw new CustomError(Constants.Error.InvalidDate)
     if(startDate.getTime() > endDate.getTime()) throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     if(endDate.getTime() - startDate.getTime() > 24 * 60 * 60 * 1000) throw new CustomError(Constants.Error.TimeCannotExceed24H);
     Checker.ifEmptyThrowError(customerId, 'Customer ' + Constants.Error.IdRequired);
@@ -181,6 +194,7 @@ module.exports = {
     let { promoIdUsed, startDate, endDate, bookingSourceEnum, merchantId, lockerTypeId, kioskId} = bookingData;
     startDate = new Date(startDate);
     endDate = new Date(endDate);
+    if(startDate < new Date()) throw new CustomError(Constants.Error.InvalidDate)
     if(startDate > endDate) throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     if(endDate.getTime() - startDate.getTime() > 24 * 60 * 60 * 1000) throw new CustomError(Constants.Error.TimeCannotExceed24H);
     Checker.ifEmptyThrowError(merchantId, 'Merchant ' + Constants.Error.IdRequired);
@@ -223,6 +237,7 @@ module.exports = {
     let booking;
     startDate = new Date(startDate);
     endDate = new Date(endDate);
+    if(startDate < new Date()) throw new CustomError(Constants.Error.InvalidDate)
     if(startDate > endDate) throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     if(endDate.getTime() - startDate.getTime() > 24 * 60 * 60 * 1000) throw new CustomError(Constants.Error.TimeCannotExceed24H);
     Checker.ifEmptyThrowError(customerId, 'Customer ' + Constants.Error.IdRequired);
@@ -261,6 +276,7 @@ module.exports = {
     let booking;
     startDate = new Date(startDate);
     endDate = new Date(endDate);
+    if(startDate < new Date()) throw new CustomError(Constants.Error.InvalidDate)
     if(startDate > endDate) throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     if(endDate.getTime() - startDate.getTime() > 24 * 60 * 60 * 1000) throw new CustomError(Constants.Error.TimeCannotExceed24H);
     Checker.ifEmptyThrowError(merchantId, 'Merchant ' + Constants.Error.IdRequired);

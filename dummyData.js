@@ -13,6 +13,7 @@ const LockerType = require('./app/models/LockerType');
 const Advertisement = require('./app/models/Advertisement');
 const Product = require('./app/models/Product');
 const BookingPackageModel = require('./app/models/BookingPackageModel');
+const LockerActionRecord = require('./app/models/LockerActionRecord');
 const Constants = require('./app/common/constants');
 const BookingPackageService = require('./app/services/bookingPackageService');
 const BookingService = require('./app/services/bookingService');
@@ -70,7 +71,7 @@ const addDummyData = async () => {
   await Product.create({ categoryId: toyCategory.id, merchantId: toysRUs.id, name: 'Doll', unitPrice: 15, description: 'Blue Hair Doll', quantityAvailable: 10, images: ['doll.jpg'] });
   await Product.create({ categoryId: toyCategory.id, merchantId: toysRUs.id, name: 'Car', unitPrice: 105.9, description: 'Red Car', quantityAvailable: 10, images: ['car.jpg'] });
 
-  let kiosk = await Kiosk.create({ address: '1 Sengkang Square', description: 'Sample Description'})
+  let kiosk = await Kiosk.create({ address: '1 Sengkang Square', description: 'Sample Description'});
   let lockerType1 = await LockerType.create({ name: 'BIG', lockerHeight: 120, lockerWidth: 40, lockerLength: 50, pricePerHalfHour: 3 });
   let lockerType2 = await LockerType.create({ name: 'MEDIUM', lockerHeight: 80, lockerWidth: 30, lockerLength: 50, pricePerHalfHour: 2 });
   let lockerType3 = await LockerType.create({ name: 'SMALL', lockerHeight: 30, lockerWidth: 20, lockerLength: 50, pricePerHalfHour: 1 });
@@ -78,7 +79,11 @@ const addDummyData = async () => {
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType1.id});
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType1.id});
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType1.id});
+  await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType1.id});
 
+  await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType2.id});
+  await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType2.id});
+  await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType2.id});
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType2.id});
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType2.id});
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType2.id});
@@ -86,10 +91,19 @@ const addDummyData = async () => {
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType3.id});
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType3.id});
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType3.id});
+  await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType3.id});
+  await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType3.id});
+  await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType3.id});
+  await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType3.id});
 
-  await Advertisement.create({ image: '1601607853991.jpeg', title: 'Lazada sale', description: 'Lazada 50% off all items',  advertiserUrl: 'http://www.lazada.com', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '91111111', advertiserEmail: 'test1@email.com', approved: true })
-  await Advertisement.create({ image: '1601608444371.jpeg', title: 'Shopee sale', description: 'Shopee 50% off all electronic items',  advertiserUrl: 'http://www.shopee.com', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '92222222', advertiserEmail: 'test2@email.com', approved: true })
-  await Advertisement.create({ image: '1601608583950.jpeg', title: 'Qoo10 sale', description: 'Qoo10 50% off apparel items',  advertiserUrl: 'http://www.qoo10.com', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '93333333', advertiserEmail: 'test3@email.com', approved: true })
+  await Advertisement.create({ image: '1601607853991.jpeg', title: 'Lazada sale', description: 'Lazada 50% off all items',  advertiserUrl: 'http://www.lazada.com', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '91111111', advertiserEmail: 'test1@email.com', approved: true });
+  await Advertisement.create({ image: '1601608444371.jpeg', title: 'Shopee sale', description: 'Shopee 50% off all electronic items',  advertiserUrl: 'http://www.shopee.com', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '92222222', advertiserEmail: 'test2@email.com', approved: true });
+  await Advertisement.create({ image: '1601608583950.jpeg', title: 'Qoo10 sale', description: 'Qoo10 50% off apparel items',  advertiserUrl: 'http://www.qoo10.com', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '93333333', advertiserEmail: 'test3@email.com', approved: true });
+  
+  await LockerActionRecord.create({ timestamp: new Date(), lockerActionEnum: Constants.LockerAction.Open, lockerId: 1});
+  await LockerActionRecord.create({ timestamp: new Date(), lockerActionEnum: Constants.LockerAction.Close, lockerId: 1});
+  await LockerActionRecord.create({ timestamp: new Date(), lockerActionEnum: Constants.LockerAction.Open, lockerId: 2});
+  await LockerActionRecord.create({ timestamp: new Date(), lockerActionEnum: Constants.LockerAction.Close, lockerId: 2});
 
   const promoData1 = {
     promoCode: "PROMOCODE1", 
@@ -101,7 +115,7 @@ const addDummyData = async () => {
     flatDiscount: 10, 
     usageLimit: 20, 
     merchantId: 1
-  }
+  };
 
   const promoData2 = {
     promoCode: "PROMOCODE2", 
@@ -113,7 +127,7 @@ const addDummyData = async () => {
     flatDiscount: null, 
     usageLimit: 20, 
     merchantId: 1
-  }
+  };
 
   const promoData3 = {
     promoCode: "PROMOCODEMALL1", 
@@ -125,7 +139,7 @@ const addDummyData = async () => {
     flatDiscount: null, 
     usageLimit: 20, 
     staffId: 1
-  }
+  };
 
   await sequelize.transaction(async (transaction) => {
     await PromotionService.createMerchantPromotion(promoData1, transaction);
@@ -141,20 +155,20 @@ const addDummyData = async () => {
     customerId: 1, 
     bookingPackageModelId: 1,
     kioskId: 1
-  }
+  };
 
   let bookingPackageData2 = {
     merchantId: 1, 
     bookingPackageModelId: 2,
     kioskId: 1
-  }
+  };
 
   await sequelize.transaction(async (transaction) => {
     await BookingPackageService.createBookingPackageForCustomer(bookingPackageData1, transaction)
     await BookingPackageService.createBookingPackageForMerchant(bookingPackageData2, transaction)
   });
 
-  console.log('Initializing booking')
+  console.log('Initializing booking');
 
   let bookingData1 = {
     promoIdUsed: null, 
@@ -164,7 +178,7 @@ const addDummyData = async () => {
     customerId: 2, 
     lockerTypeId: 1,
     kioskId: 1
-  }
+  };
 
   let bookingData2 = {
     promoIdUsed: null, 
@@ -174,7 +188,7 @@ const addDummyData = async () => {
     merchantId: 2, 
     lockerTypeId: 2,
     kioskId: 1
-  }
+  };
 
   let bookingData3 = {
     promoIdUsed: null, 
@@ -183,7 +197,6 @@ const addDummyData = async () => {
     bookingSourceEnum: Constants.BookingSource.Kiosk, 
     customerId: 1, 
     bookingPackageId: 1,
-    kioskId: 1
   }
 
   let bookingData4 = {
@@ -193,18 +206,65 @@ const addDummyData = async () => {
     bookingSourceEnum: Constants.BookingSource.Mobile, 
     merchantId: 1, 
     bookingPackageId: 2,
-    kioskId: 1
   }
 
   let bookingData5 = {
     promoIdUsed: null, 
-    startDate: new Date(2020,09,16,20,40), 
-    endDate: new Date(2020,09,16,23,20), 
+    startDate: new Date(2020,09,26,20,40), 
+    endDate: new Date(2020,09,26,23,20), 
     bookingSourceEnum: Constants.BookingSource.Mobile, 
     merchantId: 1, 
     bookingPackageId: 2,
+  }
+
+  //ADDITIONAL
+
+  let bookingData6 = {
+    promoIdUsed: null, 
+    startDate: new Date(2020,09,24,20,40), 
+    endDate: new Date(2020,09,24,23,20), 
+    bookingSourceEnum: Constants.BookingSource.Kiosk, 
+    customerId: 1, 
+    bookingPackageId: 1,
+  }
+
+  let bookingData7 = {
+    promoIdUsed: null, 
+    startDate: new Date(2020,09,24,21,40), 
+    endDate: new Date(2020,09,24,23,20), 
+    bookingSourceEnum: Constants.BookingSource.Kiosk, 
+    customerId: 1, 
+    bookingPackageId: 1,
+  }
+
+  let bookingData8 = {
+    promoIdUsed: null, 
+    startDate: new Date(2020,09,24,21,40), 
+    endDate: new Date(2020,09,24,23,20), 
+    bookingSourceEnum: Constants.BookingSource.Kiosk, 
+    customerId: 1, 
+    bookingPackageId: 1,
+  }
+
+  let bookingData9 = {
+    promoIdUsed: null, 
+    startDate: new Date(2020,09,24,11,40), 
+    endDate: new Date(2020,09,24,14,00), 
+    bookingSourceEnum: Constants.BookingSource.Mobile, 
+    customerId: 1, 
+    lockerTypeId: 1,
     kioskId: 1
   }
+
+  let bookingData10 = {
+    promoIdUsed: null, 
+    startDate: new Date(2020,09,23,15,06), 
+    endDate: new Date(2020,09,23,15,07), 
+    bookingSourceEnum: Constants.BookingSource.Mobile, 
+    customerId: 1, 
+    lockerTypeId: 1,
+    kioskId: 1
+  };
 
   await sequelize.transaction(async (transaction) => {
     await BookingService.createBookingByCustomer(bookingData1, transaction);
@@ -216,6 +276,19 @@ const addDummyData = async () => {
     await BookingService.createBookingWithBookingPackageByMerchant(bookingData4, transaction);
     console.log('Pass 4')
     await BookingService.createBookingWithBookingPackageByMerchant(bookingData5, transaction);
+
+    console.log('*Pass 1')
+    await BookingService.createBookingWithBookingPackageByCustomer(bookingData6, transaction);
+    console.log('*Pass 2')
+    await BookingService.createBookingWithBookingPackageByCustomer(bookingData7, transaction);
+    console.log('*Pass 3')
+    await BookingService.createBookingWithBookingPackageByCustomer(bookingData8, transaction);
+
+    console.log('*Pass 4')
+    await BookingService.createBookingByCustomer(bookingData9, transaction);
+    console.log('*Pass 5')
+    await BookingService.createBookingByCustomer(bookingData10, transaction);
+
   });
 
   // await sequelize.transaction(async (transaction) => {
@@ -231,9 +304,6 @@ const addDummyData = async () => {
   // console.log(await BookingService.retrieveBookingByCustomerId(1))
   // console.log(await BookingService.retrieveBookingByCollectorId(3))
   // console.log(await BookingService.retrieveBookingByMerchantId(1))
-
-
-  
 };
 
 addDummyData();
