@@ -325,16 +325,16 @@ module.exports = {
   },
 
   //add in a collector 
-  addCollectorToBooking: async(id, collectorId, transaction) => {
-    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired)
+  addCollectorToBooking: async(id, collectorEmail, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let booking = await Booking.findByPk(id);
     Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound);
 
-    Checker.ifEmptyThrowError(collectorId, 'Collector ' + Constants.Error.IdRequired)
-    let customer = await Customer.findByPk(collectorId);
+    Checker.ifEmptyThrowError(collectorEmail, 'Collector ' + Constants.Error.EmailRequired);
+    let customer = await Customer.findOne({ where: { email: collectorEmail } });
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
     
-    booking = await booking.update({ collectorId }, { transaction });
+    booking = await booking.update({ collectorId: customer.id }, { transaction });
     return booking;
   }, 
 
@@ -352,13 +352,13 @@ module.exports = {
     return booking;
   }, 
 
-  changeCollectorToBooking: async(id, collectorId, transaction) => {
-    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired)
+  changeCollectorToBooking: async(id, collectorEmail, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let booking = await Booking.findByPk(id);
     Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound);
 
-    Checker.ifEmptyThrowError(collectorId, 'Collector ' + Constants.Error.IdRequired)
-    let customer = await Customer.findByPk(collectorId);
+    Checker.ifEmptyThrowError(collectorEmail, 'Collector ' + Constants.Error.EmailRequired);
+    let customer = await Customer.findOne({ where: { email: collectorEmail }});
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
 
     let qrCode = Math.random().toString(36).substring(2);
@@ -366,7 +366,7 @@ module.exports = {
       qrCode = Math.random().toString(36).substring(2);
     }
     
-    booking = await booking.update({ collectorId, qrCode }, { transaction });
+    booking = await booking.update({ collectorId: customer.id, qrCode }, { transaction });
     return booking;
   }, 
 
