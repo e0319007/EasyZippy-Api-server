@@ -87,6 +87,9 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let curProduct = await Product.findByPk(id);
     Checker.ifEmptyThrowError(curProduct, Constants.Error.ProductNotFound);
+    for(const variation of (await curProduct.getProductVariations())) {
+      await variation.update({ deleted: true }, { transaction });
+    }
     await Product.update({
       deleted: true,
     }, { where: { id }, transaction, returning: true });
@@ -98,6 +101,9 @@ module.exports = {
     let curProduct = await Product.findByPk(id);
     Checker.ifEmptyThrowError(curProduct, Constants.Error.ProductNotFound);
     Checker.ifDeletedThrowError(curProduct, Constants.Error.ProductDeleted);
+    for(const variation of (await curProduct.getProductVariations())) {
+      await variation.update({ productDisabled: !variation.productDisabled }, { transaction });
+    }
 
     await Product.update({
       disabled: !curProduct.disabled,
