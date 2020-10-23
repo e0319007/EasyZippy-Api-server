@@ -14,8 +14,8 @@ module.exports = {
     Checker.ifEmptyThrowError(name, Constants.Error.NameRequired);
     Checker.ifEmptyThrowError(quantityAvailable, Constants.Error.QuantityAvailableRequired);
     Checker.ifEmptyThrowError(unitPrice, Constants.Error.UnitPriceRequired);
-    Checker.ifEmptyThrowError(productId, Constants.Error.CategoryIdRequired)
-    Checker.ifEmptyThrowError(await Product.findByPk(productId), Constants.Error.ProductNotFound)
+    Checker.ifEmptyThrowError(productId, 'Product ID ' + Constants.Error.XXXIsRequired);
+    Checker.ifEmptyThrowError(await Product.findByPk(productId), Constants.Error.ProductNotFound);
     Checker.ifDeletedThrowError(await Product.findByPk(productId), Constants.Error.ProductVariationDeleted); 
     if(unitPrice <= 0) {
       throw new CustomError("Unit price " + Constants.Error.XXXCannotBeNegative);

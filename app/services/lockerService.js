@@ -28,7 +28,6 @@ module.exports = {
   },
 
   retrieveLocker: async(id) => {
-    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     const locker = await Locker.findByPk(id);
     Checker.ifEmptyThrowError(locker, Constants.Error.LockerNotFound);
     Checker.ifDeletedThrowError(locker, Constants.Error.LockerDeleted);
@@ -37,7 +36,7 @@ module.exports = {
   },
 
   retrieveAllLockers: async() => {
-    return await Locker.findAll({where: { deleted: false } });
+    return await Locker.findAll({ where: { deleted: false } });
   },
 
   retrieveLockersByLockerType: async(lockerTypeId) => {
