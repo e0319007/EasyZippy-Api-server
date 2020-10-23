@@ -20,6 +20,7 @@ const BookingService = require('./app/services/bookingService');
 const CartService = require('./app/services/cartService');
 const ProductVariationService = require('./app/services/productVariationService');
 const ProductVariation = require('./app/models/ProductVariation');
+const MaintenanceAction = require('./app/models/MaintenanceAction');
 
 const addDummyData = async () => {
   const staff1 = await StaffService.createStaff({ firstName: 'Alice', lastName: 'Ang', mobileNumber: '91234567', email: 'alice@email.com', staffRoleEnum: 'Admin' });
