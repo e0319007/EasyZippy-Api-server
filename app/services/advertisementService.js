@@ -262,11 +262,11 @@ module.exports = {
     });
   },
 
-  retrieveApprovedAdvertisment: async() => {
+  retrieveApprovedAdvertisement: async() => {
     return await Advertisement.findAll({ where: { approved: true } });
   },
 
-  retrieveUnapprovedAdvertisment: async() => {
+  retrieveUnapprovedAdvertisement: async() => {
     return await Advertisement.findAll({ where: { approved: false } });
   },
 }

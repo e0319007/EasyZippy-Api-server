@@ -181,17 +181,17 @@ module.exports = {
     }
   },
 
-  retrieveApprovedAdvertisment: async(req, res) => {
+  retrieveApprovedAdvertisement: async(req, res) => {
     try {  
-        return res.status(200).send(await AdvertisementService.retrieveApprovedAdvertisment());
+        return res.status(200).send(await AdvertisementService.retrieveApprovedAdvertisement());
     } catch (err) {
       sendErrorResponse(res, err);
     }
   },
 
-  retrieveUnapprovedAdvertisment: async(req, res) => {
+  retrieveUnapprovedAdvertisement: async(req, res) => {
     try {  
-        return res.status(200).send(await AdvertisementService.retrieveUnapprovedAdvertisment());
+        return res.status(200).send(await AdvertisementService.retrieveUnapprovedAdvertisement());
     } catch (err) {
       sendErrorResponse(res, err);
     }
