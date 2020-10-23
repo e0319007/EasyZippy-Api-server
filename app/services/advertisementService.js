@@ -11,7 +11,7 @@ const Staff = require('../models/Staff');
 
 module.exports = {
   createAdvertisementAsStaff: async(advertisementData, transaction) => {
-    let {title, description, image, advertiserUrl, startDate, endDate, amountPaid, advertiserMobile, advertiserEmail, staffId} = advertisementData;
+    let {title, description, image, advertiserUrl, startDate, endDate, amountPaid, advertiserMobile, advertiserEmail, staffId } = advertisementData;
     if(startDate > endDate) {
       throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     }
@@ -21,7 +21,7 @@ module.exports = {
     Checker.ifEmptyThrowError(await Staff.findByPk(staffId), Constants.Error.StaffNotFound);
     Checker.ifEmptyThrowError(image, Constants.Error.ImageRequired);
     const advertisement = await Advertisement.create({
-      title, description, imageUrl, startDate, endDate, amountPaid, advertiserMobile, advertiserEmail, staffId
+      title, description, imageUrl, startDate, endDate, amountPaid, advertiserMobile, advertiserEmail, staffId, approved: true
     }, { transaction });
     return advertisement;
   },
@@ -260,5 +260,13 @@ module.exports = {
         id
       }, transaction
     });
+  },
+
+  retrieveApprovedAdvertisment: async() => {
+    return Advertisement.findAll({ where: { approved: true } });
+  },
+
+  retrieveUnapprovedAdvertisment: async() => {
+    return Advertisement.findAll({ where: { approved: false } });
   },
 }
