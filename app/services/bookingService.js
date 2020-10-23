@@ -93,7 +93,7 @@ const checkBookingAvailable = async(startDate, endDate, lockerTypeId, kioskId) =
       duration++; 
       j++;
     }
-    if(availableStartDate != null) {
+    if(availableStartDate != null && duration >= 15) {
       //console.log(duration)
       availableEndDate = new Date(availableStartDate.getTime() + duration * 60000);
       availableSlot = {
