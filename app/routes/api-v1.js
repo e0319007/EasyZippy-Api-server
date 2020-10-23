@@ -58,12 +58,12 @@ router.put('/deleteBookingPackageModel/:id', Authenticator.staffOnly, BookingPac
 
 //BookingPackage
 router.get('/bookingPackage/:id', Authenticator.customerAndMerchantAndStaffOnly, BookingPackageController.retrieveBookingPackageByBookingPackageId);
-router.get('/customerBookingPackageModels/:customerId', Authenticator.customerAndStaffOnly, BookingPackageController.retrieveAllBookingPackageByCustomerId);
-router.get('/customerBookingPackageModel/:customerId', Authenticator.customerAndStaffOnly, BookingPackageController.retrieveCurrentBookingPackageByCustomerId);
-router.get('/merchantBookingPackageModels/:merchantId', Authenticator.merchantAndStaffOnly, BookingPackageController.retrieveAllBookingPackageByMerchantId);
-router.get('/merchantBookingPackageModels/:merchantId', Authenticator.merchantAndStaffOnly, BookingPackageController.retrieveCurrentBookingPackageByMerchantId);
-router.post('/bookingPackageCustomer', Authenticator.customerOnly, BookingPackageController.buyBookingPackageForCustomer);
-router.post('/bookingPackageMerchant', Authenticator.merchantOnly, BookingPackageController.buyBookingPackageForMerchant);
+router.get('/customerBookingPackages/:customerId', Authenticator.customerAndStaffOnly, BookingPackageController.retrieveAllBookingPackageByCustomerId);
+router.get('/customerBookingPackage/:customerId', Authenticator.customerAndStaffOnly, BookingPackageController.retrieveCurrentBookingPackageByCustomerId);
+router.get('/merchantBookingPackages/:merchantId', Authenticator.merchantAndStaffOnly, BookingPackageController.retrieveAllBookingPackageByMerchantId);
+router.get('/merchantBookingPackage/:merchantId', Authenticator.merchantAndStaffOnly, BookingPackageController.retrieveCurrentBookingPackageByMerchantId);
+router.post('/customerBookingPackage', Authenticator.customerOnly, BookingPackageController.buyBookingPackageForCustomer);
+router.post('/merchantBookingPackage', Authenticator.merchantOnly, BookingPackageController.buyBookingPackageForMerchant);
 
 //Booking
 router.get('/customerBooking/upcoming/:id', Authenticator.customerAndStaffOnly, BookingController.retrieveUpcomingBookingsByCustomerId);
