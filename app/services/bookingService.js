@@ -174,7 +174,7 @@ module.exports = {
     let { promoIdUsed, startDate, endDate, bookingSourceEnum, customerId, lockerTypeId, kioskId } = bookingData;
     startDate = new Date(startDate);
     endDate = new Date(endDate);
-    if(startDate < new Date()) throw new CustomError(Constants.Error.InvalidDate)
+    if(startDate.getTime() + 300000 < (new Date()).getTime()) throw new CustomError(Constants.Error.InvalidDate)
     if(startDate.getTime() > endDate.getTime()) throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     if(endDate.getTime() - startDate.getTime() > 24 * 60 * 60 * 1000) throw new CustomError(Constants.Error.TimeCannotExceed24H);
     Checker.ifEmptyThrowError(customerId, 'Customer ' + Constants.Error.IdRequired);
@@ -215,7 +215,7 @@ module.exports = {
     let { promoIdUsed, startDate, endDate, bookingSourceEnum, merchantId, lockerTypeId, kioskId} = bookingData;
     startDate = new Date(startDate);
     endDate = new Date(endDate);
-    if(startDate < new Date()) throw new CustomError(Constants.Error.InvalidDate)
+    if(startDate.getTime() + 300000 < (new Date()).getTime()) throw new CustomError(Constants.Error.InvalidDate)
     if(startDate > endDate) throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     if(endDate.getTime() - startDate.getTime() > 24 * 60 * 60 * 1000) throw new CustomError(Constants.Error.TimeCannotExceed24H);
     Checker.ifEmptyThrowError(merchantId, 'Merchant ' + Constants.Error.IdRequired);
