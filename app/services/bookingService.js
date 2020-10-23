@@ -30,8 +30,9 @@ const checkBookingAvailable = async(startDate, endDate, lockerTypeId, kioskId) =
     let bookingPackages = await bpm.getBookingPackages();
     let availBookingPackage = new Array();
     //check for non-expired booking packages only
+  
     for(let bp of bookingPackages) {
-      if(bp.kioskId === kioskId && bp.endDate.getTime() > new Date().getTime()) availBookingPackage.push(bp);
+      if(bp.kioskId === kioskId && !(bp.endDate < startDate && bp.startDate > endDate)) availBookingPackage.push(bp);
     }
     bookingPackageCount += availBookingPackage.length * bpm.quota;
   }
@@ -111,6 +112,7 @@ const checkBookingAvailable = async(startDate, endDate, lockerTypeId, kioskId) =
 
 const calculatePrice = async(startDate, endDate, lockerTypeId) => {
   let pricePerMilliSecond = (await LockerType.findByPk(lockerTypeId)).pricePerHalfHour / 1800000;
+  pricePerMilliSecond = pricePerMilliSecond.toFixed(2);
   let duration = endDate - startDate - 1800000;
   if(duration < 0) {
     return 0;
@@ -227,7 +229,7 @@ module.exports = {
     let creditPaymentRecord = await CreditPaymentRecordService.payCreditMerchant(merchantId, bookingPrice, transaction);
     let creditPaymentRecordId = creditPaymentRecord.id;
 
-    let booking = await Booking.create({ promoIdUsed, startDate, endDate, bookingSourceEnum, merchantId, qrCode, lockerTypeId, kioskId, bookingPrice, creditPaymentRecordId, bookingPrice }, { transaction });
+    let booking = await Booking.create({ promoIdUsed, startDate, endDate, bookingSourceEnum, merchantId, qrCode, lockerTypeId, kioskId, bookingPrice, creditPaymentRecordId }, { transaction });
     return booking;
   },
 
@@ -260,12 +262,30 @@ module.exports = {
       qrCode = Math.random().toString(36).substring(2);
     }
 
+    let lockerTypeId = bookingPackageModel.lockerTypeId;
+
+    //CHECK BOOKING CROSS OVER BOOKING PACKAGE END TIME
+    if(endDate > bookingPackage.endDate) {
+      let bookingPrice = await calculatePrice(bookingPackage.endDate, endDate, lockerTypeId);
+      let availSlots = await checkBookingAvailable(startDate, endDate, lockerTypeId, kioskId);
+      if(Checker.isEmpty(availSlots)) {
+        throw new CustomError(Constants.Error.BookingCannotBeMade)
+      } else if (availSlots[0].startDate.getTime() != bookingPackage.endDate.getTime() || availSlots[0].endDate.getTime() != endDate.getTime()) {
+        return availSlots;
+      }
+      //CREDIT PAYMENT
+      let creditPaymentRecord = await CreditPaymentRecordService.payCreditMerchant(customerId, bookingPrice, transaction);
+      let creditPaymentRecordId = creditPaymentRecord.id;
+      let booking = await Booking.create({ startDate, endDate, bookingSourceEnum, customerId, qrCode, bookingPackageId, lockerTypeId, kioskId, bookingPrice, creditPaymentRecordId }, { transaction });
+      return booking;
+    }
+
     //BOOKING PACKAGE UPDATE
     await BookingPackage.update({ lockerCount: ++bookingPackage.lockerCount }, { where: { id: bookingPackageId }, transaction });
 
     let kioskId = bookingPackage.kioskId;
 
-    booking = await Booking.create({ startDate, endDate, bookingSourceEnum, customerId, qrCode, bookingPackageId, lockerTypeId: bookingPackageModel.lockerTypeId, kioskId }, { transaction });
+    booking = await Booking.create({ startDate, endDate, bookingSourceEnum, customerId, qrCode, bookingPackageId, lockerTypeId, kioskId }, { transaction });
 
     return booking;
   },
