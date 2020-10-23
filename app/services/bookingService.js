@@ -144,7 +144,8 @@ module.exports = {
 
   checkBookingAllowed: async(bookingData) => {
     let { startDate, endDate, lockerTypeId, kioskId, bookingPackageId } = bookingData;
-    startDate.setSeconds(00);
+    startDate = new Date(startDate);
+    endDate = new Date(endDate);
     if (Checker.isEmpty(bookingPackageId)) {
       let availSlots = await checkBookingAvailable(startDate, endDate, lockerTypeId, kioskId);
       if(Checker.isEmpty(availSlots)) {
