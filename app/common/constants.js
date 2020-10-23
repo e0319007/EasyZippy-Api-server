@@ -125,6 +125,7 @@ module.exports = {
     LockerNotFound: 'Locker is not found',
     MaintenanceActionDeleted: 'Maintenance action is deleted',
     MaintenanceActionNotFound: 'Maintenance action not found',
+    MallNotFound: 'Mall not found',
     MerchantIdRequired: 'Merchant ID is required',
     MerchantDisabled: 'Merchant is disabled',
     MerchantNotApproved: 'Merchant is not approved',
