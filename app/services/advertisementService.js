@@ -263,10 +263,10 @@ module.exports = {
   },
 
   retrieveApprovedAdvertisment: async() => {
-    return Advertisement.findAll({ where: { approved: true } });
+    return await Advertisement.findAll({ where: { approved: true } });
   },
 
   retrieveUnapprovedAdvertisment: async() => {
-    return Advertisement.findAll({ where: { approved: false } });
+    return await Advertisement.findAll({ where: { approved: false } });
   },
 }
