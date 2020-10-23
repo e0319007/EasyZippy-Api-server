@@ -116,9 +116,9 @@ module.exports = {
 
   addCollectorToBooking: async(req, res) => {
     try{
-      const { bookingId, collectorId }= req.body;
+      const { bookingId, collectorEmail }= req.body;
       await sequelize.transaction(async (transaction) => {
-        booking = await BookingService.addCollectorToBooking(bookingId, collectorId, transaction);
+        booking = await BookingService.addCollectorToBooking(bookingId, collectorEmail, transaction);
       });
       res.status(200).send(booking);
     } catch(err) {
@@ -128,9 +128,9 @@ module.exports = {
 
   removeCollectorToBooking: async(req, res) => {
     try{
-      const bookingId = req.body;
+      const bookingId = req.body.bookingId;
       await sequelize.transaction(async (transaction) => {
-        booking = await BookingService.addCollectorToBooking(bookingId, transaction);
+        booking = await BookingService.removeCollectorToBooking(bookingId, transaction);
       });
       res.status(200).send(booking);
     } catch(err) {
@@ -140,9 +140,9 @@ module.exports = {
 
   changeCollectorToBooking: async(req, res) => {
     try{
-      const { bookingId, collectorId }= req.body;
+      const { bookingId, collectorEmail }= req.body;
       await sequelize.transaction(async (transaction) => {
-        booking = await BookingService.changeCollectorToBooking(bookingId, collectorId, transaction);
+        booking = await BookingService.changeCollectorToBooking(bookingId, collectorEmail, transaction);
       });
       res.status(200).send(booking);
     } catch(err) {

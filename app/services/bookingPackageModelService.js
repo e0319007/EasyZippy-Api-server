@@ -1,7 +1,9 @@
 const Checker = require('../common/checker');
 const Constants = require('../common/constants');
 const CustomError = require('../common/error/customError');
+const lockerTypeController = require('../controllers/lockerTypeController');
 const BookingPackageModel = require('../models/BookingPackageModel');
+const Locker = require('../models/Locker');
 const LockerType = require('../models/LockerType');
 
 module.exports = {
@@ -84,6 +86,22 @@ module.exports = {
     Checker.ifDeletedThrowError(bookingPackageModel, Constants.Error.BookingPackageModelDeleted);
 
     return bookingPackageModel;
+  },
+
+  retrieveBookingPackageModelsByKioskId: async(kioskId) => {
+    Checker.ifEmptyThrowError(kioskId, Constants.Error.IdRequired);
+    let bookingPackageModels = new Array();
+    let lockers = await Locker.findAll({ where: { kioskId } });
+    let lockerTypeIds = new Array();
+    for(let l of lockers) {
+      lockerTypeIds.push(l.lockerTypeId);
+    }
+    let uniqueLockerTypeIds = [...new Set(lockerTypeIds)];
+    for(let lockerTypeId of uniqueLockerTypeIds) {
+      let bookingPackageModel = await BookingPackageModel.findAll({ where: { lockerTypeId } });
+      bookingPackageModels = bookingPackageModels.concat(bookingPackageModel);
+    }
+    return bookingPackageModels;
   },
 
   deleteBookingPackageModel: async(id, transaction) => {

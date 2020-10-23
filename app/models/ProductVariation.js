@@ -42,6 +42,11 @@ ProductVariation.init(
       type: TEXT,
       allowNull: true
     },
+    productDisabled: {
+      type: BOOLEAN,
+      defaultValue: false,
+      allowNull: false
+    },
     disabled: {
       type: BOOLEAN,
       defaultValue: false,
