@@ -251,6 +251,8 @@ module.exports = {
     let bookingPackage = await BookingPackage.findOne({ where: { id: bookingPackageId, expired: false, customerId } });
     Checker.ifEmptyThrowError(bookingPackage, Constants.Error.BookingPackageNotFound);
     let bookingPackageModel = await BookingPackageModel.findByPk(bookingPackage.bookingPackageModelId);
+    //Check if at least the start date of a booking falls within the booking package period
+    if(startDate > bookingPackage.endDate) throw new CustomError(Constants.Error.BookingStartDateAfterPackageEndDate);
     //Check booking package availability
     if(bookingPackage.lockerCount >= bookingPackageModel.quota) {
       throw new CustomError(Constants.Error.BookingPackageReachedMaximumLockerCount);
@@ -308,6 +310,8 @@ module.exports = {
     let bookingPackage = await BookingPackage.findOne({ where: { id: bookingPackageId, expired: false, merchantId } });
     Checker.ifEmptyThrowError(bookingPackage, Constants.Error.BookingPackageNotFound);
     let bookingPackageModel = await BookingPackageModel.findByPk(bookingPackage.bookingPackageModelId);
+    //Check if at least the start date of a booking falls within the booking package period
+    if(startDate > bookingPackage.endDate) throw new CustomError(Constants.Error.BookingStartDateAfterPackageEndDate);
     //Check booking package availability
     if(bookingPackage.lockerCount >= bookingPackageModel.quota) {
       throw new CustomError(Constants.Error.BookingPackageReachedMaximumLockerCount);
