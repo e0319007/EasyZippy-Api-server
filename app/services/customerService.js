@@ -51,7 +51,6 @@ module.exports = {
       Checker.ifEmptyThrowError(firstName, Constants.Error.NameRequired);
       Checker.ifEmptyThrowError(lastName, Constants.Error.NameRequired);
       Checker.ifEmptyThrowError(password, Constants.Error.PasswordRequired);
-      Checker.ifEmptyThrowError(mobileNumber, Constants.Error.MobileNumberRequired);
       Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
 
       customerData.email = customerData.email.toLowerCase();
