@@ -263,8 +263,8 @@ const addDummyData = async () => {
 
   let bookingData9 = {
     promoIdUsed: null, 
-    startDate: new Date(2020,09,24,11,40), 
-    endDate: new Date(2020,09,24,14,00), 
+    startDate: new Date(2020,09,25,11,40), 
+    endDate: new Date(2020,09,25,14,00), 
     bookingSourceEnum: Constants.BookingSource.Mobile, 
     customerId: 1, 
     lockerTypeId: 1,
