@@ -46,9 +46,13 @@ const addDummyData = async () => {
 
   const staffId = (await StaffService.retrieveAllStaff())[0].id;
   const customerId = (await CustomerService.retrieveAllCustomers())[0].id;
+  const customerId2 = (await CustomerService.retrieveAllCustomers())[1].id;
+  const customerId3 = (await CustomerService.retrieveAllCustomers())[2].id;
   const merchantId = (await MerchantService.retrieveAllMerchants())[0].id;
 
   await CustomerService.activateCustomer(customerId);
+  await CustomerService.activateCustomer(customerId2);
+  await CustomerService.activateCustomer(customerId3);
   await MerchantService.approveMerchant(merchantId);
 
   await AnnouncementService.createAnnouncement({ title: 'Notice', description: 'The Ez2keep system will be disabled for maintenance on 21 September 2020', staffId });
