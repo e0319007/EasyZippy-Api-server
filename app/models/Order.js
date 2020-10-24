@@ -6,7 +6,6 @@ const sequelize = require('../common/database');
 
 const Customer = require('./Customer');
 const CreditPaymentRecord = require('./CreditPaymentRecord');
-const LineItem = require('./LineItem');
 const Merchant = require('./Merchant');
 
 class Order extends Model {
