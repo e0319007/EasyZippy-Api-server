@@ -65,6 +65,7 @@ const addDummyData = async () => {
   let toyCategory = await Category.create({ name: 'Toys', description: 'Sample Description' });
   let bagCategory = await Category.create({ name: 'Bags', description: 'Sample Description' });
   let bottleCategory = await Category.create({ name: 'Water Bottles', description: 'Sample Description' });
+  let apparelCategory = await Category.create({ name: 'Apparel', description: 'Sample Description' });
 
   await Product.create({ categoryId: bagCategory.id, merchantId: nike.id, name: 'Nike Venom Bag', unitPrice: 35.5, description: 'Black', quantityAvailable: 10, images: ['bag1.jpg'],  });
   await Product.create({ categoryId: bagCategory.id, merchantId: nike.id, name: 'Nike Sports Duffel Bag', unitPrice: 50.2, description: 'Pink', quantityAvailable: 10, images: ['bag2.jpg'] });
