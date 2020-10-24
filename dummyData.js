@@ -67,6 +67,7 @@ const addDummyData = async () => {
   let toyCategory = await Category.create({ name: 'Toys', description: 'Sample Description' });
   let bagCategory = await Category.create({ name: 'Bags', description: 'Sample Description' });
   let bottleCategory = await Category.create({ name: 'Water Bottles', description: 'Sample Description' });
+  let apparelCategory = await Category.create({ name: 'Apparel', description: 'Sample Description' });
 
   await Product.create({ categoryId: bagCategory.id, merchantId: nike.id, name: 'Nike Venom Bag', unitPrice: 35.5, description: 'Black', quantityAvailable: 100, images: ['bag1.jpg'],  });
   await Product.create({ categoryId: bagCategory.id, merchantId: nike.id, name: 'Nike Sports Duffel Bag', unitPrice: 50.2, description: 'Pink', quantityAvailable: 100, images: ['bag2.jpg'] });
@@ -116,7 +117,7 @@ const addDummyData = async () => {
   console.log((await CartService.retrieveCartByCustomerId(1)).length);
 
   let kiosk = await Kiosk.create({ address: '1 Sengkang Square', description: 'Sample Description'});
-  let kiosk2 = await Kiosk.create({ address: 'Clementi', description: 'Sample Description'});
+  let kiosk2 = await Kiosk.create({ address: '3155 Commonwealth Ave West', description: 'Sample Description'});
   let lockerType1 = await LockerType.create({ name: 'BIG', lockerHeight: 120, lockerWidth: 40, lockerLength: 50, pricePerHalfHour: 3 });
   let lockerType2 = await LockerType.create({ name: 'MEDIUM', lockerHeight: 80, lockerWidth: 30, lockerLength: 50, pricePerHalfHour: 2 });
   let lockerType3 = await LockerType.create({ name: 'SMALL', lockerHeight: 30, lockerWidth: 20, lockerLength: 50, pricePerHalfHour: 1 });
