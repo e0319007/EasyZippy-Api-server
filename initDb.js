@@ -18,6 +18,7 @@ const Merchant = require('./app/models/Merchant');
 const Notification = require('./app/models/Notification');
 const Order = require('./app/models/Order');
 const Product = require('./app/models/Product');
+const ProductVariation = require('./app/models/ProductVariation');
 const Promotion = require('./app/models/Promotion');
 const Staff = require('./app/models/Staff');
 
