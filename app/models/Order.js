@@ -61,6 +61,5 @@ Customer.hasMany(Order);
 Order.belongsTo(Merchant, { foreignKey: { allowNull: false } });
 Merchant.hasMany(Order);
 
-Order.hasMany(LineItem);
 
 module.exports = Order;

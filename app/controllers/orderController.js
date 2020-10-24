@@ -46,16 +46,28 @@ module.exports = {
   updateOrderStatus: async(req, res) => {
     try {
       let order;
-      let bookingStatus = req.body.bookingStatus;
+      let orderStatusEnum = req.body.orderStatus;
       await sequelize.transaction(async (transaction) => {
-        order = await BookingService.updateBookingStatus(bookingStatus, transaction);
+        order = await BookingService.updateBookingStatus(orderStatusEnum, transaction);
       });
-      return res.status(200).send(orders);
+      return res.status(200).send(order);
     } catch(err) {
       console.log(err)
       sendErrorResponse(res, err);
     }
   },
 
-
+  createOrder: async(req, res) => {
+    try {
+      let order;
+      let orderData = req.body;
+      await sequelize.transaction(async (transaction) => {
+        order = await BookingService.createOrder(orderData, transaction);
+      });
+      return res.status(200).send(order);
+    } catch(err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  },
 }
