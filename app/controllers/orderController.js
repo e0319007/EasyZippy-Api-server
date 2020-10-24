@@ -1,12 +1,12 @@
 const { sendErrorResponse } = require('../common/error/errorHandler');
 const sequelize = require('../common/database');
-const BookingService = require('../services/bookingService');
+const OrderService = require('../services/orderService');
 
 module.exports = {
   retrieveOrderByCustomerId: async(req, res) => {
     try {
-      
-      return res.status(200).send(orders);
+      let { customerId } = req.params
+      return res.status(200).send(await OrderService.retrieveOrderByCustomerId(customerId));
     } catch(err) {
       console.log(err)
       sendErrorResponse(res, err);
@@ -15,8 +15,8 @@ module.exports = {
 
   retrieveOrderByMerchantId: async(req, res) => {
     try {
-      
-      return res.status(200).send(orders);
+      let { merchantId } = req.params
+      return res.status(200).send(await OrderService.retrieveOrderByMerchantId(merchantId));
     } catch(err) {
       console.log(err)
       sendErrorResponse(res, err);
@@ -25,8 +25,7 @@ module.exports = {
 
   retrieveAllOrders: async(req, res) => {
     try {
-      
-      return res.status(200).send(orders);
+      return res.status(200).send(await OrderService.retrieveAllOrders());
     } catch(err) {
       console.log(err)
       sendErrorResponse(res, err);
@@ -35,8 +34,8 @@ module.exports = {
 
   retrieveOrderById: async(req, res) => {
     try {
-      
-      return res.status(200).send(orders);
+      let { orderId } = req.params
+      return res.status(200).send(await OrderService.retrieveOrderByMerchantId(orderId));
     } catch(err) {
       console.log(err)
       sendErrorResponse(res, err);
