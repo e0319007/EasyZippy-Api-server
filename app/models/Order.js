@@ -5,7 +5,6 @@ const {
 const sequelize = require('../common/database');
 
 const Customer = require('./Customer');
-const CreditPaymentRecord = require('./CreditPaymentRecord');
 const Merchant = require('./Merchant');
 
 class Order extends Model {
@@ -51,8 +50,6 @@ Order.init(
   }
 );
 
-Order.belongsTo(CreditPaymentRecord, { foreignKey: { allowNull: false } });
-CreditPaymentRecord.hasOne(Order);
 
 Order.belongsTo(Customer, { foreignKey: { allowNull: false } });
 Customer.hasMany(Order);

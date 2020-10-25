@@ -6,7 +6,7 @@ const sequelize = require('../common/database');
 
 const Merchant = require('./Merchant');
 const Customer = require('./Customer');
-const { validate } = require('email-validator');
+const Order = require('./Order');
 
 class CreditPaymentRecord extends Model {
 }
@@ -48,5 +48,8 @@ Merchant.hasMany(CreditPaymentRecord);
 
 CreditPaymentRecord.belongsTo(Customer);
 Customer.hasMany(CreditPaymentRecord);
+
+CreditPaymentRecord.belongsTo(Order);
+Order.hasMany(CreditPaymentRecord, { foreignKey: { allowNull: false } });
 
 module.exports = CreditPaymentRecord;
