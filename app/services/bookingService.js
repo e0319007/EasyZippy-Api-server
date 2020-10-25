@@ -16,7 +16,8 @@ const Order = require('../models/Order');
 const cons = require('consolidate');
 const Kiosk = require('../models/Kiosk');
 const ScheduleHelper = require('../common/scheduleHelper')
-const NotificationHelper = require('../common/notificationHelper')
+const NotificationHelper = require('../common/notificationHelper');
+const CreditPaymentRecord = require('../models/CreditPaymentRecord');
 
 const checkBookingAvailable = async(startDate, endDate, lockerTypeId, kioskId) => {
   let bookings = await Booking.findAll({ where: { lockerTypeId, kioskId } });
@@ -277,7 +278,7 @@ module.exports = {
     }
     
     //CREDIT PAYMENT
-    let creditPaymentRecord = await CreditPaymentRecordService.payCreditCustomer(customerId, bookingPrice, transaction);
+    let creditPaymentRecord = await CreditPaymentRecordService.payCreditCustomer(customerId, bookingPrice, Constants.CreditPaymentType.Booking, transaction);
     let creditPaymentRecordId = creditPaymentRecord.id;
 
     let booking = await Booking.create({ promoIdUsed, startDate, endDate, bookingSourceEnum, customerId, qrCode, lockerTypeId, kioskId, bookingPrice, creditPaymentRecordId }, { transaction })
@@ -316,7 +317,7 @@ module.exports = {
     }
 
     //CREDIT PAYMENT
-    let creditPaymentRecord = await CreditPaymentRecordService.payCreditMerchant(merchantId, bookingPrice, transaction);
+    let creditPaymentRecord = await CreditPaymentRecordService.payCreditMerchant(merchantId, bookingPrice, Constants.CreditPaymentType.Booking, transaction);
     let creditPaymentRecordId = creditPaymentRecord.id;
 
     let booking = await Booking.create({ promoIdUsed, startDate, endDate, bookingSourceEnum, merchantId, qrCode, lockerTypeId, kioskId, bookingPrice, creditPaymentRecordId }, { transaction });
@@ -527,9 +528,11 @@ module.exports = {
 
     const customer = await booking.getCustomer();
     const merchant = await booking.getMerchant();
+    const creditPaymentRecord = await CreditPaymentRecord.findByPk(booking.creditPaymentRecordId);
     
     if(!Checker.isEmpty(customer) && booking.bookingPrice !== null && booking.bookingPrice !== 0) {
-      await CreditPaymentRecordService.refundCreditCustomer(customer.id, booking.bookingPrice, transaction);
+      if(creditPaymentRecord.referralCreditUsed == 0) await CreditPaymentRecordService.refundCreditCustomer(customer.id, booking.bookingPrice, transaction);
+      else await CreditPaymentRecordService.refundCreditCustomer(customer.id, booking.bookingPrice, creditPaymentRecord.referralCreditUsed, transaction);
     }
 
     if(!Checker.isEmpty(merchant) && booking.bookingPrice !== null && booking.bookingPrice !== 0) {

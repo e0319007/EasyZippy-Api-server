@@ -199,5 +199,19 @@ module.exports = {
       console.log(err)
       sendErrorResponse(res, err);
     }
-  }
+  },
+
+  addReferrer: async (req, res) => {
+    try {
+      const { referrerId, refereeId } = req.body;
+      let referee;
+      await sequelize.transaction(async (transaction) => {
+        referee = await CustomerService.addReferrer(referrerId, refereeId, transaction);
+      });
+      return res.status(200).send(referee);
+    } catch (err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  },
 };

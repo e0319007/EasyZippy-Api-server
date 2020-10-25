@@ -19,6 +19,13 @@ module.exports = {
     InStall: 'In Stall',
     Kiosk: 'Kiosk'
   },
+  CreditPaymentType: {
+    Order: 'Order',
+    Booking: 'Booking',
+    BookingPackage: 'Booking Package',
+    BookingOvertimeCharge: 'Booking Overtime Charge',
+    ReferralBonus: 'Referral Bonus'
+  },
   LockerStatus: {
     InUse: 'In Use',
     Empty: 'Empty'
@@ -156,6 +163,8 @@ module.exports = {
     PromotionDeleted: 'Promotion is deleted',
     PromotionNotFound: 'Promotion not found',
     QuantityAvailableRequired: 'Quantity available is required',
+    ReferrerExist: 'Referrer exists already',
+    ReferrerAndRefereeInvalid: 'Referrer and referee cannot have the same ID',
     StaffDisabled: 'Staff is disabled',
     StaffNotFound: 'Staff not found',
     StartDateLaterThanEndDate: 'Start date should not be later then end date',
