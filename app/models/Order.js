@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const constants = require('../common/constants');
 const {
   INTEGER, DATE, DECIMAL, STRING, Model
 } = Sequelize;
@@ -36,7 +37,8 @@ Order.init(
     },
     orderStatusEnum: {
       type: STRING,
-      allowNull: false
+      allowNull: false,
+      defaultValue: constants.OrderStatus.Processing
     },
     collectionMethodEnum: {
       type: STRING,

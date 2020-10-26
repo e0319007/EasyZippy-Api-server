@@ -1,3 +1,4 @@
+const cons = require('consolidate');
 const { order } = require('paypal-rest-sdk');
 const Checker = require('../common/checker');
 const Constants = require('../common/constants');
@@ -40,7 +41,7 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let order = await Order.findByPk(id);
     Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound);
-
+    console.log(order)
     if(orderStatusEnum === Constants.OrderStatus.Complete) return await markOrderComplete(order, transaction);
     order = await Order.update({ orderStatusEnum }, { where: { id }, transaction, returning: true });
     return order;
@@ -52,9 +53,9 @@ module.exports = {
       Checker.ifEmptyThrowError(await Promotion.findByPk(promoIdUsed), Constants.Error.PromotionNotFound);
     }
     Checker.ifEmptyThrowError(collectionMethodEnum, 'Collection method enum ' + Constants.Error.XXXIsRequired);
-    Checker.ifEmptyThrowError(totalAmountPaid, 'Total amount ' + Constants.Error.XXXIsRequired)
-    Checker.ifNegativeThrowError(totalAmountPaid, 'Total amount ' + Constants.Error.XXXCannotBeNegative);
-    Checker.ifNotNumberThrowError(totalAmountPaid, 'Total amount ' + Constants.Error.XXXMustBeNumber);
+    // Checker.ifEmptyThrowError(totalAmountPaid, 'Total amount ' + Constants.Error.XXXIsRequired)
+    // Checker.ifNegativeThrowError(totalAmountPaid, 'Total amount ' + Constants.Error.XXXCannotBeNegative);
+    // Checker.ifNotNumberThrowError(totalAmountPaid, 'Total amount ' + Constants.Error.XXXMustBeNumber);
     Checker.isEmpty(customerId, Constants.Error.IdRequired)
     Checker.isEmpty(await Customer.findByPk(customerId), Constants.Error.CustomerNotFound);
 
@@ -63,10 +64,18 @@ module.exports = {
     while(!Checker.isEmpty(cart)) {
       let lt = cart.pop(); 
       let merchantId;
-      if(lt.productId === null) {
-        merchantId = (await Product.findByPk(lt.productId)).merchantId;
+      if(lt.productId !== null) {
+        let product = await Product.findByPk(lt.productId);
+        console.log(lt.productId);
+        console.log(product);
+        await product.update({ quantityAvailable: product.quantityAvailable - lt.quantity}, { transaction });
+        merchantId = product.merchantId;
       } else {
-        merchantId = (await Product.findByPk((await ProductVariation.findByPk(lt.productVariationId).productId))).merchantId;
+        let productVariation = await ProductVariation.findByPk(lt.productVariationId);
+        console.log(lt.productVariationId);
+        console.log(productVariation);
+        await productVariation.update({ quantityAvailable: productVariation.quantityAvailable - lt.quantity}, { transaction });
+        merchantId = (await Product.findByPk(productVariation.productId)).merchantId;
       }
       Checker.ifEmptyThrowError(merchantId, Constants.Error.MerchantNotFound)
       let lineItem = await LineItem.create({ productId: lt.productId, productVariationId: lt.productVariationId, quantity: lt.quantity }, { transaction })
@@ -84,7 +93,7 @@ module.exports = {
       if(merchantMapLineitems.has(limp.merchantId)) {
         let items = merchantMapLineitems.get(limp.merchantId);
         items.push(limp.lineItem);
-        merchantMapLineitems.set(merchantId, items);
+        merchantMapLineitems.set(limp.merchantId, items);
       } else {
         let items = new Array();
         items.push(limp.lineItem);
@@ -92,18 +101,18 @@ module.exports = {
       } 
     }
 
-    let orders; 
+    let orders = new Array(); 
     let trackTotalAmount = 0;
 
     for (let [merchantId, lineItems] of merchantMapLineitems) {
-      let totalAmount = await applyPromoCode(await calculatePrice(lineItems));
+      let totalAmount = await applyPromoCode(promoIdUsed, await calculatePrice(lineItems));
       trackTotalAmount += totalAmount;
-      let creditPaymentRecordId = await CreditPaymentRecordService.payCreditCustomer(customerId, totalAmount, Constants.CreditPaymentType.Order, transaction).id;
+      let creditPaymentRecordId = (await CreditPaymentRecordService.payCreditCustomer(customerId, totalAmount, Constants.CreditPaymentType.Order, transaction)).id;
       let order = await Order.create({ promoIdUsed, totalAmount, collectionMethodEnum, customerId, merchantId, creditPaymentRecordId }, { transaction });
       orders.push(order);
     }
 
-    if(totalAmountPaid != trackTotalAmount) throw new CustomError(Constants.Error.PriceDoesNotTally);
+    // if(totalAmountPaid != trackTotalAmount) throw new CustomError(Constants.Error.PriceDoesNotTally);
 
     return orders;
   },
@@ -111,20 +120,28 @@ module.exports = {
 }
 
 const markOrderComplete = async(order, transaction) => {
-  let creditPaymentRecord = await CreditPaymentRecordService.refundCreditMerchant(order.merchantId, order.amountPaid, Constants.CreditPaymentType.Order, transaction);
+  console.log('Amount paid:' + order.amountPaid);
+  console.log('order:');
+  console.log(order);
+  let creditPaymentRecord = await CreditPaymentRecordService.refundCreditMerchant(order.merchantId, order.totalAmount, Constants.CreditPaymentType.Order, transaction);
   let creditPaymentRecords = await CreditPaymentRecord.findAll({ where: { orderId: order.id } });
   creditPaymentRecords.push(creditPaymentRecord);
-  let order = await order.update({ orderStatusEnum: Constants.OrderStatus.Complete, creditPaymentRecords }, { where: { id }, transaction, returning: true });
+  order = await order.update({ orderStatusEnum: Constants.OrderStatus.Complete, creditPaymentRecords }, { where: { id: order.id }, transaction, returning: true });
   return order;
 }
 
 const calculatePrice = async(lineItems) => {
   let price = 0;
+  console.log('LineItems: ')
+  console.log(lineItems);
   for(let lineItem of lineItems) {
-    if(lineItem.productId === null) {
+    console.log('productId:: ' + lineItem.productId);
+    console.log('productVariationId: ' + lineItem.productVariationId);
+    console.log(lineItem)
+    if(lineItem.productId !== null) {
       price += ((await Product.findByPk(lineItem.productId)).unitPrice * lineItem.quantity);
     } else {
-      price += ((await Product.findByPk((await ProductVariation.findByPk(lineItem.productVariationId).productId))).unitPrice * lineItem.quantity);
+      price += ((await ProductVariation.findByPk(lineItem.productVariationId)).unitPrice * lineItem.quantity);
     }
   }
   return price;
@@ -132,6 +149,7 @@ const calculatePrice = async(lineItems) => {
 
 const applyPromoCode = async(promoIdUsed, price) => {
   if(!Checker.isEmpty(promoIdUsed)) {
+    console.log('PROMO ID USED' + promoIdUsed)
     let promotion = await Promotion.findByPk(promoIdUsed);
     Checker.ifEmptyThrowError(promotion, Constants.Error.PromotionNotFound);
     if(promotion.startDate <= new Date() && promotion.endDate >= new Date()) {
@@ -142,5 +160,6 @@ const applyPromoCode = async(promoIdUsed, price) => {
       }
     }
   } 
+  if(price < 0) return 0;
   return price;
 }

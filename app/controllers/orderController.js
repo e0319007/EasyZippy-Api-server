@@ -48,7 +48,7 @@ module.exports = {
       let { id } = req.params;
       let orderStatusEnum = req.body.orderStatus;
       await sequelize.transaction(async (transaction) => {
-        order = await BookingService.updateBookingStatus(id, orderStatusEnum, transaction);
+        order = await OrderService.updateBookingStatus(id, orderStatusEnum, transaction);
       });
       return res.status(200).send(order);
     } catch(err) {
@@ -62,7 +62,7 @@ module.exports = {
       let order;
       let orderData = req.body;
       await sequelize.transaction(async (transaction) => {
-        order = await BookingService.createOrder(orderData, transaction);
+        order = await OrderService.createOrder(orderData, transaction);
       });
       return res.status(200).send(order);
     } catch(err) {
