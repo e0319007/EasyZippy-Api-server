@@ -19,6 +19,7 @@ const BookingPackageService = require('./app/services/bookingPackageService');
 const BookingService = require('./app/services/bookingService');
 const cons = require('consolidate');
 const MaintenanceAction = require('./app/models/MaintenanceAction');
+const mallService = require('./app/services/mallService');
 
 const addDummyData = async () => {
   const staff1 = await StaffService.createStaff({ firstName: 'Alice', lastName: 'Ang', mobileNumber: '91234567', email: 'alice@email.com', staffRoleEnum: 'Admin' });
@@ -73,8 +74,23 @@ const addDummyData = async () => {
   await Product.create({ categoryId: toyCategory.id, merchantId: toysRUs.id, name: 'Doll', unitPrice: 15, description: 'Blue Hair Doll', quantityAvailable: 10, images: ['doll.jpg'] });
   await Product.create({ categoryId: toyCategory.id, merchantId: toysRUs.id, name: 'Car', unitPrice: 105.9, description: 'Red Car', quantityAvailable: 10, images: ['car.jpg'] });
 
-  let kiosk = await Kiosk.create({ address: '1 Sengkang Square', description: 'Sample Description'});
-  let kiosk2 = await Kiosk.create({ address: 'Clementi', description: 'Sample Description'});
+  mallData1 = {
+    name: 'Compass 1', 
+    address: '1 Sengkang Square', 
+    postalCode: '123456'
+  }
+
+  mallData2 = {
+    name: 'Clementi Mall', 
+    address: '123 Clementi street', 
+    postalCode: '636272'
+  }
+
+  await mallService.createMall(mallData1);
+  await mallService.createMall(mallData2);
+
+  let kiosk = await Kiosk.create({ address: '1 Sengkang Square', description: 'Sample Description', mallId: 1 });
+  let kiosk2 = await Kiosk.create({ address: 'Clementi', description: 'Sample Description', mallId: 2 });
   let lockerType1 = await LockerType.create({ name: 'BIG', lockerHeight: 120, lockerWidth: 40, lockerLength: 50, pricePerHalfHour: 3 });
   let lockerType2 = await LockerType.create({ name: 'MEDIUM', lockerHeight: 80, lockerWidth: 30, lockerLength: 50, pricePerHalfHour: 2 });
   let lockerType3 = await LockerType.create({ name: 'SMALL', lockerHeight: 30, lockerWidth: 20, lockerLength: 50, pricePerHalfHour: 1 });

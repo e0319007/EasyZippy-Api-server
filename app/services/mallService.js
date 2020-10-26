@@ -24,6 +24,10 @@ module.exports = {
     return await Mall.findAll({ where: { deleted: false } });
   },
 
+  retrieveAllMallsWithoutDisabled: async() => {
+    return await Mall.findAll({ where: { deleted: false, disabled: false } });
+  },
+
   updateMall: async(id, mallData, transaction) => {
     let mall = await Mall.findByPk(id);
     Checker.ifEmptyThrowError(mall, Constants.Error.MallNotFound);
@@ -45,7 +49,7 @@ module.exports = {
   },
 
   toggleDisableMall: async(id, transaction) => {
-    const mall = await Mall.findByPk(id);
+    let mall = await Mall.findByPk(id);
     Checker.ifEmptyThrowError(mall, Constants.Error.MallNotFound);
     Checker.ifDeletedThrowError(mall, Constants.Error.MallNotFound);
 
@@ -53,7 +57,7 @@ module.exports = {
   },
 
   deleteMall: async(id, transaction) => {
-    const mall = await Mall.findByPk(id);
+    let mall = await Mall.findByPk(id);
     Checker.ifEmptyThrowError(mall, Constants.Error.MallNotFound);
 
     await mall.update({ deleted: true }, { transaction });

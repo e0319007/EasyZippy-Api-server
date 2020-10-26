@@ -3,6 +3,7 @@ const {
   INTEGER, STRING, DECIMAL, BOOLEAN, Model
 } = Sequelize;
 const sequelize = require('../common/database');
+const Mall = require('./Mall');
 
 class Merchant extends Model {
 }
@@ -94,5 +95,8 @@ Merchant.init(
     underscored: true
   }
 );
+
+Merchant.belongsToMany(Mall, { through: 'MallMerchant' });
+Mall.belongsToMany(Merchant, { through: 'MallMerchant' });
 
 module.exports = Merchant;
