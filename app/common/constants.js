@@ -98,6 +98,7 @@ module.exports = {
     CategoryIdRequired: 'Category ID is required',
     CategoryNotFound: 'Category is not found',
     CheckerCalledInappropriately: 'Checker was called inappropriately',
+    ChooseOneDiscountType: 'Choose only one discount type',
     CurrentPasswordRequired: 'Current password required',
     CustomerDisabled: 'Customer is disabled',
     CustomerNotActivated: 'Customer not activated',

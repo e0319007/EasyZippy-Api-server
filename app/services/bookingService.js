@@ -136,6 +136,70 @@ const applyPromoId = async(promoIdUsed, bookingPrice) => {
   return bookingPrice;
 }
 
+const createBookingWithBookingPackageByCustomer = async(bookingData, transaction) => {
+  let { startDate, endDate, bookingSourceEnum, customerId, bookingPackageId} = bookingData;
+  let booking;
+  startDate = new Date(startDate);
+  endDate = new Date(endDate);
+  if(startDate.getTime() + 300000 < (new Date()).getTime()) throw new CustomError(Constants.Error.InvalidDate)
+  if(startDate > endDate) throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
+  if(endDate.getTime() - startDate.getTime() > 24 * 60 * 60 * 1000) throw new CustomError(Constants.Error.TimeCannotExceed24H);
+  Checker.ifEmptyThrowError(customerId, 'Customer ' + Constants.Error.IdRequired);
+  Checker.ifEmptyThrowError(await Customer.findByPk(customerId), Constants.Error.CustomerNotFound);
+  Checker.ifEmptyThrowError(bookingSourceEnum, 'Booking Source ' + Constants.Error.XXXIsRequired);
+  
+  Checker.ifEmptyThrowError(bookingPackageId, 'Booking package ' + Constants.Error.IdRequired);
+  //Check if booking package belongs to the customer
+  let bookingPackage = await BookingPackage.findOne({ where: { id: bookingPackageId, expired: false, customerId } });
+  Checker.ifEmptyThrowError(bookingPackage, Constants.Error.BookingPackageNotFound);
+  let bookingPackageModel = await BookingPackageModel.findByPk(bookingPackage.bookingPackageModelId);
+  //Check if at least the start date of a booking falls within the booking package period
+  if(startDate > bookingPackage.endDate) throw new CustomError(Constants.Error.BookingStartDateAfterPackageEndDate);
+  //Check booking package availability
+  if(bookingPackage.lockerCount >= bookingPackageModel.quota) {
+    throw new CustomError(Constants.Error.BookingPackageReachedMaximumLockerCount);
+  }
+
+  //QR CODE
+  let qrCode = Math.random().toString(36).substring(2);
+  while (!Checker.isEmpty(await Booking.findOne({ where: { qrCode } }))) {
+    qrCode = Math.random().toString(36).substring(2);
+  }
+
+  let lockerTypeId = bookingPackageModel.lockerTypeId;
+  let kioskId = bookingPackage.kioskId;
+
+  /*CHECK BOOKING CROSS OVER BOOKING PACKAGE END TIME*/
+  if(endDate > bookingPackage.endDate) {
+    console.log('PASS')
+    let bookingPrice = await calculatePrice(bookingPackage.endDate, endDate, lockerTypeId);
+    let availSlots = await checkBookingAvailable(bookingPackage.endDate, endDate, lockerTypeId, kioskId);
+    if (Checker.isEmpty(availSlots) || (!Checker.isEmpty(availSlots) && availSlots[0].startDate.getTime() != bookingPackage.endDate.getTime() || availSlots[0].endDate.getTime() != endDate.getTime())) {
+      throw new CustomError(Constants.Error.BookingCannotBeMade);
+    }
+    //CREDIT PAYMENT
+    let creditPaymentRecord = await CreditPaymentRecordService.payCreditCustomer(customerId, bookingPrice, transaction);
+    let creditPaymentRecordId = creditPaymentRecord.id;
+
+    //BOOKING PACKAGE UPDATE
+    await BookingPackage.update({ lockerCount: ++bookingPackage.lockerCount }, { where: { id: bookingPackageId }, transaction });
+
+    let booking = await Booking.create({ startDate, endDate, bookingSourceEnum, customerId, qrCode, bookingPackageId, lockerTypeId, kioskId, bookingPrice, creditPaymentRecordId }, { transaction });
+    return booking;
+  
+  } else {
+
+    //BOOKING PACKAGE UPDATE
+    await BookingPackage.update({ lockerCount: ++bookingPackage.lockerCount }, { where: { id: bookingPackageId }, transaction });
+
+    let kioskId = bookingPackage.kioskId;
+
+    booking = await Booking.create({ startDate, endDate, bookingSourceEnum, customerId, qrCode, bookingPackageId, lockerTypeId, kioskId }, { transaction });
+
+    return booking;
+  }
+}
+
 module.exports = {
   // should qr code be generated on the front end?
   // backend store a randomly generated string, 
@@ -172,9 +236,20 @@ module.exports = {
 
   createBookingByCustomer: async(bookingData, transaction) => {
     let { promoIdUsed, startDate, endDate, bookingSourceEnum, customerId, lockerTypeId, kioskId } = bookingData;
+    
+    const customer = await Customer.findByPk(customerId);
+    Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
+    for(const bookingPackage of await customer.getBookingPackages()) {
+      const bookingPackageModel = await bookingPackage.getBookingPackageModel();
+      const bookingPackageModelLockerType = await bookingPackageModel.getLockerType();
+      if(!bookingPackage.expired && bookingPackageModelLockerType.id === lockerTypeId && bookingPackage.lockerCount < bookingPackageModel.quota) {
+        return await createBookingWithBookingPackageByCustomer({ ...bookingData, bookingPackageId: bookingPackage.id }, transaction);
+      }
+    }
+    
     startDate = new Date(startDate);
     endDate = new Date(endDate);
-    if(startDate < new Date()) throw new CustomError(Constants.Error.InvalidDate); // Unsuitable for instant bookings
+    if(startDate.getTime() + 300000 < (new Date()).getTime()) throw new CustomError(Constants.Error.InvalidDate)
     if(startDate.getTime() > endDate.getTime()) throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     if(endDate.getTime() - startDate.getTime() > 24 * 60 * 60 * 1000) throw new CustomError(Constants.Error.TimeCannotExceed24H);
     Checker.ifEmptyThrowError(customerId, 'Customer ' + Constants.Error.IdRequired);
@@ -185,10 +260,8 @@ module.exports = {
 
     let bookingPrice = await calculatePrice(startDate, endDate, lockerTypeId);
     let availSlots = await checkBookingAvailable(startDate, endDate, lockerTypeId, kioskId);
-    if(Checker.isEmpty(availSlots)) {
-      throw new CustomError(Constants.Error.BookingCannotBeMade)
-    } else if (availSlots[0].startDate.getTime() != startDate.getTime() || availSlots[0].endDate.getTime() != endDate.getTime()) {
-      return availSlots;
+    if(Checker.isEmpty(availSlots) || availSlots[0].startDate.getTime() != startDate.getTime() || availSlots[0].endDate.getTime() != endDate.getTime()) {
+      throw new CustomError(Constants.Error.BookingCannotBeMade);
     }
 
     //PROMOTION
@@ -215,7 +288,7 @@ module.exports = {
     let { promoIdUsed, startDate, endDate, bookingSourceEnum, merchantId, lockerTypeId, kioskId} = bookingData;
     startDate = new Date(startDate);
     endDate = new Date(endDate);
-    if(startDate < new Date()) throw new CustomError(Constants.Error.InvalidDate)
+    if(startDate.getTime() + 300000 < (new Date()).getTime()) throw new CustomError(Constants.Error.InvalidDate)
     if(startDate > endDate) throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     if(endDate.getTime() - startDate.getTime() > 24 * 60 * 60 * 1000) throw new CustomError(Constants.Error.TimeCannotExceed24H);
     Checker.ifEmptyThrowError(merchantId, 'Merchant ' + Constants.Error.IdRequired);
@@ -226,10 +299,8 @@ module.exports = {
 
     let bookingPrice = await calculatePrice(startDate, endDate, lockerTypeId);
     let availSlots = await checkBookingAvailable(startDate, endDate, lockerTypeId, kioskId);
-    if(Checker.isEmpty(availSlots)) {
-      throw new CustomError(Constants.Error.BookingCannotBeMade)
-    } else if (availSlots[0].startDate.getTime() != startDate.getTime() || availSlots[0].endDate.getTime() != endDate.getTime()) {
-      return availSlots;
+    if(Checker.isEmpty(availSlots) || availSlots[0].startDate.getTime() != startDate.getTime() || availSlots[0].endDate.getTime() != endDate.getTime()) {
+      throw new CustomError(Constants.Error.BookingCannotBeMade);
     }
 
     //PROMOTION
@@ -253,73 +324,7 @@ module.exports = {
   },
 
 
-  createBookingWithBookingPackageByCustomer: async(bookingData, transaction) => {
-    let { startDate, endDate, bookingSourceEnum, customerId, bookingPackageId} = bookingData;
-    let booking;
-    startDate = new Date(startDate);
-    endDate = new Date(endDate);
-    if(startDate < new Date()) throw new CustomError(Constants.Error.InvalidDate)
-    if(startDate > endDate) throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
-    if(endDate.getTime() - startDate.getTime() > 24 * 60 * 60 * 1000) throw new CustomError(Constants.Error.TimeCannotExceed24H);
-    Checker.ifEmptyThrowError(customerId, 'Customer ' + Constants.Error.IdRequired);
-    Checker.ifEmptyThrowError(await Customer.findByPk(customerId), Constants.Error.CustomerNotFound);
-    Checker.ifEmptyThrowError(bookingSourceEnum, 'Booking Source ' + Constants.Error.XXXIsRequired);
-    
-    Checker.ifEmptyThrowError(bookingPackageId, 'Booking package ' + Constants.Error.IdRequired);
-    //Check if booking package belongs to the customer
-    let bookingPackage = await BookingPackage.findOne({ where: { id: bookingPackageId, expired: false, customerId } });
-    Checker.ifEmptyThrowError(bookingPackage, Constants.Error.BookingPackageNotFound);
-    let bookingPackageModel = await BookingPackageModel.findByPk(bookingPackage.bookingPackageModelId);
-    //Check if at least the start date of a booking falls within the booking package period
-    if(startDate > bookingPackage.endDate) throw new CustomError(Constants.Error.BookingStartDateAfterPackageEndDate);
-    //Check booking package availability
-    if(bookingPackage.lockerCount >= bookingPackageModel.quota) {
-      throw new CustomError(Constants.Error.BookingPackageReachedMaximumLockerCount);
-    }
-
-    //QR CODE
-    let qrCode = Math.random().toString(36).substring(2);
-    while (!Checker.isEmpty(await Booking.findOne({ where: { qrCode } }))) {
-      qrCode = Math.random().toString(36).substring(2);
-    }
-
-    let lockerTypeId = bookingPackageModel.lockerTypeId;
-    let kioskId = bookingPackage.kioskId;
-
-    /*CHECK BOOKING CROSS OVER BOOKING PACKAGE END TIME*/
-    if(endDate > bookingPackage.endDate) {
-      console.log('PASS')
-      let bookingPrice = await calculatePrice(bookingPackage.endDate, endDate, lockerTypeId);
-      let availSlots = await checkBookingAvailable(bookingPackage.endDate, endDate, lockerTypeId, kioskId);
-      if (Checker.isEmpty(availSlots) || (!Checker.isEmpty(availSlots) && availSlots[0].startDate.getTime() != bookingPackage.endDate.getTime() || availSlots[0].endDate.getTime() != endDate.getTime())) {
-        availSlots.push({
-          'startDate': startDate,
-          'endDate': bookingPackage.endDate
-        })
-        return availSlots;
-      }
-      //CREDIT PAYMENT
-      let creditPaymentRecord = await CreditPaymentRecordService.payCreditCustomer(customerId, bookingPrice, transaction);
-      let creditPaymentRecordId = creditPaymentRecord.id;
-
-      //BOOKING PACKAGE UPDATE
-      await BookingPackage.update({ lockerCount: ++bookingPackage.lockerCount }, { where: { id: bookingPackageId }, transaction });
-
-      let booking = await Booking.create({ startDate, endDate, bookingSourceEnum, customerId, qrCode, bookingPackageId, lockerTypeId, kioskId, bookingPrice, creditPaymentRecordId }, { transaction });
-      return booking;
-    
-    } else {
-
-      //BOOKING PACKAGE UPDATE
-      await BookingPackage.update({ lockerCount: ++bookingPackage.lockerCount }, { where: { id: bookingPackageId }, transaction });
-
-      let kioskId = bookingPackage.kioskId;
-
-      booking = await Booking.create({ startDate, endDate, bookingSourceEnum, customerId, qrCode, bookingPackageId, lockerTypeId, kioskId }, { transaction });
-
-      return booking;
-    }
-  },
+  createBookingWithBookingPackageByCustomer,
 
 
   createBookingWithBookingPackageByMerchant: async(bookingData, transaction) => {
@@ -327,7 +332,7 @@ module.exports = {
     let booking;
     startDate = new Date(startDate);
     endDate = new Date(endDate);
-    if(startDate < new Date()) throw new CustomError(Constants.Error.InvalidDate)
+    if(startDate.getTime() + 300000 < (new Date()).getTime()) throw new CustomError(Constants.Error.InvalidDate)
     if(startDate > endDate) throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     if(endDate.getTime() - startDate.getTime() > 24 * 60 * 60 * 1000) throw new CustomError(Constants.Error.TimeCannotExceed24H);
     Checker.ifEmptyThrowError(merchantId, 'Merchant ' + Constants.Error.IdRequired);
@@ -360,11 +365,7 @@ module.exports = {
       let bookingPrice = await calculatePrice(bookingPackage.endDate, endDate, lockerTypeId);
       let availSlots = await checkBookingAvailable(bookingPackage.endDate, endDate, lockerTypeId, kioskId);
       if (Checker.isEmpty(availSlots) || (!Checker.isEmpty(availSlots) && availSlots[0].startDate.getTime() != bookingPackage.endDate.getTime() || availSlots[0].endDate.getTime() != endDate.getTime())) {
-        availSlots.push({
-          'startDate': startDate,
-          'endDate': bookingPackage.endDate
-        })
-        return availSlots;
+        throw new CustomError(Constants.Error.BookingCannotBeMade);
       }
 
       //CREDIT PAYMENT

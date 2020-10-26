@@ -47,9 +47,13 @@ const addDummyData = async () => {
 
   const staffId = (await StaffService.retrieveAllStaff())[0].id;
   const customerId = (await CustomerService.retrieveAllCustomers())[0].id;
+  const customerId2 = (await CustomerService.retrieveAllCustomers())[1].id;
+  const customerId3 = (await CustomerService.retrieveAllCustomers())[2].id;
   const merchantId = (await MerchantService.retrieveAllMerchants())[0].id;
 
   await CustomerService.activateCustomer(customerId);
+  await CustomerService.activateCustomer(customerId2);
+  await CustomerService.activateCustomer(customerId3);
   await MerchantService.approveMerchant(merchantId);
 
   await AnnouncementService.createAnnouncement({ title: 'Notice', description: 'The Ez2keep system will be disabled for maintenance on 21 September 2020', staffId });
@@ -66,6 +70,7 @@ const addDummyData = async () => {
   let toyCategory = await Category.create({ name: 'Toys', description: 'Sample Description' });
   let bagCategory = await Category.create({ name: 'Bags', description: 'Sample Description' });
   let bottleCategory = await Category.create({ name: 'Water Bottles', description: 'Sample Description' });
+  let apparelCategory = await Category.create({ name: 'Apparel', description: 'Sample Description' });
 
   await Product.create({ categoryId: bagCategory.id, merchantId: nike.id, name: 'Nike Venom Bag', unitPrice: 35.5, description: 'Black', quantityAvailable: 10, images: ['bag1.jpg'],  });
   await Product.create({ categoryId: bagCategory.id, merchantId: nike.id, name: 'Nike Sports Duffel Bag', unitPrice: 50.2, description: 'Pink', quantityAvailable: 10, images: ['bag2.jpg'] });
@@ -89,8 +94,9 @@ const addDummyData = async () => {
   await mallService.createMall(mallData1);
   await mallService.createMall(mallData2);
 
+  
   let kiosk = await Kiosk.create({ address: '1 Sengkang Square', description: 'Sample Description', mallId: 1 });
-  let kiosk2 = await Kiosk.create({ address: 'Clementi', description: 'Sample Description', mallId: 2 });
+  let kiosk2 = await Kiosk.create({ address: '3155 Commonwealth Ave West', description: 'Sample Description', mallId: 2 });
   let lockerType1 = await LockerType.create({ name: 'BIG', lockerHeight: 120, lockerWidth: 40, lockerLength: 50, pricePerHalfHour: 3 });
   let lockerType2 = await LockerType.create({ name: 'MEDIUM', lockerHeight: 80, lockerWidth: 30, lockerLength: 50, pricePerHalfHour: 2 });
   let lockerType3 = await LockerType.create({ name: 'SMALL', lockerHeight: 30, lockerWidth: 20, lockerLength: 50, pricePerHalfHour: 1 });
@@ -200,10 +206,22 @@ const addDummyData = async () => {
 
   console.log('Initializing booking');
 
+  const startDate1 = new Date(new Date().getTime() + 24 * 60 * 60000);
+  const endDate1 = new Date(new Date().getTime() + 24 * 60 * 60000 + 60 * 60000);
+
+  const startDate2 = new Date(new Date().getTime() + 48 * 60 * 60000);
+  const endDate2 = new Date(new Date().getTime() + 48 * 60 * 60000 + 60 * 60000);
+
+  const startDate3 = new Date(new Date().getTime() + 72 * 60 * 60000);
+  const endDate3 = new Date(new Date().getTime() + 72 * 60 * 60000 + 60 * 60000);
+
+  const startDate4 = new Date(new Date().getTime() + 96 * 60 * 60000);
+  const endDate4 = new Date(new Date().getTime() + 96 * 60 * 60000 + 60 * 60000);
+
   let bookingData1 = {
     promoIdUsed: null, 
-    startDate: new Date(2020,10,3,12,10), 
-    endDate: new Date(2020,10,3,13,20), 
+    startDate: startDate1,
+    endDate: endDate1, 
     bookingSourceEnum: Constants.BookingSource.Mobile, 
     customerId: 2, 
     lockerTypeId: 1,
@@ -212,8 +230,8 @@ const addDummyData = async () => {
 
   let bookingData2 = {
     promoIdUsed: null, 
-    startDate: new Date(2020,10,4,09,10), 
-    endDate: new Date(2020,10,4,17,20), 
+    startDate: startDate2, 
+    endDate: endDate2, 
     bookingSourceEnum: Constants.BookingSource.Kiosk, 
     merchantId: 2, 
     lockerTypeId: 2,
@@ -222,8 +240,8 @@ const addDummyData = async () => {
 
   let bookingData3 = {
     promoIdUsed: null, 
-    startDate: new Date(2020,09,30,10,00), 
-    endDate: new Date(2020,09,30,10,20), 
+    startDate: startDate3, 
+    endDate: endDate3, 
     bookingSourceEnum: Constants.BookingSource.Kiosk, 
     customerId: 1, 
     bookingPackageId: 1,
@@ -231,81 +249,81 @@ const addDummyData = async () => {
 
   let bookingData4 = {
     promoIdUsed: null, 
-    startDate: new Date(2020,09,29,12,10), 
-    endDate: new Date(2020,09,30,07,20), 
+    startDate: startDate4, 
+    endDate: endDate4, 
     bookingSourceEnum: Constants.BookingSource.Mobile, 
     merchantId: 1, 
     bookingPackageId: 2,
   }
 
-  let bookingData5 = {
-    promoIdUsed: null, 
-    startDate: new Date(2020,09,26,20,40), 
-    endDate: new Date(2020,09,26,23,20), 
-    bookingSourceEnum: Constants.BookingSource.Mobile, 
-    merchantId: 1, 
-    bookingPackageId: 2,
-  }
+  // let bookingData5 = {
+  //   promoIdUsed: null, 
+  //   startDate: new Date(2020,09,26,20,40), 
+  //   endDate: new Date(2020,09,26,23,20), 
+  //   bookingSourceEnum: Constants.BookingSource.Mobile, 
+  //   merchantId: 1, 
+  //   bookingPackageId: 2,
+  // };
 
   //ADDITIONAL
 
-  let bookingData6 = {
-    promoIdUsed: null, 
-    startDate: new Date(2020,09,24,20,40), 
-    endDate: new Date(2020,09,24,23,20), 
-    bookingSourceEnum: Constants.BookingSource.Kiosk, 
-    customerId: 1, 
-    bookingPackageId: 1,
-  }
+  // let bookingData6 = {
+  //   promoIdUsed: null, 
+  //   startDate: new Date(2020,09,24,20,40), 
+  //   endDate: new Date(2020,09,24,23,20), 
+  //   bookingSourceEnum: Constants.BookingSource.Kiosk, 
+  //   customerId: 1, 
+  //   bookingPackageId: 1,
+  // }
 
-  let bookingData7 = {
-    promoIdUsed: null, 
-    startDate: new Date(2020,09,24,21,40), 
-    endDate: new Date(2020,09,24,23,20), 
-    bookingSourceEnum: Constants.BookingSource.Kiosk, 
-    customerId: 1, 
-    bookingPackageId: 1,
-  }
+  // let bookingData7 = {
+  //   promoIdUsed: null, 
+  //   startDate: new Date(2020,09,24,21,40), 
+  //   endDate: new Date(2020,09,24,23,20), 
+  //   bookingSourceEnum: Constants.BookingSource.Kiosk, 
+  //   customerId: 1, 
+  //   bookingPackageId: 1,
+  // }
 
-  let bookingData8 = {
-    promoIdUsed: null, 
-    startDate: new Date(2020,09,24,21,40), 
-    endDate: new Date(2020,09,24,23,20), 
-    bookingSourceEnum: Constants.BookingSource.Kiosk, 
-    customerId: 1, 
-    bookingPackageId: 1,
-  }
+  // let bookingData8 = {
+  //   promoIdUsed: null, 
+  //   startDate: new Date(2020,09,24,21,40), 
+  //   endDate: new Date(2020,09,24,23,20), 
+  //   bookingSourceEnum: Constants.BookingSource.Kiosk, 
+  //   customerId: 1, 
+  //   bookingPackageId: 1,
+  // }
 
-  let bookingData9 = {
-    promoIdUsed: null, 
-    startDate: new Date(2020,09,24,11,40), 
-    endDate: new Date(2020,09,24,14,00), 
-    bookingSourceEnum: Constants.BookingSource.Mobile, 
-    customerId: 1, 
-    lockerTypeId: 1,
-    kioskId: 1
-  }
+  // let bookingData9 = {
+  //   promoIdUsed: null, 
+  //   startDate: new Date(2020,09,25,11,40), 
+  //   endDate: new Date(2020,09,25,14,00), 
+  //   bookingSourceEnum: Constants.BookingSource.Mobile, 
+  //   customerId: 1, 
+  //   lockerTypeId: 1,
+  //   kioskId: 1
+  // }
 
-  let bookingData10 = {
-    promoIdUsed: null, 
-    startDate : new Date(2020,09,30,17,00,00),
-    endDate : new Date(2020,09,30,19,00,00),
-    bookingSourceEnum: Constants.BookingSource.Kiosk, 
-    customerId: 1, 
-    bookingPackageId: 1,
-  };
+  // let bookingData10 = {
+  //   promoIdUsed: null, 
+  //   startDate : new Date(2020,09,30,17,00,00),
+  //   endDate : new Date(2020,09,30,19,00,00),
+  //   bookingSourceEnum: Constants.BookingSource.Kiosk, 
+  //   customerId: 1, 
+  //   bookingPackageId: 1,
+  // };
 
-  bookingData = {
-    startDate : new Date(2020,09,30,17,00,00),
-    endDate : new Date(2020,09,30,19,0,00),
-    lockerTypeId : 1,
-    kioskId : 1,
-    bookingPackageId : 1
-  }
+  // const bookingData = {
+  //   startDate : new Date(2020,09,30,17,00,00),
+  //   endDate : new Date(2020,09,30,19,0,00),
+  //   lockerTypeId : 1,
+  //   kioskId : 1,
+  //   bookingPackageId : 1
+  // }
 
-  console.log(bookingPackage1.endDate.toLocaleString());
-  let times = await BookingService.checkBookingAllowed(bookingData);
-  console.log(times)
+  // console.log(bookingPackage1.endDate.toLocaleString());
+  // let times = await BookingService.checkBookingAllowed(bookingData);
+  // console.log(times);
 
   await sequelize.transaction(async (transaction) => {
     await BookingService.createBookingByCustomer(bookingData1, transaction);
@@ -316,20 +334,19 @@ const addDummyData = async () => {
     console.log('Pass 3')
     await BookingService.createBookingWithBookingPackageByMerchant(bookingData4, transaction);
     console.log('Pass 4')
-    await BookingService.createBookingWithBookingPackageByMerchant(bookingData5, transaction);
+    // await BookingService.createBookingWithBookingPackageByMerchant(bookingData5, transaction);
 
-    console.log('*Pass 1')
-    await BookingService.createBookingWithBookingPackageByCustomer(bookingData6, transaction);
-    console.log('*Pass 2')
-    await BookingService.createBookingWithBookingPackageByCustomer(bookingData7, transaction);
-    console.log('*Pass 3')
-    await BookingService.createBookingWithBookingPackageByCustomer(bookingData8, transaction);
+    // console.log('*Pass 1')
+    // await BookingService.createBookingWithBookingPackageByCustomer(bookingData6, transaction);
+    // console.log('*Pass 2')
+    // await BookingService.createBookingWithBookingPackageByCustomer(bookingData7, transaction);
+    // console.log('*Pass 3')
+    // await BookingService.createBookingWithBookingPackageByCustomer(bookingData8, transaction);
 
-    console.log('*Pass 4')
-    await BookingService.createBookingByCustomer(bookingData9, transaction);
-    console.log('*Pass 5')
-    await BookingService.createBookingWithBookingPackageByCustomer(bookingData10, transaction);
-
+    // console.log('*Pass 4')
+    // await BookingService.createBookingByCustomer(bookingData9, transaction);
+    // console.log('*Pass 5')
+    // await BookingService.createBookingWithBookingPackageByCustomer(bookingData10, transaction);
   });
 
   // await sequelize.transaction(async (transaction) => {
