@@ -11,6 +11,7 @@ const CustomError = require('../common/error/customError');
 
 const Merchant = require('../models/Merchant');
 const { ifEmptyThrowError, isEmpty } = require('../common/checker');
+const Location = require('../models/Location');
 
 
 const retrieveMerchantByEmail = async(email) => {
@@ -48,7 +49,7 @@ const changePasswordForResetPassword = async(id, newPassword, transaction) => {
 
 module.exports = {
   createMerchant: async (merchantData, transaction) => {
-    const { name, mobileNumber, password, email, blk, street, postalCode, unitNumber, floor, pointOfContact } = merchantData;
+    const { name, mobileNumber, password, email, blk, street, postalCode, unitNumber, floor, pointOfContact, locationId } = merchantData;
 
     Checker.ifEmptyThrowError(name, Constants.Error.NameRequired);
     Checker.ifEmptyThrowError(mobileNumber, Constants.Error.MobileNumberRequired);
@@ -64,6 +65,7 @@ module.exports = {
     Checker.ifEmptyThrowError(pointOfContact, 'Point of contact ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(floor, 'Floor ' + Constants.Error.XXXIsRequired);
     Checker.ifNotNumberThrowError(floor, 'Floor ' + Constants.Error.XXXMustBeNumber)
+    Checker.ifEmptyThrowError(locationId, 'Location Id ' + Constants.Error.XXXIsRequired);
 
     merchantData.email = merchantData.email.toLowerCase();
 
@@ -77,13 +79,18 @@ module.exports = {
     if (!Checker.isEmpty( await Merchant.findOne({ where: { email } }))) {
       throw new CustomError(Constants.Error.EmailNotUnique);
     }
+    
     if (!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/).test(password)) {
       throw new CustomError(Constants.Error.PasswordWeak);
     }
 
+    let location = Location.findByPk(locationId);
+    let locations = new Array();
+    locations.push(location);
+
     merchantData.password = await Helper.hashPassword(password);
 
-    const merchant = await Merchant.create(merchantData, { transaction });
+    const merchant = await Merchant.create({ name, mobileNumber, password, email, blk, street, postalCode, unitNumber, floor, pointOfContact, locations }, { transaction });
 
     return merchant;
   },
