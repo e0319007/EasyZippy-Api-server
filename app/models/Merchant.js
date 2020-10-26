@@ -3,7 +3,7 @@ const {
   INTEGER, STRING, DECIMAL, BOOLEAN, Model
 } = Sequelize;
 const sequelize = require('../common/database');
-const Mall = require('./Mall');
+const Location = require('./Location');
 
 class Merchant extends Model {
 }
@@ -96,7 +96,7 @@ Merchant.init(
   }
 );
 
-Merchant.belongsToMany(Mall, { through: 'MallMerchant' });
-Mall.belongsToMany(Merchant, { through: 'MallMerchant' });
+Merchant.belongsToMany(Location, { through: 'LocationMerchant' });
+Location.belongsToMany(Merchant, { through: 'LocationMerchant' });
 
 module.exports = Merchant;

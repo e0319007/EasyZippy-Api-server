@@ -3,15 +3,15 @@ const Constants = require('../common/constants');
 const CustomError = require('../common/error/customError');
 
 const Kiosk = require('../models/Kiosk');
-const Mall = require('../models/Mall');
+const Location = require('../models/Location');
 
 module.exports = { 
   createKiosk: async(kioskData, transaction) => {
-      const { address, mallId } = kioskData;
+      const { address, locationId } = kioskData;
       Checker.ifEmptyThrowError(address, Constants.Error.KioskAddressRequired);
-      Checker.ifEmptyThrowError(mallId, 'Mall ID ' + Constants.Error.XXXIsRequired);
-      Checker.ifEmptyThrowError(await Mall.findByPk(mallId), Constants.Error.MallNotFound);
-      Checker.ifDeletedThrowError(await Mall.findByPk(mallId), Constants.Error.MallDeleted); 
+      Checker.ifEmptyThrowError(locationId, 'Location ID ' + Constants.Error.XXXIsRequired);
+      Checker.ifEmptyThrowError(await Location.findByPk(locationId), Constants.Error.LocationNotFound);
+      Checker.ifDeletedThrowError(await Location.findByPk(locationId), Constants.Error.LocationDeleted); 
       const kiosk = await Kiosk.create(kioskData, { transaction });
       return kiosk;
   }, 

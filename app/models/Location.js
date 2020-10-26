@@ -4,10 +4,10 @@ const {
 } = Sequelize;
 const sequelize = require('../common/database');
 
-class Mall extends Model {
+class Location extends Model {
 }
 
-Mall.init(
+Location.init(
   {
     id: {
       type: INTEGER,
@@ -40,9 +40,9 @@ Mall.init(
   },
   {
     sequelize,
-    modelName: 'mall',
+    modelName: 'location',
     underscored: true
   }
 );
 
-module.exports = Mall;
+module.exports = Location;

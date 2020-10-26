@@ -3,7 +3,7 @@ const {
   INTEGER, STRING, BOOLEAN, Model
 } = Sequelize;
 const sequelize = require('../common/database');
-const Mall = require('./Mall');
+const Location = require('./Location');
 
 class Kiosk extends Model {
 }
@@ -42,7 +42,7 @@ Kiosk.init(
   }
 );
 
-Kiosk.belongsTo(Mall, { foreignKey: { allowNull: false } });
-Mall.hasMany(Kiosk);
+Kiosk.belongsTo(Location, { foreignKey: { allowNull: false } });
+Location.hasMany(Kiosk);
 
 module.exports = Kiosk;
