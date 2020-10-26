@@ -21,12 +21,15 @@ module.exports = {
       throw new CustomError(Constants.Error.PromoCodeNotUnique);
     }
     if(startDate.getTime() < new Date().getTime()) {
-      throw new CustomError(Constants.Error.InvalidDate)
+      throw new CustomError(Constants.Error.InvalidDate);
     }
     let promotionTypeEnum = Constants.PromotionType.MerchantPromotion;
     
     if(Checker.isEmpty(percentageDiscount) && Checker.isEmpty(flatDiscount)) {
       throw new CustomError('Percentage discount or flat discount ' + Constants.Error.XXXIsRequired);
+    }
+    if(!Checker.isEmpty(percentageDiscount) && !Checker.isEmpty(flatDiscount)) {
+      throw new CustomError(Constants.Error.ChooseOneDiscountType);
     }
     let promotion = await Promotion.create({ promoCode, startDate, endDate, description, termsAndConditions, percentageDiscount, flatDiscount, usageLimit, promotionTypeEnum, merchantId, minimumSpend }, { transaction });
     return promotion;
@@ -44,7 +47,7 @@ module.exports = {
       throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     }
     if(startDate.getTime() < new Date().getTime()) {
-      throw new CustomError(Constants.Error.InvalidDate)
+      throw new CustomError(Constants.Error.InvalidDate);
     }
     if(!Checker.isEmpty(await Promotion.findOne({ where: { promoCode, expired: false } }))) {
       throw new CustomError(Constants.Error.PromoCodeNotUnique);
@@ -53,6 +56,9 @@ module.exports = {
     
     if(Checker.isEmpty(percentageDiscount) && Checker.isEmpty(flatDiscount)) {
       throw new CustomError('Percentage discount or flat discount ' + Constants.Error.XXXIsRequired);
+    }
+    if(!Checker.isEmpty(percentageDiscount) && !Checker.isEmpty(flatDiscount)) {
+      throw new CustomError(Constants.Error.ChooseOneDiscountType);
     }
     let promotion = await Promotion.create({ promoCode, startDate, endDate, description, termsAndConditions, percentageDiscount, flatDiscount, usageLimit, staffId, promotionTypeEnum, minimumSpend }, { transaction });
     return promotion;
