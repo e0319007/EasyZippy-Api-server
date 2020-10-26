@@ -18,6 +18,7 @@ const LockerTypeController = require('../controllers/lockerTypeController');
 const MaintenanceActionController = require('../controllers/maintenanceActionController');
 const MerchantController = require('../controllers/merchantController');
 const NotificationController = require('../controllers/notificationController');
+const OrderController = require('../controllers/orderController');
 const PaymentController = require('../controllers/paymentController');
 const ProductController = require('../controllers/productController');
 const ProductVariationController = require('../controllers/productVariationController');
@@ -185,6 +186,14 @@ router.get('/notification/merchant/:merchantId', Authenticator.merchantOnly, Not
 router.get('/notification/staff', Authenticator.staffOnly, NotificationController.retrieveStaffNotification);
 router.put('/readNotification/:id', Authenticator.customerAndMerchantAndStaffOnly, NotificationController.readNotification);
 router.post('/notification/create', Authenticator.staffOnly, NotificationController.createNotification);
+
+//Order
+router.get('/orders/customer/:customerId', /*Authenticator.customerOnly,*/ OrderController.retrieveOrderByCustomerId);
+router.get('/orders/merchant/:merchantId', /*Authenticator.customerOnly,*/ OrderController.retrieveOrderByMerchantId);
+router.get('/orders', /*Authenticator.customerOnly,*/ OrderController.retrieveAllOrders);
+router.get('/order/:id', /*Authenticator.customerOnly,*/ OrderController.retrieveOrderById);
+router.put('/order/:id', /*Authenticator.customerOnly,*/ OrderController.updateOrderStatus);
+router.post('/order', /*Authenticator.customerOnly,*/ OrderController.createOrder);
 
 //Payment
 router.get('/pay/:customerId/:amount', Authenticator.customerAndMerchantOnly, PaymentController.pay);

@@ -95,7 +95,7 @@ module.exports = {
     Checker.ifEmptyThrowError(amountPaid, 'Amount paid ' + Constants.Error.XXXIsRequired);
     Checker.ifNotNumberThrowError(amountPaid, 'Amount paid ' + Constants.Error.XXXMustBeNumber);
     Checker.ifNegativeThrowError(amountPaid, 'Amount paid ' + Constants.Error.XXXCannotBeNegative);
-
+ 
     let merchant = await Merchant.findByPk(merchantId);
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
     await merchant.update({ creditBalance: Number(merchant.creditBalance) + Number(amountPaid) }, { transaction });
