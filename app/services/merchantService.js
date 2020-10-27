@@ -168,11 +168,11 @@ module.exports = {
   toggleDisableMerchant: async(id, transaction) => {
     const curMerchant = await Merchant.findByPk(id);
     Checker.ifEmptyThrowError(curMerchant);
-    let merchant = await Merchant.update( {
+    let merchant = await Merchant.update({
       disabled: !curMerchant.disabled
     }, {
-      where: { 
-        id: id
+      where: {
+        id
       }, returning: true, transaction });
     return merchant;
   },

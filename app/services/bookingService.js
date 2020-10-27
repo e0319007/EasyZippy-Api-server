@@ -175,11 +175,7 @@ const createBookingWithBookingPackageByCustomer = async(bookingData, transaction
     let bookingPrice = await calculatePrice(bookingPackage.endDate, endDate, lockerTypeId);
     let availSlots = await checkBookingAvailable(bookingPackage.endDate, endDate, lockerTypeId, kioskId);
     if (Checker.isEmpty(availSlots) || (!Checker.isEmpty(availSlots) && availSlots[0].startDate.getTime() != bookingPackage.endDate.getTime() || availSlots[0].endDate.getTime() != endDate.getTime())) {
-      availSlots.push({
-        'startDate': startDate,
-        'endDate': bookingPackage.endDate
-      })
-      return availSlots;
+      throw new CustomError(Constants.Error.BookingCannotBeMade);
     }
     //CREDIT PAYMENT
     let creditPaymentRecord = await CreditPaymentRecordService.payCreditCustomer(customerId, bookingPrice, transaction);
@@ -264,10 +260,8 @@ module.exports = {
 
     let bookingPrice = await calculatePrice(startDate, endDate, lockerTypeId);
     let availSlots = await checkBookingAvailable(startDate, endDate, lockerTypeId, kioskId);
-    if(Checker.isEmpty(availSlots)) {
-      throw new CustomError(Constants.Error.BookingCannotBeMade)
-    } else if (availSlots[0].startDate.getTime() != startDate.getTime() || availSlots[0].endDate.getTime() != endDate.getTime()) {
-      return availSlots;
+    if(Checker.isEmpty(availSlots) || availSlots[0].startDate.getTime() != startDate.getTime() || availSlots[0].endDate.getTime() != endDate.getTime()) {
+      throw new CustomError(Constants.Error.BookingCannotBeMade);
     }
 
     //PROMOTION
@@ -305,10 +299,8 @@ module.exports = {
 
     let bookingPrice = await calculatePrice(startDate, endDate, lockerTypeId);
     let availSlots = await checkBookingAvailable(startDate, endDate, lockerTypeId, kioskId);
-    if(Checker.isEmpty(availSlots)) {
-      throw new CustomError(Constants.Error.BookingCannotBeMade)
-    } else if (availSlots[0].startDate.getTime() != startDate.getTime() || availSlots[0].endDate.getTime() != endDate.getTime()) {
-      return availSlots;
+    if(Checker.isEmpty(availSlots) || availSlots[0].startDate.getTime() != startDate.getTime() || availSlots[0].endDate.getTime() != endDate.getTime()) {
+      throw new CustomError(Constants.Error.BookingCannotBeMade);
     }
 
     //PROMOTION
@@ -373,11 +365,7 @@ module.exports = {
       let bookingPrice = await calculatePrice(bookingPackage.endDate, endDate, lockerTypeId);
       let availSlots = await checkBookingAvailable(bookingPackage.endDate, endDate, lockerTypeId, kioskId);
       if (Checker.isEmpty(availSlots) || (!Checker.isEmpty(availSlots) && availSlots[0].startDate.getTime() != bookingPackage.endDate.getTime() || availSlots[0].endDate.getTime() != endDate.getTime())) {
-        availSlots.push({
-          'startDate': startDate,
-          'endDate': bookingPackage.endDate
-        })
-        return availSlots;
+        throw new CustomError(Constants.Error.BookingCannotBeMade);
       }
 
       //CREDIT PAYMENT

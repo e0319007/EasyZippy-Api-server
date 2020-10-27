@@ -80,9 +80,8 @@ module.exports = {
           throw new CustomError(Constants.Error.EmailNotUnique);
         }
       }
-  
-      const customer = await Customer.create(customerData, { transaction });
-  
+
+      let customer = await Customer.create(customerData, { transaction });
       return customer;
   },
 

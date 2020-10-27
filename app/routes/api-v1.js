@@ -5,6 +5,7 @@ const Upload = require('../middleware/upload');
 
 const AdvertisementController = require('../controllers/advertisementController');
 const AnnouncementController = require('../controllers/announcementController');
+const CartController = require('../controllers/cartController');
 const BookingController = require('../controllers/bookingController');
 const BookingPackageController = require('../controllers/bookingPackageController');
 const BookingPackageModelController = require('../controllers/bookingPackageModelController');
@@ -94,6 +95,10 @@ router.post('/booking/bookingPackage/customer', Authenticator.customerAndMerchan
 router.post('/booking/bookingPackage/merchant', Authenticator.customerAndMerchantAndStaffOnly, BookingController.createBookingWithBookingPackageByMerchant);
 router.post('/checkBookingAllowed', Authenticator.customerAndMerchantAndStaffOnly, BookingController.checkBookingAllowed);
 
+
+//Cart
+router.put('/saveCart/:customerId', CartController.saveItemsToCart);
+router.get('/retrieveCart/:customerId', CartController.retrieveCartByCustomerId);
 
 //Category
 router.get('/category/:id', Authenticator.customerAndMerchantAndStaffOnly, CategoryController.retrieveCategory);

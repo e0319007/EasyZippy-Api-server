@@ -7,7 +7,7 @@ const fs = require('fs-extra');
 
 module.exports = {
   createProductVariation: async(productVariationData, transaction) => {
-    let {name, unitPrice, quantityAvailable, image, productId} = productVariationData;
+    let { name, unitPrice, quantityAvailable, image, productId } = productVariationData;
     Checker.ifNotNumberThrowError(unitPrice, 'Unit price ' + Constants.Error.XXXMustBeNumber);
     Checker.ifNotNumberThrowError(quantityAvailable, 'Quantity available ' + Constants.Error.XXXMustBeNumber);
 
@@ -28,8 +28,8 @@ module.exports = {
   },
 
   updateProductVariation: async(id, productVariationData, transaction) => {
-    let {name, unitPrice, quantityAvailable, image} = productVariationData;
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
+    let {name, unitPrice, quantityAvailable, image} = productVariationData;
     let productVariation = await ProductVariation.findByPk(id);
 
     Checker.ifEmptyThrowError(productVariation, Constants.Error.ProductVariationNotFound);
