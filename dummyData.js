@@ -17,7 +17,8 @@ const LockerActionRecord = require('./app/models/LockerActionRecord');
 const Constants = require('./app/common/constants');
 const BookingPackageService = require('./app/services/bookingPackageService');
 const BookingService = require('./app/services/bookingService');
-const cons = require('consolidate');
+const CartService = require('./app/services/cartService');
+const ProductVariationService = require('./app/services/productVariationService');
 const MaintenanceAction = require('./app/models/MaintenanceAction');
 
 const addDummyData = async () => {
@@ -71,12 +72,52 @@ const addDummyData = async () => {
   let bottleCategory = await Category.create({ name: 'Water Bottles', description: 'Sample Description' });
   let apparelCategory = await Category.create({ name: 'Apparel', description: 'Sample Description' });
 
-  await Product.create({ categoryId: bagCategory.id, merchantId: nike.id, name: 'Nike Venom Bag', unitPrice: 35.5, description: 'Black', quantityAvailable: 10, images: ['bag1.jpg'],  });
-  await Product.create({ categoryId: bagCategory.id, merchantId: nike.id, name: 'Nike Sports Duffel Bag', unitPrice: 50.2, description: 'Pink', quantityAvailable: 10, images: ['bag2.jpg'] });
-  await Product.create({ categoryId: bottleCategory.id, merchantId: nike.id, name: 'Nike Sports Bottle', unitPrice: 20, description: 'Transparent 1L', quantityAvailable: 10, images: ['bo1.jpg'] });
-  await Product.create({ categoryId: toyCategory.id, merchantId: toysRUs.id, name: 'Teddy Bear', unitPrice: 15, description: 'White Bear', quantityAvailable: 10, images: ['bear.jpg'] });
-  await Product.create({ categoryId: toyCategory.id, merchantId: toysRUs.id, name: 'Doll', unitPrice: 15, description: 'Blue Hair Doll', quantityAvailable: 10, images: ['doll.jpg'] });
-  await Product.create({ categoryId: toyCategory.id, merchantId: toysRUs.id, name: 'Car', unitPrice: 105.9, description: 'Red Car', quantityAvailable: 10, images: ['car.jpg'] });
+  await Product.create({ categoryId: bagCategory.id, merchantId: nike.id, name: 'Nike Venom Bag', unitPrice: 35.5, description: 'Black', quantityAvailable: 100, images: ['bag1.jpg'],  });
+  await Product.create({ categoryId: bagCategory.id, merchantId: nike.id, name: 'Nike Sports Duffel Bag', unitPrice: 50.2, description: 'Pink', quantityAvailable: 100, images: ['bag2.jpg'] });
+  await Product.create({ categoryId: bottleCategory.id, merchantId: nike.id, name: 'Nike Sports Bottle', unitPrice: 20, description: 'Transparent 1L', quantityAvailable: 100, images: ['bo1.jpg'] });
+  await Product.create({ categoryId: toyCategory.id, merchantId: toysRUs.id, name: 'Teddy Bear', unitPrice: 15, description: 'White Bear', quantityAvailable: 100, images: ['bear.jpg'] });
+  await Product.create({ categoryId: toyCategory.id, merchantId: toysRUs.id, name: 'Doll', unitPrice: 15, description: 'Blue Hair Doll', quantityAvailable: 100, images: ['doll.jpg'] });
+  await Product.create({ categoryId: toyCategory.id, merchantId: toysRUs.id, name: 'Car', unitPrice: 105.9, description: 'Red Car', quantityAvailable: 100, images: ['car.jpg'] });
+
+  let productVariationData1 = {
+    name: 'Variation 1 for product 1', 
+    unitPrice: 10, 
+    quantityAvailable: 60, 
+    productId: 1
+  }
+
+  let productVariationData2 = {
+    name: 'Variation 2 for product 1', 
+    unitPrice: 4, 
+    quantityAvailable: 30, 
+    productId: 1
+  }
+
+  await sequelize.transaction(async (transaction) => {
+    await ProductVariationService.createProductVariation(productVariationData1, transaction);
+    await ProductVariationService.createProductVariation(productVariationData2, transaction);
+  });
+
+  let lineItem1 = {
+    productVariationId: 1,
+    productId: null,
+    quantity: 5
+  }
+
+  let lineItem2 = {
+    productVariationId: null,
+    productId: 2,
+    quantity: 2
+  }
+
+  let lineItems = new Array();
+  lineItems.push(lineItem1);
+  lineItems.push(lineItem2);
+
+  await sequelize.transaction(async (transaction) => {
+    await CartService.saveItemsToCart(1, { lineItems }, transaction);
+  });
+  console.log((await CartService.retrieveCartByCustomerId(1)).length);
 
   let kiosk = await Kiosk.create({ address: '1 Sengkang Square', description: 'Sample Description'});
   let kiosk2 = await Kiosk.create({ address: '3155 Commonwealth Ave West', description: 'Sample Description'});
