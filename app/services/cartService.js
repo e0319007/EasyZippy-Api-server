@@ -8,6 +8,7 @@ const ProductVariation = require('../models/ProductVariation');
 
 module.exports = {
   saveItemsToCart: async(id, cartData, transaction) => { 
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let { lineItems } = cartData;
     let customer = await Customer.findByPk(id);
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
@@ -32,7 +33,8 @@ module.exports = {
     return await Cart.findByPk(cart.id);
   },
 
-  retrieveCartByCustomerId: async(id) => { 
+  retrieveCartByCustomerId: async(id) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let customer = await Customer.findByPk(id);
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
     

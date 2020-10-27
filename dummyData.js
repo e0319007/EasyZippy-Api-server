@@ -7,6 +7,7 @@ const sequelize = require('./app/common/database');
 const NotificationService = require('./app/services/notificationService');
 const PromotionService = require('./app/services/promotionService');
 const Category = require('./app/models/Category');
+const Customer = require('./app/models/Customer');
 const Locker = require('./app/models/Locker');
 const Kiosk = require('./app/models/Kiosk');
 const LockerType = require('./app/models/LockerType');
@@ -42,6 +43,8 @@ const addDummyData = async () => {
   await CustomerService.createCustomer({ firstName: 'Vivian', lastName: 'Toh', mobileNumber: '92638678', password: 'Password123!', email: 'vivian@email.com', creditBalance: 1000 });
   await CustomerService.createCustomer({ firstName: 'With', lastName: 'Credit', mobileNumber: '96677838', password: 'Password123!', email: 'withcredit@email.com', creditBalance: 1000 });
 
+  await CustomerService.addReferrer(2,3)
+  await CustomerService.addReferrer(2,4)
   let nike = await MerchantService.createMerchant({ name: 'Nike', mobileNumber: '93456789', password: 'Password123!', email: 'nike@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '2', unitNumber: '5', pointOfContact: 'David', creditBalance:1000, tenancyAgreement: 'tenancy_agreement.pdf' });
   let toysRUs = await MerchantService.createMerchant({ name: 'Toys R\' Us', mobileNumber: '93456358', password: 'Password123!', email: 'toys@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '1', unitNumber: '9', pointOfContact: 'Don', creditBalance: 1000, tenancyAgreement: 'tenancy_agreement.pdf' });
 

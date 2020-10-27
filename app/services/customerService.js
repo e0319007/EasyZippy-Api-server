@@ -9,9 +9,8 @@ const CustomError = require('../common/error/customError');
 const EmailHelper = require('../common/emailHelper');
 const OtpHelper = require('../common/otpHelper');
 
-
 const Customer = require('../models/Customer');
-const Cart = require('../models/Cart');
+const CreditPaymentRecordService = require('./creditPaymentRecordService');
 
 const retrieveCustomerByEmail = async(email) => {
   const customer = await Customer.findOne({ where : { email } });
@@ -83,7 +82,6 @@ module.exports = {
       }
 
       let customer = await Customer.create(customerData, { transaction });
-      let cart = await Cart.create({customerId: customer.id}, { transaction });
       return customer;
   },
 
@@ -323,6 +321,23 @@ module.exports = {
       throw new CustomError(Constants.Error.OtpInvalid);
     } 
     customer = await customer.update({ activated: true, mobileNumber }, { transaction });
+  },
+
+  addReferrer: async(referrerId, refereeId, transaction) => {
+    Checker.ifEmptyThrowError(referrerId, 'Referrer ' + Constants.Error.IdRequired);
+    Checker.ifEmptyThrowError(refereeId, 'Referee ' + Constants.Error.IdRequired);
+    if(referrerId === refereeId) {
+      throw new CustomError(Constants.Error.ReferrerAndRefereeInvalid);
+    }
+    let referee = await Customer.findByPk(refereeId);
+    let referrer = await Customer.findByPk(referrerId);
+    Checker.ifEmptyThrowError(referrer, 'Referrer ' + Constants.Error.CustomerNotFound);
+    Checker.ifEmptyThrowError(referee, 'Referee ' + Constants.Error.CustomerNotFound);
+    //console.log('before' + referee.referrerId)
+    if (!Checker.isEmpty(referee.referrerId)) throw new CustomError(Constants.Error.ReferrerExist)
+    referee = await Customer.update({ referrerId }, { where: { id: refereeId }, transaction, returning:true });
+    CreditPaymentRecordService.addReferralBonus(referrerId, refereeId, transaction);
+    return referee;
   },
 }
 

@@ -1,13 +1,10 @@
-const { update } = require('lodash');
 const Checker = require('../common/checker');
 const Constants = require('../common/constants');
-const CustomError = require('../common/error/customError');
 const Booking = require('../models/Booking');
 const BookingPackage = require('../models/BookingPackage');
 const Kiosk = require('../models/Kiosk');
 
 const Locker = require('../models/Locker');
-const LockerActionRecord = require('../models/LockerActionRecord');
 const LockerType = require('../models/LockerType');
 const CreditPaymentRecordService = require('./creditPaymentRecordService');
 
@@ -101,8 +98,6 @@ module.exports = {
     return await Locker.findAll({ where: { lockerTypeId, lockerStatusEnum: Constants.LockerStatus.Empty } });
   },
 
-  
-
   scanOpenLocker: async(qrCode, transaction) => {
     let booking = await Booking.findOne( { where: { qrCode } });
     //OPEN LOCKER FOR THE FIRST TIME
@@ -127,10 +122,9 @@ module.exports = {
         extraPrice = passHalfAnHourDuration * (price / 180000) * 2 + price;
       } else extraprice = extraDuration * (price / 180000)
       
-      let creditPaymentRecord
       if(!Checker.isEmpty(booking.customerId)) {
-         creditPaymentRecord = await CreditPaymentRecordService.payCreditCustomer(booking.customerId, extraPrice, transaction);
-      } else creditPaymentRecord = await CreditPaymentRecordService.payCreditMerchant(booking.merchantId, extraPrice, transaction);
+         creditPaymentRecord = await CreditPaymentRecordService.payCreditCustomer(booking.customerId, extraPrice, Constants.CreditPaymentType.BookingOvertimeCharge, transaction);
+      } else creditPaymentRecord = await CreditPaymentRecordService.payCreditMerchant(booking.merchantId, extraPrice, Constants.CreditPaymentType.BookingOvertimeCharge, transaction);
 
       booking = await booking.update({ bookingStatusEnum: Constants.BookingStatus.Unfulfilled, bookingPrice: booking.bookingPrice + extraPrice }, { transaction });
       let locker = await Locker.findByPk(booking.lockerId);
@@ -142,5 +136,4 @@ module.exports = {
       }
     }
   }
-    
 };

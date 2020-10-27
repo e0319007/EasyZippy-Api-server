@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const {
-  INTEGER, STRING, DECIMAL, JSON, DATE, Model
+  INTEGER, STRING, DECIMAL, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 
@@ -22,6 +22,18 @@ CreditPaymentRecord.init(
       type: DECIMAL,
       allowNull: false,
     },
+    creditPaymentTypeEnum: {
+      type: STRING,
+      allowNull: false
+    },
+    referralCreditUsed: {
+      type: DECIMAL,
+      allowNull: false,
+      defaultValue: 0,
+      validate: {
+        min: 0.0
+      }
+    }
   },
   {
     sequelize,
