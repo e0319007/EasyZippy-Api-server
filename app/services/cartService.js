@@ -5,12 +5,9 @@ const Cart = require('../models/Cart');
 const LineItem = require('../models/LineItem');
 const Product = require('../models/Product');
 const ProductVariation = require('../models/ProductVariation');
-const { lt } = require('lodash');
-const cons = require('consolidate');
 
 module.exports = {
   saveItemsToCart: async(id, cartData, transaction) => { 
-    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let { lineItems } = cartData;
     let customer = await Customer.findByPk(id);
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
@@ -36,7 +33,6 @@ module.exports = {
   },
 
   retrieveCartByCustomerId: async(id) => { 
-    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let customer = await Customer.findByPk(id);
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
     
@@ -47,7 +43,7 @@ module.exports = {
     });
     let temp = new Array();
     if (Checker.isEmpty(await cart.getLineItems())) return temp;
-     console.log('****is array? ' + Array.isArray(await cart.getLineItems()))
+    console.log('****is array? ' + Array.isArray(await cart.getLineItems()))
 
     console.log(await cart.getLineItems())
     console.log(typeof (await cart.getLineItems()))
@@ -57,7 +53,7 @@ module.exports = {
       let pv; 
       if(!Checker.isEmpty(li.productId)) p = await Product.findByPk(li.productId);
       else pv = await ProductVariation.findByPk(li.productVariationId);
-      if ((!Checker.isEmpty(p) && !p.disabled && !p.deleted) || (!Checker.isEmpty(pv) && !pv.disabled && !pv.deleted)) {
+      if ((!Checker.isEmpty(p) && !p.disabled && !p.deleted) || (!Checker.isEmpty(pv) && !pv.disabled && !pv.productDisabled && !pv.deleted)) {
         temp.push({
           product: p,
           productVariation: pv,

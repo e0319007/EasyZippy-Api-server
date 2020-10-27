@@ -29,7 +29,6 @@ module.exports = {
 
   updateProductVariation: async(id, productVariationData, transaction) => {
     let {name, unitPrice, quantityAvailable, image} = productVariationData;
-    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let productVariation = await ProductVariation.findByPk(id);
 
     Checker.ifEmptyThrowError(productVariation, Constants.Error.ProductVariationNotFound);
@@ -62,7 +61,6 @@ module.exports = {
   },
 
   toggleDisableProductVariation: async(id, transaction) => {
-    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let curProductVariation = await ProductVariation.findByPk(id);
     Checker.ifEmptyThrowError(curProductVariation, Constants.Error.ProductVariationNotFound);
     Checker.ifDeletedThrowError(curProductVariation, Constants.Error.ProductVariationDeleted);
@@ -74,7 +72,6 @@ module.exports = {
   },
 
   retrieveProductVariationsByProductId: async(id) => {
-    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let product = await Product.findByPk(id);
     Checker.ifEmptyThrowError(product, Constants.Error.ProductNotFound);
     Checker.ifDeletedThrowError(product, Constants.Error.ProductDeleted); 
@@ -82,7 +79,6 @@ module.exports = {
   },
 
   retrieveProductVariationsByProductIdIncludingDisabled: async(id) => {
-    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let product = await Product.findByPk(id);
     Checker.ifEmptyThrowError(product, Constants.Error.ProductNotFound);
     Checker.ifDeletedThrowError(product, Constants.Error.ProductDeleted); 
@@ -90,7 +86,6 @@ module.exports = {
   },
 
   deleteProductVariation: async(id, transaction) => {
-    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let curProductVariation = await ProductVariation.findByPk(id);
     Checker.ifEmptyThrowError(curProductVariation, Constants.Error.ProductNotFound);
     await ProductVariation.update({
