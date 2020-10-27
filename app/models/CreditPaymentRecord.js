@@ -6,7 +6,6 @@ const sequelize = require('../common/database');
 
 const Merchant = require('./Merchant');
 const Customer = require('./Customer');
-const { validate } = require('email-validator');
 
 class CreditPaymentRecord extends Model {
 }

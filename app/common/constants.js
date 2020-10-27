@@ -163,7 +163,7 @@ module.exports = {
     PromotionDeleted: 'Promotion is deleted',
     PromotionNotFound: 'Promotion not found',
     QuantityAvailableRequired: 'Quantity available is required',
-    ReferrerExist: 'Referrer exists already',
+    ReferrerExist: 'Referrer already exists',
     ReferrerAndRefereeInvalid: 'Referrer and referee cannot have the same ID',
     StaffDisabled: 'Staff is disabled',
     StaffNotFound: 'Staff not found',

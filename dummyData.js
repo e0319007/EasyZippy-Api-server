@@ -18,7 +18,6 @@ const LockerActionRecord = require('./app/models/LockerActionRecord');
 const Constants = require('./app/common/constants');
 const BookingPackageService = require('./app/services/bookingPackageService');
 const BookingService = require('./app/services/bookingService');
-const cons = require('consolidate');
 const MaintenanceAction = require('./app/models/MaintenanceAction');
 
 const addDummyData = async () => {
