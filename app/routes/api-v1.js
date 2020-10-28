@@ -98,15 +98,15 @@ router.post('/checkBookingAllowed', Authenticator.customerAndMerchantAndStaffOnl
 
 
 //Cart
-router.put('/saveCart/:customerId', CartController.saveItemsToCart);
 router.get('/retrieveCart/:customerId', CartController.retrieveCartByCustomerId);
+router.put('/saveCart/:customerId', CartController.saveItemsToCart);
 
 //Category
 router.get('/category/:id', Authenticator.customerAndMerchantAndStaffOnly, CategoryController.retrieveCategory);
 router.get('/categories', Authenticator.customerAndMerchantAndStaffOnly, CategoryController.retrieveAllCategory);
 router.put('/category/:id',  Authenticator.staffOnly, CategoryController.updateCategory);
-router.post('/category', Authenticator.staffOnly, CategoryController.createCategory);
 router.put('/deleteCategory/:id', Authenticator.staffOnly, CategoryController.deleteCategory);
+router.post('/category', Authenticator.staffOnly, CategoryController.createCategory);
 
 //Customer
 router.get('/customer/:id', Authenticator.customerAndMerchantAndStaffOnly, CustomerController.retrieveCustomer);
@@ -131,8 +131,8 @@ router.get('/kiosks', Authenticator.customerAndMerchantAndStaffOnly, KioskContro
 router.get('/kiosk/:id', Authenticator.staffOnly, KioskController.retrieveKiosk);
 router.put('/kiosk/:id/toggleDisable', Authenticator.staffOnly, KioskController.toggleDisableKiosk);
 router.put('/kiosk/:id', Authenticator.staffOnly, KioskController.updateKiosk);
-router.post('/kiosk', Authenticator.staffOnly, KioskController.createKiosk);
 router.put('/deleteKiosk/:id', Authenticator.staffOnly, KioskController.deleteKiosk);
+router.post('/kiosk', Authenticator.staffOnly, KioskController.createKiosk);
 
 //Locker
 router.get('/locker/lockerType/:lockerTypeId', Authenticator.customerAndMerchantAndStaffOnly, LockerController.retrieveLockersByLockerType);
@@ -162,8 +162,8 @@ router.post('/lockerType', Authenticator.staffOnly, LockerTypeController.createL
 router.get('/maintenanceAction/:id', Authenticator.staffOnly, MaintenanceActionController.retrieveMaintenanceAction);
 router.get('/maintenanceActions', Authenticator.staffOnly, MaintenanceActionController.retrieveAllMaintenanceAction);
 router.put('/maintenanceAction/:id', Authenticator.staffOnly, MaintenanceActionController.updateMaintenanceAction);
-router.post('/maintenanceAction', Authenticator.staffOnly, MaintenanceActionController.createMaintenanceAction);
 router.put('/deleteMaintenanceAction/:id', Authenticator.staffOnly, MaintenanceActionController.deleteMaintenanceAction);
+router.post('/maintenanceAction', Authenticator.staffOnly, MaintenanceActionController.createMaintenanceAction);
 
 //Merchant
 router.get('/merchant/:id', Authenticator.customerAndMerchantAndStaffOnly, MerchantController.retrieveMerchant);

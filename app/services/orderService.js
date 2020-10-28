@@ -1,8 +1,5 @@
-const cons = require('consolidate');
-const { order } = require('paypal-rest-sdk');
 const Checker = require('../common/checker');
 const Constants = require('../common/constants');
-const CustomError = require('../common/error/customError');
 const CreditPaymentRecord = require('../models/CreditPaymentRecord');
 const Customer = require('../models/Customer');
 const LineItem = require('../models/LineItem');
@@ -15,13 +12,13 @@ const CreditPaymentRecordService = require('./creditPaymentRecordService');
 
 module.exports = {
   retrieveOrderByCustomerId: async(customerId) => {
-    Checker.isEmpty(customerId, Constants.Error.IdRequired)
+    Checker.isEmpty(customerId, Constants.Error.IdRequired);
     Checker.isEmpty(await Customer.findByPk(customerId), Constants.Error.CustomerNotFound);
     return await Order.findAll({ where: { customerId } });
   },
 
   retrieveOrderByMerchantId: async(merchantId) => {
-    Checker.isEmpty(merchantId, Constants.Error.IdRequired)
+    Checker.isEmpty(merchantId, Constants.Error.IdRequired);
     Checker.isEmpty(await Merchant.findByPk(merchantId), Constants.Error.MerchantNotFound);
     return await Order.findAll({ where: { merchantId } });
   },
@@ -33,6 +30,7 @@ module.exports = {
   retrieveOrderById: async(orderId) => {
     Checker.isEmpty(orderId, Constants.Error.IdRequired);
     let order = await Order.findByPk(orderId);
+    Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound);
     return order;
   },
 
@@ -56,13 +54,13 @@ module.exports = {
     // Checker.ifEmptyThrowError(totalAmountPaid, 'Total amount ' + Constants.Error.XXXIsRequired)
     // Checker.ifNegativeThrowError(totalAmountPaid, 'Total amount ' + Constants.Error.XXXCannotBeNegative);
     // Checker.ifNotNumberThrowError(totalAmountPaid, 'Total amount ' + Constants.Error.XXXMustBeNumber);
-    Checker.isEmpty(customerId, Constants.Error.IdRequired)
+    Checker.isEmpty(customerId, Constants.Error.IdRequired);
     Checker.isEmpty(await Customer.findByPk(customerId), Constants.Error.CustomerNotFound);
 
     let lineItemsArray = new Array();
 
     while(!Checker.isEmpty(cart)) {
-      let lt = cart.pop(); 
+      let lt = cart.pop();
       let merchantId;
       if(lt.productId !== null) {
         let product = await Product.findByPk(lt.productId);
@@ -126,7 +124,7 @@ const markOrderComplete = async(order, transaction) => {
   let creditPaymentRecord = await CreditPaymentRecordService.refundCreditMerchant(order.merchantId, order.totalAmount, Constants.CreditPaymentType.Order, transaction);
   let creditPaymentRecords = await CreditPaymentRecord.findAll({ where: { orderId: order.id } });
   creditPaymentRecords.push(creditPaymentRecord);
-  order = await order.update({ orderStatusEnum: Constants.OrderStatus.Complete, creditPaymentRecords }, { where: { id: order.id }, transaction, returning: true });
+  order = await order.update({ orderStatusEnum: Constants.OrderStatus.Complete, creditPaymentRecords }, { transaction, returning: true });
   return order;
 }
 
