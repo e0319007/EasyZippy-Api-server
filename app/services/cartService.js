@@ -45,11 +45,11 @@ module.exports = {
     });
     let temp = new Array();
     if (Checker.isEmpty(await cart.getLineItems())) return temp;
-    console.log('****is array? ' + Array.isArray(await cart.getLineItems()))
+    // console.log('****is array? ' + Array.isArray(await cart.getLineItems()))
 
-    console.log(await cart.getLineItems())
-    console.log(typeof (await cart.getLineItems()))
-    console.log(typeof (await cart.getLineItems()))
+    // console.log(await cart.getLineItems())
+    // console.log(typeof (await cart.getLineItems()))
+    // console.log(typeof (await cart.getLineItems()))
     for(let li of (await cart.getLineItems())) {
       let p;
       let pv; 

@@ -20,7 +20,9 @@ const BookingPackageService = require('./app/services/bookingPackageService');
 const BookingService = require('./app/services/bookingService');
 const CartService = require('./app/services/cartService');
 const ProductVariationService = require('./app/services/productVariationService');
+const ProductVariation = require('./app/models/ProductVariation');
 const MaintenanceAction = require('./app/models/MaintenanceAction');
+const orderService = require('./app/services/orderService');
 
 const addDummyData = async () => {
   const staff1 = await StaffService.createStaff({ firstName: 'Alice', lastName: 'Ang', mobileNumber: '91234567', email: 'alice@email.com', staffRoleEnum: 'Admin' });
@@ -389,6 +391,42 @@ const addDummyData = async () => {
   // console.log(await BookingService.retrieveBookingByCustomerId(1))
   // console.log(await BookingService.retrieveBookingByCollectorId(3))
   // console.log(await BookingService.retrieveBookingByMerchantId(1))
+  
+  //TEST ORDER
+  
+  let cart1 = [
+    { productId: null, productVariationId: 1, quantity: 4 }, 
+    { productId: 2, productVariationId: null, quantity: 3 }, 
+    { productId: 6, productVariationId: null, quantity: 3 }
+  ]
+  let orderData1 = {
+    cart: cart1, 
+    promoIdUsed: 1, 
+    collectionMethodEnum: Constants.CollectionMethod.InStall, 
+    //totalAmountPaid: 3, 
+    customerId: 1
+  }
+  await sequelize.transaction(async (transaction) => {
+    await orderService.createOrder(orderData1, transaction);
+  });
+
+  await sequelize.transaction(async (transaction) => {
+    console.log(await orderService.updateOrderStatus(1, Constants.OrderStatus.ReadyForCollection, transaction));
+
+  });
+
+  await sequelize.transaction(async (transaction) => {
+    await orderService.updateOrderStatus(1, Constants.OrderStatus.Complete, transaction);
+  });
+
+  console.log('RETRIEVE ALL')
+  console.log(await orderService.retrieveAllOrders());
+  console.log('RETRIEVE BY ID')
+  console.log(await orderService.retrieveOrderById(1));
+  console.log('RETRIEVE BY CUSTOMER ID')
+  console.log(await orderService.retrieveOrderByCustomerId(1));
+  console.log('RETRIEVE BY MERCHANT ID')
+  console.log(await orderService.retrieveOrderByMerchantId(1));
 };
 
 addDummyData();

@@ -10,6 +10,7 @@ const EmailHelper = require('../common/emailHelper');
 const OtpHelper = require('../common/otpHelper');
 
 const Customer = require('../models/Customer');
+const Cart = require('../models/Cart');
 const CreditPaymentRecordService = require('./creditPaymentRecordService');
 
 const retrieveCustomerByEmail = async(email) => {
@@ -82,6 +83,7 @@ module.exports = {
       }
 
       let customer = await Customer.create(customerData, { transaction });
+      await Cart.create({customerId: customer.id}, { transaction });
       return customer;
   },
 

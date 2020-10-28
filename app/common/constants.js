@@ -45,6 +45,7 @@ module.exports = {
     PendingPayment: 'Pending Payment',
     Processing: 'Processing',
     ReadyForCollection: 'Ready For Collection',
+    Complete: 'Complete',
     Cancelled: 'Cancelled',
     Refund: 'Refund'
   },
@@ -155,6 +156,7 @@ module.exports = {
     PayloadRequired: 'Payload is required',
     PaymentIdRequired: 'Payment ID required',
     PdfFileRequired: 'PDF file is required',
+    PriceDoesNotTally: 'Price passed in does not tally with the price calculated',
     ProductDeleted: 'Product is deleted',
     ProductNotFound: 'Product not found',
     ProductVariationDeleted: 'Product variation is deleted',

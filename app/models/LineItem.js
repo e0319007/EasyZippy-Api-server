@@ -4,6 +4,7 @@ const {
 } = Sequelize;
 const sequelize = require('../common/database');
 const Cart = require('./Cart');
+const Order = require('./Order');
 
 const Product = require('./Product');
 const ProductVariation = require('./ProductVariation');
@@ -40,5 +41,8 @@ LineItem.belongsTo(ProductVariation);
 
 Cart.hasMany(LineItem);
 LineItem.belongsTo(Cart);
+
+LineItem.belongsTo(Order);
+Order.hasMany(LineItem);
 
 module.exports = LineItem;

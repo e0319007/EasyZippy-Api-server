@@ -1,12 +1,11 @@
 const Sequelize = require('sequelize');
+const constants = require('../common/constants');
 const {
   INTEGER, DATE, DECIMAL, STRING, Model
 } = Sequelize;
 const sequelize = require('../common/database');
 
 const Customer = require('./Customer');
-const CreditPaymentRecord = require('./CreditPaymentRecord');
-const LineItem = require('./LineItem');
 const Merchant = require('./Merchant');
 
 class Order extends Model {
@@ -38,7 +37,8 @@ Order.init(
     },
     orderStatusEnum: {
       type: STRING,
-      allowNull: false
+      allowNull: false,
+      defaultValue: constants.OrderStatus.Processing
     },
     collectionMethodEnum: {
       type: STRING,
@@ -52,8 +52,6 @@ Order.init(
   }
 );
 
-Order.belongsTo(CreditPaymentRecord, { foreignKey: { allowNull: false } });
-CreditPaymentRecord.hasOne(Order);
 
 Order.belongsTo(Customer, { foreignKey: { allowNull: false } });
 Customer.hasMany(Order);
@@ -61,6 +59,5 @@ Customer.hasMany(Order);
 Order.belongsTo(Merchant, { foreignKey: { allowNull: false } });
 Merchant.hasMany(Order);
 
-Order.hasMany(LineItem);
 
 module.exports = Order;

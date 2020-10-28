@@ -18,6 +18,7 @@ const LockerTypeController = require('../controllers/lockerTypeController');
 const MaintenanceActionController = require('../controllers/maintenanceActionController');
 const MerchantController = require('../controllers/merchantController');
 const NotificationController = require('../controllers/notificationController');
+const OrderController = require('../controllers/orderController');
 const PaymentController = require('../controllers/paymentController');
 const ProductController = require('../controllers/productController');
 const ProductVariationController = require('../controllers/productVariationController');
@@ -97,15 +98,15 @@ router.post('/checkBookingAllowed', Authenticator.customerAndMerchantAndStaffOnl
 
 
 //Cart
-router.put('/saveCart/:customerId', CartController.saveItemsToCart);
 router.get('/retrieveCart/:customerId', CartController.retrieveCartByCustomerId);
+router.put('/saveCart/:customerId', CartController.saveItemsToCart);
 
 //Category
 router.get('/category/:id', Authenticator.customerAndMerchantAndStaffOnly, CategoryController.retrieveCategory);
 router.get('/categories', Authenticator.customerAndMerchantAndStaffOnly, CategoryController.retrieveAllCategory);
 router.put('/category/:id',  Authenticator.staffOnly, CategoryController.updateCategory);
-router.post('/category', Authenticator.staffOnly, CategoryController.createCategory);
 router.put('/deleteCategory/:id', Authenticator.staffOnly, CategoryController.deleteCategory);
+router.post('/category', Authenticator.staffOnly, CategoryController.createCategory);
 
 //Customer
 router.get('/customer/:id', Authenticator.customerAndMerchantAndStaffOnly, CustomerController.retrieveCustomer);
@@ -130,8 +131,8 @@ router.get('/kiosks', Authenticator.customerAndMerchantAndStaffOnly, KioskContro
 router.get('/kiosk/:id', Authenticator.staffOnly, KioskController.retrieveKiosk);
 router.put('/kiosk/:id/toggleDisable', Authenticator.staffOnly, KioskController.toggleDisableKiosk);
 router.put('/kiosk/:id', Authenticator.staffOnly, KioskController.updateKiosk);
-router.post('/kiosk', Authenticator.staffOnly, KioskController.createKiosk);
 router.put('/deleteKiosk/:id', Authenticator.staffOnly, KioskController.deleteKiosk);
+router.post('/kiosk', Authenticator.staffOnly, KioskController.createKiosk);
 
 //Locker
 router.get('/locker/lockerType/:lockerTypeId', Authenticator.customerAndMerchantAndStaffOnly, LockerController.retrieveLockersByLockerType);
@@ -161,8 +162,8 @@ router.post('/lockerType', Authenticator.staffOnly, LockerTypeController.createL
 router.get('/maintenanceAction/:id', Authenticator.staffOnly, MaintenanceActionController.retrieveMaintenanceAction);
 router.get('/maintenanceActions', Authenticator.staffOnly, MaintenanceActionController.retrieveAllMaintenanceAction);
 router.put('/maintenanceAction/:id', Authenticator.staffOnly, MaintenanceActionController.updateMaintenanceAction);
-router.post('/maintenanceAction', Authenticator.staffOnly, MaintenanceActionController.createMaintenanceAction);
 router.put('/deleteMaintenanceAction/:id', Authenticator.staffOnly, MaintenanceActionController.deleteMaintenanceAction);
+router.post('/maintenanceAction', Authenticator.staffOnly, MaintenanceActionController.createMaintenanceAction);
 
 //Merchant
 router.get('/merchant/:id', Authenticator.customerAndMerchantAndStaffOnly, MerchantController.retrieveMerchant);
@@ -185,6 +186,14 @@ router.get('/notification/merchant/:merchantId', Authenticator.merchantOnly, Not
 router.get('/notification/staff', Authenticator.staffOnly, NotificationController.retrieveStaffNotification);
 router.put('/readNotification/:id', Authenticator.customerAndMerchantAndStaffOnly, NotificationController.readNotification);
 router.post('/notification/create', Authenticator.staffOnly, NotificationController.createNotification);
+
+//Order
+router.get('/orders/customer/:customerId', /*Authenticator.customerOnly,*/ OrderController.retrieveOrderByCustomerId);
+router.get('/orders/merchant/:merchantId', /*Authenticator.customerOnly,*/ OrderController.retrieveOrderByMerchantId);
+router.get('/orders', /*Authenticator.customerOnly,*/ OrderController.retrieveAllOrders);
+router.get('/order/:id', /*Authenticator.customerOnly,*/ OrderController.retrieveOrderById);
+router.put('/order/:id', /*Authenticator.customerOnly,*/ OrderController.updateOrderStatus);
+router.post('/order', /*Authenticator.customerOnly,*/ OrderController.createOrder);
 
 //Payment
 router.get('/pay/:customerId/:amount', Authenticator.customerAndMerchantOnly, PaymentController.pay);
