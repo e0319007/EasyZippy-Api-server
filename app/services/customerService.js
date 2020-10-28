@@ -9,10 +9,9 @@ const CustomError = require('../common/error/customError');
 const EmailHelper = require('../common/emailHelper');
 const OtpHelper = require('../common/otpHelper');
 
-
 const Customer = require('../models/Customer');
 const Cart = require('../models/Cart');
-const creditPaymentRecordService = require('./creditPaymentRecordService');
+const CreditPaymentRecordService = require('./creditPaymentRecordService');
 
 const retrieveCustomerByEmail = async(email) => {
   const customer = await Customer.findOne({ where : { email } });
@@ -84,7 +83,7 @@ module.exports = {
       }
 
       let customer = await Customer.create(customerData, { transaction });
-      let cart = await Cart.create({customerId: customer.id}, { transaction });
+      await Cart.create({customerId: customer.id}, { transaction });
       return customer;
   },
 
@@ -339,7 +338,7 @@ module.exports = {
     //console.log('before' + referee.referrerId)
     if (!Checker.isEmpty(referee.referrerId)) throw new CustomError(Constants.Error.ReferrerExist)
     referee = await Customer.update({ referrerId }, { where: { id: refereeId }, transaction, returning:true });
-    creditPaymentRecordService.addReferralBonus(referrerId, refereeId, transaction);
+    CreditPaymentRecordService.addReferralBonus(referrerId, refereeId, transaction);
     return referee;
   },
 }

@@ -33,7 +33,7 @@ module.exports = {
     return await Cart.findByPk(cart.id);
   },
 
-  retrieveCartByCustomerId: async(id) => { 
+  retrieveCartByCustomerId: async(id) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let customer = await Customer.findByPk(id);
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
@@ -55,7 +55,7 @@ module.exports = {
       let pv; 
       if(!Checker.isEmpty(li.productId)) p = await Product.findByPk(li.productId);
       else pv = await ProductVariation.findByPk(li.productVariationId);
-      if ((!Checker.isEmpty(p) && !p.disabled && !p.deleted) || (!Checker.isEmpty(pv) && !pv.disabled && !pv.deleted)) {
+      if ((!Checker.isEmpty(p) && !p.disabled && !p.deleted) || (!Checker.isEmpty(pv) && !pv.disabled && !pv.productDisabled && !pv.deleted)) {
         temp.push({
           product: p,
           productVariation: pv,

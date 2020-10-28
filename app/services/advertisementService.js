@@ -21,7 +21,7 @@ module.exports = {
     Checker.ifEmptyThrowError(await Staff.findByPk(staffId), Constants.Error.StaffNotFound);
     Checker.ifEmptyThrowError(image, Constants.Error.ImageRequired);
     const advertisement = await Advertisement.create({
-      title, description, imageUrl, startDate, endDate, staffId, approved: true },
+      title, description, image, startDate, endDate, staffId, approved: true },
       { transaction });
     return advertisement;
   },

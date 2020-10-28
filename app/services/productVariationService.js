@@ -28,8 +28,8 @@ module.exports = {
   },
 
   updateProductVariation: async(id, productVariationData, transaction) => {
-    let {name, unitPrice, quantityAvailable, image} = productVariationData;
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
+    let {name, unitPrice, quantityAvailable, image} = productVariationData;
     let productVariation = await ProductVariation.findByPk(id);
 
     Checker.ifEmptyThrowError(productVariation, Constants.Error.ProductVariationNotFound);

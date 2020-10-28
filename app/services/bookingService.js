@@ -13,7 +13,6 @@ const Locker = require('../models/Locker');
 const LockerType = require('../models/LockerType');
 const CreditPaymentRecordService = require('./creditPaymentRecordService');
 const Order = require('../models/Order');
-const cons = require('consolidate');
 const Kiosk = require('../models/Kiosk');
 const ScheduleHelper = require('../common/scheduleHelper')
 const NotificationHelper = require('../common/notificationHelper');
@@ -531,8 +530,8 @@ module.exports = {
     const creditPaymentRecord = await CreditPaymentRecord.findByPk(booking.creditPaymentRecordId);
     
     if(!Checker.isEmpty(customer) && booking.bookingPrice !== null && booking.bookingPrice !== 0) {
-      if(creditPaymentRecord.referralCreditUsed == 0) await CreditPaymentRecordService.refundCreditCustomer(customer.id, booking.bookingPrice, transaction);
-      else await CreditPaymentRecordService.refundCreditCustomer(customer.id, booking.bookingPrice, creditPaymentRecord.referralCreditUsed, transaction);
+      if(creditPaymentRecord.referralCreditUsed == 0) await CreditPaymentRecordService.refundCreditCustomer(customer.id, booking.bookingPrice, Constants.CreditPaymentType.Booking, transaction);
+      else await CreditPaymentRecordService.refundCreditCustomer(customer.id, booking.bookingPrice, Constants.CreditPaymentType.Booking, creditPaymentRecord.referralCreditUsed, transaction);
     }
 
     if(!Checker.isEmpty(merchant) && booking.bookingPrice !== null && booking.bookingPrice !== 0) {
