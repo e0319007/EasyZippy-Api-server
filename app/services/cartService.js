@@ -5,8 +5,42 @@ const Cart = require('../models/Cart');
 const LineItem = require('../models/LineItem');
 const Product = require('../models/Product');
 const ProductVariation = require('../models/ProductVariation');
+const CustomError = require('../common/error/customError');
+
+const getInvalidCartItems = async(cartData) => {
+  let { lineItems } = cartData;
+  const invalidCartItems = new Array();
+
+  for(const lineItem of lineItems) {
+    const productId = lineItem.productId;
+    const productVariationId = lineItem.productVariationId
+    const quantity = lineItem.quantity;
+
+    if(Checker.isEmpty(productId) && Checker.isEmpty(productVariationId)) {
+      throw new CustomError(Constants.Error.ProductIdOrProductVariationIdRequired);
+    }
+
+    if(!Checker.isEmpty(productId)) {
+      const product = await Product.findByPk(lineItem.productId);
+      Checker.ifEmptyThrowError(product, Constants.Error.ProductNotFound);
+      if(product.deleted || product.disabled || product.quantityAvailable < quantity) {
+        invalidCartItems.push({ product });
+      }
+    } else {
+      const productVariation = await ProductVariation.findByPk(lineItem.productVariationId);
+      Checker.ifEmptyThrowError(productVariation, Constants.Error.ProductVariationNotFound);
+      if(productVariation.deleted || productVariation.disabled || productVariation.quantityAvailable < quantity) {
+        invalidCartItems.push({ productVariation });
+      }
+    }
+  }
+
+  return invalidCartItems;
+};
 
 module.exports = {
+  getInvalidCartItems,
+  
   saveItemsToCart: async(id, cartData, transaction) => { 
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let { lineItems } = cartData;
