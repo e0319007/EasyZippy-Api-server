@@ -67,7 +67,7 @@ module.exports = {
       if(Array.isArray(createOrderReturnValue)) {
         return res.status(200).send(createOrderReturnValue);
       }
-      return res.status(400).send(createOrderReturnValue);
+      return res.status(400).send(createOrderReturnValue.invalidCartItems);
     } catch(err) {
       console.log(err)
       sendErrorResponse(res, err);

@@ -59,8 +59,7 @@ module.exports = {
     Checker.isEmpty(await Customer.findByPk(customerId), Constants.Error.CustomerNotFound);
 
     const invalidCartItems = await CartService.getInvalidCartItems(cart);
-    console.log('------------------------------------------------------------------------------------------------')
-    console.log(invalidCartItems)
+    
     if(!Checker.isEmpty(invalidCartItems)) {
       return { invalidCartItems };
     }
