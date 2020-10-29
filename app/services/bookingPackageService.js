@@ -142,5 +142,19 @@ module.exports = {
     Checker.ifEmptyThrowError(bookingPackage, Constants.Error.BookingPackageNotFound);
 
     return bookingPackage;
+  },
+
+  retrieveValidBookingPackageByCustomerIdAndLockerTypeId: async(customerId, lockerTypeId, bookingStartDate) => {
+    Checker.ifEmptyThrowError(customerId, 'Customer ' + Constants.Error.IdRequired);
+    Checker.ifEmptyThrowError(lockerTypeId, 'Locker type ' + Constants.Error.IdRequired);
+    Checker.ifEmptyThrowError(bookingStartDate, Constants.Error.DateRequired);
+    const bookingPackages = await BookingPackage.findAll({ where: { customerId } });
+    for(const bookingPackage of bookingPackages) {
+      const bookingPackageModel = await bookingPackage.getBookingPackageModel();
+      if(bookingPackage.endDate > new Date(bookingStartDate) && bookingPackageModel.lockerTypeId === Number(lockerTypeId) && bookingPackage.lockerCount < bookingPackageModel.quota) {
+        return bookingPackage;
+      }
+    }
+    return null;
   }
 };
