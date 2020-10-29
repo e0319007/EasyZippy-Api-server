@@ -9,22 +9,25 @@ module.exports = {
       const { lineItems } = req.body;
 
       const invalidLineItems = await CartService.getInvalidCartItems(lineItems);
-      return invalidLineItems;
+      return res.status(200).send(invalidLineItems);
     } catch (err) {
       console.log(err)
       sendErrorResponse(res, err);
     }
   },
-  
+
   saveItemsToCart: async(req, res) => {
     try {
       const { customerId } = req.params;
       const cartData = req.body;
-      let cart;
+      let returnValue;
       await sequelize.transaction(async (transaction) => {
-        cart = await CartService.saveItemsToCart(customerId, cartData, transaction);
+        returnValue = await CartService.saveItemsToCart(customerId, cartData, transaction);
       });
-      return res.status(200).send(cart);
+      if(Array.isArray(returnValue)) {
+        return res.status(400).send(returnValue);
+      }
+      return res.status(200).send(returnValue);
     } catch (err) {
       console.log(err)
       sendErrorResponse(res, err);
