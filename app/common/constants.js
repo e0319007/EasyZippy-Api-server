@@ -181,6 +181,7 @@ module.exports = {
     TokenNotFound: 'Token not found',
     UnexpectedError: 'An unexpected error has occured',
     UnitPriceRequired: 'Unit Price is required',
+    UsageLimitLowerThanUsageCount: 'Usage limit is lower than current usage count',
     UserUnauthorised: 'User is unauthorised',
     XXXCannotBeNegative: 'must be more than zero',
     XXXIsRequired:'is required',

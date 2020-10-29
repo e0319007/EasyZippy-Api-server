@@ -94,7 +94,10 @@ module.exports = {
       }
     }
     if(updateKeys.includes('usageLimit')) {
-    Checker.ifEmptyThrowError(usageLimit, 'Usage Limit ' + Constants.Error.XXXIsRequired);
+      Checker.ifEmptyThrowError(usageLimit, 'Usage Limit ' + Constants.Error.XXXIsRequired);
+      if(promotion.usageCount > parseInt(usageLimit)) {
+        throw new CustomError(Constants.Error.UsageLimitLowerThanUsageCount);
+      }
     }
     promotion = await Promotion.update(promotionData, { transaction, where: { id }, returning: true });
     return promotion;
