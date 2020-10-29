@@ -20,14 +20,11 @@ module.exports = {
     try {
       const { customerId } = req.params;
       const cartData = req.body;
-      let returnValue;
+      let cart;
       await sequelize.transaction(async (transaction) => {
-        returnValue = await CartService.saveItemsToCart(customerId, cartData, transaction);
+        cart = await CartService.saveItemsToCart(customerId, cartData, transaction);
       });
-      if(Array.isArray(returnValue)) {
-        return res.status(400).send(returnValue);
-      }
-      return res.status(200).send(returnValue);
+      return res.status(200).send(cart);
     } catch (err) {
       console.log(err)
       sendErrorResponse(res, err);

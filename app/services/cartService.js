@@ -43,10 +43,6 @@ module.exports = {
   saveItemsToCart: async(id, cartData, transaction) => { 
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let { lineItems } = cartData;
-    const invalidCartItems = await getInvalidCartItems(lineItems);
-    if(!Checker.isEmpty(invalidCartItems)) {
-      return invalidCartItems;
-    }
     let customer = await Customer.findByPk(id);
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
     let cart = await Cart.findOne({ 
