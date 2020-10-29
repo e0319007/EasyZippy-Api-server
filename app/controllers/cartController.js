@@ -4,6 +4,18 @@ const { sendErrorResponse } = require('../common/error/errorHandler');
 const CartService = require('../services/cartService')
 
 module.exports = {
+  getInvalidCartItems: async(req, res) => {
+    try {
+      const { lineItems } = req.body;
+
+      const invalidLineItems = await CartService.getInvalidCartItems(lineItems);
+      return res.status(200).send(invalidLineItems);
+    } catch (err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  },
+
   saveItemsToCart: async(req, res) => {
     try {
       const { customerId } = req.params;

@@ -158,6 +158,7 @@ module.exports = {
     PdfFileRequired: 'PDF file is required',
     PriceDoesNotTally: 'Price passed in does not tally with the price calculated',
     ProductDeleted: 'Product is deleted',
+    ProductIdOrProductVariationIdRequired: 'Product ID or product variation ID required',
     ProductNotFound: 'Product not found',
     ProductVariationDeleted: 'Product variation is deleted',
     ProductVariationNotFound: 'Product variation not found',
