@@ -59,12 +59,15 @@ module.exports = {
 
   createOrder: async(req, res) => {
     try {
-      let order;
+      let createOrderReturnValue;
       let orderData = req.body;
       await sequelize.transaction(async (transaction) => {
-        order = await OrderService.createOrder(orderData, transaction);
+        createOrderReturnValue = await OrderService.createOrder(orderData, transaction);
       });
-      return res.status(200).send(order);
+      if(Array.isArray(createOrderReturnValue)) {
+        return res.status(200).send(createOrderReturnValue);
+      }
+      return res.status(400).send(createOrderReturnValue);
     } catch(err) {
       console.log(err)
       sendErrorResponse(res, err);

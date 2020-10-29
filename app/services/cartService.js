@@ -7,8 +7,7 @@ const Product = require('../models/Product');
 const ProductVariation = require('../models/ProductVariation');
 const CustomError = require('../common/error/customError');
 
-const getInvalidCartItems = async(cartData) => {
-  let { lineItems } = cartData;
+const getInvalidCartItems = async(lineItems) => {
   const invalidCartItems = new Array();
 
   for(const lineItem of lineItems) {
@@ -40,10 +39,14 @@ const getInvalidCartItems = async(cartData) => {
 
 module.exports = {
   getInvalidCartItems,
-  
+
   saveItemsToCart: async(id, cartData, transaction) => { 
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let { lineItems } = cartData;
+    const invalidCartItems = await getInvalidCartItems(lineItems);
+    if(!Checker.isEmpty(invalidCartItems)) {
+      return invalidCartItems;
+    }
     let customer = await Customer.findByPk(id);
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
     let cart = await Cart.findOne({ 
@@ -77,8 +80,8 @@ module.exports = {
         customerId: id
       }
     });
-    let temp = new Array();
-    if (Checker.isEmpty(await cart.getLineItems())) return temp;
+    let cartItems = new Array();
+    if (Checker.isEmpty(await cart.getLineItems())) return cartItems;
     // console.log('****is array? ' + Array.isArray(await cart.getLineItems()))
 
     // console.log(await cart.getLineItems())
@@ -90,13 +93,14 @@ module.exports = {
       if(!Checker.isEmpty(li.productId)) p = await Product.findByPk(li.productId);
       else pv = await ProductVariation.findByPk(li.productVariationId);
       if ((!Checker.isEmpty(p) && !p.disabled && !p.deleted) || (!Checker.isEmpty(pv) && !pv.disabled && !pv.productDisabled && !pv.deleted)) {
-        temp.push({
+        cartItems.push({
           product: p,
           productVariation: pv,
           quantity: li.quantity
         });
       }
     }
-    return temp;
+    
+    return { cartItems, invalidCartItems: await getInvalidCartItems(await cart.getLineItems())};
   }
 }

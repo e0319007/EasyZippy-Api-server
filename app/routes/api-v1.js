@@ -100,6 +100,7 @@ router.post('/checkBookingAllowed', Authenticator.customerAndMerchantAndStaffOnl
 //Cart
 router.get('/retrieveCart/:customerId', CartController.retrieveCartByCustomerId);
 router.put('/saveCart/:customerId', CartController.saveItemsToCart);
+router.post('/retrieveInvalidCartItems', CartController.getInvalidCartItems);
 
 //Category
 router.get('/category/:id', Authenticator.customerAndMerchantAndStaffOnly, CategoryController.retrieveCategory);

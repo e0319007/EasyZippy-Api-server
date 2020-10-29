@@ -9,6 +9,7 @@ const Product = require('../models/Product');
 const ProductVariation = require('../models/ProductVariation');
 const Promotion = require('../models/Promotion');
 const CreditPaymentRecordService = require('./creditPaymentRecordService');
+const CartService = require('./cartService');
 
 module.exports = {
   retrieveOrderByCustomerId: async(customerId) => {
@@ -56,6 +57,13 @@ module.exports = {
     // Checker.ifNotNumberThrowError(totalAmountPaid, 'Total amount ' + Constants.Error.XXXMustBeNumber);
     Checker.isEmpty(customerId, Constants.Error.IdRequired);
     Checker.isEmpty(await Customer.findByPk(customerId), Constants.Error.CustomerNotFound);
+
+    const invalidCartItems = await CartService.getInvalidCartItems(cart);
+    console.log('------------------------------------------------------------------------------------------------')
+    console.log(invalidCartItems)
+    if(!Checker.isEmpty(invalidCartItems)) {
+      return { invalidCartItems };
+    }
 
     let lineItemsArray = new Array();
 
