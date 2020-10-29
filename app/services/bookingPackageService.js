@@ -148,13 +148,26 @@ module.exports = {
     Checker.ifEmptyThrowError(customerId, 'Customer ' + Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(lockerTypeId, 'Locker type ' + Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(bookingStartDate, Constants.Error.DateRequired);
-    const bookingPackages = await BookingPackage.findAll({ where: { customerId } });
-    for(const bookingPackage of bookingPackages) {
-      const bookingPackageModel = await bookingPackage.getBookingPackageModel();
-      if(bookingPackage.endDate > new Date(bookingStartDate) && bookingPackageModel.lockerTypeId === Number(lockerTypeId) && bookingPackage.lockerCount < bookingPackageModel.quota) {
-        return bookingPackage;
-      }
+    const bookingPackage = await BookingPackage.findOne({ where: { customerId, expired: false } });
+    const bookingPackageModel = await bookingPackage.getBookingPackageModel();
+    const bookingPackageIssues = [];
+
+    if(Checker.isEmpty(bookingPackage)) {
+      bookingPackageIssues.push(Constants.Error.NoActiveBookingPackage);
+      return { bookingPackage, bookingPackageIssues };
     }
-    return null;
+    if(bookingPackage.endDate > new Date(bookingStartDate)) {
+      bookingPackageIssues.push(Constants.Error.BookingStartDateAfterPackageEndDate);
+    }
+    if(bookingPackage.lockerCount < bookingPackageModel.quota) {
+      bookingPackageIssues.push(Constants.Error.BookingPackageQuotaInsufficient);
+    }
+    if(bookingPackageModel.lockerTypeId === Number(lockerTypeId)) {
+      bookingPackageIssues.push(Constants.Error.LockerTypeDifferent);
+    }
+    if(Checker.isEmpty(bookingPackageIssues)) {
+      return { bookingPackage, bookingPackageIssues };
+    }
+    return { bookingPackage: null, bookingPackageIssues };
   }
 };
