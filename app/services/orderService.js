@@ -10,6 +10,7 @@ const ProductVariation = require('../models/ProductVariation');
 const Promotion = require('../models/Promotion');
 const CreditPaymentRecordService = require('./creditPaymentRecordService');
 const CartService = require('./cartService');
+const CustomError = require('../common/error/customError');
 
 module.exports = {
   retrieveOrderByCustomerId: async(customerId) => {
@@ -109,19 +110,19 @@ module.exports = {
     let orders = new Array(); 
     let trackTotalAmount = 0;
 
-    for (let [merchantId, lineItems] of merchantMapLineitems) {
-      let totalAmount = await applyPromoCode(promoIdUsed, await calculatePrice(lineItems));
+    for (let [merchantId, lineItem] of merchantMapLineitems) {
+      let totalAmount = await applyPromoCode(promoIdUsed, await calculatePrice(lineItem));
       trackTotalAmount += totalAmount;
       let creditPaymentRecordId = (await CreditPaymentRecordService.payCreditCustomer(customerId, totalAmount, Constants.CreditPaymentType.Order, transaction)).id;
-      let order = await Order.create({ promoIdUsed, totalAmount, collectionMethodEnum, customerId, merchantId, creditPaymentRecordId }, { transaction });
+      let order = await Order.create({ lineItem, promoIdUsed, totalAmount, collectionMethodEnum, customerId, merchantId, creditPaymentRecordId }, { transaction });
+      await order.setLineItems(lineItem, { transaction });
       orders.push(order);
     }
 
     // if(totalAmountPaid != trackTotalAmount) throw new CustomError(Constants.Error.PriceDoesNotTally);
 
     return orders;
-  },
-
+  }
 }
 
 const markOrderComplete = async(order, transaction) => {
@@ -152,11 +153,18 @@ const calculatePrice = async(lineItems) => {
   return price;
 }
 
-const applyPromoCode = async(promoIdUsed, price) => {
+const applyPromoCode = async(promoIdUsed, price, transaction) => {
+  let promotion;
   if(!Checker.isEmpty(promoIdUsed)) {
     console.log('PROMO ID USED' + promoIdUsed)
-    let promotion = await Promotion.findByPk(promoIdUsed);
+    promotion = await Promotion.findByPk(promoIdUsed);
     Checker.ifEmptyThrowError(promotion, Constants.Error.PromotionNotFound);
+    if(Checker.isEmpty(promotion.usageLimit) && promotion.usageLimit <= promotion.usageCount) {
+      throw new CustomError(Constants.Error.PromotionUsageLimitReached);
+    }
+    if(Checker.isEmpty(promotion.minimumSpend) && price < promotion.minimumSpend) {
+      throw new CustomError(Constants.Error.PromotionMinimumSpendNotMet);
+    }
     if(promotion.startDate <= new Date() && promotion.endDate >= new Date()) {
       if(!Checker.isEmpty(promotion.flatDiscount)) {
         price -= promotion.flatDiscount;
@@ -164,7 +172,8 @@ const applyPromoCode = async(promoIdUsed, price) => {
         price *= (1 - promotion.percentageDiscount);
       }
     }
-  } 
+  }
+  await promotion.update({ usageCount: ++promotion.usageCount }, { transaction });
   if(price < 0) return 0;
   return price;
 }

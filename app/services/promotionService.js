@@ -11,7 +11,6 @@ module.exports = {
     Checker.ifEmptyThrowError(promoCode, 'Promo code ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(startDate, 'Start date ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(endDate, 'End date ' + Constants.Error.XXXIsRequired);
-    Checker.ifEmptyThrowError(usageLimit, 'Usage limit ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(merchantId, 'Merchant ID ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(await Merchant.findByPk(merchantId), Constants.Error.MerchantNotFound);
     if(startDate > endDate) {
@@ -40,7 +39,6 @@ module.exports = {
     Checker.ifEmptyThrowError(promoCode, 'Promo code ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(startDate, 'Start date ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(endDate, 'End date ' + Constants.Error.XXXIsRequired);
-    Checker.ifEmptyThrowError(usageLimit, 'Usage limit ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(staffId, 'Staff ID ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(await Staff.findByPk(staffId), Constants.Error.StaffNotFound);
     if(startDate > endDate) {
@@ -94,7 +92,10 @@ module.exports = {
       }
     }
     if(updateKeys.includes('usageLimit')) {
-    Checker.ifEmptyThrowError(usageLimit, 'Usage Limit ' + Constants.Error.XXXIsRequired);
+      Checker.ifEmptyThrowError(usageLimit, 'Usage Limit ' + Constants.Error.XXXIsRequired);
+      if(promotion.usageCount > parseInt(usageLimit)) {
+        throw new CustomError(Constants.Error.UsageLimitLowerThanUsageCount);
+      }
     }
     promotion = await Promotion.update(promotionData, { transaction, where: { id }, returning: true });
     return promotion;
