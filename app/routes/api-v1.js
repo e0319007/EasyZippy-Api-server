@@ -228,6 +228,7 @@ router.get('/promotion/merchant', Authenticator.customerAndMerchantAndStaffOnly,
 router.get('/promotion/merchant/:id', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveMerchantPromotionByMerchantId);
 router.get('/promotion/promoCode/:promoCode', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrievePromotionByPromoCode);
 router.get('/promotions', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveAllPromotions);
+router.get('/promotion/:id', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrievePromotionById);
 router.put('/promotion/:id', Authenticator.merchantAndStaffOnly, PromotionController.updatePromotion);
 router.put('/deletePromotion/:id', Authenticator.merchantAndStaffOnly, PromotionController.deletePromotion);
 router.post('/promotion/merchant', Authenticator.merchantOnly, PromotionController.createMerchantPromotion);

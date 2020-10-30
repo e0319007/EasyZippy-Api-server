@@ -91,6 +91,16 @@ module.exports = {
     }
   },
 
+  retrievePromotionById: async(req, res) => {
+    try {
+      const { id } = req.params
+      return res.status(200).send(await PromotionService.retrievePromotionById(id));
+    } catch (err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  },
+
   deletePromotion: async(req, res) => {
     try {
       const { id } = req.params

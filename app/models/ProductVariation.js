@@ -21,7 +21,7 @@ ProductVariation.init(
       type: STRING,
       allowNull: false
     },
-    unitPrice: {
+    unitPrice: {   
       type: DECIMAL,
       allowNull: false,
       validate: {

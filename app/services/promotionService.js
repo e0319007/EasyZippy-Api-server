@@ -122,6 +122,13 @@ module.exports = {
     return promotion;
   },
 
+  retrievePromotionById: async(id) => {
+    Checker.ifEmptyThrowError(id, 'Promotion ID ' + Constants.Error.IdRequired);
+    let promotion = await Promotion.findByPk(id);
+    Checker.ifEmptyThrowError(promotion, Constants.Error.PromotionNotFound);
+    return promotion;
+  },
+
   retrieveAllPromotions: async() => {
     return await Promotion.findAll({ where: { deleted: false } });
   },
