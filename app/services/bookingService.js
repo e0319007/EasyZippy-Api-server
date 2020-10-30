@@ -17,6 +17,7 @@ const Kiosk = require('../models/Kiosk');
 const ScheduleHelper = require('../common/scheduleHelper')
 const NotificationHelper = require('../common/notificationHelper');
 const CreditPaymentRecord = require('../models/CreditPaymentRecord');
+const EmailHelper = require('../common/emailHelper');
 
 const checkBookingAvailable = async(startDate, endDate, lockerTypeId, kioskId) => {
   let bookings = await Booking.findAll({ where: { lockerTypeId, kioskId } });
@@ -419,6 +420,7 @@ module.exports = {
     console.log('add collector to booking now is')
     console.log(booking)
     NotificationHelper.notificationCollectorAdded(id, collectorId);
+    EmailHelper.sendEmailForAddCollector(customer.email, booking.id)
     return booking;
   }, 
 
@@ -436,6 +438,7 @@ module.exports = {
     booking = await booking.update({ collectorId: null, qrCode }, { transaction });
     console.log('CHECK COLLECTOR TO BE REMOVED: ' + booking.collectorId)
     NotificationHelper.notificationCollectorRemoved(id, collectorId);
+    EmailHelper.sendEmailForRemoveCollector((await Customer.findByPk(collectorId)).email, booking.id)
     return booking;
   }, 
 
@@ -461,6 +464,8 @@ module.exports = {
 
     NotificationHelper.notificationCollectorAdded(id, collectorId);
     NotificationHelper.notificationCollectorRemoved(id, oldCollectorId);
+    EmailHelper.sendEmailForAddCollector(customer.email, booking.id)
+    EmailHelper.sendEmailForRemoveCollector((await Customer.findByPk(oldCollectorId)).email, booking.id)
     return booking;
   }, 
 
