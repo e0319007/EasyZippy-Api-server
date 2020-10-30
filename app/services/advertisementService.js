@@ -7,6 +7,7 @@ const fs = require('fs-extra');
 const Advertisement = require('../models/Advertisement');
 const Merchant = require('../models/Merchant');
 const Staff = require('../models/Staff');
+const notificationHelper = require('../common/notificationHelper');
 
 
 module.exports = {
@@ -49,6 +50,7 @@ module.exports = {
     const advertisement = await Advertisement.create(
       advertisementData
     , { transaction });
+    await notificationHelper.notificationNewAdvertisementApplicationFromMerchant(advertisement.id)
     return advertisement;
   },
 
@@ -66,6 +68,7 @@ module.exports = {
     const advertisement = await Advertisement.create(
       advertisementData
     , { transaction });
+    await notificationHelper.notificationNewAdvertisementApplicationFromAdvertiser(advertisement.id)
     return advertisement;
   },
 

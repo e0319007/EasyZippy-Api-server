@@ -8,6 +8,8 @@ const Staff = require('../models/Staff');
 module.exports = {
   createMerchantPromotion: async(promotionData, transaction) => {
     let { promoCode, startDate, endDate, description, termsAndConditions, percentageDiscount, flatDiscount, usageLimit, merchantId, minimumSpend } = promotionData;
+    startDate = new Date(startDate);
+    endDate = new Date(endDate);
     Checker.ifEmptyThrowError(promoCode, 'Promo code ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(startDate, 'Start date ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(endDate, 'End date ' + Constants.Error.XXXIsRequired);
@@ -36,6 +38,8 @@ module.exports = {
 
   createMallPromotion: async(promotionData, transaction) => {
     let { promoCode, startDate, endDate, description, termsAndConditions, percentageDiscount, flatDiscount, usageLimit, staffId, minimumSpend } = promotionData;
+    startDate = new Date(startDate);
+    endDate = new Date(endDate);
     Checker.ifEmptyThrowError(promoCode, 'Promo code ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(startDate, 'Start date ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(endDate, 'End date ' + Constants.Error.XXXIsRequired);

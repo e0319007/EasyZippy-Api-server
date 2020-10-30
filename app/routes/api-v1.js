@@ -119,6 +119,7 @@ router.put('/customer/referral', Authenticator.customerOnly, CustomerController.
 router.put('/customer/:id', Authenticator.customerOnly, CustomerController.updateCustomer);
 router.post('/customer/login', CustomerController.loginCustomer);
 router.post('/customer/email', Authenticator.customerAndMerchantAndStaffOnly, CustomerController.retrieveCustomerByEmail);
+router.post('/customer/mobileNumber', Authenticator.customerAndMerchantAndStaffOnly, CustomerController.retrieveCustomerByMobileNumber);
 router.post('/customer/:id/verifyPassword', Authenticator.customerOnly, CustomerController.verifyCurrentPassword);
 router.post('/customer/forgotPassword', CustomerController.sendResetPasswordEmail);
 router.post('/customer/resetPassword/checkValidToken', CustomerController.checkValidToken);

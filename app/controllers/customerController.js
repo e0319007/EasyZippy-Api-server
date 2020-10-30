@@ -43,6 +43,16 @@ module.exports = {
     }
   },
 
+  retrieveCustomerByMobileNumber: async(req, res) => {
+    try {
+      const { mobileNumber } = req.body;
+      const customer = await CustomerService.retrieveCustomerByEmail(mobileNumber);
+      return res.status(200).send(customer);
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
   retrieveAllCustomers: async (req, res) => {
     try {
       let customers = await CustomerService.retrieveAllCustomers();

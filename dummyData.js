@@ -23,6 +23,7 @@ const ProductVariationService = require('./app/services/productVariationService'
 const ProductVariation = require('./app/models/ProductVariation');
 const MaintenanceAction = require('./app/models/MaintenanceAction');
 const orderService = require('./app/services/orderService');
+const advertisementService = require('./app/services/advertisementService');
 
 const addDummyData = async () => {
   const staff1 = await StaffService.createStaff({ firstName: 'Alice', lastName: 'Ang', mobileNumber: '91234567', email: 'alice@email.com', staffRoleEnum: 'Admin' });
@@ -160,9 +161,10 @@ const addDummyData = async () => {
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType3.id});
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType3.id});
 
-  await Advertisement.create({ image: '1601607853991.jpeg', title: 'Lazada sale', description: 'Lazada 50% off all items',  advertiserUrl: 'http://www.lazada.com', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '91111111', advertiserEmail: 'test1@email.com', approved: true });
+  // await Advertisement.create({ image: '1601607853991.jpeg', title: 'Lazada sale', description: 'Lazada 50% off all items',  advertiserUrl: 'http://www.lazada.com', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '91111111', advertiserEmail: 'test1@email.com', approved: true });
   await Advertisement.create({ image: '1601608444371.jpeg', title: 'Shopee sale', description: 'Shopee 50% off all electronic items',  advertiserUrl: 'http://www.shopee.com', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '92222222', advertiserEmail: 'test2@email.com', approved: true });
   await Advertisement.create({ image: '1601608583950.jpeg', title: 'Qoo10 sale', description: 'Qoo10 50% off apparel items',  advertiserUrl: 'http://www.qoo10.com', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '93333333', advertiserEmail: 'test3@email.com', approved: true });
+  advertisementService.createAdvertisementAsMerchantWithoutAccount({ image: '1601607853991.jpeg', title: 'Lazada sale', description: 'Lazada 50% off all items',  advertiserUrl: 'http://www.lazada.com', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '91111111', advertiserEmail: 'test1@email.com', approved: true })
   
   await LockerActionRecord.create({ timestamp: new Date(), lockerActionEnum: Constants.LockerAction.Open, lockerId: 1});
   await LockerActionRecord.create({ timestamp: new Date(), lockerActionEnum: Constants.LockerAction.Close, lockerId: 1});
@@ -385,11 +387,24 @@ const addDummyData = async () => {
     // await BookingService.createBookingWithBookingPackageByCustomer(bookingData10, transaction);
   });
 
+  await sequelize.transaction(async (transaction) => {
+    console.log(await BookingService.addCollectorToBooking(1, 1, transaction))
+   
+  });
+
+  await sequelize.transaction(async (transaction) => {
+    console.log(await BookingService.changeCollectorToBooking(1, 3, transaction))
+
+  });
+
+  await sequelize.transaction(async (transaction) => {
+    console.log(await BookingService.removeCollectorToBooking(1, transaction))
+  });
+
   // await sequelize.transaction(async (transaction) => {
   //   //await BookingService.createBookingWithBookingPackageByMerchant(bookingData5, transaction);
-  //   console.log(await BookingService.addCollectorToBooking(1, 3, transaction))
-  //   console.log(await BookingService.addCollectorToBooking(2, 3, transaction))
-  //   console.log(await BookingService.changeCollectorToBooking(2, 4, transaction))
+  //   console.log(await BookingService.addCollectorToBooking(1, 1, transaction))
+  //   console.log(await BookingService.changeCollectorToBooking(1, 3, transaction))
   //   console.log(await BookingService.removeCollectorToBooking(1, transaction))
   //   //console.log(await BookingService.cancelBooking(5, transaction))
   // });
@@ -399,7 +414,9 @@ const addDummyData = async () => {
   // console.log(await BookingService.retrieveBookingByCollectorId(3))
   // console.log(await BookingService.retrieveBookingByMerchantId(1))
   
-  //TEST ORDER
+  /**
+   * TEST ORDER
+   **/
   
   let cart1 = [
     { productId: null, productVariationId: 1, quantity: 4 }, 
@@ -414,30 +431,30 @@ const addDummyData = async () => {
     //totalAmountPaid: 3, 
     customerId: 1
   }
-  let orderVal;
-  await sequelize.transaction(async (transaction) => {
-    orderVal = await orderService.createOrder(orderData1, transaction);
-  });
+  // let orderVal;
+  // await sequelize.transaction(async (transaction) => {
+  //   orderVal = await orderService.createOrder(orderData1, transaction);
+  // });
 
-  await sequelize.transaction(async (transaction) => {
-    console.log(await orderService.updateOrderStatus(1, Constants.OrderStatus.ReadyForCollection, transaction));
+  // await sequelize.transaction(async (transaction) => {
+  //   console.log(await orderService.updateOrderStatus(1, Constants.OrderStatus.ReadyForCollection, transaction));
 
-  });
+  // });
 
-  await sequelize.transaction(async (transaction) => {
-    await orderService.updateOrderStatus(1, Constants.OrderStatus.Complete, transaction);
-  });
+  // await sequelize.transaction(async (transaction) => {
+  //   await orderService.updateOrderStatus(1, Constants.OrderStatus.Complete, transaction);
+  // });
 
-  console.log('RETRIEVE ALL')
-  console.log(await orderService.retrieveAllOrders());
-  console.log('RETRIEVE BY ID')
-  console.log(await orderService.retrieveOrderById(1));
-  console.log('RETRIEVE BY CUSTOMER ID')
-  console.log(await orderService.retrieveOrderByCustomerId(1));
-  console.log('RETRIEVE BY MERCHANT ID')
-  console.log(await orderService.retrieveOrderByMerchantId(1));
-  console.log('RETRIEVE ORDER LINE ITEMS');
-  console.log(await orderVal[0].getLineItems());
+  // console.log('RETRIEVE ALL')
+  // console.log(await orderService.retrieveAllOrders());
+  // console.log('RETRIEVE BY ID')
+  // console.log(await orderService.retrieveOrderById(1));
+  // console.log('RETRIEVE BY CUSTOMER ID')
+  // console.log(await orderService.retrieveOrderByCustomerId(1));
+  // console.log('RETRIEVE BY MERCHANT ID')
+  // console.log(await orderService.retrieveOrderByMerchantId(1));
+  // console.log('RETRIEVE ORDER LINE ITEMS');
+  // console.log(await orderVal[0].getLineItems());
 };
 
 addDummyData();

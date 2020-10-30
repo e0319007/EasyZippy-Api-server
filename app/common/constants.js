@@ -39,7 +39,8 @@ module.exports = {
     Booking: 'Booking',
     Order: 'Order',
     Staff: 'Staff',
-    Customer: 'Customer'
+    Customer: 'Customer',
+    Advertisement: 'Advertisement'
   },
   OrderStatus: {
     PendingPayment: 'Pending Payment',

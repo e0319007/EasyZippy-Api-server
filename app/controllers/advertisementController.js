@@ -2,6 +2,7 @@ const sequelize = require('../common/database');
 const { sendErrorResponse } = require('../common/error/errorHandler');
 const AdvertisementService = require('../services/advertisementService');
 const fs = require('fs-extra');
+const NotificationHelper = require('../common/notificationHelper');
 
 module.exports = {
   createAdvertisementAsStaff: async(req, res) => {
@@ -40,6 +41,7 @@ module.exports = {
       await sequelize.transaction(async (transaction) => {
         advertisement = await AdvertisementService.createAdvertisementAsMerchant(advertisementData, transaction)
       });
+      NotificationHelper.notificationNewAdvertisementApplicationFromMerchant(advertisement.id)
       return res.status(200).send(advertisement);
     } catch (err) {
       fs.remove(image);
@@ -56,6 +58,7 @@ module.exports = {
       await sequelize.transaction(async (transaction) => {
         advertisement = await AdvertisementService.createAdvertisementAsMerchantWithoutAccount(advertisementData, transaction)
       });
+      NotificationHelper.notificationNewAdvertisementApplicationFromAdvertiser(advertisement.id)
       return res.status(200).send(advertisement);
     } catch (err) {
       fs.remove(image);
