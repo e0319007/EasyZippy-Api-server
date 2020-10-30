@@ -56,6 +56,7 @@ Promotion.init(
     usageCount: {
       type: INTEGER,
       allowNull: true,
+      defaultValue: 0,
       validate: {
         min: 0
       }

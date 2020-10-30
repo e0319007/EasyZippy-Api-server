@@ -11,7 +11,6 @@ module.exports = {
     Checker.ifEmptyThrowError(promoCode, 'Promo code ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(startDate, 'Start date ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(endDate, 'End date ' + Constants.Error.XXXIsRequired);
-    Checker.ifEmptyThrowError(usageLimit, 'Usage limit ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(merchantId, 'Merchant ID ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(await Merchant.findByPk(merchantId), Constants.Error.MerchantNotFound);
     if(startDate > endDate) {
@@ -40,7 +39,6 @@ module.exports = {
     Checker.ifEmptyThrowError(promoCode, 'Promo code ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(startDate, 'Start date ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(endDate, 'End date ' + Constants.Error.XXXIsRequired);
-    Checker.ifEmptyThrowError(usageLimit, 'Usage limit ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(staffId, 'Staff ID ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(await Staff.findByPk(staffId), Constants.Error.StaffNotFound);
     if(startDate > endDate) {

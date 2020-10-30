@@ -109,11 +109,15 @@ module.exports = {
     let orders = new Array(); 
     let trackTotalAmount = 0;
 
-    for (let [merchantId, lineItems] of merchantMapLineitems) {
-      let totalAmount = await applyPromoCode(promoIdUsed, await calculatePrice(lineItems));
+    for (let [merchantId, lineItem] of merchantMapLineitems) {
+      let totalAmount = await applyPromoCode(promoIdUsed, await calculatePrice(lineItem));
       trackTotalAmount += totalAmount;
       let creditPaymentRecordId = (await CreditPaymentRecordService.payCreditCustomer(customerId, totalAmount, Constants.CreditPaymentType.Order, transaction)).id;
-      let order = await Order.create({ promoIdUsed, totalAmount, collectionMethodEnum, customerId, merchantId, creditPaymentRecordId }, { transaction });
+      let order = await Order.create({ lineItem, promoIdUsed, totalAmount, collectionMethodEnum, customerId, merchantId, creditPaymentRecordId }, { transaction, include: [LineItem] });
+      console.log('*****------------------------CHECKER')
+      console.log(lineItem)
+      await order.setLineItems(lineItem);
+      order = await order.save();
       orders.push(order);
     }
 

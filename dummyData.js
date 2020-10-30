@@ -107,17 +107,24 @@ const addDummyData = async () => {
     productVariationId: 1,
     productId: null,
     quantity: 5
-  }
+  };
 
   let lineItem2 = {
     productVariationId: null,
     productId: 2,
     quantity: 2
-  }
+  };
+
+  let lineItem3 = {
+    productVariationId: null,
+    productId: 3,
+    quantity: 98
+  };
 
   let lineItems = new Array();
   lineItems.push(lineItem1);
   lineItems.push(lineItem2);
+  lineItems.push(lineItem3);
 
   await sequelize.transaction(async (transaction) => {
     await CartService.saveItemsToCart(1, { lineItems }, transaction);
@@ -397,7 +404,8 @@ const addDummyData = async () => {
   let cart1 = [
     { productId: null, productVariationId: 1, quantity: 4 }, 
     { productId: 2, productVariationId: null, quantity: 3 }, 
-    { productId: 6, productVariationId: null, quantity: 3 }
+    { productId: 6, productVariationId: null, quantity: 3 },
+    { productId: 3, productVariationId: null, quantity: 98 },
   ]
   let orderData1 = {
     cart: cart1, 
@@ -406,8 +414,9 @@ const addDummyData = async () => {
     //totalAmountPaid: 3, 
     customerId: 1
   }
+  let orderVal;
   await sequelize.transaction(async (transaction) => {
-    await orderService.createOrder(orderData1, transaction);
+    orderVal = await orderService.createOrder(orderData1, transaction);
   });
 
   await sequelize.transaction(async (transaction) => {
@@ -427,6 +436,8 @@ const addDummyData = async () => {
   console.log(await orderService.retrieveOrderByCustomerId(1));
   console.log('RETRIEVE BY MERCHANT ID')
   console.log(await orderService.retrieveOrderByMerchantId(1));
+  console.log('**********************/////////////////////////')
+  console.log(await orderVal[0].getLineItems())
 };
 
 addDummyData();
