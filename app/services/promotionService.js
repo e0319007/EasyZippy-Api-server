@@ -41,6 +41,8 @@ module.exports = {
     Checker.ifEmptyThrowError(endDate, 'End date ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(staffId, 'Staff ID ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(await Staff.findByPk(staffId), Constants.Error.StaffNotFound);
+    percentageDiscount = percentageDiscount === '' ? null : percentageDiscount;
+    flatDiscount = flatDiscount === '' ? null : flatDiscount;
     if(startDate > endDate) {
       throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     }
