@@ -8,11 +8,15 @@ const Staff = require('../models/Staff');
 module.exports = {
   createMerchantPromotion: async(promotionData, transaction) => {
     let { promoCode, startDate, endDate, description, termsAndConditions, percentageDiscount, flatDiscount, usageLimit, merchantId, minimumSpend } = promotionData;
+    startDate = new Date(startDate);
+    endDate = new Date(endDate);
     Checker.ifEmptyThrowError(promoCode, 'Promo code ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(startDate, 'Start date ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(endDate, 'End date ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(merchantId, 'Merchant ID ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(await Merchant.findByPk(merchantId), Constants.Error.MerchantNotFound);
+    percentageDiscount = percentageDiscount === '' ? null : percentageDiscount;
+    flatDiscount = flatDiscount === '' ? null : flatDiscount;
     if(startDate > endDate) {
       throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     }
@@ -36,6 +40,8 @@ module.exports = {
 
   createMallPromotion: async(promotionData, transaction) => {
     let { promoCode, startDate, endDate, description, termsAndConditions, percentageDiscount, flatDiscount, usageLimit, staffId, minimumSpend } = promotionData;
+    startDate = new Date(startDate);
+    endDate = new Date(endDate);
     Checker.ifEmptyThrowError(promoCode, 'Promo code ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(startDate, 'Start date ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(endDate, 'End date ' + Constants.Error.XXXIsRequired);
