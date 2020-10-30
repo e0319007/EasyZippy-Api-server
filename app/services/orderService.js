@@ -113,19 +113,15 @@ module.exports = {
       let totalAmount = await applyPromoCode(promoIdUsed, await calculatePrice(lineItem));
       trackTotalAmount += totalAmount;
       let creditPaymentRecordId = (await CreditPaymentRecordService.payCreditCustomer(customerId, totalAmount, Constants.CreditPaymentType.Order, transaction)).id;
-      let order = await Order.create({ lineItem, promoIdUsed, totalAmount, collectionMethodEnum, customerId, merchantId, creditPaymentRecordId }, { transaction, include: [LineItem] });
-      console.log('*****------------------------CHECKER')
-      console.log(lineItem)
-      await order.setLineItems(lineItem);
-      order = await order.save();
+      let order = await Order.create({ lineItem, promoIdUsed, totalAmount, collectionMethodEnum, customerId, merchantId, creditPaymentRecordId }, { transaction });
+      await order.setLineItems(lineItem, { transaction });
       orders.push(order);
     }
 
     // if(totalAmountPaid != trackTotalAmount) throw new CustomError(Constants.Error.PriceDoesNotTally);
 
     return orders;
-  },
-
+  }
 }
 
 const markOrderComplete = async(order, transaction) => {

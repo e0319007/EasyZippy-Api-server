@@ -436,8 +436,8 @@ const addDummyData = async () => {
   console.log(await orderService.retrieveOrderByCustomerId(1));
   console.log('RETRIEVE BY MERCHANT ID')
   console.log(await orderService.retrieveOrderByMerchantId(1));
-  console.log('**********************/////////////////////////')
-  console.log(await orderVal[0].getLineItems())
+  console.log('RETRIEVE ORDER LINE ITEMS');
+  console.log(await orderVal[0].getLineItems());
 };
 
 addDummyData();
