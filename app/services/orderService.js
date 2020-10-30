@@ -111,12 +111,29 @@ module.exports = {
     let trackTotalAmount = 0;
 
     for (let [merchantId, lineItem] of merchantMapLineitems) {
-      let totalAmount = await applyPromoCode(promoIdUsed, await calculatePrice(lineItem));
+      let totalAmount = await calculatePrice(lineItem);
       trackTotalAmount += totalAmount;
       let creditPaymentRecordId = (await CreditPaymentRecordService.payCreditCustomer(customerId, totalAmount, Constants.CreditPaymentType.Order, transaction)).id;
       let order = await Order.create({ lineItem, promoIdUsed, totalAmount, collectionMethodEnum, customerId, merchantId, creditPaymentRecordId }, { transaction });
       await order.setLineItems(lineItem, { transaction });
       orders.push(order);
+    }
+
+    let promotion;
+    
+    if(!Checker.isEmpty(promoIdUsed)) {
+      promotion = await Promotion.findByPk(promoIdUsed);
+      if(!Checker.isEmpty(promotion.usageLimit) && promotion.usageLimit <= promotion.usageCount) {
+        throw new CustomError(Constants.Error.PromotionUsageLimitReached);
+      } 
+      if(promotion.minimumSpent < trackTotalAmount) {
+        throw new CustomError(Constants.Error.PromotionMinimumSpendNotMet);
+      }
+      for (let order of orders) {
+        let priceAfterPromotion = await applyPromoCode(promoIdUsed, order.totalAmount)
+        order = await order.update({ totalAmount: priceAfterPromotion }, { transaction });
+      }
+      await promotion.update({ usageCount: ++promotion.usageCount }, { transaction });
     }
 
     // if(totalAmountPaid != trackTotalAmount) throw new CustomError(Constants.Error.PriceDoesNotTally);
@@ -153,18 +170,19 @@ const calculatePrice = async(lineItems) => {
   return price;
 }
 
-const applyPromoCode = async(promoIdUsed, price, transaction) => {
+const applyPromoCode = async(promoIdUsed, price) => {
+  price = Number(price)
   let promotion;
   if(!Checker.isEmpty(promoIdUsed)) {
     console.log('PROMO ID USED' + promoIdUsed)
     promotion = await Promotion.findByPk(promoIdUsed);
-    Checker.ifEmptyThrowError(promotion, Constants.Error.PromotionNotFound);
-    if(Checker.isEmpty(promotion.usageLimit) && promotion.usageLimit <= promotion.usageCount) {
-      throw new CustomError(Constants.Error.PromotionUsageLimitReached);
-    }
-    if(Checker.isEmpty(promotion.minimumSpend) && price < promotion.minimumSpend) {
-      throw new CustomError(Constants.Error.PromotionMinimumSpendNotMet);
-    }
+    // Checker.ifEmptyThrowError(promotion, Constants.Error.PromotionNotFound);
+    // if(Checker.isEmpty(promotion.usageLimit) && promotion.usageLimit <= promotion.usageCount) {
+    //   throw new CustomError(Constants.Error.PromotionUsageLimitReached);
+    // }
+    // if(Checker.isEmpty(promotion.minimumSpend) && price < promotion.minimumSpend) {
+    //   throw new CustomError(Constants.Error.PromotionMinimumSpendNotMet);
+    // }
     if(promotion.startDate <= new Date() && promotion.endDate >= new Date()) {
       if(!Checker.isEmpty(promotion.flatDiscount)) {
         price -= promotion.flatDiscount;
@@ -173,7 +191,8 @@ const applyPromoCode = async(promoIdUsed, price, transaction) => {
       }
     }
   }
-  await promotion.update({ usageCount: ++promotion.usageCount }, { transaction });
+  // await promotion.update({ usageCount: ++promotion.usageCount }, { transaction });
   if(price < 0) return 0;
+  price = price.toFixed(2);
   return price;
 }

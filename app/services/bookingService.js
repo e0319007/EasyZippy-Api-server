@@ -126,7 +126,13 @@ const applyPromoId = async(promoIdUsed, bookingPrice) => {
     let promotion = await Promotion.findByPk(promoIdUsed);
     Checker.ifEmptyThrowError(promotion, Constants.Error.PromotionNotFound);
     if(promotion.startDate <= new Date() && promotion.endDate >= new Date()) {
-      if(!Checker.isEmpty(promotion.flatDiscount)) {
+      if(!Checker.isEmpty(promotion.usageCount) && promotion.usageCount >= promotion.usageLimit) {
+        throw new CustomError(Constants.Error.PromotionUsageLimitReached);
+      }
+      if(promotion.minimumSpent > bookingPrice) {
+        throw new CustomError(Constants.Error.PromotionMinimumSpendNotMet);
+      }
+      if (!Checker.isEmpty(promotion.flatDiscount)) {
         bookingPrice -= promotion.flatDiscount;
       } else {
         bookingPrice *= (1 - promotion.percentageDiscount);

@@ -39,8 +39,8 @@ router.get('/approvedAdvertisements', Authenticator.staffOnly, AdvertisementCont
 router.get('/unapprovedAdvertisements', Authenticator.staffOnly, AdvertisementController.retrieveUnapprovedAdvertisement);
 router.put('/approveAdvertisement/:id', Authenticator.staffOnly, AdvertisementController.toggleApproveAdvertisement);
 router.put('/setExpireAdvertisement/:id', Authenticator.staffOnly, AdvertisementController.setExpireAdvertisement);
-router.put('/advertisement/toggleDisable/:id', Authenticator.staffOnly, AdvertisementController.toggleDisableAdvertisement);
-router.put('/deleteAdvertisement/:id', Authenticator.staffOnly, AdvertisementController.deleteAdvertisement);
+router.put('/advertisement/toggleDisable/:id', Authenticator.merchantAndStaffOnly, AdvertisementController.toggleDisableAdvertisement);
+router.put('/deleteAdvertisement/:id', Authenticator.merchantAndStaffOnly, AdvertisementController.deleteAdvertisement);
 router.put('/advertisement/:id', Authenticator.merchantAndStaffOnly, AdvertisementController.updateAdvertisement);
 
 //Announcement
