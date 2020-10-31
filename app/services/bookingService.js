@@ -536,8 +536,9 @@ module.exports = {
     const creditPaymentRecord = await CreditPaymentRecord.findByPk(booking.creditPaymentRecordId);
     
     if(!Checker.isEmpty(customer) && booking.bookingPrice !== null && booking.bookingPrice !== 0) {
+      console.log('creditPaymentRecord.referralCreditUsed' + creditPaymentRecord.referralCreditUsed)
       if(creditPaymentRecord.referralCreditUsed == 0) await CreditPaymentRecordService.refundCreditCustomer(customer.id, booking.bookingPrice, Constants.CreditPaymentType.Booking, transaction);
-      else await CreditPaymentRecordService.refundCreditCustomer(customer.id, booking.bookingPrice, Constants.CreditPaymentType.Booking, creditPaymentRecord.referralCreditUsed, transaction);
+      else await CreditPaymentRecordService.refundCreditCustomerWithReferral(customer.id, booking.bookingPrice, Constants.CreditPaymentType.Booking, creditPaymentRecord.referralCreditUsed, transaction);
     }
 
     if(!Checker.isEmpty(merchant) && booking.bookingPrice !== null && booking.bookingPrice !== 0) {

@@ -338,7 +338,7 @@ module.exports = {
     //console.log('before' + referee.referrerId)
     if (!Checker.isEmpty(referee.referrerId)) throw new CustomError(Constants.Error.ReferrerExist)
     referee = await Customer.update({ referrerId }, { where: { id: refereeId }, transaction, returning:true });
-    CreditPaymentRecordService.addReferralBonus(referrerId, refereeId, transaction);
+    await CreditPaymentRecordService.addReferralBonus(referrerId, refereeId, transaction);
     return referee;
   },
 }

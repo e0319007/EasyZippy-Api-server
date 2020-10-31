@@ -385,14 +385,14 @@ const addDummyData = async () => {
     // await BookingService.createBookingWithBookingPackageByCustomer(bookingData10, transaction);
   });
 
-  // await sequelize.transaction(async (transaction) => {
+  await sequelize.transaction(async (transaction) => {
   //   //await BookingService.createBookingWithBookingPackageByMerchant(bookingData5, transaction);
   //   console.log(await BookingService.addCollectorToBooking(1, 3, transaction))
   //   console.log(await BookingService.addCollectorToBooking(2, 3, transaction))
   //   console.log(await BookingService.changeCollectorToBooking(2, 4, transaction))
   //   console.log(await BookingService.removeCollectorToBooking(1, transaction))
-  //   //console.log(await BookingService.cancelBooking(5, transaction))
-  // });
+    console.log(await BookingService.cancelBooking(1, transaction))
+  });
 
   // console.log('*****')
   // console.log(await BookingService.retrieveBookingByCustomerId(1))

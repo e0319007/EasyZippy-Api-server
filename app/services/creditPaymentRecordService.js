@@ -41,6 +41,7 @@ module.exports = {
 
   refundCreditCustomer: async(customerId, amountPaid, creditPaymentTypeEnum, transaction) => {
     amountPaid = parseFloat(amountPaid);
+    console.log('customerID' + customerId)
     Checker.ifEmptyThrowError(customerId, Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(amountPaid, 'Amount paid ' + Constants.Error.XXXIsRequired);
     Checker.ifNotNumberThrowError(amountPaid, 'Amount paid ' + Constants.Error.XXXMustBeNumber);
@@ -48,7 +49,9 @@ module.exports = {
 
     let customer = await Customer.findByPk(customerId);
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
-    await customer.update({ creditBalance: Number(customer.creditBalance) + Number(amountPaid) }, { transaction });
+    console.log(customer)
+    let creditBalance = Number(customer.creditBalance) + Number(amountPaid)
+    customer = await customer.update({ creditBalance }, { transaction });
     let creditPaymentRecord = await CreditPaymentRecord.create({ amount: amountPaid, customerId, creditPaymentTypeEnum }, { transaction });
 
     return creditPaymentRecord;
@@ -63,7 +66,9 @@ module.exports = {
 
     let customer = await Customer.findByPk(customerId);
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
-    await customer.update({ creditBalance: customer.creditBalance + amountPaid, referralCreditMarker: customer.referralCreditMarker + referralCreditUsed }, { transaction });
+    let creditBalance = Number(customer.creditBalance) + Number(amountPaid)
+    let referralCreditMarker = Number(customer.referralCreditMarker) + Number(referralCreditUsed);
+    await customer.update({ creditBalance, referralCreditMarker }, { transaction });
     let creditPaymentRecord = await CreditPaymentRecord.create({ amount: amountPaid, customerId, creditPaymentTypeEnum }, { transaction });
 
     return creditPaymentRecord;
@@ -113,8 +118,13 @@ module.exports = {
     customer2 = await Customer.findByPk(customer2Id);
     Checker.ifEmptyThrowError(customer1, Constants.Error.CustomerNotFound)
     Checker.ifEmptyThrowError(customer2, Constants.Error.CustomerNotFound)
-    await Customer.update({ creditBalance: Number(customer1.creditBalance) + 5, referralCreditMarker: Number(customer1.referralCreditMarker) + 5 }, { where: { id: customer1Id }, transaction });
-    await Customer.update({ creditBalance: Number(customer2.creditBalance) + 5, referralCreditMarker: Number(customer2.referralCreditMarker) + 5 }, { where: { id: customer2Id }, transaction });
+    let creditBalance1 = Number(customer1.creditBalance) + 5;
+    let creditBalance2 = Number(customer2.creditBalance) + 5;
+    let marker1 = Number(customer1.referralCreditMarker) + 5;
+    let marker2 = Number(customer2.referralCreditMarker) + 5;
+ 
+    await customer1.update({ creditBalance: creditBalance1, referralCreditMarker: marker1 }, { transaction });
+    await customer2.update({ creditBalance: creditBalance2, referralCreditMarker: marker2 }, { transaction });
     await CreditPaymentRecord.create({ amount: bonus, customerId: customer1Id, creditPaymentTypeEnum }, { transaction });
     await CreditPaymentRecord.create({ amount: bonus, customerId: customer2Id, creditPaymentTypeEnum }, { transaction });
 
