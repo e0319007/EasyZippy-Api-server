@@ -59,9 +59,9 @@ module.exports = {
   },
 
   createAdvertisementAsMerchantWithoutAccount: async(advertisementData, transaction) => {
+    let {title, description, image, advertiserUrl, startDate, endDate, amountPaid, advertiserMobile, advertiserEmail} = advertisementData;
     startDate = new Date(startDate);
     endDate = new Date(endDate);
-    let {title, description, image, advertiserUrl, startDate, endDate, amountPaid, advertiserMobile, advertiserEmail} = advertisementData;
     if(startDate > endDate) {
       throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     }
