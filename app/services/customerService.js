@@ -102,6 +102,12 @@ module.exports = {
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
     return customer;
   },
+
+  retrieveCustomerByMobileNumber: async (mobileNumber) => {
+    const customer = await Customer.findOne({ where: { mobileNumber, disabled: false, activated: true } });
+    Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
+    return customer;
+  },
   
   retrieveAllCustomers: async () => {
       const customers = await Customer.findAll();
