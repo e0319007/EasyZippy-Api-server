@@ -123,10 +123,10 @@ module.exports = {
     let marker1 = Number(customer1.referralCreditMarker) + 5;
     let marker2 = Number(customer2.referralCreditMarker) + 5;
  
-    await customer1.update({ creditBalance: creditBalance1, referralCreditMarker: marker1 }, { transaction });
-    await customer2.update({ creditBalance: creditBalance2, referralCreditMarker: marker2 }, { transaction });
+    customer1 = await customer1.update({ creditBalance: creditBalance1, referralCreditMarker: marker1 }, { transaction });
+    customer2 = await customer2.update({ creditBalance: creditBalance2, referralCreditMarker: marker2 }, { transaction });
     await CreditPaymentRecord.create({ amount: bonus, customerId: customer1Id, creditPaymentTypeEnum }, { transaction });
     await CreditPaymentRecord.create({ amount: bonus, customerId: customer2Id, creditPaymentTypeEnum }, { transaction });
-
+    return customer2
   }
 };
