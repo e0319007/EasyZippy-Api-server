@@ -153,8 +153,8 @@ module.exports = {
       let info = await transporter.sendMail({
         from: 'easyzippyhelp@gmail.com', // sender address
         to: email, // list of receivers
-        subject: 'Your are added as a collector', // Subject line
-        text: `Dear customer,\n\nYou are added as a collector for booking ` + bookingId + `.\n\n Please log in to view booking.\n\n<This is a system generated email, Please do not reply>`
+        subject: 'Your have been added as a collector', // Subject line
+        text: `Dear customer,\n\nYou have been added as a collector for booking ` + bookingId + `.\n\n Please log in to view booking.\n\n<This is a system generated email, Please do not reply>`
       });
 
       //console.log('Message sent: %s', info.messageId);
@@ -183,8 +183,8 @@ module.exports = {
       let info = await transporter.sendMail({
         from: 'easyzippyhelp@gmail.com', // sender address
         to: email, // list of receivers
-        subject: 'Your are added as a collector', // Subject line
-        text: `Dear customer,\n\nYou are removed as a collector for booking ` + bookingId + `.\n\n<This is a system generated email, Please do not reply>`
+        subject: 'Your have been removed as a collector', // Subject line
+        text: `Dear customer,\n\nYou have been removed as a collector for booking ` + bookingId + `.\n\n<This is a system generated email, Please do not reply>`
       });
 
       //console.log('Message sent: %s', info.messageId);

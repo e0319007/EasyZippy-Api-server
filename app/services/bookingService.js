@@ -450,7 +450,7 @@ module.exports = {
     console.log('old booking')
     console.log(booking)
 
-    Checker.ifEmptyThrowError(collectorId, 'Collector ' + Constants.Error.collectorId);
+    Checker.ifEmptyThrowError(collectorId, 'Collector ' + Constants.Error.IdRequired);
     let customer = await Customer.findByPk(collectorId);
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
 

@@ -46,7 +46,7 @@ module.exports = {
   retrieveCustomerByMobileNumber: async(req, res) => {
     try {
       const { mobileNumber } = req.body;
-      const customer = await CustomerService.retrieveCustomerByEmail(mobileNumber);
+      const customer = await CustomerService.retrieveCustomerByMobileNumber(mobileNumber);
       return res.status(200).send(customer);
     } catch (err) {
       sendErrorResponse(res, err);
