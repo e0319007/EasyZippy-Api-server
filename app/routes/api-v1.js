@@ -215,13 +215,13 @@ router.post('/product', Authenticator.merchantOnly, ProductController.createProd
 
 
 //Product Variation
-router.get('/productVariations/:id', /*Authenticator.customerAndMerchantAndStaffOnly, */ ProductVariationController.retrieveProductVariationsByProductId);
-router.get('/productVariationsIncludingDisabled/:id', /*Authenticator.customerAndMerchantAndStaffOnly, */ ProductVariationController.retrieveProductVariationsByProductIdIncludingDisabled);
-router.put('/productVariations/toggleDisable/:id', /*Authenticator.customerAndMerchantAndStaffOnly, */ ProductVariationController.toggleDisableProductVariation);
-router.put('/productVariations/:id', /*Authenticator.customerAndMerchantAndStaffOnly, */ ProductVariationController.updateProductVariation);
-router.put('/deleteProductVariations/:id', /*Authenticator.customerAndMerchantAndStaffOnly, */ ProductVariationController.deleteProductVariation);
-router.post('/productVariation/addImage', /*Authenticator.merchantOnly,*/ Upload.preUploadCheckForImg, ProductVariationController.addImageForProductVariation);
-router.post('/productVariation', /*Authenticator.customerAndMerchantAndStaffOnly, */ ProductVariationController.createProductVariation);
+router.get('/productVariations/:id', Authenticator.customerAndMerchantAndStaffOnly, ProductVariationController.retrieveProductVariationsByProductId);
+router.get('/productVariationsIncludingDisabled/:id', Authenticator.customerAndMerchantAndStaffOnly,  ProductVariationController.retrieveProductVariationsByProductIdIncludingDisabled);
+router.put('/productVariations/toggleDisable/:id', Authenticator.customerAndMerchantAndStaffOnly, ProductVariationController.toggleDisableProductVariation);
+router.put('/productVariations/:id', Authenticator.customerAndMerchantAndStaffOnly, ProductVariationController.updateProductVariation);
+router.put('/deleteProductVariations/:id', Authenticator.customerAndMerchantAndStaffOnly, ProductVariationController.deleteProductVariation);
+router.post('/productVariation/addImage', Authenticator.merchantOnly, Upload.preUploadCheckForImg, ProductVariationController.addImageForProductVariation);
+router.post('/productVariation', Authenticator.merchantOnly, ProductVariationController.createProductVariation);
 
 //Promotion
 router.get('/promotion/mall', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveAllMallPromotions);
