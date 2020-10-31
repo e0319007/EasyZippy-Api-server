@@ -15,6 +15,8 @@ module.exports = {
     Checker.ifEmptyThrowError(endDate, 'End date ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(merchantId, 'Merchant ID ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(await Merchant.findByPk(merchantId), Constants.Error.MerchantNotFound);
+    percentageDiscount = percentageDiscount === '' ? null : percentageDiscount;
+    flatDiscount = flatDiscount === '' ? null : flatDiscount;
     if(startDate > endDate) {
       throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     }
@@ -45,6 +47,8 @@ module.exports = {
     Checker.ifEmptyThrowError(endDate, 'End date ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(staffId, 'Staff ID ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(await Staff.findByPk(staffId), Constants.Error.StaffNotFound);
+    percentageDiscount = percentageDiscount === '' ? null : percentageDiscount;
+    flatDiscount = flatDiscount === '' ? null : flatDiscount;
     if(startDate > endDate) {
       throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     }
@@ -122,6 +126,13 @@ module.exports = {
   retrievePromotionByPromoCode: async(promoCode) => {
     Checker.ifEmptyThrowError(promoCode, 'Promotion Code ' + Constants.Error.XXXIsRequired);
     let promotion = await Promotion.findAll({ where: { deleted: false, expired: false, promoCode } });
+    Checker.ifEmptyThrowError(promotion, Constants.Error.PromotionNotFound);
+    return promotion;
+  },
+
+  retrievePromotionById: async(id) => {
+    Checker.ifEmptyThrowError(id, 'Promotion ID ' + Constants.Error.IdRequired);
+    let promotion = await Promotion.findByPk(id);
     Checker.ifEmptyThrowError(promotion, Constants.Error.PromotionNotFound);
     return promotion;
   },

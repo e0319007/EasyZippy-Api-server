@@ -39,8 +39,8 @@ router.get('/approvedAdvertisements', Authenticator.staffOnly, AdvertisementCont
 router.get('/unapprovedAdvertisements', Authenticator.staffOnly, AdvertisementController.retrieveUnapprovedAdvertisement);
 router.put('/approveAdvertisement/:id', Authenticator.staffOnly, AdvertisementController.toggleApproveAdvertisement);
 router.put('/setExpireAdvertisement/:id', Authenticator.staffOnly, AdvertisementController.setExpireAdvertisement);
-router.put('/advertisement/toggleDisable/:id', Authenticator.staffOnly, AdvertisementController.toggleDisableAdvertisement);
-router.put('/deleteAdvertisement/:id', Authenticator.staffOnly, AdvertisementController.deleteAdvertisement);
+router.put('/advertisement/toggleDisable/:id', Authenticator.merchantAndStaffOnly, AdvertisementController.toggleDisableAdvertisement);
+router.put('/deleteAdvertisement/:id', Authenticator.merchantAndStaffOnly, AdvertisementController.deleteAdvertisement);
 router.put('/advertisement/:id', Authenticator.merchantAndStaffOnly, AdvertisementController.updateAdvertisement);
 
 //Announcement
@@ -71,6 +71,7 @@ router.get('/merchantBookingPackages/:merchantId', Authenticator.merchantAndStaf
 router.get('/merchantBookingPackage/:merchantId', Authenticator.merchantAndStaffOnly, BookingPackageController.retrieveCurrentBookingPackageByMerchantId);
 router.post('/customerBookingPackage', Authenticator.customerOnly, BookingPackageController.buyBookingPackageForCustomer);
 router.post('/merchantBookingPackage', Authenticator.merchantOnly, BookingPackageController.buyBookingPackageForMerchant);
+router.post('/validBookingPackage', Authenticator.customerAndMerchantOnly, BookingPackageController.retrieveValidBookingPackageByCustomerIdAndLockerTypeId);
 
 //Booking
 router.get('/customerBooking/upcoming/:id', Authenticator.customerAndStaffOnly, BookingController.retrieveUpcomingBookingsByCustomerId);
@@ -215,13 +216,13 @@ router.post('/product', Authenticator.merchantOnly, ProductController.createProd
 
 
 //Product Variation
-router.get('/productVariations/:id', /*Authenticator.customerAndMerchantAndStaffOnly, */ ProductVariationController.retrieveProductVariationsByProductId);
-router.get('/productVariationsIncludingDisabled/:id', /*Authenticator.customerAndMerchantAndStaffOnly, */ ProductVariationController.retrieveProductVariationsByProductIdIncludingDisabled);
-router.put('/productVariations/toggleDisable/:id', /*Authenticator.customerAndMerchantAndStaffOnly, */ ProductVariationController.toggleDisableProductVariation);
-router.put('/productVariations/:id', /*Authenticator.customerAndMerchantAndStaffOnly, */ ProductVariationController.updateProductVariation);
-router.put('/deleteProductVariations/:id', /*Authenticator.customerAndMerchantAndStaffOnly, */ ProductVariationController.deleteProductVariation);
-router.post('/productVariation/addImage', /*Authenticator.merchantOnly,*/ Upload.preUploadCheckForImg, ProductVariationController.addImageForProductVariation);
-router.post('/productVariation', /*Authenticator.customerAndMerchantAndStaffOnly, */ ProductVariationController.createProductVariation);
+router.get('/productVariations/:id', Authenticator.customerAndMerchantAndStaffOnly, ProductVariationController.retrieveProductVariationsByProductId);
+router.get('/productVariationsIncludingDisabled/:id', Authenticator.customerAndMerchantAndStaffOnly,  ProductVariationController.retrieveProductVariationsByProductIdIncludingDisabled);
+router.put('/productVariations/toggleDisable/:id', Authenticator.customerAndMerchantAndStaffOnly, ProductVariationController.toggleDisableProductVariation);
+router.put('/productVariations/:id', Authenticator.customerAndMerchantAndStaffOnly, ProductVariationController.updateProductVariation);
+router.put('/deleteProductVariations/:id', Authenticator.customerAndMerchantAndStaffOnly, ProductVariationController.deleteProductVariation);
+router.post('/productVariation/addImage', Authenticator.merchantOnly, Upload.preUploadCheckForImg, ProductVariationController.addImageForProductVariation);
+router.post('/productVariation', Authenticator.merchantOnly, ProductVariationController.createProductVariation);
 
 //Promotion
 router.get('/promotion/mall', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveAllMallPromotions);
@@ -229,6 +230,7 @@ router.get('/promotion/merchant', Authenticator.customerAndMerchantAndStaffOnly,
 router.get('/promotion/merchant/:id', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveMerchantPromotionByMerchantId);
 router.get('/promotion/promoCode/:promoCode', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrievePromotionByPromoCode);
 router.get('/promotions', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrieveAllPromotions);
+router.get('/promotion/:id', Authenticator.customerAndMerchantAndStaffOnly, PromotionController.retrievePromotionById);
 router.put('/promotion/:id', Authenticator.merchantAndStaffOnly, PromotionController.updatePromotion);
 router.put('/deletePromotion/:id', Authenticator.merchantAndStaffOnly, PromotionController.deletePromotion);
 router.post('/promotion/merchant', Authenticator.merchantOnly, PromotionController.createMerchantPromotion);

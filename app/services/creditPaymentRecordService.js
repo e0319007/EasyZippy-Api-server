@@ -105,7 +105,7 @@ module.exports = {
   },
 
   addReferralBonus: async(customer1Id, customer2Id, transaction) => {
-    const bonus = 5;
+    const bonus = Number(5);
     let creditPaymentTypeEnum = Constants.CreditPaymentType.ReferralBonus;
     Checker.ifEmptyThrowError(customer1Id, Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(customer2Id, Constants.Error.IdRequired);
@@ -113,8 +113,8 @@ module.exports = {
     customer2 = await Customer.findByPk(customer2Id);
     Checker.ifEmptyThrowError(customer1, Constants.Error.CustomerNotFound)
     Checker.ifEmptyThrowError(customer2, Constants.Error.CustomerNotFound)
-    await Customer.update({ creditBalance: customer1.creditBalance + bonus, referralCreditMarker: customer1.creditBalance + bonus }, { where: { id: customer1Id }, transaction });
-    await Customer.update({ creditBalance: customer2.creditBalance + bonus, referralCreditMarker: customer2.creditBalance + bonus }, { where: { id: customer2Id }, transaction });
+    await Customer.update({ creditBalance: Number(customer1.creditBalance) + 5, referralCreditMarker: Number(customer1.referralCreditMarker) + 5 }, { where: { id: customer1Id }, transaction });
+    await Customer.update({ creditBalance: Number(customer2.creditBalance) + 5, referralCreditMarker: Number(customer2.referralCreditMarker) + 5 }, { where: { id: customer2Id }, transaction });
     await CreditPaymentRecord.create({ amount: bonus, customerId: customer1Id, creditPaymentTypeEnum }, { transaction });
     await CreditPaymentRecord.create({ amount: bonus, customerId: customer2Id, creditPaymentTypeEnum }, { transaction });
 

@@ -13,6 +13,8 @@ const NotificationHelper = require('../common/notificationHelper');
 module.exports = {
   createAdvertisementAsStaff: async(advertisementData, transaction) => {
     let {title, description, image, startDate, endDate, staffId} = advertisementData;
+    startDate = new Date(startDate);
+    endDate = new Date(endDate);
     if(startDate > endDate) {
       throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     }
@@ -29,6 +31,8 @@ module.exports = {
 
   createAdvertisementAsMerchant: async(advertisementData, transaction) => {
     let {title, description, image, advertiserUrl, startDate, endDate, amountPaid, advertiserMobile, advertiserEmail, merchantId} = advertisementData;
+    startDate = new Date(startDate);
+    endDate = new Date(endDate);
     if(startDate > endDate) {
       throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     }
@@ -55,6 +59,8 @@ module.exports = {
   },
 
   createAdvertisementAsMerchantWithoutAccount: async(advertisementData, transaction) => {
+    startDate = new Date(startDate);
+    endDate = new Date(endDate);
     let {title, description, image, advertiserUrl, startDate, endDate, amountPaid, advertiserMobile, advertiserEmail} = advertisementData;
     if(startDate > endDate) {
       throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
@@ -144,9 +150,11 @@ module.exports = {
     }
     if(updateKeys.includes('startDate')) {
       Checker.ifEmptyThrowError(advertisementData.startDate, Constants.Error.AdvertisementStartDateRequired);
+      advertisementData.startDate = new Date(startDate);
     }
     if(updateKeys.includes('endDate')) {
       Checker.ifEmptyThrowError(advertisementData.endDate, Constants.Error.AdvertisementEndDateRequired);
+      advertisementData.endDate = new Date(endDate);
     }
     if(updateKeys.includes('startDate') && updateKeys.includes('endDate')) {
       if(advertisementData.startDate > advertisementData.endDate) {
