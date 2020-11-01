@@ -116,7 +116,7 @@ router.get('/customers', Authenticator.customerAndMerchantAndStaffOnly, Customer
 router.put('/customer/changePassword', Authenticator.customerOnly, CustomerController.changePassword);
 router.put('/customer/:id/toggleDisable', Authenticator.staffOnly, CustomerController.toggleDisableCustomer);
 router.put('/customer/:id/activate',  Authenticator.customerOnly, CustomerController.activateCustomer);
-router.put('/customer/referral', /*Authenticator.customerOnly,*/ CustomerController.addReferrer);
+router.put('/customer/referral', Authenticator.customerOnly, CustomerController.addReferrer);
 router.put('/customer/:id', Authenticator.customerOnly, CustomerController.updateCustomer);
 router.post('/customer/login', CustomerController.loginCustomer);
 router.post('/customer/email', Authenticator.customerAndMerchantAndStaffOnly, CustomerController.retrieveCustomerByEmail);
@@ -194,12 +194,12 @@ router.put('/readNotification/:id', Authenticator.customerAndMerchantAndStaffOnl
 router.post('/notification/create', Authenticator.staffOnly, NotificationController.createNotification);
 
 //Order
-router.get('/orders/customer/:customerId', /*Authenticator.customerOnly,*/ OrderController.retrieveOrderByCustomerId);
-router.get('/orders/merchant/:merchantId', /*Authenticator.customerOnly,*/ OrderController.retrieveOrderByMerchantId);
-router.get('/orders', /*Authenticator.customerOnly,*/ OrderController.retrieveAllOrders);
-router.get('/order/:id', /*Authenticator.customerOnly,*/ OrderController.retrieveOrderById);
-router.put('/order/:id', /*Authenticator.customerOnly,*/ OrderController.updateOrderStatus);
-router.post('/order', /*Authenticator.customerOnly,*/ OrderController.createOrder);
+router.get('/orders/customer/:customerId', Authenticator.customerAndMerchantAndStaffOnly, OrderController.retrieveOrderByCustomerId);
+router.get('/orders/merchant/:merchantId', Authenticator.merchantAndStaffOnly, OrderController.retrieveOrderByMerchantId);
+router.get('/orders', Authenticator.staffOnly, OrderController.retrieveAllOrders);
+router.get('/order/:id', Authenticator.customerAndMerchantAndStaffOnly, OrderController.retrieveOrderById);
+router.put('/order/:id', Authenticator.customerAndMerchantAndStaffOnly, OrderController.updateOrderStatus);
+router.post('/order', Authenticator.customerOnly, OrderController.createOrder);
 
 //Payment
 router.get('/pay/:customerId/:amount', Authenticator.customerAndMerchantOnly, PaymentController.pay);
