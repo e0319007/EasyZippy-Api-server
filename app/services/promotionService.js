@@ -72,6 +72,8 @@ module.exports = {
 
   updatePromotion: async(id, promotionData, transaction) => {
     let { promoCode, startDate, endDate, description, termsAndConditions, percentageDiscount, flatDiscount, usageLimit, minimumSpend} = promotionData;
+    promotionData.startDate = new Date(startDate);
+    promotionData.endDate = new Date(endDate);
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let promotion = await Promotion.findByPk(id);
     Checker.ifDeletedThrowError(promotion, 'Promotion ' + Constants.Error.PromotionDeleted);
