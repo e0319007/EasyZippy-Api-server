@@ -86,7 +86,12 @@ Merchant.init(
     pointOfContact: {
       type: STRING,
       allowNull:false
-    }
+    },
+
+    merchantLogoImage: {
+      type: STRING,
+      allowNull: true
+    },
   },
   {
     sequelize,

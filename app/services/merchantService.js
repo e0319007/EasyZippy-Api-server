@@ -324,4 +324,33 @@ module.exports = {
     }
     return merchant;
   },
+
+  addImageForMerchantLogo: async(id, merchantLogoImage, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired)
+    let merchant = await Merchant.findByPk(id);
+    Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound)
+
+    merchant = await merchant.update({ merchantLogoImage }, { transaction, returning: true });
+    return merchant;
+  },
+
+  changeImageForMerchantLogo: async(id, merchantLogoImage, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired)
+    let merchant = await Merchant.findByPk(id);
+    Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound)
+
+    fs.remove(`./app/assets/${merchant.merchantLogoImage}`);
+    merchant = await merchant.update({ merchantLogoImage }, { transaction, returning: true });
+    return merchant;
+  },
+
+  removeImageForMerchantLogo: async(id, transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired)
+    let merchant = await Merchant.findByPk(id);
+    Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound)
+
+    fs.remove(`./app/assets/${merchant.merchantLogoImage}`);
+    merchant = await merchant.update({ merchantLogoImage: null }, { transaction, returning: true });
+    return merchant;
+  }
 };

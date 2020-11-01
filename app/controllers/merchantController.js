@@ -1,7 +1,6 @@
 const sequelize = require('../common/database');
 const MerchantService = require('../services/merchantService');
 const { sendErrorResponse } = require('../common/error/errorHandler');
-const merchantService = require('../services/merchantService');
 const NotificationHelper = require('../common/notificationHelper');
 const EmailHelper = require('../common/emailHelper');
 
@@ -58,7 +57,7 @@ module.exports = {
       const { id } = req.params;
       let merchant;
       await sequelize.transaction(async(transaction) => {
-        merchant = await merchantService.updateMerchant(id, merchantData, transaction);
+        merchant = await MerchantService.updateMerchant(id, merchantData, transaction);
       })
       return res.status(200).send(merchant);
     } catch (err) {
@@ -171,5 +170,46 @@ module.exports = {
     } catch (err) {
       sendErrorResponse(res, err);
     }
-  }
+  },
+
+  addImageForMerchantLogo: async (req, res) => {
+    try {
+      let merchant;
+      let { id } = req.params;
+      await sequelize.transaction(async (transaction) => {
+        merchant = await MerchantService.addImageForMerchantLogo(id, req.files[0].filename, transaction);
+      });
+      return res.status(200).send(merchant);
+    } catch (err) {
+      console.log(err);
+      sendErrorResponse(res, err);
+    }
+  },
+
+  changeImageForMerchantLogo: async (req, res) => {
+    try {
+      let merchant;
+      let { id } = req.params;
+      await sequelize.transaction(async (transaction) => {
+        merchant = await MerchantService.changeImageForMerchantLogo(id, req.files[0].filename, transaction);
+      });
+      return res.status(200).send(merchant);    
+    } catch (err) {
+      console.log(err);
+      sendErrorResponse(res, err);
+    }
+  },
+
+  removeImageForMerchantLogo: async (req, res) => {
+    try {
+      let merchant;
+      let { id } = req.params;
+      await sequelize.transaction(async (transaction) => {
+        merchant = await MerchantService.removeImageForMerchantLogo(id, transaction);
+      });
+      return res.status(200).send(merchant);    } catch (err) {
+      console.log(err);
+      sendErrorResponse(res, err);
+    }
+  },
 };
