@@ -7,7 +7,7 @@ const Staff = require('../models/Staff');
 
 module.exports = {
   createMerchantPromotion: async(promotionData, transaction) => {
-    let { promoCode, startDate, endDate, description, termsAndConditions, percentageDiscount, flatDiscount, usageLimit, merchantId, minimumSpend } = promotionData;
+    let { promoCode, startDate, endDate, title, description, termsAndConditions, percentageDiscount, flatDiscount, usageLimit, merchantId, minimumSpend } = promotionData;
     startDate = new Date(startDate);
     endDate = new Date(endDate);
     Checker.ifEmptyThrowError(promoCode, 'Promo code ' + Constants.Error.XXXIsRequired);
@@ -34,12 +34,12 @@ module.exports = {
     if(!Checker.isEmpty(percentageDiscount) && !Checker.isEmpty(flatDiscount)) {
       throw new CustomError(Constants.Error.ChooseOneDiscountType);
     }
-    let promotion = await Promotion.create({ promoCode, startDate, endDate, description, termsAndConditions, percentageDiscount, flatDiscount, usageLimit, promotionTypeEnum, merchantId, minimumSpend }, { transaction });
+    let promotion = await Promotion.create({ title, promoCode, startDate, endDate, description, termsAndConditions, percentageDiscount, flatDiscount, usageLimit, promotionTypeEnum, merchantId, minimumSpend }, { transaction });
     return promotion;
   },
 
   createMallPromotion: async(promotionData, transaction) => {
-    let { promoCode, startDate, endDate, description, termsAndConditions, percentageDiscount, flatDiscount, usageLimit, staffId, minimumSpend } = promotionData;
+    let { promoCode, startDate, endDate, description, title, termsAndConditions, percentageDiscount, flatDiscount, usageLimit, staffId, minimumSpend } = promotionData;
     startDate = new Date(startDate);
     endDate = new Date(endDate);
     Checker.ifEmptyThrowError(promoCode, 'Promo code ' + Constants.Error.XXXIsRequired);
@@ -66,7 +66,7 @@ module.exports = {
     if(!Checker.isEmpty(percentageDiscount) && !Checker.isEmpty(flatDiscount)) {
       throw new CustomError(Constants.Error.ChooseOneDiscountType);
     }
-    let promotion = await Promotion.create({ promoCode, startDate, endDate, description, termsAndConditions, percentageDiscount, flatDiscount, usageLimit, staffId, promotionTypeEnum, minimumSpend }, { transaction });
+    let promotion = await Promotion.create({ title, promoCode, startDate, endDate, description, termsAndConditions, percentageDiscount, flatDiscount, usageLimit, staffId, promotionTypeEnum, minimumSpend }, { transaction });
     return promotion;
   },
 
