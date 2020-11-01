@@ -173,6 +173,7 @@ const addDummyData = async () => {
 
   const promoData1 = {
     promoCode: "PROMOCODE1", 
+    title: 'Title for promo 1',
     startDate: new Date(new Date().getTime() + 30 * 1000 * 60), 
     endDate: new Date(new Date().getTime() + 24 * 30 * 1000 * 60), 
     description: "save on spending!", 
@@ -185,6 +186,7 @@ const addDummyData = async () => {
 
   const promoData2 = {
     promoCode: "PROMOCODE2", 
+    title: 'Title for promo 2',
     startDate: new Date(new Date().getTime() + 30 * 1000 * 60), 
     endDate: new Date(new Date().getTime() + 24 * 30 * 1000 * 60), 
     description: "save on spending a second time!", 
@@ -197,6 +199,7 @@ const addDummyData = async () => {
 
   const promoData3 = {
     promoCode: "PROMOCODEMALL1", 
+    title: 'Title for promo 3',
     startDate: new Date(new Date().getTime() + 30 * 1000 * 60), 
     endDate: new Date(new Date().getTime() + 24 * 30 * 1000 * 60), 
     description: "save on spending a second time!", 

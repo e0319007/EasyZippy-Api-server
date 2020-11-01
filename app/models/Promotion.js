@@ -18,6 +18,10 @@ Promotion.init(
       autoIncrement: true,
       allowNull: false
     },
+    title: {
+      type: STRING,
+      allowNull: true
+    },
     promoCode: {
       type: STRING,
       allowNull: false
