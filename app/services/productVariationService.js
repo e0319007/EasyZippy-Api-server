@@ -35,7 +35,7 @@ module.exports = {
     Checker.ifEmptyThrowError(productVariation, Constants.Error.ProductVariationNotFound);
     Checker.ifDeletedThrowError(productVariation, Constants.Error.ProductVariationDeleted);
 
-    const updateKeys = Object.keys(productData);
+    const updateKeys = Object.keys(productVariationData);
     if(updateKeys.includes('name')) {
       Checker.ifEmptyThrowError(name, Constants.Error.NameRequired);
     }

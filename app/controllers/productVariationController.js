@@ -31,7 +31,7 @@ module.exports = {
 
   updateProductVariation: async(req, res) => {
     const productVariationData = req.body;
-    const updateKeys = Object.keys(productData);
+    const updateKeys = Object.keys(productVariationData);
     let image;
     if(updateKeys.includes('image')) {
       image = req.body.image;
