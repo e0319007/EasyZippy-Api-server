@@ -74,13 +74,15 @@ module.exports = {
         let product = await Product.findByPk(lt.productId);
         console.log(lt.productId);
         console.log(product);
-        await product.update({ quantityAvailable: product.quantityAvailable - lt.quantity}, { transaction });
+        await product.update({ quantityAvailable: product.quantityAvailable - lt.quantity, quantitySold: lt.quantity + product.quantitySold }, { transaction });
         merchantId = product.merchantId;
       } else {
         let productVariation = await ProductVariation.findByPk(lt.productVariationId);
         console.log(lt.productVariationId);
         console.log(productVariation);
         await productVariation.update({ quantityAvailable: productVariation.quantityAvailable - lt.quantity}, { transaction });
+        let product = await Product.findByPk(productVariation.productId);
+        product = await product.update({ quantitySold: lt.quantity + product.quantitySold }, { transaction })
         merchantId = (await Product.findByPk(productVariation.productId)).merchantId;
       }
       Checker.ifEmptyThrowError(merchantId, Constants.Error.MerchantNotFound)

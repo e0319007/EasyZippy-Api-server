@@ -59,7 +59,15 @@ Product.init(
       type: BOOLEAN,
       defaultValue: false,
       allowNull: false
-    }
+    },
+    quantitySold: {
+      type: INTEGER,
+      allowNull: false,
+      validate: {
+        min: 0
+      },
+      defaultValue: 0
+    },
   },
   {
     sequelize,

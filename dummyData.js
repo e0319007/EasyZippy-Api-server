@@ -435,10 +435,10 @@ const addDummyData = async () => {
     //totalAmountPaid: 3, 
     customerId: 1
   }
-  // let orderVal;
-  // await sequelize.transaction(async (transaction) => {
-  //   orderVal = await orderService.createOrder(orderData1, transaction);
-  // });
+  let orderVal;
+  await sequelize.transaction(async (transaction) => {
+    orderVal = await orderService.createOrder(orderData1, transaction);
+  });
 
   // await sequelize.transaction(async (transaction) => {
   //   console.log(await orderService.updateOrderStatus(1, Constants.OrderStatus.ReadyForCollection, transaction));
