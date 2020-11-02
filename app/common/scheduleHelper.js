@@ -4,9 +4,9 @@ const BookingPackage = require('../models/BookingPackage')
 const Promotion = require('../models/Promotion')
 
 let rule = new schedule.RecurrenceRule();
-rule.hour = 00;
-rule.minute = 00;
-rule.second = 00;
+rule.hour = 0;
+rule.minute = 0;
+rule.second = 0;
 rule.dayOfWeek = new schedule.Range(0,6);
 
 module.exports = {
