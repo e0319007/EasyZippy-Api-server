@@ -150,11 +150,11 @@ module.exports = {
     }
     if(updateKeys.includes('startDate')) {
       Checker.ifEmptyThrowError(advertisementData.startDate, Constants.Error.AdvertisementStartDateRequired);
-      advertisementData.startDate = new Date(startDate);
+      advertisementData.startDate = new Date(advertisementData.startDate);
     }
     if(updateKeys.includes('endDate')) {
       Checker.ifEmptyThrowError(advertisementData.endDate, Constants.Error.AdvertisementEndDateRequired);
-      advertisementData.endDate = new Date(endDate);
+      advertisementData.endDate = new Date(advertisementData.endDate);
     }
     if(updateKeys.includes('startDate') && updateKeys.includes('endDate')) {
       if(advertisementData.startDate > advertisementData.endDate) {
