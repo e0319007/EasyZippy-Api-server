@@ -1,0 +1,14 @@
+{
+  "name": "Easy Zippy Test",
+  "server": {
+    "host": "localhost",
+    "port": "7700"
+  },
+  "postgres": {
+    "host": "localhost",
+    "user": "postgres",
+    "password": "password",
+    "database": "easy_zippy_test_db"
+  },
+  "private_key_file_path": "C:/Users/bryan/Documents/EasyZippy/api-server/app/firebase/easy_zippy_reactnative_android_firebase_adminsdk_k9h7o_06a95c884e.json"
+} 

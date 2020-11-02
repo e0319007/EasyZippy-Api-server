@@ -67,8 +67,4 @@ if (app.get('env') === 'development') {
   console.log('Running development');
 }
 
-app.listen(port, host, () => {
-  console.log(`This server is running on port ${port}`);
-});
-
 module.exports = app;
