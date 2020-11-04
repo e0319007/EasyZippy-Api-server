@@ -36,5 +36,17 @@ const initialiseDatabase = async () => {
   await sequelize.close();
 };
 
+const initialiseTestDatabase = async () => {
+  await sequelize.drop()
+    .then(async () => {
+      return sequelize.sync({ force: true });
+    })
+    .catch((error) => {
+      console.log(`Error in initialising database: ${error}`);
+    });
+};
+
 initialiseDatabase();
 console.log('Database initialised');
+
+module.exports = { initialiseTestDatabase };

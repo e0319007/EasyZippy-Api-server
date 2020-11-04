@@ -11,6 +11,6 @@ module.exports = {
   },
 
   comparePassword: async (passwordInput, hashedPassword) => {
-    return bcrypt.compare(passwordInput, hashedPassword);
+    return await bcrypt.compare(passwordInput, hashedPassword);
   }
 };

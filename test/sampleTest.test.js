@@ -20,4 +20,4 @@ describe('Sample Test Desc', () => {
     await sequelize.close();
     done();
   });
-}); 
+});
