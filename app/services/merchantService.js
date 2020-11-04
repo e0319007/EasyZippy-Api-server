@@ -47,7 +47,7 @@ const changePasswordForResetPassword = async(id, newPassword, transaction) => {
 };
 
 module.exports = {
-  createMerchant: async (merchantData, logo, transaction) => {
+  createMerchant: async (merchantData, transaction) => {
     const { name, mobileNumber, password, email, blk, street, postalCode, unitNumber, floor, pointOfContact } = merchantData;
 
     Checker.ifEmptyThrowError(name, Constants.Error.NameRequired);
@@ -83,7 +83,7 @@ module.exports = {
 
     merchantData.password = await Helper.hashPassword(password);
 
-    const merchant = await Merchant.create({ ...merchantData, merchantLogoImage: logo}, { transaction });
+    const merchant = await Merchant.create(merchantData, { transaction });
 
     return merchant;
   },
