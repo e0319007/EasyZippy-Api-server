@@ -173,6 +173,14 @@ module.exports = {
     }
   },
 
+  uploadImageForMerchantLogoPreRegister: async(req, res) => {
+    try {
+      return res.status(200).send(req.files[0].filename);
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
   addImageForMerchantLogo: async (req, res) => {
     try {
       let merchant;

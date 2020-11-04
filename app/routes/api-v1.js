@@ -182,6 +182,7 @@ router.post('/merchant/resetPassword/checkValidToken', MerchantController.checkV
 router.post('/merchant/resetPassword', MerchantController.resetPassword);
 router.post('/merchant', Upload.preUploadCheckForOptionalImg, MerchantController.registerMerchant);
 router.post('/merchant/:id/uploadTenancyAgreement', Upload.preUploadCheck, MerchantController.uploadTenancyAgreement);
+router.post('/merchantUploadLogoPreRegistration', Upload.preUploadCheckForImg, MerchantController.uploadImageForMerchantLogoPreRegister);
 router.post('/merchantUploadLogo/:id', Upload.preUploadCheckForImg, MerchantController.addImageForMerchantLogo);
 router.post('/merchantChangeLogo/:id', Upload.preUploadCheckForImg, MerchantController.changeImageForMerchantLogo);
 router.post('/merchantRemoveLogo/:id', Upload.preUploadCheckForImg, MerchantController.removeImageForMerchantLogo);
