@@ -99,6 +99,6 @@ Promotion.belongsTo(Staff);
 Staff.hasMany(Promotion);
 
 Promotion.belongsTo(Merchant);
-Merchant.belongsTo(Staff);
+Merchant.hasMany(Promotion);
 
 module.exports = Promotion;

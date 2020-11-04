@@ -10,6 +10,7 @@ const ProductVariation = require('../models/ProductVariation');
 const Promotion = require('../models/Promotion');
 const CreditPaymentRecordService = require('./creditPaymentRecordService');
 const CartService = require('./cartService');
+const PromotionService = require('./promotionService');
 const CustomError = require('../common/error/customError');
 
 module.exports = {
@@ -49,9 +50,7 @@ module.exports = {
 
   createOrder: async(orderData, transaction) => {
     let { cart, promoIdUsed, collectionMethodEnum, totalAmountPaid, customerId } = orderData;
-    if(!Checker.isEmpty(promoIdUsed)) {
-      Checker.ifEmptyThrowError(await Promotion.findByPk(promoIdUsed), Constants.Error.PromotionNotFound);
-    }
+
     Checker.ifEmptyThrowError(collectionMethodEnum, 'Collection method enum ' + Constants.Error.XXXIsRequired);
     // Checker.ifEmptyThrowError(totalAmountPaid, 'Total amount ' + Constants.Error.XXXIsRequired)
     // Checker.ifNegativeThrowError(totalAmountPaid, 'Total amount ' + Constants.Error.XXXCannotBeNegative);
@@ -125,6 +124,7 @@ module.exports = {
     
     if(!Checker.isEmpty(promoIdUsed)) {
       promotion = await Promotion.findByPk(promoIdUsed);
+      Checker.ifEmptyThrowError(promotion, Constants.Error.PromotionNotFound);
       if(!Checker.isEmpty(promotion.usageLimit) && promotion.usageLimit <= promotion.usageCount) {
         throw new CustomError(Constants.Error.PromotionUsageLimitReached);
       } 
@@ -141,6 +141,20 @@ module.exports = {
     // if(totalAmountPaid != trackTotalAmount) throw new CustomError(Constants.Error.PriceDoesNotTally);
 
     return orders;
+  },
+
+  checkPromoCode: async(promoCode) => {
+    if(!Checker.isEmpty(promoCode, cart)) {
+      const promotion = await PromotionService.retrievePromotionByPromoCode(promoCode);
+      if(!Checker.isEmpty(promotion.usageLimit) && promotion.usageLimit <= promotion.usageCount) {
+        throw new CustomError(Constants.Error.PromotionUsageLimitReached);
+      }
+      if(promotion.minimumSpent < trackTotalAmount) {
+        throw new CustomError(Constants.Error.PromotionMinimumSpendNotMet);
+      }
+    } else {
+      throw new CustomError('Promotion ' + Constants.Error.IdRequired);
+    }
   }
 }
 

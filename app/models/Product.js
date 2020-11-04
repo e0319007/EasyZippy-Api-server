@@ -41,11 +41,6 @@ Product.init(
         min: 0
       }
     },
-    listDate: {
-      type: DATE,
-      allowNull: false,
-      defaultValue: Sequelize.NOW
-    },
     images: {
       type: ARRAY(TEXT),
       allowNull: false
