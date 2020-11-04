@@ -24,11 +24,28 @@ module.exports = {
     try {
       const file = req.files[0];
 
-    Checker.ifEmptyThrowError(file, Constants.Error.FileRequired);
-    if (file.filename.slice(-4) !== '.png' && file.filename.slice(-4) !== '.jpg' && file.filename.slice(-5) !== '.jpeg') {
-      fs.remove(`./app/assets/${file.filename}`);
-      throw new CustomError(Constants.Error.ImageRequired);
+      Checker.ifEmptyThrowError(file, Constants.Error.FileRequired);
+      if (file.filename.slice(-4) !== '.png' && file.filename.slice(-4) !== '.jpg' && file.filename.slice(-5) !== '.jpeg') {
+        fs.remove(`./app/assets/${file.filename}`);
+        throw new CustomError(Constants.Error.ImageRequired);
+      }
+      return next();
+    } catch (err) {
+      console.log(err)
+      sendErrorResponse(res, err);
     }
+  },
+
+  preUploadCheckForOptionalImg: async (req, res, next) => {
+    try {
+      const file = req.files[0];
+
+      if (Checker.isEmpty(file)) return next();
+
+      if (file.filename.slice(-4) !== '.png' && file.filename.slice(-4) !== '.jpg' && file.filename.slice(-5) !== '.jpeg') {
+        fs.remove(`./app/assets/${file.filename}`);
+        throw new CustomError(Constants.Error.ImageRequired);
+      }
       return next();
     } catch (err) {
       console.log(err)

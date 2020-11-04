@@ -7,11 +7,12 @@ const EmailHelper = require('../common/emailHelper');
 module.exports = {
   registerMerchant: async (req, res) => {
     try {
+      const logo = req.files[0].filename;
       const merchantData = req.body;
       let merchant;
 
       await sequelize.transaction(async (transaction) => {
-        merchant = await MerchantService.createMerchant(merchantData, transaction);
+        merchant = await MerchantService.createMerchant(merchantData, logo, transaction);
       });
 
       await NotificationHelper.notificationNewApplication(merchant.id);

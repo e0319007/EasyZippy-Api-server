@@ -180,7 +180,7 @@ router.post('/merchant/email', MerchantController.retrieveMerchantByEmail);
 router.post('/merchant/forgotPassword', MerchantController.sendResetPasswordEmail);
 router.post('/merchant/resetPassword/checkValidToken', MerchantController.checkValidToken);
 router.post('/merchant/resetPassword', MerchantController.resetPassword);
-router.post('/merchant', MerchantController.registerMerchant);
+router.post('/merchant', Upload.preUploadCheckForOptionalImg, MerchantController.registerMerchant);
 router.post('/merchant/:id/uploadTenancyAgreement', Upload.preUploadCheck, MerchantController.uploadTenancyAgreement);
 router.post('/merchantUploadLogo/:id', Upload.preUploadCheckForImg, MerchantController.addImageForMerchantLogo);
 router.post('/merchantChangeLogo/:id', Upload.preUploadCheckForImg, MerchantController.changeImageForMerchantLogo);
