@@ -143,8 +143,8 @@ module.exports = {
     return orders;
   },
 
-  checkPromoCode: async(promoCode) => {
-    if(!Checker.isEmpty(promoCode, cart)) {
+  checkPromoCode: async(promoCode, cart) => {
+    if(!Checker.isEmpty(promoCode)) {
       const promotion = await PromotionService.retrievePromotionByPromoCode(promoCode);
       if(!Checker.isEmpty(promotion.usageLimit) && promotion.usageLimit <= promotion.usageCount) {
         throw new CustomError(Constants.Error.PromotionUsageLimitReached);

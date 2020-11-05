@@ -129,8 +129,11 @@ module.exports = {
 
   retrievePromotionByPromoCode: async(promoCode) => {
     Checker.ifEmptyThrowError(promoCode, 'Promotion Code ' + Constants.Error.XXXIsRequired);
-    let promotion = await Promotion.findAll({ where: { deleted: false, expired: false, promoCode } });
+    const promotion = await Promotion.findOne({ where: { promoCode } });
     Checker.ifEmptyThrowError(promotion, Constants.Error.PromotionNotFound);
+    Checker.ifDeletedThrowError(promotion, Constants.Error.PromotionDeleted);
+    if(promotion.expired) throw new CustomError(Constants.Error.PromotionExpired);
+    if(promotion.usageCount >= promotion.usageLimit) throw new CustomError(Constants.Error.PromotionUsageLimitReached);
     return promotion;
   },
 
