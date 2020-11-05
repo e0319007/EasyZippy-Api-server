@@ -10,6 +10,7 @@ const Constants = require('../common/constants');
 const CustomError = require('../common/error/customError');
 
 const Merchant = require('../models/Merchant');
+const Promotion = require('../models/Promotion');
 const { ifEmptyThrowError, isEmpty } = require('../common/checker');
 const ProductVariation = require('../models/ProductVariation');
 
@@ -110,6 +111,14 @@ module.exports = {
     }
     const product = await productVariation.getProduct();
     const merchant = await product.getMerchant();
+    return merchant;
+  },
+
+  retrieveMerchantByPromotionId: async(promotionId) => {
+    const promotion = await Promotion.findByPk(promotionId);
+    Checker.ifEmptyThrowError(promotion, Constants.Error.PromotionNotFound);
+    Checker.ifDeletedThrowError(promotion, Constants.Error.PromotionDeleted);
+    const merchant = await promotion.getMerchant();
     return merchant;
   },
 
