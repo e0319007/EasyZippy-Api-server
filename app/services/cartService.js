@@ -53,7 +53,8 @@ module.exports = {
     // console.log('****is array? ' + Array.isArray(await cart.getLineItems()))
     // console.log('****array? ' + await cart.getLineItems())
     while (!Checker.isEmpty(await cart.getLineItems())) {
-      await LineItem.destroy((await cart.getLineItems()).pop(),  { transaction });
+      const lineItemId = ((await cart.getLineItems())[0]).id;
+      await LineItem.destroy({ where: { id: lineItemId } }, { transaction });
     }
     // console.log('lineItems')
     // console.log(lineItems)
