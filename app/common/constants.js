@@ -168,6 +168,7 @@ module.exports = {
     ProductVariationDisabled: 'Product variation is disabled',
     ProductVariationNotFound: 'Product variation not found',
     PromotionCannotBeDeleted: 'Promotion cannot be deleted since its already used',
+    PromotionExpired: 'Promotion is expired',
     PromotionMinimumSpendNotMet: 'Promotion minimum spend not met',
     PromotionUsageLimitReached: 'Promotion usage limit reached',
     PromoCodeNotUnique: 'Promotion code not unique',
