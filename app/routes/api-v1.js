@@ -169,6 +169,7 @@ router.put('/deleteMaintenanceAction/:id', Authenticator.staffOnly, MaintenanceA
 router.post('/maintenanceAction', Authenticator.staffOnly, MaintenanceActionController.createMaintenanceAction);
 
 //Merchant
+router.get('/merchant/productVariation/:productVariationId', Authenticator.customerAndMerchantAndStaffOnly, MerchantController.retrieveMerchantByProductVariationId);
 router.get('/merchant/:id', Authenticator.customerAndMerchantAndStaffOnly, MerchantController.retrieveMerchant);
 router.get('/merchants', Authenticator.customerAndMerchantAndStaffOnly, MerchantController.retrieveAllMerchants);
 router.put('/merchant/:id/toggleDisable', Authenticator.staffOnly, MerchantController.toggleDisableMerchant);

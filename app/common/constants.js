@@ -165,6 +165,7 @@ module.exports = {
     ProductIdOrProductVariationIdRequired: 'Product ID or product variation ID required',
     ProductNotFound: 'Product not found',
     ProductVariationDeleted: 'Product variation is deleted',
+    ProductVariationDisabled: 'Product variation is disabled',
     ProductVariationNotFound: 'Product variation not found',
     PromotionCannotBeDeleted: 'Promotion cannot be deleted since its already used',
     PromotionMinimumSpendNotMet: 'Promotion minimum spend not met',

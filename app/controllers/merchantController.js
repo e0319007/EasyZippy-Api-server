@@ -42,6 +42,16 @@ module.exports = {
     }
   },
 
+  retrieveMerchantByProductVariationId: async(req, res) => {
+    try {
+      const { productVariationId } = req.params;
+      const merchant = await MerchantService.retrieveMerchantByProductVariationId(productVariationId);
+      return res.status(200).send(merchant);
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
+  },
+
   retrieveAllMerchants: async(req, res) => {
     try {
       let merchants = await MerchantService.retrieveAllMerchants();
