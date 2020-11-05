@@ -10,7 +10,9 @@ const Constants = require('../common/constants');
 const CustomError = require('../common/error/customError');
 
 const Merchant = require('../models/Merchant');
+const Promotion = require('../models/Promotion');
 const { ifEmptyThrowError, isEmpty } = require('../common/checker');
+const ProductVariation = require('../models/ProductVariation');
 
 
 const retrieveMerchantByEmail = async(email) => {
@@ -97,6 +99,26 @@ module.exports = {
   retrieveMerchantByEmail: async(email) => {
     const merchant = await Merchant.findOne({ where: { email } });
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
+    return merchant;
+  },
+
+  retrieveMerchantByProductVariationId: async(productVariationId) => {
+    const productVariation = await ProductVariation.findByPk(productVariationId);
+    Checker.ifEmptyThrowError(productVariation, Constants.Error.ProductVariationNotFound);
+    Checker.ifDeletedThrowError(productVariation, Constants.Error.ProductVariationDeleted);
+    if(productVariation.disabled || productVariation.productDisabled) {
+      throw new CustomError(Constants.Error.ProductVariationDisabled)
+    }
+    const product = await productVariation.getProduct();
+    const merchant = await product.getMerchant();
+    return merchant;
+  },
+
+  retrieveMerchantByPromotionId: async(promotionId) => {
+    const promotion = await Promotion.findByPk(promotionId);
+    Checker.ifEmptyThrowError(promotion, Constants.Error.PromotionNotFound);
+    Checker.ifDeletedThrowError(promotion, Constants.Error.PromotionDeleted);
+    const merchant = await promotion.getMerchant();
     return merchant;
   },
 
