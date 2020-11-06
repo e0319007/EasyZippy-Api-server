@@ -17,7 +17,7 @@ module.exports = {
       const customer = await Customer.findByPk(decodedToken.id);
 
       Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
-      if (decodedToken.accountType !== Constants.AccountType.Customer) {
+      if (decodedToken.accountType !== Constants.AccountType.CUSTOMER) {
         throw new CustomError(Constants.Error.UserUnauthorised);
       }
 
@@ -35,7 +35,7 @@ module.exports = {
       const merchant = await Merchant.findByPk(decodedToken.id);
 
       Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
-      if (decodedToken.accountType !== Constants.AccountType.Merchant) {
+      if (decodedToken.accountType !== Constants.AccountType.MERCHANT) {
         throw new CustomError(Constants.Error.UserUnauthorised);
       }
 
@@ -53,7 +53,7 @@ module.exports = {
       const staff = await Staff.findByPk(decodedToken.id);
 
       Checker.ifEmptyThrowError(staff, Constants.Error.StaffNotFound);
-      if (decodedToken.accountType !== Constants.AccountType.Staff) {
+      if (decodedToken.accountType !== Constants.AccountType.STAFF) {
         throw new CustomError(Constants.Error.UserUnauthorised);
       }
 
@@ -71,7 +71,7 @@ module.exports = {
       const staff = await Staff.findByPk(decodedToken.id);
 
       Checker.ifEmptyThrowError(staff, Constants.Error.StaffNotFound);
-      if (decodedToken.accountType !== Constants.AccountType.Staff || decodedToken.staffRole !== Constants.StaffRole.Admin) {
+      if (decodedToken.accountType !== Constants.AccountType.STAFF || decodedToken.staffRole !== Constants.StaffRole.ADMIN) {
         throw new CustomError(Constants.Error.UserUnauthorised);
       }
 
@@ -88,10 +88,10 @@ module.exports = {
       const decodedToken = jwt.verify(token, config.get('jwt.private_key'));
 
       let user;
-      if (decodedToken.accountType === Constants.AccountType.Customer) {
+      if (decodedToken.accountType === Constants.AccountType.CUSTOMER) {
         user = await Customer.findByPk(decodedToken.id);
         Checker.ifEmptyThrowError(user, Constants.Error.CustomerNotFound);
-      } else if (decodedToken.accountType === Constants.AccountType.Merchant) {
+      } else if (decodedToken.accountType === Constants.AccountType.MERCHANT) {
         user = await Merchant.findByPk(decodedToken.id);
         Checker.ifEmptyThrowError(user, Constants.Error.MerchantNotFound);
       } else {
@@ -111,10 +111,10 @@ module.exports = {
       const decodedToken = jwt.verify(token, config.get('jwt.private_key'));
 
       let user;
-      if (decodedToken.accountType === Constants.AccountType.Customer) {
+      if (decodedToken.accountType === Constants.AccountType.CUSTOMER) {
         user = await Customer.findByPk(decodedToken.id);
         Checker.ifEmptyThrowError(user, Constants.Error.CustomerNotFound);
-      } else if (decodedToken.accountType === Constants.AccountType.Staff) {
+      } else if (decodedToken.accountType === Constants.AccountType.STAFF) {
         user = await Staff.findByPk(decodedToken.id);
         Checker.ifEmptyThrowError(user, Constants.Error.StaffRoleRequired);
       } else {
@@ -134,10 +134,10 @@ module.exports = {
       const decodedToken = jwt.verify(token, config.get('jwt.private_key'));
 
       let user;
-      if (decodedToken.accountType === Constants.AccountType.Merchant) {
+      if (decodedToken.accountType === Constants.AccountType.MERCHANT) {
         user = await Merchant.findByPk(decodedToken.id);
         Checker.ifEmptyThrowError(user, Constants.Error.MerchantNotFound);
-      } else if (decodedToken.accountType === Constants.AccountType.Staff) {
+      } else if (decodedToken.accountType === Constants.AccountType.STAFF) {
         user = await Staff.findByPk(decodedToken.id);
         Checker.ifEmptyThrowError(user, Constants.Error.StaffNotFound);
       } else {
@@ -157,13 +157,13 @@ module.exports = {
       const decodedToken = jwt.verify(token, config.get('jwt.private_key'));
 
       let user;
-      if (decodedToken.accountType === Constants.AccountType.Customer) {
+      if (decodedToken.accountType === Constants.AccountType.CUSTOMER) {
         user = await Customer.findByPk(decodedToken.id);
         Checker.ifEmptyThrowError(user, Constants.Error.CustomerNotFound);
-      } else if (decodedToken.accountType === Constants.AccountType.Merchant) {
+      } else if (decodedToken.accountType === Constants.AccountType.MERCHANT) {
         user = await Merchant.findByPk(decodedToken.id);
         Checker.ifEmptyThrowError(user, Constants.Error.MerchantNotFound);
-      } else if (decodedToken.accountType === Constants.AccountType.Staff) {
+      } else if (decodedToken.accountType === Constants.AccountType.STAFF) {
         user = await Staff.findByPk(decodedToken.id);
         Checker.ifEmptyThrowError(user, Constants.Error.StaffNotFound);
       } else {

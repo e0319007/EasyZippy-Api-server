@@ -17,7 +17,7 @@ module.exports = {
     Checker.ifEmptyThrowError(externalId, Constants.Error.PaymentIdRequired);
     Checker.ifEmptyThrowError(amount, Constants.Error.AmountRequired);
 
-    const externalPaymentRecord = await ExternalPaymentRecord.create({ externalId, amount, payload, paymentTypeEnum: Constants.PaymentType.Paypal, customerId }, { transaction });
+    const externalPaymentRecord = await ExternalPaymentRecord.create({ externalId, amount, payload, paymentTypeEnum: Constants.PaymentType.PAYPAL, customerId }, { transaction });
 
     await CreditPaymentRecordService.refundCreditCustomer(customerId, amount, Constants.CreditPaymentType.TOP_UP, transaction);
 

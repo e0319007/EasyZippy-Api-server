@@ -205,7 +205,7 @@ module.exports = {
     const token = jwt.sign(
       {
         id: staff.id,
-        accountType: Constants.AccountType.Staff,
+        accountType: Constants.AccountType.STAFF,
         staffRole: staff.staffRoleEnum
       },
       config.get('jwt.private_key'),

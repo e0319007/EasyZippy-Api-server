@@ -58,7 +58,7 @@ module.exports = {
     let i = 0;
     let liId = new Array();
     while (i < ctx) {
-      const lt = (await cart.getLineItems())[0];
+      const lt = (await cart.getLineItems({ transaction }))[0];
       liId.push(lt.id);
       await cart.removeLineItem(lt, { transaction });
       i++;

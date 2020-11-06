@@ -1,74 +1,74 @@
 module.exports = {
   AccountType: {
-    Customer: 'Customer',
-    Merchant: 'Merchant',
-    Staff: 'Staff'
+    CUSTOMER: 'Customer',
+    MERCHANT: 'Merchant',
+    STAFF: 'Staff'
   },
   BookingStatus: {
-    Unfulfilled: 'Unfulfilled',
-    Active: 'Active',
-    Fulfilled: 'Fulfilled',
-    Cancelled: 'Cancelled',
-    Expired: 'Expired'
+    UNFULFILLED: 'Unfulfilled',
+    ACTIVE: 'Active',
+    FULFILLED: 'Fulfilled',
+    CANCELLED: 'Cancelled',
+    EXPIRED: 'Expired'
   },
   BookingSource: {
-    Mobile: 'Mobile',
-    Kiosk: 'Kiosk'
+    MOBILE: 'Mobile',
+    KIOSK: 'Kiosk'
   },
   CollectionMethod: {
-    InStore: 'In Store',
-    Kiosk: 'Kiosk'
+    IN_STORE: 'In Store',
+    KIOSK: 'Kiosk'
   },
   CreditPaymentType: {
-    Order: 'Order',
-    Booking: 'Booking',
-    BookingPackage: 'Booking Package',
-    BookingOvertimeCharge: 'Booking Overtime Charge',
-    ReferralBonus: 'Referral Bonus',
+    ORDER: 'Order',
+    BOOKING: 'Booking',
+    BOOKING_PACKAGE: 'Booking Package',
+    BOOKING_OVERTIME_CHARGE: 'Booking Overtime Charge',
+    REFERRAL_BONUS: 'Referral Bonus',
     TOP_UP: 'Top Up'
   },
   LockerStatus: {
-    InUse: 'In Use',
-    Empty: 'Empty'
+    IN_USE: 'In Use',
+    EMPTY: 'Empty'
   },
   LockerAction: {
-    Close: 'Close',
-    Open: 'Open'
+    CLOSE: 'Close',
+    OPEN: 'Open'
   },
   ModelEnum: {
-    Merchant: 'Merchant',
-    Booking: 'Booking',
-    Order: 'Order',
-    Staff: 'Staff',
-    Customer: 'Customer',
-    Advertisement: 'Advertisement'
+    MERCHANT: 'Merchant',
+    BOOKING: 'Booking',
+    ORDER: 'Order',
+    STAFF: 'Staff',
+    CUSTOMER: 'Customer',
+    ADVERTISEMENT: 'Advertisement'
   },
   OrderStatus: {
-    PendingPayment: 'Pending Payment',
-    Processing: 'Processing',
-    ReadyForCollection: 'Ready For Collection',
-    Complete: 'Complete',
-    Cancelled: 'Cancelled',
-    Refund: 'Refund'
+    PENDING_PAYMENT: 'Pending Payment',
+    PROCESSING: 'Processing',
+    READY_FOR_COLLECTION: 'Ready For Collection',
+    COMPLETE: 'Complete',
+    CANCELLED: 'Cancelled',
+    REFUND: 'Refund'
   },
   PaymentStatus: {
-    Cancelled: 'Cancelled',
-    Paid: 'Paid'
+    CANCELLED: 'Cancelled',
+    PAID: 'Paid'
   },
   PaymentType: {
-    Cash: 'Cash',
-    CreditCard: 'Credit Card',
-    Paylah: 'Paylah',
-    Paynow: 'Paynow',
-    Paypal: 'Paypal'
+    CASH: 'Cash',
+    CREDIT_CARD: 'Credit Card',
+    PAYLAH: 'Paylah',
+    PAYNOW: 'Paynow',
+    PAYPAL: 'Paypal'
   },
   PromotionType: {
-    MallPromotion: 'Mall Promotion',
-    MerchantPromotion: 'Merchant Promotion'
+    MALL_PROMOTION: 'Mall Promotion',
+    MERCHANT_PROMOTION: 'Merchant Promotion'
   },
   StaffRole: {
-    Admin: 'Admin',
-    Employee: 'Employee'
+    ADMIN: 'Admin',
+    EMPLOYEE: 'Employee'
   },
   Error: {
     AdvertisementOngoingCannotMarkExpire: 'Cannot mark an ongoing advertisement as expired',
