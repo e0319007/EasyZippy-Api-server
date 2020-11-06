@@ -212,7 +212,7 @@ module.exports = {
    */
   //send notification to customers that booking time starting in 10 minutes
   notificationBookingStartingSoonMerchant: async(bookingId, merchantId) => {
-    let merchant = await Customer.findByPk(merchantId);
+    let merchant = await Merchant.findByPk(merchantId);
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound); 
 
     let booking = await Booking.findByPk(bookingId);
@@ -231,7 +231,7 @@ module.exports = {
   },
   //send notification to customers that booking time started
    notificationBookingStartedMerchant: async(bookingId, merchantId) => {
-    let merchant = await Customer.findByPk(merchantId);
+    let merchant = await Merchant.findByPk(merchantId);
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound); 
 
     let booking = await Booking.findByPk(bookingId);
@@ -250,7 +250,7 @@ module.exports = {
   },
   //send notification to customers that booking time reaching in 10 minutes
    notificationBookingReachingSoonMerchant: async(bookingId, merchantId) => {
-    let merchant = await Customer.findByPk(merchantId);
+    let merchant = await Merchant.findByPk(merchantId);
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound); 
 
     let booking = await Booking.findByPk(bookingId);
@@ -269,7 +269,7 @@ module.exports = {
   },
   //send notification to customer that booking time reached
    notificationBookingReachedMerchant: async(bookingId, merchantId) => {
-    let merchant = await Customer.findByPk(merchantId);
+    let merchant = await Merchant.findByPk(merchantId);
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound); 
 
     let booking = await Booking.findByPk(bookingId);
@@ -297,7 +297,7 @@ module.exports = {
     let order = await Order.findByPk(id);
     Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound); 
 
-    let merchant = await Customer.findByPk(merchantId);
+    let merchant = await Merchant.findByPk(merchantId);
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
 
     let title = 'New Order';
@@ -314,7 +314,7 @@ module.exports = {
     let order = await Order.findByPk(id);
     Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound); 
 
-    let merchant = await Customer.findByPk(merchantId);
+    let merchant = await Merchant.findByPk(merchantId);
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
 
     let title = 'Order items received by customer';
@@ -327,8 +327,22 @@ module.exports = {
     await NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
   },
   //send notifications to customer that the order is ready
-  
-  //send notification to customer that the order is in the kiosk
+  notificationOrderReadyForCollection: async(orderId, customerId) => {
+    let order = await Order.findByPk(id);
+    Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound); 
+
+    let customer = await Customer.findByPk(customerId);
+    Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
+
+    let title = 'Order Ready For Collection';
+    let description = 'Your order with ID: ' + orderId + ' is ready to be collected';
+    
+    let senderModel = Constants.ModelEnum.ORDER;
+    let receiverModel = Constants.ModelEnum.CUSTOMER;
+    let senderId = orderId;
+    let receiverId = customerId;
+    await NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
+  },
 
   /**
    * SEND NOTIFICATION ABOUT ADVERTISEMENT
