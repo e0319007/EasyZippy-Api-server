@@ -23,8 +23,9 @@ module.exports = {
   },
 
   addImageForAdvertisement: async (req, res) => {
+    let image = req.files[0].filename;
     try {
-      return res.status(200).send(req.files[0].filename);
+      return res.status(200).send(image);
     } catch (err) {
       fs.remove(image);
       console.log(err)

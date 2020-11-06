@@ -6,6 +6,7 @@ const EmailHelper = require('../common/emailHelper');
 
 module.exports = {
   registerMerchant: async (req, res) => {
+    let merchantLogoImage = req.body.merchantLogoImage;
     try {
       const merchantData = req.body;
       let merchant;
@@ -17,6 +18,7 @@ module.exports = {
       await NotificationHelper.notificationNewApplication(merchant.id);
       return res.status(200).send(merchant);
     } catch (err) {
+      fs.remove(merchantLogoImage);
       console.log(err)
       sendErrorResponse(res, err);
     }
@@ -193,9 +195,12 @@ module.exports = {
   },
 
   uploadImageForMerchantLogoPreRegister: async(req, res) => {
+    let merchantLogoImage = req.files[0].filename;
     try {
-      return res.status(200).send(req.files[0].filename);
+      return res.status(200).send(merchantLogoImage);
     } catch (err) {
+      fs.remove(merchantLogoImage);
+      console.log(err);
       sendErrorResponse(res, err);
     }
   },
