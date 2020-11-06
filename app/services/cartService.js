@@ -52,10 +52,21 @@ module.exports = {
     });
     // console.log('****is array? ' + Array.isArray(await cart.getLineItems()))
     // console.log('****array? ' + await cart.getLineItems())
-    while (!Checker.isEmpty(await cart.getLineItems())) {
-      const lineItemId = ((await cart.getLineItems())[0]).id;
-      await LineItem.destroy({ where: { id: lineItemId } }, { transaction });
+
+    let ctx = (await cart.getLineItems()).length;
+    let i = 0;
+    let liId = new Array();
+    while (i < ctx) {
+      const lt = (await cart.getLineItems())[0];
+      liId.push(lt.id);
+      await cart.removeLineItem(lt, { transaction });
+      i++;
     }
+
+    while(!Checker.isEmpty(liId)) {
+      await LineItem.destroy({ where: { id: liId.pop() }, transaction });
+    }
+
     // console.log('lineItems')
     // console.log(lineItems)
     while(!Checker.isEmpty(lineItems)) {

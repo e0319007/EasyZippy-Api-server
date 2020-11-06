@@ -235,7 +235,8 @@ module.exports = {
       await sequelize.transaction(async (transaction) => {
         merchant = await MerchantService.removeImageForMerchantLogo(id, transaction);
       });
-      return res.status(200).send(merchant);    } catch (err) {
+      return res.status(200).send(merchant);    
+    } catch (err) {
       console.log(err);
       sendErrorResponse(res, err);
     }

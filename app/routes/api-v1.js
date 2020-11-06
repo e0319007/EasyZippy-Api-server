@@ -187,7 +187,7 @@ router.post('/merchant/:id/uploadTenancyAgreement', Upload.preUploadCheck, Merch
 router.post('/merchantUploadLogoPreRegistration', Upload.preUploadCheckForImg, MerchantController.uploadImageForMerchantLogoPreRegister);
 router.post('/merchantUploadLogo/:id', Upload.preUploadCheckForImg, MerchantController.addImageForMerchantLogo);
 router.post('/merchantChangeLogo/:id', Upload.preUploadCheckForImg, MerchantController.changeImageForMerchantLogo);
-router.post('/merchantRemoveLogo/:id', Upload.preUploadCheckForImg, MerchantController.removeImageForMerchantLogo);
+router.post('/merchantRemoveLogo/:id', MerchantController.removeImageForMerchantLogo);
 
 //Notification
 router.get('/notification/customer/:customerId', Authenticator.customerOnly, NotificationController.retrieveAllNotificationByCustomerId);
