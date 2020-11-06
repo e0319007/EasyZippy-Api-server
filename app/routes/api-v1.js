@@ -131,7 +131,7 @@ router.post('/customer', CustomerController.registerCustomer);
 
 //Kiosk
 router.get('/kiosks', Authenticator.customerAndMerchantAndStaffOnly, KioskController.retrieveAllKiosks);
-router.get('/kiosk/:id', Authenticator.staffOnly, KioskController.retrieveKiosk);
+router.get('/kiosk/:id', Authenticator.customerAndMerchantAndStaffOnly, KioskController.retrieveKiosk);
 router.put('/kiosk/:id/toggleDisable', Authenticator.staffOnly, KioskController.toggleDisableKiosk);
 router.put('/kiosk/:id', Authenticator.staffOnly, KioskController.updateKiosk);
 router.put('/deleteKiosk/:id', Authenticator.staffOnly, KioskController.deleteKiosk);
