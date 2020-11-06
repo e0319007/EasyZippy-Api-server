@@ -119,13 +119,27 @@ const addDummyData = async () => {
   let lineItem3 = {
     productVariationId: null,
     productId: 3,
-    quantity: 98
+    quantity: 3
+  };
+
+  let lineItem4 = {
+    productVariationId: null,
+    productId: 6,
+    quantity: 3
+  };
+
+  let lineItem5 = {
+    productVariationId: null,
+    productId: 5,
+    quantity: 3
   };
 
   let lineItems = new Array();
   lineItems.push(lineItem1);
   lineItems.push(lineItem2);
   lineItems.push(lineItem3);
+  lineItems.push(lineItem4);
+  lineItems.push(lineItem5);
 
   await sequelize.transaction(async (transaction) => {
     await CartService.saveItemsToCart(1, { lineItems }, transaction);
@@ -426,7 +440,7 @@ const addDummyData = async () => {
     { productId: null, productVariationId: 1, quantity: 4 }, 
     { productId: 2, productVariationId: null, quantity: 3 }, 
     { productId: 6, productVariationId: null, quantity: 3 },
-    { productId: 3, productVariationId: null, quantity: 98 },
+    { productId: 3, productVariationId: null, quantity: 4 },
   ]
   let orderData1 = {
     cart: cart1, 
