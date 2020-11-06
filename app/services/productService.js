@@ -149,6 +149,18 @@ module.exports = {
     });
   },
 
+  retrieveMostPopularProducts: async(quantity) => {
+    Checker.ifEmptyThrowError(quantity, Constants.Error.QuantityRequired);
+    const products = await Product.findAll({ order: [['quantitySold', 'DESC']], limit: quantity });
+    return products
+  },
+
+  retrieveMostRecentProducts: async(quantity) => {
+    Checker.ifEmptyThrowError(quantity, Constants.Error.QuantityRequired);
+    const products = await Product.findAll({ order: [['createdAt', 'DESC']], limit: quantity });
+    return products
+  },
+
   searchProducts: async(searchTerm) => {
     const products = await Product.findAll({ where: { name: { [Op.iLike]: `%${searchTerm}%` }, deleted: false, disabled: false } });
     return products;

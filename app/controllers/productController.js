@@ -151,6 +151,28 @@ module.exports = {
     }
   },
 
+  retrieveMostPopularProducts: async(req, res) => {
+    try {
+      const { quantity } = req.params;
+      const products = await ProductService.retrieveMostPopularProducts(quantity);
+      return res.status(200).send(products);
+    } catch(err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  },
+
+  retrieveMostRecentProducts: async(req, res) => {
+    try {
+      const { quantity } = req.params;
+      const products = await ProductService.retrieveMostRecentProducts(quantity);
+      return res.status(200).send(products);
+    } catch(err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  },
+
   searchProducts: async(req, res) => {
     try {
       const { searchTerm } = req.body;

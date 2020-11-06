@@ -211,6 +211,8 @@ router.get('/cancel', PaymentController.cancel);
 
 //Product
 router.get('/product/:id', Authenticator.customerAndMerchantAndStaffOnly, ProductController.retrieveProduct);
+router.get('/products/popular/:quantity', Authenticator.customerAndMerchantAndStaffOnly, ProductController.retrieveMostPopularProducts);
+router.get('/products/recent/:quantity', Authenticator.customerAndMerchantAndStaffOnly, ProductController.retrieveMostRecentProducts);
 router.get('/products', Authenticator.customerAndMerchantAndStaffOnly, ProductController.retrieveAllProduct);
 router.get('/merchantProducts/:merchantId', Authenticator.customerAndMerchantAndStaffOnly, ProductController.retrieveProductByMerchantId);
 router.get('/categoryProducts/:categoryId', Authenticator.customerAndMerchantAndStaffOnly, ProductController.retrieveProductByCategoryId);
