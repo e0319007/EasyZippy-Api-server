@@ -54,7 +54,7 @@ module.exports = {
     const advertisement = await Advertisement.create(
       advertisementData
     , { transaction });
-    await NotificationHelper.notificationNewAdvertisementApplicationFromMerchant(advertisement.id)
+    await NotificationHelper.notificationNewAdvertisementApplicationFromMerchant(advertisement.id, transaction);
     return advertisement;
   },
 
@@ -74,7 +74,7 @@ module.exports = {
     const advertisement = await Advertisement.create(
       advertisementData
     , { transaction });
-    await NotificationHelper.notificationNewAdvertisementApplicationFromAdvertiser(advertisement.id)
+    await NotificationHelper.notificationNewAdvertisementApplicationFromAdvertiser(advertisement.id, transaction);
     return advertisement;
   },
 
