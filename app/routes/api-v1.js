@@ -217,6 +217,7 @@ router.get('/categoryProducts/:categoryId', Authenticator.customerAndMerchantAnd
 router.put('/deleteProduct/:id', Authenticator.merchantAndStaffOnly, ProductController.deleteProduct);
 router.put('/product/toggleDisable/:id', Authenticator.merchantAndStaffOnly, ProductController.toggleDisableProduct);
 router.put('/product/:id', Authenticator.merchantOnly, ProductController.updateProduct);
+router.post('/product/search', Authenticator.customerAndMerchantAndStaffOnly, ProductController.searchProducts);
 router.post('/product/addImage', Authenticator.merchantOnly, Upload.preUploadCheckForImg, ProductController.addImageForProduct);
 router.post('/product', Authenticator.merchantOnly, ProductController.createProduct);
 

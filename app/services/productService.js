@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const Checker = require('../common/checker');
 const Constants = require('../common/constants');
 const CustomError = require('../common/error/customError');
@@ -146,5 +147,10 @@ module.exports = {
         deleted: false
       }
     });
+  },
+
+  searchProducts: async(searchTerm) => {
+    const products = await Product.findAll({ where: { name: { [Op.iLike]: `%${searchTerm}%` }, deleted: false, disabled: false } });
+    return products;
   }
 }

@@ -150,4 +150,15 @@ module.exports = {
       sendErrorResponse(res, err);
     }
   },
+
+  searchProducts: async(req, res) => {
+    try {
+      const { searchTerm } = req.body;
+      const products = await ProductService.searchProducts(searchTerm);
+      return res.status(200).send(products);
+    } catch(err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  }
 }
