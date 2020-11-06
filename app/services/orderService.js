@@ -46,7 +46,7 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let order = await Order.findByPk(id);
     Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound);
-    console.log(order)
+    
     if(orderStatusEnum === Constants.OrderStatus.Complete) return await markOrderComplete(order, transaction);
     order = await Order.update({ orderStatusEnum }, { where: { id }, transaction, returning: true });
     return order;
