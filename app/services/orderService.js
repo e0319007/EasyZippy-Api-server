@@ -47,7 +47,7 @@ module.exports = {
     let order = await Order.findByPk(id);
     Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound);
     console.log(order)
-    if(orderStatusEnum === Constants.OrderStatus.Complete) return await markOrderComplete(order, transaction);
+    if(orderStatusEnum === Constants.OrderStatus.COMPLETE) return await markOrderComplete(order, transaction);
     order = await Order.update({ orderStatusEnum }, { where: { id }, transaction, returning: true });
     return order;
   },
@@ -118,7 +118,7 @@ module.exports = {
     for (let [merchantId, lineItem] of merchantMapLineitems) {
       let totalAmount = await calculatePrice(lineItem);
       trackTotalAmount += totalAmount;
-      let creditPaymentRecordId = (await CreditPaymentRecordService.payCreditCustomer(customerId, totalAmount, Constants.CreditPaymentType.Order, transaction)).id;
+      let creditPaymentRecordId = (await CreditPaymentRecordService.payCreditCustomer(customerId, totalAmount, Constants.CreditPaymentType.ORDER, transaction)).id;
       let order = await Order.create({ lineItem, promoIdUsed, totalAmount, collectionMethodEnum, customerId, merchantId, creditPaymentRecordId }, { transaction });
       await order.setLineItems(lineItem, { transaction });
       orders.push(order);
@@ -166,10 +166,10 @@ const markOrderComplete = async(order, transaction) => {
   console.log('Amount paid:' + order.amountPaid);
   console.log('order:');
   console.log(order);
-  let creditPaymentRecord = await CreditPaymentRecordService.refundCreditMerchant(order.merchantId, order.totalAmount, Constants.CreditPaymentType.Order, transaction);
+  let creditPaymentRecord = await CreditPaymentRecordService.refundCreditMerchant(order.merchantId, order.totalAmount, Constants.CreditPaymentType.ORDER, transaction);
   let creditPaymentRecords = await CreditPaymentRecord.findAll({ where: { orderId: order.id } });
   creditPaymentRecords.push(creditPaymentRecord);
-  order = await order.update({ orderStatusEnum: Constants.OrderStatus.Complete, creditPaymentRecords }, { transaction, returning: true });
+  order = await order.update({ orderStatusEnum: Constants.OrderStatus.COMPLETE, creditPaymentRecords }, { transaction, returning: true });
   return order;
 }
 

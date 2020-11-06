@@ -15,7 +15,7 @@ module.exports = {
     Checker.ifEmptyThrowError(externalId, Constants.Error.PaymentIdRequired);
     Checker.ifEmptyThrowError(amount, Constants.Error.AmountRequired);
 
-    const externalPaymentRecord = await ExternalPaymentRecord.create({ externalId, amount, payload, paymentTypeEnum: Constants.PaymentType.Paypal, customerId }, { transaction });
+    const externalPaymentRecord = await ExternalPaymentRecord.create({ externalId, amount, payload, paymentTypeEnum: Constants.paymentType.PAYPAL, customerId }, { transaction });
     
     const updatedCreditBalance = parseFloat(customer.creditBalance) + parseFloat(amount);
 

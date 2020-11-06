@@ -9,8 +9,8 @@ const LockerType = require('../models/LockerType');
 const CreditPaymentRecordService = require('./creditPaymentRecordService');
 
 const assignLockersToBookings = async(bookingId, lockerId, transaction) => {
-  await Locker.update( { lockerStatusEnum: Constants.LockerStatus.InUse }, { where: { id: lockerId }, transaction });
-  await Booking.update( { lockerId, bookingStatusEnum: Constants.BookingStatus.Active }, { where: {id: bookingId }, transaction });
+  await Locker.update( { lockerStatusEnum: Constants.LockerStatus.IN_USE }, { where: { id: lockerId }, transaction });
+  await Booking.update( { lockerId, bookingStatusEnum: Constants.BookingStatus.ACTIVE }, { where: {id: bookingId }, transaction });
 };
 
 module.exports = {
@@ -61,7 +61,7 @@ module.exports = {
     Checker.ifEmptyThrowError(locker, Constants.Error.LockerNotFound);
     Checker.ifDeletedThrowError(locker, Constants.Error.LockerDeleted);
 
-    return await locker.update({ lockerStatusEnum: Constants.LockerStatus.Empty }, { transaction });
+    return await locker.update({ lockerStatusEnum: Constants.LockerStatus.EMPTY }, { transaction });
   },
 
   setLockerInUse: async(id, transaction) => {
@@ -70,7 +70,7 @@ module.exports = {
     Checker.ifEmptyThrowError(locker, Constants.Error.LockerNotFound);
     Checker.ifDeletedThrowError(locker, Constants.Error.LockerDeleted);
 
-    return await locker.update({ lockerStatusEnum: Constants.LockerStatus.InUse }, { transaction });
+    return await locker.update({ lockerStatusEnum: Constants.LockerStatus.IN_USE }, { transaction });
   },
 
   toggleDisableLocker: async(id, transaction) => {
@@ -91,29 +91,29 @@ module.exports = {
   },
 
   retrieveAvailableLockers: async() => {
-    return await Locker.findAll({ where: { lockerStatusEnum: Constants.LockerStatus.Empty } });
+    return await Locker.findAll({ where: { lockerStatusEnum: Constants.LockerStatus.EMPTY } });
   },
 
   retrieveAvailableLockersByLockerType: async(lockerTypeId) => {
-    return await Locker.findAll({ where: { lockerTypeId, lockerStatusEnum: Constants.LockerStatus.Empty } });
+    return await Locker.findAll({ where: { lockerTypeId, lockerStatusEnum: Constants.LockerStatus.EMPTY } });
   },
 
   scanOpenLocker: async(qrCode, transaction) => {
     let booking = await Booking.findOne( { where: { qrCode } });
     //OPEN LOCKER FOR THE FIRST TIME
-    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfulfilled) {
+    if(booking.bookingStatusEnum === Constants.BookingStatus.UNFULFILLED) {
       //call open locker api, create locker action record after integrating to hardware
       
-      booking = await booking.update({ bookingStatusEnum: Constants.BookingStatus.Active }, { transaction });
+      booking = await booking.update({ bookingStatusEnum: Constants.BookingStatus.ACTIVE }, { transaction });
 
-      let locker = await Locker.findOne( { where: { lockerTypeId: booking.lockerTypeId, lockerStatusEnum: Constants.LockerStatus.Empty } });
-      // let lockerAction = await LockerActionRecord.create({ lockerId: locker.id, LockerActionEnum: Constant.LockerAction.Open}) ;
+      let locker = await Locker.findOne( { where: { lockerTypeId: booking.lockerTypeId, lockerStatusEnum: Constants.LockerStatus.EMPTY } });
+      // let lockerAction = await LockerActionRecord.create({ lockerId: locker.id, LockerActionEnum: Constant.LockerAction.OPEN}) ;
 
-      locker = await locker.update( { lockerStatusEnum: Constants.LockerStatus.InUse }, { transaction }); 
+      locker = await locker.update( { lockerStatusEnum: Constants.LockerStatus.IN_USE }, { transaction }); 
       await assignLockersToBookings(booking.id, locker.id, transaction);
       
     //OPEN LOCKER FOR THE SECOND TIME
-    } else if (booking.bookingStatusEnum === Constants.BookingStatus.Active) {
+    } else if (booking.bookingStatusEnum === Constants.BookingStatus.ACTIVE) {
       let extraDuration = new Date() - booking.endTime;
       let extraPrice;
       let passHalfAnHourDuration = extraDuration - 1800000;
@@ -123,12 +123,12 @@ module.exports = {
       } else extraprice = extraDuration * (price / 180000)
       
       if(!Checker.isEmpty(booking.customerId)) {
-         creditPaymentRecord = await CreditPaymentRecordService.payCreditCustomer(booking.customerId, extraPrice, Constants.CreditPaymentType.BookingOvertimeCharge, transaction);
-      } else creditPaymentRecord = await CreditPaymentRecordService.payCreditMerchant(booking.merchantId, extraPrice, Constants.CreditPaymentType.BookingOvertimeCharge, transaction);
+         creditPaymentRecord = await CreditPaymentRecordService.payCreditCustomer(booking.customerId, extraPrice, Constants.CreditPaymentType.BOOKING_OVERTIME_CHARGE, transaction);
+      } else creditPaymentRecord = await CreditPaymentRecordService.payCreditMerchant(booking.merchantId, extraPrice, Constants.CreditPaymentType.BOOKING_OVERTIME_CHARGE, transaction);
 
-      booking = await booking.update({ bookingStatusEnum: Constants.BookingStatus.Unfulfilled, bookingPrice: booking.bookingPrice + extraPrice }, { transaction });
+      booking = await booking.update({ bookingStatusEnum: Constants.BookingStatus.FULFILLED, bookingPrice: booking.bookingPrice + extraPrice }, { transaction });
       let locker = await Locker.findByPk(booking.lockerId);
-      locker = await locker.update( { lockerStatusEnum: Constants.LockerStatus.Empty }, { transaction }); 
+      locker = await locker.update( { lockerStatusEnum: Constants.LockerStatus.EMPTY }, { transaction }); 
       
       if(!Checker.isEmpty(booking.bookingPackageId)) {
         let bookingPackage = await BookingPackage.findByPk(booking.bookingPackageId);
