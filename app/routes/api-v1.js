@@ -197,6 +197,7 @@ router.put('/readNotification/:id', Authenticator.customerAndMerchantAndStaffOnl
 router.post('/notification/create', Authenticator.staffOnly, NotificationController.createNotification);
 
 //Order
+router.get('/order/orderStatus', Authenticator.customerAndMerchantAndStaffOnly, OrderController.retrieveAllOrderStatus);
 router.get('/orders/customer/:customerId', Authenticator.customerAndMerchantAndStaffOnly, OrderController.retrieveOrderByCustomerId);
 router.get('/orders/merchant/:merchantId', Authenticator.merchantAndStaffOnly, OrderController.retrieveOrderByMerchantId);
 router.get('/orders', Authenticator.staffOnly, OrderController.retrieveAllOrders);
