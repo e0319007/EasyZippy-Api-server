@@ -3,7 +3,6 @@ const Constants = require('../common/constants');
 const CustomError = require('../common/error/customError');
 
 const Booking = require('../models/Booking')
-const Promotion = require('../models/Promotion');
 const Merchant = require('../models/Merchant');
 const Customer = require('../models/Customer');
 const BookingPackage = require('../models/BookingPackage');
@@ -120,27 +119,6 @@ const calculatePrice = async(startDate, endDate, lockerTypeId) => {
     return 0;
   }
   return (duration / 1000 / 60) * pricePerMinute;
-}
-
-const applyPromoId = async(promoIdUsed, bookingPrice) => {
-  if(!Checker.isEmpty(promoIdUsed)) {
-    let promotion = await Promotion.findByPk(promoIdUsed);
-    Checker.ifEmptyThrowError(promotion, Constants.Error.PromotionNotFound);
-    if(promotion.startDate <= new Date() && promotion.endDate >= new Date()) {
-      if(!Checker.isEmpty(promotion.usageCount) && promotion.usageCount >= promotion.usageLimit) {
-        throw new CustomError(Constants.Error.PromotionUsageLimitReached);
-      }
-      if(promotion.minimumSpent > bookingPrice) {
-        throw new CustomError(Constants.Error.PromotionMinimumSpendNotMet);
-      }
-      if (!Checker.isEmpty(promotion.flatDiscount)) {
-        bookingPrice -= promotion.flatDiscount;
-      } else {
-        bookingPrice *= (1 - promotion.percentageDiscount);
-      }
-    }
-  } 
-  return bookingPrice;
 }
 
 const createBookingWithBookingPackageByCustomer = async(bookingData, transaction) => {
@@ -271,10 +249,6 @@ module.exports = {
       throw new CustomError(Constants.Error.BookingCannotBeMade);
     }
 
-    //PROMOTION
-    if(!Checker.isEmpty(promoIdUsed)) {
-      bookingPrice = await applyPromoId(promoIdUsed, bookingPrice);
-    } 
     bookingPrice = bookingPrice.toFixed(2);
 
     //QR CODE
@@ -310,12 +284,6 @@ module.exports = {
       throw new CustomError(Constants.Error.BookingCannotBeMade);
     }
 
-    //PROMOTION
-    if(!Checker.isEmpty(promoIdUsed)) {
-      bookingPrice = await applyPromoId(promoIdUsed, bookingPrice);
-    } 
-    bookingPrice = bookingPrice.toFixed(2);
-    
     //QR CODE
     let qrCode = Math.random().toString(36).substring(2);
     while (!Checker.isEmpty(await Booking.findOne({ where: { qrCode } }))) {
