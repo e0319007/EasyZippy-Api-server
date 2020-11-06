@@ -335,9 +335,9 @@ module.exports = {
    */
 
    //send notification to staff about new advertisement from merchant 
-   notificationNewAdvertisementApplicationFromMerchant: async(advertisementId) => {
+   notificationNewAdvertisementApplicationFromMerchant: async(advertisementId, transaction) => {
     console.log('In notificationNewApplication')
-    let advertisement = await Advertisement.findByPk(advertisementId);
+    let advertisement = await Advertisement.findByPk(advertisementId, { transaction });
     Checker.ifEmptyThrowError(advertisement, Constants.Error.AdvertisementNotFound);
     
     let title = 'New Advertisement Application';
@@ -348,13 +348,13 @@ module.exports = {
     let senderId = advertisementId
     let receiverId = null;
     let forStaff = true;
-    await NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId, forStaff });
+    await NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId, forStaff }, transaction);
   },
 
    //send notification to staff about new advertisement from advertisers
-   notificationNewAdvertisementApplicationFromAdvertiser: async(advertisementId) => {
+   notificationNewAdvertisementApplicationFromAdvertiser: async(advertisementId, transaction) => {
     console.log('In notificationNewApplication')
-    let advertisement = await Advertisement.findByPk(advertisementId);
+    let advertisement = await Advertisement.findByPk(advertisementId, { transaction });
     Checker.ifEmptyThrowError(advertisement, Constants.Error.AdvertisementNotFound);
     
     let title = 'New Advertisement Application';
@@ -365,7 +365,7 @@ module.exports = {
     let senderId = advertisementId
     let receiverId = null;
     let forStaff = true;
-    await NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId, forStaff });
+    await NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId, forStaff }, transaction);
   },
 
    //send notification for merchants about advertisement approval

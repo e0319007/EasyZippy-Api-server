@@ -58,7 +58,7 @@ module.exports = {
       let { id } = req.params;
       let { orderStatus } = req.body;
       await sequelize.transaction(async (transaction) => {
-        order = await OrderService.updateBookingStatus(id, orderStatus, transaction);
+        order = await OrderService.updateOrderStatus(id, orderStatus, transaction);
       });
       return res.status(200).send(order);
     } catch(err) {
