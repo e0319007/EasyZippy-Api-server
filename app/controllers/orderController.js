@@ -42,6 +42,16 @@ module.exports = {
     }
   },
 
+  retrieveAllOrderStatus: async(req, res) => {
+    try {
+      const orderStatus = await OrderService.retrieveAllOrderStatus();
+      return res.status(200).send(orderStatus);
+    } catch (err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  },
+
   updateOrderStatus: async(req, res) => {
     try {
       let order;

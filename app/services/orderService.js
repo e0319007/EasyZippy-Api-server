@@ -37,6 +37,10 @@ module.exports = {
     return order;
   },
 
+  retrieveAllOrderStatus: async() => {
+    return Object.values(Constants.OrderStatus);
+  },
+
   updateOrderStatus: async(id, orderStatusEnum, transaction) => {
     Checker.ifEmptyThrowError(orderStatusEnum, 'Order status ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
