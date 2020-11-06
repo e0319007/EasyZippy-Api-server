@@ -24,7 +24,8 @@ module.exports = {
     Booking: 'Booking',
     BookingPackage: 'Booking Package',
     BookingOvertimeCharge: 'Booking Overtime Charge',
-    ReferralBonus: 'Referral Bonus'
+    ReferralBonus: 'Referral Bonus',
+    TOP_UP: 'Top Up'
   },
   LockerStatus: {
     InUse: 'In Use',
