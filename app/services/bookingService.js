@@ -532,7 +532,7 @@ module.exports = {
     }
 
     booking = await Booking.update({ 
-    bookingStatusEnum: Constants.bookingstatus.CANCELLED 
+    bookingStatusEnum: Constants.BookingStatus.CANCELLED 
     }, { where: { id }, transaction });
     return booking;
   },
