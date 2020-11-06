@@ -6,6 +6,7 @@ const LineItem = require('../models/LineItem');
 const Product = require('../models/Product');
 const ProductVariation = require('../models/ProductVariation');
 const CustomError = require('../common/error/customError');
+const Merchant = require('../models/Merchant');
 
 const getInvalidCartItems = async(lineItems) => {
   const invalidCartItems = new Array();
@@ -95,20 +96,46 @@ module.exports = {
     // console.log(await cart.getLineItems())
     // console.log(typeof (await cart.getLineItems()))
     // console.log(typeof (await cart.getLineItems()))
+
+    let merchantMapLineitems = new Map();
+
     for(let li of (await cart.getLineItems())) {
       let p;
       let pv; 
+      let merchant;
       if(!Checker.isEmpty(li.productId)) p = await Product.findByPk(li.productId);
       else pv = await ProductVariation.findByPk(li.productVariationId);
       if ((!Checker.isEmpty(p) && !p.disabled && !p.deleted) || (!Checker.isEmpty(pv) && !pv.disabled && !pv.productDisabled && !pv.deleted)) {
-        cartItems.push({
+        lineItem = {
           product: p,
           productVariation: pv,
           quantity: li.quantity
-        });
+        };
       }
+      if(Checker.isEmpty(p)) {
+        merchant = await Merchant.findByPk((await Product.findByPk(pv.productId)).merchantId);
+      } else merchant = await Merchant.findByPk(p.merchantId);
+      let merchantId = merchant.id
+      console.log('merchantid: ' + merchantId)
+      if(merchantMapLineitems.has(merchantId)) {
+        let items = merchantMapLineitems.get(merchantId);
+        items.push(lineItem);
+        merchantMapLineitems.set(merchantId, items);
+      } else {
+        let items = new Array();
+        items.push(lineItem);
+        merchantMapLineitems.set(merchantId, items);
+      } 
     }
-    
+
+    for(let [merchantId, lineItem] of merchantMapLineitems) {
+      console.log(merchantId)
+      cartItems.push({ 
+        merchant: await Merchant.findByPk(merchantId),
+        lineItems: lineItem
+       })
+    }
+    console.log(cartItems);
     return { cartItems, invalidCartItems: await getInvalidCartItems(await cart.getLineItems())};
   }
 }
