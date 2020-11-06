@@ -38,7 +38,7 @@ Order.init(
     orderStatusEnum: {
       type: STRING,
       allowNull: false,
-      defaultValue: constants.OrderStatus.Processing
+      defaultValue: constants.OrderStatus.PROCESSING
     },
     collectionMethodEnum: {
       type: STRING,

@@ -237,7 +237,7 @@ module.exports = {
     const token = jwt.sign(
       {
         id: merchant.id,
-        accountType: Constants.AccountType.Merchant
+        accountType: Constants.AccountType.MERCHANT
       },
       config.get('jwt.private_key'),
       { expiresIn: '1d' }

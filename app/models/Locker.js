@@ -22,7 +22,7 @@ Locker.init(
     lockerStatusEnum: {
       type: STRING,
       allowNull: false,
-      defaultValue: Constants.LockerStatus.Empty
+      defaultValue: Constants.LockerStatus.EMPTY
     },
     disabled: {
       type: BOOLEAN,

@@ -26,7 +26,7 @@ module.exports = {
     if(startDate.getTime() < new Date().getTime()) {
       throw new CustomError(Constants.Error.InvalidDate);
     }
-    let promotionTypeEnum = Constants.PromotionType.MerchantPromotion;
+    let promotionTypeEnum = Constants.PromotionType.MERCHANT_PROMOTION;
     
     if(Checker.isEmpty(percentageDiscount) && Checker.isEmpty(flatDiscount)) {
       throw new CustomError('Percentage discount or flat discount ' + Constants.Error.XXXIsRequired);
@@ -58,7 +58,7 @@ module.exports = {
     if(!Checker.isEmpty(await Promotion.findOne({ where: { promoCode, expired: false } }))) {
       throw new CustomError(Constants.Error.PromoCodeNotUnique);
     }
-    let promotionTypeEnum = Constants.PromotionType.MallPromotion;
+    let promotionTypeEnum = Constants.PromotionType.MALL_PROMOTION;
     
     if(Checker.isEmpty(percentageDiscount) && Checker.isEmpty(flatDiscount)) {
       throw new CustomError('Percentage discount or flat discount ' + Constants.Error.XXXIsRequired);
@@ -114,17 +114,17 @@ module.exports = {
   },
 
   retrieveAllMallPromotions: async() => {
-    return await Promotion.findAll({ where: { promotionTypeEnum: Constants.PromotionType.MallPromotion, deleted: false } });
+    return await Promotion.findAll({ where: { promotionTypeEnum: Constants.PromotionType.MALL_PROMOTION, deleted: false } });
   },
 
   retrieveAllMerchantPromotions: async() => {
-    return await Promotion.findAll({ where: { promotionTypeEnum: Constants.PromotionType.MerchantPromotion, deleted: false } });
+    return await Promotion.findAll({ where: { promotionTypeEnum: Constants.PromotionType.MERCHANT_PROMOTION, deleted: false } });
   },
   
   retrieveMerchantPromotionByMerchantId: async(merchantId) => {
     Checker.ifEmptyThrowError(merchantId, 'Merchant ID ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(await Merchant.findByPk(merchantId), Constants.Error.MerchantNotFound);
-    return await Promotion.findAll({ where: { merchantId, promotionTypeEnum: Constants.PromotionType.MerchantPromotion, deleted: false } });
+    return await Promotion.findAll({ where: { merchantId, promotionTypeEnum: Constants.PromotionType.MERCHANT_PROMOTION, deleted: false } });
   },
 
   retrievePromotionByPromoCode: async(promoCode) => {
