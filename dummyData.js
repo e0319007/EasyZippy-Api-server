@@ -431,7 +431,7 @@ const addDummyData = async () => {
   let orderData1 = {
     cart: cart1, 
     promoIdUsed: 1, 
-    collectionMethodEnum: Constants.CollectionMethod.InStore, 
+    collectionMethodEnum: Constants.CollectionMethod.IN_STORE, 
     //totalAmountPaid: 3, 
     customerId: 1
   }

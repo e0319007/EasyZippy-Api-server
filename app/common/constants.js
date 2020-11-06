@@ -16,7 +16,7 @@ module.exports = {
     KIOSK: 'Kiosk'
   },
   CollectionMethod: {
-    IN_STALL: 'In Store',
+    IN_STORE: 'In Store',
     KIOSK: 'Kiosk'
   },
   CreditPaymentType: {
