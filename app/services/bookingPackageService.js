@@ -149,20 +149,18 @@ module.exports = {
     Checker.ifEmptyThrowError(lockerTypeId, 'Locker type ' + Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(bookingStartDate, Constants.Error.DateRequired);
     const bookingPackage = await BookingPackage.findOne({ where: { customerId, expired: false } });
-    if(Checker.isEmpty(bookingPackage)) {
-      return { bookingPackage: null, error: Constants.Error.NoActiveBookingPackage };
-    }
+    Checker.ifEmptyThrowError(bookingPackage, Constants.Error.NoActiveBookingPackage);
     const bookingPackageModel = await bookingPackage.getBookingPackageModel();
 
     if(bookingPackageModel.lockerTypeId !== Number(lockerTypeId)) {
-      return { bookingPackage: null, error: Constants.Error.LockerTypeDifferent };
+      throw new CustomError(Constants.Error.LockerTypeDifferent);
     }
     if(bookingPackage.lockerCount >= bookingPackageModel.quota) {
-      return { bookingPackage: null, error: Constants.Error.BookingPackageQuotaInsufficient };
+      throw new CustomError(Constants.Error.BookingPackageQuotaInsufficient);
     }
     if(bookingPackage.endDate < new Date(bookingStartDate)) {
-      return { bookingPackage: null, error: Constants.Error.BookingStartDateAfterPackageEndDate };
+      throw new CustomError(Constants.Error.BookingStartDateAfterPackageEndDate);
     }
-    return { bookingPackage, error: null };
+    return bookingPackage;
   }
 };
