@@ -3,7 +3,6 @@ const Constants = require('../common/constants');
 const CustomError = require('../common/error/customError');
 
 const Booking = require('../models/Booking')
-const Promotion = require('../models/Promotion');
 const Merchant = require('../models/Merchant');
 const Customer = require('../models/Customer');
 const BookingPackage = require('../models/BookingPackage');
@@ -120,27 +119,6 @@ const calculatePrice = async(startDate, endDate, lockerTypeId) => {
     return 0;
   }
   return (duration / 1000 / 60) * pricePerMinute;
-}
-
-const applyPromoId = async(promoIdUsed, bookingPrice) => {
-  if(!Checker.isEmpty(promoIdUsed)) {
-    let promotion = await Promotion.findByPk(promoIdUsed);
-    Checker.ifEmptyThrowError(promotion, Constants.Error.PromotionNotFound);
-    if(promotion.startDate <= new Date() && promotion.endDate >= new Date()) {
-      if(!Checker.isEmpty(promotion.usageCount) && promotion.usageCount >= promotion.usageLimit) {
-        throw new CustomError(Constants.Error.PromotionUsageLimitReached);
-      }
-      if(promotion.minimumSpent > bookingPrice) {
-        throw new CustomError(Constants.Error.PromotionMinimumSpendNotMet);
-      }
-      if (!Checker.isEmpty(promotion.flatDiscount)) {
-        bookingPrice -= promotion.flatDiscount;
-      } else {
-        bookingPrice *= (1 - promotion.percentageDiscount);
-      }
-    }
-  } 
-  return bookingPrice;
 }
 
 const createBookingWithBookingPackageByCustomer = async(bookingData, transaction) => {
@@ -271,10 +249,6 @@ module.exports = {
       throw new CustomError(Constants.Error.BookingCannotBeMade);
     }
 
-    //PROMOTION
-    if(!Checker.isEmpty(promoIdUsed)) {
-      bookingPrice = await applyPromoId(promoIdUsed, bookingPrice);
-    } 
     bookingPrice = bookingPrice.toFixed(2);
 
     //QR CODE
@@ -284,7 +258,7 @@ module.exports = {
     }
     
     //CREDIT PAYMENT
-    let creditPaymentRecord = await CreditPaymentRecordService.payCreditCustomer(customerId, bookingPrice, Constants.CreditPaymentType.Booking, transaction);
+    let creditPaymentRecord = await CreditPaymentRecordService.payCreditCustomer(customerId, bookingPrice, Constants.CreditPaymentType.BOOKING, transaction);
     let creditPaymentRecordId = creditPaymentRecord.id;
 
     let booking = await Booking.create({ promoIdUsed, startDate, endDate, bookingSourceEnum, customerId, qrCode, lockerTypeId, kioskId, bookingPrice, creditPaymentRecordId }, { transaction })
@@ -310,12 +284,6 @@ module.exports = {
       throw new CustomError(Constants.Error.BookingCannotBeMade);
     }
 
-    //PROMOTION
-    if(!Checker.isEmpty(promoIdUsed)) {
-      bookingPrice = await applyPromoId(promoIdUsed, bookingPrice);
-    } 
-    bookingPrice = bookingPrice.toFixed(2);
-    
     //QR CODE
     let qrCode = Math.random().toString(36).substring(2);
     while (!Checker.isEmpty(await Booking.findOne({ where: { qrCode } }))) {
@@ -323,7 +291,7 @@ module.exports = {
     }
 
     //CREDIT PAYMENT
-    let creditPaymentRecord = await CreditPaymentRecordService.payCreditMerchant(merchantId, bookingPrice, Constants.CreditPaymentType.Booking, transaction);
+    let creditPaymentRecord = await CreditPaymentRecordService.payCreditMerchant(merchantId, bookingPrice, Constants.CreditPaymentType.BOOKING, transaction);
     let creditPaymentRecordId = creditPaymentRecord.id;
 
     let booking = await Booking.create({ promoIdUsed, startDate, endDate, bookingSourceEnum, merchantId, qrCode, lockerTypeId, kioskId, bookingPrice, creditPaymentRecordId }, { transaction });
@@ -520,20 +488,20 @@ module.exports = {
   },
 
   retrieveUpcomingBookingsByCustomerId: async(customerId) => {
-    return await Booking.findAll({ where: { customerId, bookingStatusEnum: Constants.BookingStatus.Unfulfilled }});
+    return await Booking.findAll({ where: { customerId, bookingStatusEnum: Constants.BookingStatus.UNFULFILLED }});
   },
 
   retrieveOngoingBookingsByCustomerId: async(customerId) => {
-    return await Booking.findAll({ where: { customerId, bookingStatusEnum: Constants.BookingStatus.Active }});
+    return await Booking.findAll({ where: { customerId, bookingStatusEnum: Constants.BookingStatus.ACTIVE }});
     
   },
 
   retrieveUpcomingBookingsByMerchantId: async(merchantId) => {
-    return await Booking.findAll({ where: { merchantId, bookingStatusEnum: Constants.BookingStatus.Unfulfilled }});
+    return await Booking.findAll({ where: { merchantId, bookingStatusEnum: Constants.BookingStatus.UNFULFILLED }});
   },
 
   retrieveOngoingBookingsByMerchantId: async(merchantId) => {
-    return await Booking.findAll({ where: { merchantId, bookingStatusEnum: Constants.BookingStatus.Active }});
+    return await Booking.findAll({ where: { merchantId, bookingStatusEnum: Constants.BookingStatus.ACTIVE }});
   },
 
   cancelBooking: async(id, transaction) => {
@@ -541,7 +509,7 @@ module.exports = {
     let booking = await Booking.findByPk(id);
     Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound);
     
-    if(booking.bookingStatusEnum != Constants.BookingStatus.Unfulfilled || booking.startDate.getTime() - 30 * 60000 <= new Date().getTime()) {
+    if(booking.bookingStatusEnum != Constants.BookingStatus.UNFULFILLED || booking.startDate.getTime() - 30 * 60000 <= new Date().getTime()) {
       console.log(booking.startDate)
       console.log(booking.startDate.getTime())
       console.log(new Date(new Date() - 30 * 60000))
@@ -555,8 +523,8 @@ module.exports = {
     
     if(!Checker.isEmpty(customer) && booking.bookingPrice !== null && booking.bookingPrice !== 0) {
       console.log('creditPaymentRecord.referralCreditUsed' + creditPaymentRecord.referralCreditUsed)
-      if(creditPaymentRecord.referralCreditUsed == 0) await CreditPaymentRecordService.refundCreditCustomer(customer.id, booking.bookingPrice, Constants.CreditPaymentType.Booking, transaction);
-      else await CreditPaymentRecordService.refundCreditCustomerWithReferral(customer.id, booking.bookingPrice, Constants.CreditPaymentType.Booking, creditPaymentRecord.referralCreditUsed, transaction);
+      if(creditPaymentRecord.referralCreditUsed == 0) await CreditPaymentRecordService.refundCreditCustomer(customer.id, booking.bookingPrice, Constants.CreditPaymentType.BOOKING, transaction);
+      else await CreditPaymentRecordService.refundCreditCustomerWithReferral(customer.id, booking.bookingPrice, Constants.CreditPaymentType.BOOKING, creditPaymentRecord.referralCreditUsed, transaction);
     }
 
     if(!Checker.isEmpty(merchant) && booking.bookingPrice !== null && booking.bookingPrice !== 0) {
@@ -564,7 +532,7 @@ module.exports = {
     }
 
     booking = await Booking.update({ 
-    bookingStatusEnum: Constants.BookingStatus.Cancelled 
+    bookingStatusEnum: Constants.BookingStatus.CANCELLED 
     }, { where: { id }, transaction });
     return booking;
   },

@@ -30,7 +30,7 @@ module.exports = {
     let bookingPackageModel = await BookingPackageModel.findByPk(bookingPackageModelId);
     let lockerTypeId = bookingPackageModel.lockerTypeId;
     Checker.ifEmptyThrowError(bookingPackageModel, Constants.Error.BookingPackageModelNotFound);
-    let creditPaymentRecord = await CreditPaymentRecordService.payCreditCustomer(customerId, bookingPackageModel.price, Constants.CreditPaymentType.BookingPackage, transaction);
+    let creditPaymentRecord = await CreditPaymentRecordService.payCreditCustomer(customerId, bookingPackageModel.price, Constants.CreditPaymentType.BOOKING_PACKAGE, transaction);
     let creditPaymentRecordId = creditPaymentRecord.id;
     
     // add in check for overselling 
@@ -76,7 +76,7 @@ module.exports = {
     let lockerTypeId = bookingPackageModel.lockerTypeId;
     Checker.ifEmptyThrowError(bookingPackageModel, Constants.Error.BookingPackageModelNotFound);
     
-    let creditPaymentRecord = await CreditPaymentRecordService.payCreditMerchant(merchantId, bookingPackageModel.price, Constants.CreditPaymentType.BookingPackage, transaction);
+    let creditPaymentRecord = await CreditPaymentRecordService.payCreditMerchant(merchantId, bookingPackageModel.price, Constants.CreditPaymentType.BOOKING_PACKAGE, transaction);
     let creditPaymentRecordId = creditPaymentRecord.id;
 
     // add in check for overselling 

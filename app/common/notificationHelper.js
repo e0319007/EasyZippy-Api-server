@@ -21,8 +21,8 @@ module.exports = {
     let title = 'New Merchant Application';
     let description = 'Click to view application by ' + merchant.name + '.';
     
-    let senderModel = Constants.ModelEnum.Merchant;
-    let receiverModel = Constants.ModelEnum.Staff;
+    let senderModel = Constants.ModelEnum.MERCHANT;
+    let receiverModel = Constants.ModelEnum.STAFF;
     let senderId = id
     let receiverId = null;
     let forStaff = true;
@@ -37,8 +37,8 @@ module.exports = {
     let title = 'Account Approved';
     let description = 'Your account is approved, you can start posting products!';
     
-    let senderModel = Constants.ModelEnum.Staff;
-    let receiverModel = Constants.ModelEnum.Merchant;
+    let senderModel = Constants.ModelEnum.STAFF;
+    let receiverModel = Constants.ModelEnum.MERCHANT;
     let senderId = null
     let receiverId = id;
     await NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
@@ -52,8 +52,8 @@ module.exports = {
     let title = 'Account Disapproved';
     let description = 'Your account is disapproved, please contact admin!';
     
-    let senderModel = Constants.ModelEnum.Staff;
-    let receiverModel = Constants.ModelEnum.Merchant;
+    let senderModel = Constants.ModelEnum.STAFF;
+    let receiverModel = Constants.ModelEnum.MERCHANT;
     let senderId = null
     let receiverId = id;
     await NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
@@ -71,12 +71,12 @@ module.exports = {
     let booking = await Booking.findByPk(bookingId);
     Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound); 
 
-    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfulfilled) {
+    if(booking.bookingStatusEnum === Constants.BookingStatus.UNFULFILLED) {
       let title = 'Booking Starting';
       let description = 'Your booking with ID: ' + bookingId + ' is starting in 10 minutes';
       
-      let senderModel = Constants.ModelEnum.Booking;
-      let receiverModel = Constants.ModelEnum.Customer;
+      let senderModel = Constants.ModelEnum.BOOKING;
+      let receiverModel = Constants.ModelEnum.CUSTOMER;
       let senderId = bookingId;
       let receiverId = customerId;
       await NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
@@ -89,12 +89,12 @@ module.exports = {
 
     let booking = await Booking.findByPk(bookingId);
     Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound); 
-    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfulfilled) {
+    if(booking.bookingStatusEnum === Constants.BookingStatus.UNFULFILLED) {
       let title = 'Booking Started';
       let description = 'Your booking with ID: ' + bookingId + ' has started';
       
-      let senderModel = Constants.ModelEnum.Booking;
-      let receiverModel = Constants.ModelEnum.Customer;
+      let senderModel = Constants.ModelEnum.BOOKING;
+      let receiverModel = Constants.ModelEnum.CUSTOMER;
       let senderId = bookingId;
       let receiverId = customerId;
       await NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
@@ -108,12 +108,12 @@ module.exports = {
     let booking = await Booking.findByPk(bookingId);
     Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound); 
 
-    if(booking.bookingStatusEnum === Constants.BookingStatus.Active) {
+    if(booking.bookingStatusEnum === Constants.BookingStatus.ACTIVE) {
       let title = 'Booking Ending';
       let description = 'Your booking with ID: ' + bookingId + ' is ending in 10 minutes. Additional charges will apply if booking not retrieved in 10 minutes';
       
-      let senderModel = Constants.ModelEnum.Booking;
-      let receiverModel = Constants.ModelEnum.Customer;
+      let senderModel = Constants.ModelEnum.BOOKING;
+      let receiverModel = Constants.ModelEnum.CUSTOMER;
       let senderId = bookingId;
       let receiverId = customerId;
       await NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
@@ -127,12 +127,12 @@ module.exports = {
     let booking = await Booking.findByPk(bookingId);
     Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound); 
 
-    if(booking.bookingStatusEnum === Constants.BookingStatus.Active) {
+    if(booking.bookingStatusEnum === Constants.BookingStatus.ACTIVE) {
       let title = 'Booking Ended';
       let description = 'Your booking with ID: ' + bookingId + ' has ended. Additional charges will apply';
       
-      let senderModel = Constants.ModelEnum.Booking;
-      let receiverModel = Constants.ModelEnum.Customer;
+      let senderModel = Constants.ModelEnum.BOOKING;
+      let receiverModel = Constants.ModelEnum.CUSTOMER;
       let senderId = bookingId;
       let receiverId = customerId;
       await NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
@@ -146,16 +146,16 @@ module.exports = {
     let booking = await Booking.findByPk(bookingId);
     Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound); 
 
-    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfulfilled) {
+    if(booking.bookingStatusEnum === Constants.BookingStatus.UNFULFILLED) {
       let title = 'Your booking has expired';
       let description = 'Your booking with ID: ' + bookingId + ' has expired. Credits will not be refunded';
       
-      let senderModel = Constants.ModelEnum.Booking;
-      let receiverModel = Constants.ModelEnum.Customer;
+      let senderModel = Constants.ModelEnum.BOOKING;
+      let receiverModel = Constants.ModelEnum.CUSTOMER;
       let senderId = bookingId;
       let receiverId = customerId;
 
-      await booking.update({ bookingStatusEnum: Constants.BookingStatus.Expired });
+      await booking.update({ bookingStatusEnum: Constants.bookingstatus.EXPIRED });
 
       await NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
 
@@ -170,12 +170,12 @@ module.exports = {
     let booking = await Booking.findByPk(bookingId);
     Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound); 
 
-    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfulfilled) {
+    if(booking.bookingStatusEnum === Constants.BookingStatus.UNFULFILLED) {
       let title = 'You are added to booking ' + bookingId + ' as collector';
       let description = 'Scan QR code to open locker';
       
-      let senderModel = Constants.ModelEnum.Booking;
-      let receiverModel = Constants.ModelEnum.Customer;
+      let senderModel = Constants.ModelEnum.BOOKING;
+      let receiverModel = Constants.ModelEnum.CUSTOMER;
       let senderId = bookingId;
       let receiverId = collectorId;
 
@@ -192,12 +192,12 @@ module.exports = {
     let booking = await Booking.findByPk(bookingId);
     Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound); 
 
-    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfulfilled) {
+    if(booking.bookingStatusEnum === Constants.BookingStatus.UNFULFILLED) {
       let title = 'You are removed from booking';
       let description = 'You are no longer a collector for booking' + bookingId;
       
-      let senderModel = Constants.ModelEnum.Booking;
-      let receiverModel = Constants.ModelEnum.Customer;
+      let senderModel = Constants.ModelEnum.BOOKING;
+      let receiverModel = Constants.ModelEnum.CUSTOMER;
       let senderId = bookingId;
       let receiverId = collectorId;
 
@@ -212,18 +212,18 @@ module.exports = {
    */
   //send notification to customers that booking time starting in 10 minutes
   notificationBookingStartingSoonMerchant: async(bookingId, merchantId) => {
-    let merchant = await Customer.findByPk(merchantId);
+    let merchant = await Merchant.findByPk(merchantId);
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound); 
 
     let booking = await Booking.findByPk(bookingId);
     Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound); 
 
-    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfulfilled) {
+    if(booking.bookingStatusEnum === Constants.BookingStatus.UNFULFILLED) {
       let title = 'Booking Starting';
       let description = 'Your booking with ID: ' + bookingId + ' is starting in 10 minutes';
       
-      let senderModel = Constants.ModelEnum.Booking;
-      let receiverModel = Constants.ModelEnum.Merchant;
+      let senderModel = Constants.ModelEnum.BOOKING;
+      let receiverModel = Constants.ModelEnum.MERCHANT;
       let senderId = bookingId;
       let receiverId = merchantId;
       await NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
@@ -231,18 +231,18 @@ module.exports = {
   },
   //send notification to customers that booking time started
    notificationBookingStartedMerchant: async(bookingId, merchantId) => {
-    let merchant = await Customer.findByPk(merchantId);
+    let merchant = await Merchant.findByPk(merchantId);
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound); 
 
     let booking = await Booking.findByPk(bookingId);
     Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound); 
 
-    if(booking.bookingStatusEnum === Constants.BookingStatus.Unfulfilled) {
+    if(booking.bookingStatusEnum === Constants.BookingStatus.UNFULFILLED) {
       let title = 'Booking Starting';
       let description = 'Your booking with ID: ' + bookingId + ' has started';
       
-      let senderModel = Constants.ModelEnum.Booking;
-      let receiverModel = Constants.ModelEnum.Merchant;
+      let senderModel = Constants.ModelEnum.BOOKING;
+      let receiverModel = Constants.ModelEnum.MERCHANT;
       let senderId = bookingId;
       let receiverId = merchantId;
       await NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
@@ -250,18 +250,18 @@ module.exports = {
   },
   //send notification to customers that booking time reaching in 10 minutes
    notificationBookingReachingSoonMerchant: async(bookingId, merchantId) => {
-    let merchant = await Customer.findByPk(merchantId);
+    let merchant = await Merchant.findByPk(merchantId);
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound); 
 
     let booking = await Booking.findByPk(bookingId);
     Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound); 
 
-    if(booking.bookingStatusEnum === Constants.BookingStatus.Active) {
+    if(booking.bookingStatusEnum === Constants.BookingStatus.ACTIVE) {
       let title = 'Booking Ending';
       let description = 'Your booking with ID: ' + bookingId + ' is ending in 10 minutes. Additional charges will apply if booking not retrieved in 10 minutes';
       
-      let senderModel = Constants.ModelEnum.Booking;
-      let receiverModel = Constants.ModelEnum.Merchant;
+      let senderModel = Constants.ModelEnum.BOOKING;
+      let receiverModel = Constants.ModelEnum.MERCHANT;
       let senderId = bookingId;
       let receiverId = merchantId;
       await NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
@@ -269,18 +269,18 @@ module.exports = {
   },
   //send notification to customer that booking time reached
    notificationBookingReachedMerchant: async(bookingId, merchantId) => {
-    let merchant = await Customer.findByPk(merchantId);
+    let merchant = await Merchant.findByPk(merchantId);
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound); 
 
     let booking = await Booking.findByPk(bookingId);
     Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound); 
     
-    if(booking.bookingStatusEnum === Constants.BookingStatus.Active) {
+    if(booking.bookingStatusEnum === Constants.BookingStatus.ACTIVE) {
       let title = 'Booking Ended';
       let description = 'Your booking with ID: ' + bookingId + ' has ended. Additional charges will apply';
       
-      let senderModel = Constants.ModelEnum.Booking;
-      let receiverModel = Constants.ModelEnum.Merchant;
+      let senderModel = Constants.ModelEnum.BOOKING;
+      let receiverModel = Constants.ModelEnum.MERCHANT;
       let senderId = bookingId;
       let receiverId = merchantId;
       await NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
@@ -297,14 +297,14 @@ module.exports = {
     let order = await Order.findByPk(id);
     Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound); 
 
-    let merchant = await Customer.findByPk(merchantId);
+    let merchant = await Merchant.findByPk(merchantId);
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
 
     let title = 'New Order';
     let description = 'You have a new order';
     
-    let senderModel = Constants.ModelEnum.Order;
-    let receiverModel = Constants.ModelEnum.Merchant;
+    let senderModel = Constants.ModelEnum.ORDER;
+    let receiverModel = Constants.ModelEnum.MERCHANT;
     let senderId = orderId;
     let receiverId = merchantId;
     await NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
@@ -314,21 +314,35 @@ module.exports = {
     let order = await Order.findByPk(id);
     Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound); 
 
-    let merchant = await Customer.findByPk(merchantId);
+    let merchant = await Merchant.findByPk(merchantId);
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
 
     let title = 'Order items received by customer';
     let description = 'Order items with order ID: ' + orderId + ' is collected by customer';
     
-    let senderModel = Constants.ModelEnum.Order;
-    let receiverModel = Constants.ModelEnum.Merchant;
+    let senderModel = Constants.ModelEnum.ORDER;
+    let receiverModel = Constants.ModelEnum.MERCHANT;
     let senderId = orderId;
     let receiverId = merchantId;
     await NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
   },
   //send notifications to customer that the order is ready
-  
-  //send notification to customer that the order is in the kiosk
+  notificationOrderReadyForCollection: async(orderId, customerId) => {
+    let order = await Order.findByPk(id);
+    Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound); 
+
+    let customer = await Customer.findByPk(customerId);
+    Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
+
+    let title = 'Order Ready For Collection';
+    let description = 'Your order with ID: ' + orderId + ' is ready to be collected';
+    
+    let senderModel = Constants.ModelEnum.ORDER;
+    let receiverModel = Constants.ModelEnum.CUSTOMER;
+    let senderId = orderId;
+    let receiverId = customerId;
+    await NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });
+  },
 
   /**
    * SEND NOTIFICATION ABOUT ADVERTISEMENT
@@ -343,8 +357,8 @@ module.exports = {
     let title = 'New Advertisement Application';
     let description = 'Click to view application.';
     
-    let senderModel = Constants.ModelEnum.Advertisement;
-    let receiverModel = Constants.ModelEnum.Staff;
+    let senderModel = Constants.ModelEnum.ADVERTISEMENT;
+    let receiverModel = Constants.ModelEnum.STAFF;
     let senderId = advertisementId
     let receiverId = null;
     let forStaff = true;
@@ -360,8 +374,8 @@ module.exports = {
     let title = 'New Advertisement Application';
     let description = 'Click to view application.';
     
-    let senderModel = Constants.ModelEnum.Advertisement;
-    let receiverModel = Constants.ModelEnum.Staff;
+    let senderModel = Constants.ModelEnum.ADVERTISEMENT;
+    let receiverModel = Constants.ModelEnum.STAFF;
     let senderId = advertisementId
     let receiverId = null;
     let forStaff = true;
@@ -379,8 +393,8 @@ module.exports = {
     let title = 'Your advertisment is approved';
     let description = 'Your advertisement ' + advertisementId + ' is approved!';
     
-    let senderModel = Constants.ModelEnum.Advertisement;
-    let receiverModel = Constants.ModelEnum.Merchant;
+    let senderModel = Constants.ModelEnum.ADVERTISEMENT;
+    let receiverModel = Constants.ModelEnum.MERCHANT;
     let senderId = advertisementId
     let receiverId = merchantId;
     await NotificationService.createNotification({ title, description, receiverModel, senderModel, senderId, receiverModel, receiverId });

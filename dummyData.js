@@ -119,13 +119,27 @@ const addDummyData = async () => {
   let lineItem3 = {
     productVariationId: null,
     productId: 3,
-    quantity: 98
+    quantity: 3
+  };
+
+  let lineItem4 = {
+    productVariationId: null,
+    productId: 6,
+    quantity: 3
+  };
+
+  let lineItem5 = {
+    productVariationId: null,
+    productId: 5,
+    quantity: 3
   };
 
   let lineItems = new Array();
   lineItems.push(lineItem1);
   lineItems.push(lineItem2);
   lineItems.push(lineItem3);
+  lineItems.push(lineItem4);
+  lineItems.push(lineItem5);
 
   await sequelize.transaction(async (transaction) => {
     await CartService.saveItemsToCart(1, { lineItems }, transaction);
@@ -166,10 +180,10 @@ const addDummyData = async () => {
   await Advertisement.create({ image: '1601608583950.jpeg', title: 'Qoo10 sale', description: 'Qoo10 50% off apparel items',  advertiserUrl: 'http://www.qoo10.com', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '93333333', advertiserEmail: 'test3@email.com', approved: true });
   advertisementService.createAdvertisementAsMerchantWithoutAccount({ image: '1601607853991.jpeg', title: 'Lazada sale', description: 'Lazada 50% off all items',  advertiserUrl: 'http://www.lazada.com', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '91111111', advertiserEmail: 'test1@email.com', approved: true })
   
-  await LockerActionRecord.create({ timestamp: new Date(), lockerActionEnum: Constants.LockerAction.Open, lockerId: 1});
-  await LockerActionRecord.create({ timestamp: new Date(), lockerActionEnum: Constants.LockerAction.Close, lockerId: 1});
-  await LockerActionRecord.create({ timestamp: new Date(), lockerActionEnum: Constants.LockerAction.Open, lockerId: 2});
-  await LockerActionRecord.create({ timestamp: new Date(), lockerActionEnum: Constants.LockerAction.Close, lockerId: 2});
+  await LockerActionRecord.create({ timestamp: new Date(), lockerActionEnum: Constants.LockerAction.OPEN, lockerId: 1});
+  await LockerActionRecord.create({ timestamp: new Date(), lockerActionEnum: Constants.LockerAction.CLOSE, lockerId: 1});
+  await LockerActionRecord.create({ timestamp: new Date(), lockerActionEnum: Constants.LockerAction.OPEN, lockerId: 2});
+  await LockerActionRecord.create({ timestamp: new Date(), lockerActionEnum: Constants.LockerAction.CLOSE, lockerId: 2});
 
   const promoData1 = {
     promoCode: "PROMOCODE1", 
@@ -263,7 +277,7 @@ const addDummyData = async () => {
     promoIdUsed: null, 
     startDate: startDate1,
     endDate: endDate1, 
-    bookingSourceEnum: Constants.BookingSource.Mobile, 
+    bookingSourceEnum: Constants.BookingSource.MOBILE, 
     customerId: 2, 
     lockerTypeId: 1,
     kioskId: 1
@@ -273,7 +287,7 @@ const addDummyData = async () => {
     promoIdUsed: null, 
     startDate: startDate2, 
     endDate: endDate2, 
-    bookingSourceEnum: Constants.BookingSource.Kiosk, 
+    bookingSourceEnum: Constants.BookingSource.KIOSK, 
     merchantId: 2, 
     lockerTypeId: 2,
     kioskId: 1
@@ -283,7 +297,7 @@ const addDummyData = async () => {
     promoIdUsed: null, 
     startDate: startDate3, 
     endDate: endDate3, 
-    bookingSourceEnum: Constants.BookingSource.Kiosk, 
+    bookingSourceEnum: Constants.BookingSource.KIOSK, 
     customerId: 1, 
     bookingPackageId: 1,
   }
@@ -292,7 +306,7 @@ const addDummyData = async () => {
     promoIdUsed: null, 
     startDate: startDate4, 
     endDate: endDate4, 
-    bookingSourceEnum: Constants.BookingSource.Mobile, 
+    bookingSourceEnum: Constants.BookingSource.MOBILE, 
     merchantId: 1, 
     bookingPackageId: 2,
   }
@@ -301,7 +315,7 @@ const addDummyData = async () => {
   //   promoIdUsed: null, 
   //   startDate: new Date(2020,09,26,20,40), 
   //   endDate: new Date(2020,09,26,23,20), 
-  //   bookingSourceEnum: Constants.BookingSource.Mobile, 
+  //   bookingSourceEnum: Constants.BookingSource.MOBILE, 
   //   merchantId: 1, 
   //   bookingPackageId: 2,
   // };
@@ -312,7 +326,7 @@ const addDummyData = async () => {
   //   promoIdUsed: null, 
   //   startDate: new Date(2020,09,24,20,40), 
   //   endDate: new Date(2020,09,24,23,20), 
-  //   bookingSourceEnum: Constants.BookingSource.Kiosk, 
+  //   bookingSourceEnum: Constants.BookingSource.KIOSK, 
   //   customerId: 1, 
   //   bookingPackageId: 1,
   // }
@@ -321,7 +335,7 @@ const addDummyData = async () => {
   //   promoIdUsed: null, 
   //   startDate: new Date(2020,09,24,21,40), 
   //   endDate: new Date(2020,09,24,23,20), 
-  //   bookingSourceEnum: Constants.BookingSource.Kiosk, 
+  //   bookingSourceEnum: Constants.BookingSource.KIOSK, 
   //   customerId: 1, 
   //   bookingPackageId: 1,
   // }
@@ -330,7 +344,7 @@ const addDummyData = async () => {
   //   promoIdUsed: null, 
   //   startDate: new Date(2020,09,24,21,40), 
   //   endDate: new Date(2020,09,24,23,20), 
-  //   bookingSourceEnum: Constants.BookingSource.Kiosk, 
+  //   bookingSourceEnum: Constants.BookingSource.KIOSK, 
   //   customerId: 1, 
   //   bookingPackageId: 1,
   // }
@@ -339,7 +353,7 @@ const addDummyData = async () => {
   //   promoIdUsed: null, 
   //   startDate: new Date(2020,09,25,11,40), 
   //   endDate: new Date(2020,09,25,14,00), 
-  //   bookingSourceEnum: Constants.BookingSource.Mobile, 
+  //   bookingSourceEnum: Constants.BookingSource.MOBILE, 
   //   customerId: 1, 
   //   lockerTypeId: 1,
   //   kioskId: 1
@@ -349,7 +363,7 @@ const addDummyData = async () => {
   //   promoIdUsed: null, 
   //   startDate : new Date(2020,09,30,17,00,00),
   //   endDate : new Date(2020,09,30,19,00,00),
-  //   bookingSourceEnum: Constants.BookingSource.Kiosk, 
+  //   bookingSourceEnum: Constants.BookingSource.KIOSK, 
   //   customerId: 1, 
   //   bookingPackageId: 1,
   // };
@@ -426,12 +440,12 @@ const addDummyData = async () => {
     { productId: null, productVariationId: 1, quantity: 4 }, 
     { productId: 2, productVariationId: null, quantity: 3 }, 
     { productId: 6, productVariationId: null, quantity: 3 },
-    { productId: 3, productVariationId: null, quantity: 98 },
+    { productId: 3, productVariationId: null, quantity: 4 },
   ]
   let orderData1 = {
     cart: cart1, 
     promoIdUsed: 1, 
-    collectionMethodEnum: Constants.CollectionMethod.InStore, 
+    collectionMethodEnum: Constants.CollectionMethod.IN_STORE, 
     //totalAmountPaid: 3, 
     customerId: 1
   }
@@ -441,12 +455,12 @@ const addDummyData = async () => {
   });
 
   // await sequelize.transaction(async (transaction) => {
-  //   console.log(await orderService.updateOrderStatus(1, Constants.OrderStatus.ReadyForCollection, transaction));
+  //   console.log(await orderService.updateOrderStatus(1, Constants.OrderStatus.READY_FOR_COLLECTION, transaction));
 
   // });
 
   // await sequelize.transaction(async (transaction) => {
-  //   await orderService.updateOrderStatus(1, Constants.OrderStatus.Complete, transaction);
+  //   await orderService.updateOrderStatus(1, Constants.OrderStatus.COMPLETE, transaction);
   // });
 
   // console.log('RETRIEVE ALL')

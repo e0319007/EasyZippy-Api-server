@@ -12,6 +12,7 @@ const CreditPaymentRecordService = require('./creditPaymentRecordService');
 const CartService = require('./cartService');
 const PromotionService = require('./promotionService');
 const CustomError = require('../common/error/customError');
+const NotificationHelper = require('../common/notificationHelper');
 
 module.exports = {
   retrieveOrderByCustomerId: async(customerId) => {
@@ -47,7 +48,11 @@ module.exports = {
     let order = await Order.findByPk(id);
     Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound);
     console.log(order)
-    if(orderStatusEnum === Constants.OrderStatus.Complete) return await markOrderComplete(order, transaction);
+    if(orderStatusEnum === Constants.OrderStatus.COMPLETE) {
+      return await markOrderComplete(order, transaction);
+    } else if(orderStatusEnum === Constants.OrderStatus.READY_FOR_COLLECTION) {
+      await NotificationHelper.notificationOrderReadyForCollection(id, order.customerId);
+    }
     order = await Order.update({ orderStatusEnum }, { where: { id }, transaction, returning: true });
     return order;
   },
@@ -75,14 +80,10 @@ module.exports = {
       let merchantId;
       if(lt.productId !== null) {
         let product = await Product.findByPk(lt.productId);
-        console.log(lt.productId);
-        console.log(product);
         await product.update({ quantityAvailable: product.quantityAvailable - lt.quantity, quantitySold: lt.quantity + product.quantitySold }, { transaction });
         merchantId = product.merchantId;
       } else {
         let productVariation = await ProductVariation.findByPk(lt.productVariationId);
-        console.log(lt.productVariationId);
-        console.log(productVariation);
         await productVariation.update({ quantityAvailable: productVariation.quantityAvailable - lt.quantity}, { transaction });
         let product = await Product.findByPk(productVariation.productId);
         product = await product.update({ quantitySold: lt.quantity + product.quantitySold }, { transaction })
@@ -118,7 +119,7 @@ module.exports = {
     for (let [merchantId, lineItem] of merchantMapLineitems) {
       let totalAmount = await calculatePrice(lineItem);
       trackTotalAmount += totalAmount;
-      let creditPaymentRecordId = (await CreditPaymentRecordService.payCreditCustomer(customerId, totalAmount, Constants.CreditPaymentType.Order, transaction)).id;
+      let creditPaymentRecordId = (await CreditPaymentRecordService.payCreditCustomer(customerId, totalAmount, Constants.CreditPaymentType.ORDER, transaction)).id;
       let order = await Order.create({ lineItem, promoIdUsed, totalAmount, collectionMethodEnum, customerId, merchantId, creditPaymentRecordId }, { transaction });
       await order.setLineItems(lineItem, { transaction });
       orders.push(order);
@@ -166,10 +167,11 @@ const markOrderComplete = async(order, transaction) => {
   console.log('Amount paid:' + order.amountPaid);
   console.log('order:');
   console.log(order);
-  let creditPaymentRecord = await CreditPaymentRecordService.refundCreditMerchant(order.merchantId, order.totalAmount, Constants.CreditPaymentType.Order, transaction);
+  let creditPaymentRecord = await CreditPaymentRecordService.refundCreditMerchant(order.merchantId, order.totalAmount, Constants.CreditPaymentType.ORDER, transaction);
   let creditPaymentRecords = await CreditPaymentRecord.findAll({ where: { orderId: order.id } });
   creditPaymentRecords.push(creditPaymentRecord);
-  order = await order.update({ orderStatusEnum: Constants.OrderStatus.Complete, creditPaymentRecords }, { transaction, returning: true });
+  order = await order.update({ orderStatusEnum: Constants.OrderStatus.COMPLETE, creditPaymentRecords }, { transaction, returning: true });
+  await NotificationHelper.notificationOrderReceivedMerchant(order.id, order.merchantId)
   return order;
 }
 

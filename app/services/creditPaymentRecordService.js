@@ -19,7 +19,7 @@ module.exports = {
     let referralCreditMarker = customer.referralCreditMarker;
     let referralCreditUsed;
 
-    if(creditPaymentTypeEnum === Constants.CreditPaymentType.Booking) {
+    if(creditPaymentTypeEnum === Constants.CreditPaymentType.BOOKING) {
       if (amountPaid > customer.creditBalance) throw new CustomError(Constants.Error.InsufficientCreditBalance);
       if(referralCreditMarker - amountPaid >= 0) {
         referralCreditUsed = amountPaid;
@@ -111,7 +111,7 @@ module.exports = {
 
   addReferralBonus: async(customer1Id, customer2Id, transaction) => {
     const bonus = Number(5);
-    let creditPaymentTypeEnum = Constants.CreditPaymentType.ReferralBonus;
+    let creditPaymentTypeEnum = Constants.CreditPaymentType.REFERRAL_BONUS;
     Checker.ifEmptyThrowError(customer1Id, Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(customer2Id, Constants.Error.IdRequired);
     customer1 = await Customer.findByPk(customer1Id);
