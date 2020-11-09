@@ -60,6 +60,7 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let category = await Category.findByPk(id);
     Checker.ifEmptyThrowError(category, Constants.Error.CategoryNotFound);
+    if(!Checker.isEmpty(await category.getProducts())) throw new CustomError(Constants.Error.CategoryCannotBeDeleted);
     await Category.update({
       deleted: true
     }, { where: { id }, transaction });

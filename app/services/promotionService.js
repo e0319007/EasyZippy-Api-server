@@ -23,7 +23,7 @@ module.exports = {
     if(!Checker.isEmpty(await Promotion.findOne({ where: { promoCode, expired: false } }))) {
       throw new CustomError(Constants.Error.PromoCodeNotUnique);
     }
-    if(startDate.getTime() < new Date().getTime()) {
+    if(startDate.getTime() < new Date(new Date().getTime - 60 * 1000).getTime()) {
       throw new CustomError(Constants.Error.InvalidDate);
     }
     let promotionTypeEnum = Constants.PromotionType.MERCHANT_PROMOTION;
@@ -52,7 +52,7 @@ module.exports = {
     if(startDate > endDate) {
       throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     }
-    if(startDate.getTime() < new Date().getTime()) {
+    if(startDate.getTime() < new Date(new Date().getTime - 60 * 1000).getTime()) {
       throw new CustomError(Constants.Error.InvalidDate);
     }
     if(!Checker.isEmpty(await Promotion.findOne({ where: { promoCode, expired: false } }))) {

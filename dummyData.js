@@ -144,7 +144,7 @@ const addDummyData = async () => {
   await sequelize.transaction(async (transaction) => {
     await CartService.saveItemsToCart(1, { lineItems }, transaction);
   });
-  console.log((await CartService.retrieveCartByCustomerId(1)).length);
+  //console.log((await CartService.retrieveCartByCustomerId(1)).length);
 
   let kiosk = await Kiosk.create({ address: '1 Sengkang Square', description: 'Sample Description'});
   let kiosk2 = await Kiosk.create({ address: '3155 Commonwealth Ave West', description: 'Sample Description'});
@@ -188,46 +188,64 @@ const addDummyData = async () => {
   const promoData1 = {
     promoCode: "PROMOCODE1", 
     title: 'Title for promo 1',
-    startDate: new Date(new Date().getTime() + 30 * 1000 * 60), 
+    startDate: new Date(), 
     endDate: new Date(new Date().getTime() + 24 * 30 * 1000 * 60), 
     description: "save on spending!", 
     termsAndConditions: "terms and conditions", 
     percentageDiscount: null, 
     flatDiscount: 10, 
     usageLimit: 20, 
-    merchantId: 1
+    merchantId: 1,
+    minimumSpent: 10
   };
 
   const promoData2 = {
     promoCode: "PROMOCODE2", 
     title: 'Title for promo 2',
-    startDate: new Date(new Date().getTime() + 30 * 1000 * 60), 
+    startDate: new Date(), 
     endDate: new Date(new Date().getTime() + 24 * 30 * 1000 * 60), 
     description: "save on spending a second time!", 
     termsAndConditions: "terms and conditions", 
     percentageDiscount: 0.1, 
     flatDiscount: null, 
     usageLimit: 20, 
-    merchantId: 1
+    merchantId: 1,
+    minimumSpent: 10
   };
 
   const promoData3 = {
     promoCode: "PROMOCODEMALL1", 
-    title: 'Title for promo 3',
-    startDate: new Date(new Date().getTime() + 30 * 1000 * 60), 
+    title: 'Title for promo mall percentage',
+    startDate: new Date(), 
     endDate: new Date(new Date().getTime() + 24 * 30 * 1000 * 60), 
     description: "save on spending a second time!", 
     termsAndConditions: "terms and conditions", 
     percentageDiscount: 0.1, 
     flatDiscount: null, 
     usageLimit: 20, 
-    staffId: 1
+    staffId: 1,
+    minimumSpent: 10
+  };
+
+  const promoData4 = {
+    promoCode: 'PROMOCODEMALL2', 
+    title: 'Title for promo mall ',
+    startDate: new Date(), 
+    endDate: new Date(new Date().getTime() + 24 * 30 * 1000 * 60), 
+    description: "save on spending a second time!", 
+    termsAndConditions: "terms and conditions", 
+    percentageDiscount: null, 
+    flatDiscount: 10, 
+    usageLimit: 20, 
+    staffId: 1,
+    minimumSpent: 10
   };
 
   await sequelize.transaction(async (transaction) => {
     await PromotionService.createMerchantPromotion(promoData1, transaction);
     await PromotionService.createMerchantPromotion(promoData2, transaction);
     await PromotionService.createMallPromotion(promoData3, transaction);
+    await PromotionService.createMallPromotion(promoData4, transaction);
   });
 
   await BookingPackageModel.create({ name: 'BIG Booking Package', description: 'Booking package for BIG lockers', quota: 1, price: 39, duration: 7, lockerTypeId: 1});
@@ -274,7 +292,6 @@ const addDummyData = async () => {
   const endDate4 = new Date(new Date().getTime() + 96 * 60 * 60000 + 60 * 60000);
 
   let bookingData1 = {
-    promoIdUsed: null, 
     startDate: startDate1,
     endDate: endDate1, 
     bookingSourceEnum: Constants.BookingSource.MOBILE, 
@@ -284,7 +301,6 @@ const addDummyData = async () => {
   };
 
   let bookingData2 = {
-    promoIdUsed: null, 
     startDate: startDate2, 
     endDate: endDate2, 
     bookingSourceEnum: Constants.BookingSource.KIOSK, 
@@ -294,7 +310,6 @@ const addDummyData = async () => {
   };
 
   let bookingData3 = {
-    promoIdUsed: null, 
     startDate: startDate3, 
     endDate: endDate3, 
     bookingSourceEnum: Constants.BookingSource.KIOSK, 
@@ -303,7 +318,6 @@ const addDummyData = async () => {
   }
 
   let bookingData4 = {
-    promoIdUsed: null, 
     startDate: startDate4, 
     endDate: endDate4, 
     bookingSourceEnum: Constants.BookingSource.MOBILE, 
@@ -312,7 +326,6 @@ const addDummyData = async () => {
   }
 
   // let bookingData5 = {
-  //   promoIdUsed: null, 
   //   startDate: new Date(2020,09,26,20,40), 
   //   endDate: new Date(2020,09,26,23,20), 
   //   bookingSourceEnum: Constants.BookingSource.MOBILE, 
@@ -323,7 +336,6 @@ const addDummyData = async () => {
   //ADDITIONAL
 
   // let bookingData6 = {
-  //   promoIdUsed: null, 
   //   startDate: new Date(2020,09,24,20,40), 
   //   endDate: new Date(2020,09,24,23,20), 
   //   bookingSourceEnum: Constants.BookingSource.KIOSK, 
@@ -332,7 +344,6 @@ const addDummyData = async () => {
   // }
 
   // let bookingData7 = {
-  //   promoIdUsed: null, 
   //   startDate: new Date(2020,09,24,21,40), 
   //   endDate: new Date(2020,09,24,23,20), 
   //   bookingSourceEnum: Constants.BookingSource.KIOSK, 
@@ -341,7 +352,6 @@ const addDummyData = async () => {
   // }
 
   // let bookingData8 = {
-  //   promoIdUsed: null, 
   //   startDate: new Date(2020,09,24,21,40), 
   //   endDate: new Date(2020,09,24,23,20), 
   //   bookingSourceEnum: Constants.BookingSource.KIOSK, 
@@ -350,7 +360,6 @@ const addDummyData = async () => {
   // }
 
   // let bookingData9 = {
-  //   promoIdUsed: null, 
   //   startDate: new Date(2020,09,25,11,40), 
   //   endDate: new Date(2020,09,25,14,00), 
   //   bookingSourceEnum: Constants.BookingSource.MOBILE, 
@@ -360,7 +369,6 @@ const addDummyData = async () => {
   // }
 
   // let bookingData10 = {
-  //   promoIdUsed: null, 
   //   startDate : new Date(2020,09,30,17,00,00),
   //   endDate : new Date(2020,09,30,19,00,00),
   //   bookingSourceEnum: Constants.BookingSource.KIOSK, 
@@ -405,17 +413,17 @@ const addDummyData = async () => {
   });
 
   await sequelize.transaction(async (transaction) => {
-    console.log(await BookingService.addCollectorToBooking(1, 1, transaction))
+    //console.log(await BookingService.addCollectorToBooking(1, 1, transaction))
    
   });
 
   await sequelize.transaction(async (transaction) => {
-    console.log(await BookingService.changeCollectorToBooking(1, 3, transaction))
+    //console.log(await BookingService.changeCollectorToBooking(1, 3, transaction))
 
   });
 
   await sequelize.transaction(async (transaction) => {
-    console.log(await BookingService.removeCollectorToBooking(1, transaction))
+    //console.log(await BookingService.removeCollectorToBooking(1, transaction))
   });
 
   // await sequelize.transaction(async (transaction) => {
@@ -424,7 +432,7 @@ const addDummyData = async () => {
   //   console.log(await BookingService.changeCollectorToBooking(1, 3, transaction))
   //   console.log(await BookingService.removeCollectorToBooking(1, transaction))
   await sequelize.transaction(async (transaction) => {
-    console.log(await BookingService.cancelBooking(1, transaction))
+    //console.log(await BookingService.cancelBooking(1, transaction))
   });
 
   // console.log('*****')
@@ -437,10 +445,31 @@ const addDummyData = async () => {
    **/
   
   let cart1 = [
-    { productId: null, productVariationId: 1, quantity: 4 }, 
-    { productId: 2, productVariationId: null, quantity: 3 }, 
-    { productId: 6, productVariationId: null, quantity: 3 },
-    { productId: 3, productVariationId: null, quantity: 4 },
+    { productId: null, productVariationId: 1, quantity: 2 }, 
+    { productId: 2, productVariationId: null, quantity: 2 }, 
+    { productId: 3, productVariationId: null, quantity: 2 },
+    { productId: 6, productVariationId: null, quantity: 2 },
+  ]
+
+  let cart2 = [
+    { productId: null, productVariationId: 1, quantity: 2 }, 
+    { productId: 2, productVariationId: null, quantity: 2 }, 
+    { productId: 3, productVariationId: null, quantity: 2 },
+    { productId: 6, productVariationId: null, quantity: 2 },
+  ]
+
+  let cart3 = [
+    { productId: null, productVariationId: 1, quantity: 2 }, 
+    { productId: 2, productVariationId: null, quantity: 2 }, 
+    { productId: 3, productVariationId: null, quantity: 2 },
+    { productId: 6, productVariationId: null, quantity: 2 },
+  ]
+
+  let cart4 = [
+    { productId: null, productVariationId: 1, quantity: 2 }, 
+    { productId: 2, productVariationId: null, quantity: 2 }, 
+    { productId: 3, productVariationId: null, quantity: 2 },
+    { productId: 6, productVariationId: null, quantity: 2 },
   ]
   let orderData1 = {
     cart: cart1, 
@@ -449,10 +478,38 @@ const addDummyData = async () => {
     //totalAmountPaid: 3, 
     customerId: 1
   }
-  let orderVal;
-  await sequelize.transaction(async (transaction) => {
-    orderVal = await orderService.createOrder(orderData1, transaction);
-  });
+
+  let orderData2 = {
+    cart: cart2,  
+    promoIdUsed: 2, 
+    collectionMethodEnum: Constants.CollectionMethod.IN_STORE, 
+    //totalAmountPaid: 3, 
+    customerId: 1
+  }
+
+  let orderData3 = {
+    cart: cart3,  
+    promoIdUsed: 3, 
+    collectionMethodEnum: Constants.CollectionMethod.IN_STORE, 
+    //totalAmountPaid: 3, 
+    customerId: 1
+  }
+
+  let orderData4 = {
+    cart: cart4,  
+    promoIdUsed: 4, 
+    collectionMethodEnum: Constants.CollectionMethod.IN_STORE, 
+    //totalAmountPaid: 3, 
+    customerId: 1
+  }
+
+  let orderVal1 = await orderService.createOrder(orderData1);
+  console.log('create order cart item length: ' + cart2.length);
+  let orderVal2 = await orderService.createOrder(orderData2);
+  console.log('create order cart item length: ' + cart3.length);
+  let orderVal3 = await orderService.createOrder(orderData3);
+  console.log('create order cart item length: ' + cart4.length);
+  let orderVal4 = await orderService.createOrder(orderData4);
 
   // await sequelize.transaction(async (transaction) => {
   //   console.log(await orderService.updateOrderStatus(1, Constants.OrderStatus.READY_FOR_COLLECTION, transaction));

@@ -8,6 +8,7 @@ const Product = require('../models/Product');
 const Category = require('../models/Category');
 
 const fs = require('fs-extra');
+const LineItem = require("../models/LineItem");
 
 module.exports = {
   createProduct: async(productData, transaction) => {

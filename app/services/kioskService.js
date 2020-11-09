@@ -62,7 +62,7 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     const kiosk = await Kiosk.findByPk(id);
     Checker.ifEmptyThrowError(kiosk, Constants.Error.KioskNotFound);
-    //do a check on the list of lockers
+    if(!Checker.isEmpty(await kiosk.getLockers())) throw new CustomError(Constants.Error.KioskCannotBeDeleted);
     await Kiosk.update({
       deleted: true
     },{

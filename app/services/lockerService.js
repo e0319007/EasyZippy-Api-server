@@ -132,7 +132,7 @@ module.exports = {
       
       if(!Checker.isEmpty(booking.bookingPackageId)) {
         let bookingPackage = await BookingPackage.findByPk(booking.bookingPackageId);
-        bookingPackage = await bookingPackage.update({ quota: ++bookingPackage.quota }, { transaction });
+        bookingPackage = await bookingPackage.update({ lockerCount: --bookingPackage.lockerCount }, { transaction });
       }
     }
   }

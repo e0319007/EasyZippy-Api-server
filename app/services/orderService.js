@@ -119,28 +119,54 @@ module.exports = {
     for (let [merchantId, lineItem] of merchantMapLineitems) {
       let totalAmount = await calculatePrice(lineItem);
       trackTotalAmount += totalAmount;
-      let creditPaymentRecordId = (await CreditPaymentRecordService.payCreditCustomer(customerId, totalAmount, Constants.CreditPaymentType.ORDER, transaction)).id;
-      let order = await Order.create({ lineItem, promoIdUsed, totalAmount, collectionMethodEnum, customerId, merchantId, creditPaymentRecordId }, { transaction });
+      let order = await Order.create({ lineItem, totalAmount, collectionMethodEnum, customerId, merchantId }, { transaction });
       await order.setLineItems(lineItem, { transaction });
       orders.push(order);
     }
-
     let promotion;
     
     if(!Checker.isEmpty(promoIdUsed)) {
       promotion = await Promotion.findByPk(promoIdUsed);
+      console.log('in promotion service: ' + promoIdUsed)
       Checker.ifEmptyThrowError(promotion, Constants.Error.PromotionNotFound);
       if(!Checker.isEmpty(promotion.usageLimit) && promotion.usageLimit <= promotion.usageCount) {
         throw new CustomError(Constants.Error.PromotionUsageLimitReached);
-      } 
-      if(promotion.minimumSpent < trackTotalAmount) {
-        throw new CustomError(Constants.Error.PromotionMinimumSpendNotMet);
       }
-      for (let order of orders) {
-        let priceAfterPromotion = await applyPromoCode(promoIdUsed, order.totalAmount)
-        order = await order.update({ totalAmount: priceAfterPromotion }, { transaction });
+      if(promotion.promotionTypeEnum === Constants.PromotionType.MALL_PROMOTION) {
+        for (let order of orders) {
+          let discountedAmount;
+          if(!Checker.isEmpty(promotion.percentageDiscount)) {
+            discountedAmount = await applyPromoCodePercentageDiscount(promoIdUsed, order.totalAmount)
+          } else {
+            discountedAmount = await applyPromoCodeFlatDiscount(promoIdUsed, trackTotalAmount, order.totalAmount);
+          }
+          let creditPaymentRecordId = (await CreditPaymentRecordService.payCreditCustomer(customerId, discountedAmount, Constants.CreditPaymentType.ORDER, transaction)).id;
+          await order.update({ discountedAmount, promoIdUsed, creditPaymentRecordId }, { transaction });
+        }
+      }
+      if(promotion.promotionTypeEnum === Constants.PromotionType.MERCHANT_PROMOTION) {
+        for (let order of orders) {
+          if(order.merchantId === promotion.merchantId) {
+            let discountedAmount = order.totalAmount;
+            if(!Checker.isEmpty(promotion.percentageDiscount)) {
+              discountedAmount = await applyPromoCodePercentageDiscount(promoIdUsed, order.totalAmount)
+            } else {
+              discountedAmount -= promotion.flatDiscount;
+            }
+            let creditPaymentRecordId = (await CreditPaymentRecordService.payCreditCustomer(customerId, discountedAmount, Constants.CreditPaymentType.ORDER, transaction)).id;
+            await order.update({ discountedAmount, promoIdUsed, creditPaymentRecordId }, { transaction });
+            continue;
+          }
+          let creditPaymentRecordId = (await CreditPaymentRecordService.payCreditCustomer(customerId, order.totalAmount, Constants.CreditPaymentType.ORDER, transaction)).id;
+          await order.update({ creditPaymentRecordId }, { transaction });
+        }
       }
       await promotion.update({ usageCount: ++promotion.usageCount }, { transaction });
+    } else {
+      for (let order of orders) {
+        let creditPaymentRecordId = (await CreditPaymentRecordService.payCreditCustomer(customerId, Constants.CreditPaymentType.ORDER, transaction)).id;
+        await order.update({ creditPaymentRecordId }, { transaction });
+      }
     }
 
     // if(totalAmountPaid != trackTotalAmount) throw new CustomError(Constants.Error.PriceDoesNotTally);
@@ -178,42 +204,52 @@ const markOrderComplete = async(order, transaction) => {
 const calculatePrice = async(lineItems) => {
   let price = 0;
   console.log('LineItems: ')
-  console.log(lineItems);
+  console.log(lineItems.length);
   for(let lineItem of lineItems) {
     console.log('productId:: ' + lineItem.productId);
     console.log('productVariationId: ' + lineItem.productVariationId);
-    console.log(lineItem)
+    //console.log(lineItem)
     if(lineItem.productId !== null) {
       price += ((await Product.findByPk(lineItem.productId)).unitPrice * lineItem.quantity);
     } else {
       price += ((await ProductVariation.findByPk(lineItem.productVariationId)).unitPrice * lineItem.quantity);
     }
+    console.log(lineItem.id)
+    console.log('price in loop ' + price);
   }
+  console.log(price);
   return price;
 }
 
-const applyPromoCode = async(promoIdUsed, price) => {
+const applyPromoCodeFlatDiscount = async(promoIdUsed, totalPrice, price) => {
+  price = Number(price)
+  let promotion;
+  let discountedPrice;
+  if(!Checker.isEmpty(promoIdUsed)) {
+    promotion = await Promotion.findByPk(promoIdUsed);
+    if(promotion.minimumSpent > totalPrice) throw new CustomError(Constants.Error.PromotionMinimumSpendNotMet);
+    if(promotion.startDate <= new Date() && promotion.endDate >= new Date()) {
+      discountedPrice = price - (price / totalPrice) * promotion.flatDiscount;
+    } else {
+      throw new CustomError(Constants.Error.PromotionExpired)
+    }
+  }
+  if(price < 0) return 0;
+  discountedPrice = discountedPrice.toFixed(2);
+  return discountedPrice;
+}
+
+const applyPromoCodePercentageDiscount = async(promoIdUsed, price) => {
   price = Number(price)
   let promotion;
   if(!Checker.isEmpty(promoIdUsed)) {
-    console.log('PROMO ID USED' + promoIdUsed)
     promotion = await Promotion.findByPk(promoIdUsed);
-    // Checker.ifEmptyThrowError(promotion, Constants.Error.PromotionNotFound);
-    // if(Checker.isEmpty(promotion.usageLimit) && promotion.usageLimit <= promotion.usageCount) {
-    //   throw new CustomError(Constants.Error.PromotionUsageLimitReached);
-    // }
-    // if(Checker.isEmpty(promotion.minimumSpend) && price < promotion.minimumSpend) {
-    //   throw new CustomError(Constants.Error.PromotionMinimumSpendNotMet);
-    // }
     if(promotion.startDate <= new Date() && promotion.endDate >= new Date()) {
-      if(!Checker.isEmpty(promotion.flatDiscount)) {
-        price -= promotion.flatDiscount;
-      } else {
         price *= (1 - promotion.percentageDiscount);
-      }
+    } else {
+      throw new CustomError(Constants.Error.PromotionExpired)
     }
   }
-  // await promotion.update({ usageCount: ++promotion.usageCount }, { transaction });
   if(price < 0) return 0;
   price = price.toFixed(2);
   return price;

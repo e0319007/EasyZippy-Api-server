@@ -105,13 +105,12 @@ module.exports = {
       let merchant;
       if(!Checker.isEmpty(li.productId)) p = await Product.findByPk(li.productId);
       else pv = await ProductVariation.findByPk(li.productVariationId);
-      if ((!Checker.isEmpty(p) && !p.disabled && !p.deleted) || (!Checker.isEmpty(pv) && !pv.disabled && !pv.productDisabled && !pv.deleted)) {
-        lineItem = {
+      lineItem = {
           product: p,
           productVariation: pv,
           quantity: li.quantity
-        };
-      }
+      };
+
       if(Checker.isEmpty(p)) {
         merchant = await Merchant.findByPk((await Product.findByPk(pv.productId)).merchantId);
       } else merchant = await Merchant.findByPk(p.merchantId);
