@@ -78,7 +78,7 @@ module.exports = {
     while(!Checker.isEmpty(cart)) {
       let lt = cart.pop();
       let merchantId;
-      if(lt.productId !== null) {
+      if(lt.productId !== null && lt.productId !== undefined) {
         let product = await Product.findByPk(lt.productId);
         await product.update({ quantityAvailable: product.quantityAvailable - lt.quantity, quantitySold: lt.quantity + product.quantitySold }, { transaction });
         merchantId = product.merchantId;
@@ -118,6 +118,8 @@ module.exports = {
 
     for (let [merchantId, lineItem] of merchantMapLineitems) {
       let totalAmount = await calculatePrice(lineItem);
+      totalAmount = totalAmount.toFixed(2)
+      totalAmount = Number(totalAmount)
       trackTotalAmount += totalAmount;
       let order = await Order.create({ lineItem, totalAmount, collectionMethodEnum, customerId, merchantId }, { transaction });
       await order.setLineItems(lineItem, { transaction });
@@ -164,7 +166,7 @@ module.exports = {
       await promotion.update({ usageCount: ++promotion.usageCount }, { transaction });
     } else {
       for (let order of orders) {
-        let creditPaymentRecordId = (await CreditPaymentRecordService.payCreditCustomer(customerId, Constants.CreditPaymentType.ORDER, transaction)).id;
+        let creditPaymentRecordId = (await CreditPaymentRecordService.payCreditCustomer(customerId, order.totalAmount, Constants.CreditPaymentType.ORDER, transaction)).id;
         await order.update({ creditPaymentRecordId }, { transaction });
       }
     }
@@ -217,7 +219,6 @@ const calculatePrice = async(lineItems) => {
     console.log(lineItem.id)
     console.log('price in loop ' + price);
   }
-  console.log(price);
   return price;
 }
 
