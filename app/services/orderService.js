@@ -118,6 +118,8 @@ module.exports = {
 
     for (let [merchantId, lineItem] of merchantMapLineitems) {
       let totalAmount = await calculatePrice(lineItem);
+      totalAmount = totalAmount.toFixed(2)
+      totalAmount = Number(totalAmount)
       trackTotalAmount += totalAmount;
       let order = await Order.create({ lineItem, totalAmount, collectionMethodEnum, customerId, merchantId }, { transaction });
       await order.setLineItems(lineItem, { transaction });
@@ -168,7 +170,7 @@ module.exports = {
         await order.update({ creditPaymentRecordId }, { transaction });
       }
     }
-
+    await CartService.saveItemsToCart(customerId, [])
     // if(totalAmountPaid != trackTotalAmount) throw new CustomError(Constants.Error.PriceDoesNotTally);
 
     return orders;
@@ -217,7 +219,6 @@ const calculatePrice = async(lineItems) => {
     console.log(lineItem.id)
     console.log('price in loop ' + price);
   }
-  console.log(price);
   return price;
 }
 
