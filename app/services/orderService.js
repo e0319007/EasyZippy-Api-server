@@ -78,7 +78,7 @@ module.exports = {
     while(!Checker.isEmpty(cart)) {
       let lt = cart.pop();
       let merchantId;
-      if(lt.productId !== null) {
+      if(!Checker.isEmpty(lt.productId)) {
         let product = await Product.findByPk(lt.productId);
         await product.update({ quantityAvailable: product.quantityAvailable - lt.quantity, quantitySold: lt.quantity + product.quantitySold }, { transaction });
         merchantId = product.merchantId;
@@ -164,7 +164,7 @@ module.exports = {
       await promotion.update({ usageCount: ++promotion.usageCount }, { transaction });
     } else {
       for (let order of orders) {
-        let creditPaymentRecordId = (await CreditPaymentRecordService.payCreditCustomer(customerId, Constants.CreditPaymentType.ORDER, transaction)).id;
+        let creditPaymentRecordId = (await CreditPaymentRecordService.payCreditCustomer(customerId, order.totalAmount, Constants.CreditPaymentType.ORDER, transaction)).id;
         await order.update({ creditPaymentRecordId }, { transaction });
       }
     }
