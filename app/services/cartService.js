@@ -23,14 +23,18 @@ const getInvalidCartItems = async(lineItems) => {
     if(!Checker.isEmpty(productId)) {
       const product = await Product.findByPk(lineItem.productId);
       Checker.ifEmptyThrowError(product, Constants.Error.ProductNotFound);
-      if(product.deleted || product.disabled || product.quantityAvailable < quantity) {
+      if(product.deleted || product.disabled || product.quantityAvailable === 0) {
         invalidCartItems.push({ product });
+      } else if(product.quantityAvailable < quantity) {
+        invalidCartItems.push({ product: { ...product, quantityNotZero: true } });
       }
     } else {
       const productVariation = await ProductVariation.findByPk(lineItem.productVariationId);
       Checker.ifEmptyThrowError(productVariation, Constants.Error.ProductVariationNotFound);
-      if(productVariation.deleted || productVariation.disabled || productVariation.quantityAvailable < quantity) {
+      if(productVariation.deleted || productVariation.disabled || productVariation.quantityAvailable === 0) {
         invalidCartItems.push({ productVariation });
+      } else if(productVariation.quantityAvailable < quantity) {
+        invalidCartItems.push({ productVariation: { ...productVariation, quantityNotZero: true } });
       }
     }
   }
@@ -127,7 +131,32 @@ module.exports = {
       } 
     }
 
+    const invalidCartItems = await getInvalidCartItems(await cart.getLineItems());
+
     for(let [merchantId, lineItem] of merchantMapLineitems) {
+      for(const invalidItem of invalidCartItems) {
+        const objectKeys = Object.keys(invalidItem);
+        if(objectKeys.includes('product')) {
+          const invalidProductId = invalidItem.product.id;
+          for(let itemIndex = 0; itemIndex < lineItem.length; itemIndex++) {
+            if(!Checker.isEmpty(lineItem[itemIndex].product) && lineItem[itemIndex].product.id === invalidProductId && Checker.isEmpty(invalidItem.product.quantityNotZero)) {
+              lineItem.splice(itemIndex, 1);
+              --itemIndex;
+              await LineItem.destroy({ where: { productId: invalidProductId } });
+            }
+          }
+        } else {
+          const invalidProductVariationId = invalidItem.productVariation.id;
+          for(const itemIndex = 0; itemIndex < lineItem.length; itemIndex++) {
+            if(!Checker.isEmpty(lineItem[itemIndex].productVariation) && lineItem[itemIndex].productVariation.id === invalidProductVariationId && Checker.isEmpty(invalidItem.productVariation.quantityNotZero)) {
+              lineItem.splice(itemIndex, 1);
+              --itemIndex;
+              await LineItem.destroy({ where: { productId: invalidProductVariationId } });
+            }
+          }
+        }
+      }
+
       console.log(merchantId)
       cartItems.push({ 
         merchant: await Merchant.findByPk(merchantId),
@@ -135,6 +164,6 @@ module.exports = {
        })
     }
     console.log(cartItems);
-    return { cartItems, invalidCartItems: await getInvalidCartItems(await cart.getLineItems())};
+    return { cartItems, invalidCartItems};
   }
 }
