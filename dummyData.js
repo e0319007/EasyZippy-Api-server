@@ -109,46 +109,7 @@ const addDummyData = async () => {
     await ProductVariationService.createProductVariation(productVariationData2, transaction);
   });
 
-  let lineItem1 = {
-    productVariationId: 1,
-    productId: null,
-    quantity: 5
-  };
-
-  let lineItem2 = {
-    productVariationId: null,
-    productId: 2,
-    quantity: 2
-  };
-
-  let lineItem3 = {
-    productVariationId: null,
-    productId: 3,
-    quantity: 3
-  };
-
-  let lineItem4 = {
-    productVariationId: null,
-    productId: 6,
-    quantity: 3
-  };
-
-  let lineItem5 = {
-    productVariationId: null,
-    productId: 5,
-    quantity: 3
-  };
-
-  let lineItems = new Array();
-  lineItems.push(lineItem1);
-  lineItems.push(lineItem2);
-  lineItems.push(lineItem3);
-  lineItems.push(lineItem4);
-  lineItems.push(lineItem5);
-
-  await sequelize.transaction(async (transaction) => {
-    await CartService.saveItemsToCart(1, { lineItems }, transaction);
-  });
+  
   //console.log((await CartService.retrieveCartByCustomerId(1)).length);
 
   let kiosk = await Kiosk.create({ address: '1 Sengkang Square', description: 'Sample Description' });
@@ -515,6 +476,48 @@ const addDummyData = async () => {
   let orderVal3 = await orderService.createOrder(orderData3);
   console.log('create order cart item length: ' + cart4.length);
   let orderVal4 = await orderService.createOrder(orderData4);
+
+
+  let lineItem1 = {
+    productVariationId: 1,
+    productId: null,
+    quantity: 5
+  };
+
+  let lineItem2 = {
+    productVariationId: null,
+    productId: 2,
+    quantity: 2
+  };
+
+  let lineItem3 = {
+    productVariationId: null,
+    productId: 3,
+    quantity: 3
+  };
+
+  let lineItem4 = {
+    productVariationId: null,
+    productId: 6,
+    quantity: 3
+  };
+
+  let lineItem5 = {
+    productVariationId: null,
+    productId: 5,
+    quantity: 3
+  };
+
+  let lineItems = new Array();
+  lineItems.push(lineItem1);
+  lineItems.push(lineItem2);
+  lineItems.push(lineItem3);
+  lineItems.push(lineItem4);
+  lineItems.push(lineItem5);
+
+  await sequelize.transaction(async (transaction) => {
+    await CartService.saveItemsToCart(1, { lineItems }, transaction);
+  });
 
   // await sequelize.transaction(async (transaction) => {
   //   console.log(await orderService.updateOrderStatus(1, Constants.OrderStatus.READY_FOR_COLLECTION, transaction));

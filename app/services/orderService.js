@@ -170,7 +170,7 @@ module.exports = {
         await order.update({ creditPaymentRecordId }, { transaction });
       }
     }
-
+    await CartService.saveItemsToCart(customerId, [])
     // if(totalAmountPaid != trackTotalAmount) throw new CustomError(Constants.Error.PriceDoesNotTally);
 
     return orders;
