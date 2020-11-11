@@ -1,7 +1,14 @@
 const paypal = require('paypal-rest-sdk');
+const payouts = require('@paypal/payouts-sdk');
 const sequelize = require('../common/database');
+const config = require('config');
 
 const ExternalPaymentRecordService = require('../services/externalPaymentRecordService');
+
+const clientId = config.get('paypal_client_id');
+const clientSecret = config.get('paypal_client_secret');
+let environment = new payouts.core.SandboxEnvironment(clientId, clientSecret);
+let client = new payouts.core.PayPalHttpClient(environment);
 
 module.exports = {
   customerPay: async (req, res) => {
@@ -152,5 +159,7 @@ module.exports = {
 
   cancel: async (req, res) => {
     res.render('cancel');
-  }
+  },
+
+  // merchantWithdraw: 
 };
