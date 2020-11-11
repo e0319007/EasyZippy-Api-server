@@ -30,6 +30,13 @@ Order.init(
           min: 0.0
       }
     },
+    discountedAmount: {
+      type: DECIMAL,
+      allowNull: true,
+      validate: {
+          min: 0.0
+      }
+    },
     orderDate: {
       type: DATE,
       allowNull: false,

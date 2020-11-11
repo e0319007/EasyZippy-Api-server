@@ -220,14 +220,14 @@ module.exports = {
   },
 
   createBookingByCustomer: async(bookingData, transaction) => {
-    let { promoIdUsed, startDate, endDate, bookingSourceEnum, customerId, lockerTypeId, kioskId } = bookingData;
+    let { startDate, endDate, bookingSourceEnum, customerId, lockerTypeId, kioskId } = bookingData;
     
     const customer = await Customer.findByPk(customerId);
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
     for(const bookingPackage of await customer.getBookingPackages()) {
       const bookingPackageModel = await bookingPackage.getBookingPackageModel();
       const bookingPackageModelLockerType = await bookingPackageModel.getLockerType();
-      if(!bookingPackage.expired && bookingPackageModelLockerType.id === lockerTypeId && bookingPackage.lockerCount < bookingPackageModel.quota) {
+      if(startDate <= bookingPackage.endDate && !bookingPackage.expired && bookingPackageModelLockerType.id === lockerTypeId && bookingPackage.lockerCount < bookingPackageModel.quota) {
         return await createBookingWithBookingPackageByCustomer({ ...bookingData, bookingPackageId: bookingPackage.id }, transaction);
       }
     }
@@ -261,12 +261,12 @@ module.exports = {
     let creditPaymentRecord = await CreditPaymentRecordService.payCreditCustomer(customerId, bookingPrice, Constants.CreditPaymentType.BOOKING, transaction);
     let creditPaymentRecordId = creditPaymentRecord.id;
 
-    let booking = await Booking.create({ promoIdUsed, startDate, endDate, bookingSourceEnum, customerId, qrCode, lockerTypeId, kioskId, bookingPrice, creditPaymentRecordId }, { transaction })
+    let booking = await Booking.create({ startDate, endDate, bookingSourceEnum, customerId, qrCode, lockerTypeId, kioskId, bookingPrice, creditPaymentRecordId }, { transaction })
     return booking;
   },
   
   createBookingByMerchant: async(bookingData, transaction) => {
-    let { promoIdUsed, startDate, endDate, bookingSourceEnum, merchantId, lockerTypeId, kioskId} = bookingData;
+    let { startDate, endDate, bookingSourceEnum, merchantId, lockerTypeId, kioskId} = bookingData;
     startDate = new Date(startDate);
     endDate = new Date(endDate);
     if(startDate.getTime() + 300000 < (new Date()).getTime()) throw new CustomError(Constants.Error.InvalidDate)
@@ -294,7 +294,7 @@ module.exports = {
     let creditPaymentRecord = await CreditPaymentRecordService.payCreditMerchant(merchantId, bookingPrice, Constants.CreditPaymentType.BOOKING, transaction);
     let creditPaymentRecordId = creditPaymentRecord.id;
 
-    let booking = await Booking.create({ promoIdUsed, startDate, endDate, bookingSourceEnum, merchantId, qrCode, lockerTypeId, kioskId, bookingPrice, creditPaymentRecordId }, { transaction });
+    let booking = await Booking.create({ startDate, endDate, bookingSourceEnum, merchantId, qrCode, lockerTypeId, kioskId, bookingPrice, creditPaymentRecordId }, { transaction });
     return booking;
   },
 

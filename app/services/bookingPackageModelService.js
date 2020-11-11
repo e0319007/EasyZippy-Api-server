@@ -109,7 +109,7 @@ module.exports = {
     let bookingPackageModel = await BookingPackageModel.findByPk(id);
     Checker.ifEmptyThrowError(bookingPackageModel, Constants.Error.BookingPackageModelNotFound);
     Checker.ifDeletedThrowError(bookingPackageModel, Constants.Error.BookingPackageModelDeleted);
-
+    if(!Checker.isEmpty(await bookingPackageModel.getBookingPackages())) throw new CustomError(Constants.Error.BookingPackageModelCannotBeDeleted);
     await BookingPackageModel.update({ deleted: true }, { where: { id }, transaction });
   },
 }
