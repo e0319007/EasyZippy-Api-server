@@ -91,17 +91,19 @@ const addDummyData = async () => {
   await Product.create({ categoryId: apparelCategory.id, merchantId: toysRUs.id, name: 'OPEN ORDER - Mens Top Kurta', unitPrice: 47.1, description: 'Red Car', quantityAvailable: 100, images: ['top3.jpg'] });
 
   let productVariationData1 = {
-    name: 'Variation 1 for product 1',
+    name: 'Nike Venom Phantom Bag',
     unitPrice: 10,
     quantityAvailable: 60,
-    productId: 1
+    productId: 1,
+    image: 'phantomvenom.jpg'
   }
 
   let productVariationData2 = {
-    name: 'Variation 2 for product 1',
+    name: 'Nike Hyper Venom Bag',
     unitPrice: 4,
     quantityAvailable: 30,
-    productId: 1
+    productId: 1,
+    image: 'hypervenom.jpg'
   }
 
   await sequelize.transaction(async (transaction) => {
@@ -152,8 +154,8 @@ const addDummyData = async () => {
   await LockerActionRecord.create({ timestamp: new Date(), lockerActionEnum: Constants.LockerAction.CLOSE, lockerId: 2 });
 
   const promoData1 = {
-    promoCode: "PROMOCODE1",
-    title: 'Title for promo 1',
+    promoCode: "NIKE10OFF",
+    title: 'Nike $10 Discount',
     startDate: new Date(),
     endDate: new Date(new Date().getTime() + 24 * 30 * 1000 * 60),
     description: "save on spending!",
@@ -166,8 +168,8 @@ const addDummyData = async () => {
   };
 
   const promoData2 = {
-    promoCode: "PROMOCODE2",
-    title: 'Title for promo 2',
+    promoCode: "NIKEOPENING10PERCENT",
+    title: 'Nike 10% Off',
     startDate: new Date(),
     endDate: new Date(new Date().getTime() + 24 * 30 * 1000 * 60),
     description: "save on spending a second time!",
@@ -180,8 +182,8 @@ const addDummyData = async () => {
   };
 
   const promoData3 = {
-    promoCode: "PROMOCODEMALL1",
-    title: 'Title for promo mall percentage',
+    promoCode: "WELCOMEEZP",
+    title: 'Easy Zippy Welcome Promotion',
     startDate: new Date(),
     endDate: new Date(new Date().getTime() + 24 * 30 * 1000 * 60),
     description: "save on spending a second time!",
@@ -194,11 +196,11 @@ const addDummyData = async () => {
   };
 
   const promoData4 = {
-    promoCode: 'PROMOCODEMALL2',
-    title: 'Title for promo mall ',
+    promoCode: 'XMAS10',
+    title: 'Christmas Promotion',
     startDate: new Date(),
     endDate: new Date(new Date().getTime() + 24 * 30 * 1000 * 60),
-    description: "save on spending a second time!",
+    description: "Buy on this platform for seasonal discounts!",
     termsAndConditions: "terms and conditions",
     percentageDiscount: null,
     flatDiscount: 10,
