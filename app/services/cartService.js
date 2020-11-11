@@ -147,7 +147,7 @@ module.exports = {
           }
         } else {
           const invalidProductVariationId = invalidItem.productVariation.id;
-          for(const itemIndex = 0; itemIndex < lineItem.length; itemIndex++) {
+          for(let itemIndex = 0; itemIndex < lineItem.length; itemIndex++) {
             if(!Checker.isEmpty(lineItem[itemIndex].productVariation) && lineItem[itemIndex].productVariation.id === invalidProductVariationId && Checker.isEmpty(invalidItem.productVariation.quantityNotZero)) {
               lineItem.splice(itemIndex, 1);
               --itemIndex;
