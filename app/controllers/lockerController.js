@@ -102,5 +102,17 @@ module.exports = {
     } catch(err) {
       sendErrorResponse(res, err);
     }
+  },
+
+  scanOpenLocker: async(req, res) => {
+    try {
+      const { code } = req.body.code;
+      await sequelize.transaction(async (transaction) => {
+        await LockerService.scanOpenLocker(code, transaction);
+      });
+      return res.status(200).send();
+    } catch(err) {
+      sendErrorResponse(res, err);
+    }
   }
 };

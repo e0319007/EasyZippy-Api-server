@@ -48,7 +48,7 @@ module.exports = {
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
     let cart = await Cart.findOne({ 
       where: {
-        customerId: id
+        customerId: id         
       }
     });
     // console.log('****is array? ' + Array.isArray(await cart.getLineItems()))
