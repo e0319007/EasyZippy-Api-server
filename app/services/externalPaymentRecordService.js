@@ -24,17 +24,14 @@ module.exports = {
     return externalPaymentRecord;
   },
 
-  createExternalPaymentRecordMerchantTopUp: async(merchantId, payload, transaction) => {
-    const externalId = payload.id;
-    const amount = payload.transactions[0].amount.total;
+  createExternalPaymentRecordMerchantTopUp: async(merchantId, externalId, amount, transaction) => {
     const merchant = await Merchant.findByPk(merchantId);
 
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
-    Checker.ifEmptyThrowError(payload, Constants.Error.PayloadRequired);
     Checker.ifEmptyThrowError(externalId, Constants.Error.PaymentIdRequired);
     Checker.ifEmptyThrowError(amount, Constants.Error.AmountRequired);
 
-    const externalPaymentRecord = await ExternalPaymentRecord.create({ externalId, amount, payload, paymentTypeEnum: Constants.PaymentType.Paypal, merchantId }, { transaction });
+    const externalPaymentRecord = await ExternalPaymentRecord.create({ externalId, amount, paymentTypeEnum: Constants.PaymentType.Paypal, merchantId }, { transaction });
 
     await CreditPaymentRecordService.refundCreditMerchant(merchantId, amount, Constants.CreditPaymentType.TOP_UP, transaction);
 
