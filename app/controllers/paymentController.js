@@ -161,5 +161,35 @@ module.exports = {
     res.render('cancel');
   },
 
-  // merchantWithdraw: 
+  merchantWithdraw: async (req, res) => {
+    let requestBody = {
+      "sender_batch_header": {
+        "sender_batch_id": "Test_sdk_1",
+        "email_subject": "This is a test transaction from SDK",
+        "email_message": "SDK payouts test txn",
+        "note": "Payout note"
+      },
+      "items": [{
+        "recipient_type": "EMAIL",
+        "receiver": "payout-sdk-1@paypal.com",
+        "amount": {
+          "currency": "SGD",
+          "value": "1.00"
+        },
+        "note": "This is your withdrawal",
+        "sender_item_id": "Test_txn_1"
+      }]
+    };
+    let request = new payouts.payouts.PayoutsPostRequest();
+    request.requestBody(requestBody);
+ 
+    // Call API with your client and get a response for your call
+    let createPayouts  = async () => {
+      let response = await client.execute(request);
+      console.log(`Response: ${JSON.stringify(response)}`);
+      // If call returns body in response, you can get the deserialized version from the result attribute of the response.
+      console.log(`Payouts Create Response: ${JSON.stringify(response.result)}`);
+    };
+    createPayouts();
+  }
 };
