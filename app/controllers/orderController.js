@@ -35,7 +35,7 @@ module.exports = {
   retrieveOrderById: async(req, res) => {
     try {
       let { id } = req.params
-      return res.status(200).send(await OrderService.retrieveOrderByMerchantId(id));
+      return res.status(200).send(await OrderService.retrieveOrderById(id));
     } catch(err) {
       console.log(err)
       sendErrorResponse(res, err);
@@ -83,4 +83,5 @@ module.exports = {
       sendErrorResponse(res, err);
     }
   },
+  
 }

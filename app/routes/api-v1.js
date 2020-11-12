@@ -151,6 +151,7 @@ router.put('/locker/setInUse/:id', Authenticator.customerAndMerchantAndStaffOnly
 router.put('/locker/toggleDisable/:id', Authenticator.staffOnly, LockerController.toggleDisableLocker);
 router.put('/deleteLocker/:id', Authenticator.staffOnly, LockerController.deleteLocker);
 router.post('/locker', Authenticator.staffOnly, LockerController.createLocker);
+router.post('/openLocker', LockerController.scanOpenLocker);
 
 //Locker Action Record
 router.get('/lockerActionRecords', Authenticator.staffOnly, lockerActionRecordController.retrieveAllLockerActions);

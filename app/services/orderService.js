@@ -18,13 +18,29 @@ module.exports = {
   retrieveOrderByCustomerId: async(customerId) => {
     Checker.isEmpty(customerId, Constants.Error.IdRequired);
     Checker.isEmpty(await Customer.findByPk(customerId), Constants.Error.CustomerNotFound);
-    return await Order.findAll({ where: { customerId } });
+    const orders = await Order.findAll({ where: { customerId } });
+    const orderAndItems = new Array();
+    for(const order of orders) {
+      const lineItems = await order.getLineItems();
+      const items = new Array();
+      for(const lineItem of lineItems) {
+        if(!Checker.isEmpty(lineItem.productId)) {
+          const product = await Product.findByPk(lineItem.productId);
+          items.push({ product, quantity: lineItem.quantity });
+        } else if(!Checker.isEmpty(lineItem.productVariationId)) {
+          const productVariation = await ProductVariation.findByPk(lineItem.productVariationId);
+          items.push({ productVariation, quantity: lineItem.quantity });
+        }
+      }
+      orderAndItems.push({ order, items });
+    }
+    return orderAndItems;
   },
 
   retrieveOrderByMerchantId: async(merchantId) => {
     Checker.isEmpty(merchantId, Constants.Error.IdRequired);
     Checker.isEmpty(await Merchant.findByPk(merchantId), Constants.Error.MerchantNotFound);
-    return await Order.findAll({ where: { merchantId } });
+    return await Order.findAll({ where: { merchantId }, include: { model: LineItem } });
   },
 
   retrieveAllOrders: async() => {
@@ -35,7 +51,18 @@ module.exports = {
     Checker.isEmpty(orderId, Constants.Error.IdRequired);
     let order = await Order.findByPk(orderId);
     Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound);
-    return order;
+    const lineItems = await order.getLineItems();
+    const items = new Array();
+    for(const lineItem of lineItems) {
+      if(!Checker.isEmpty(lineItem.productId)) {
+        const product = await Product.findByPk(lineItem.productId);
+        items.push({ product, quantity: lineItem.quantity });
+      } else if(!Checker.isEmpty(lineItem.productVariationId)) {
+        const productVariation = await ProductVariation.findByPk(lineItem.productVariationId);
+        items.push({ productVariation, quantity: lineItem.quantity });
+      }
+    }
+    return { order, items };
   },
 
   retrieveAllOrderStatus: async() => {
