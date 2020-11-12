@@ -328,7 +328,7 @@ module.exports = {
   },
   //send notifications to customer that the order is ready
   notificationOrderReadyForCollection: async(orderId, customerId) => {
-    let order = await Order.findByPk(id);
+    let order = await Order.findByPk(orderId);
     Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound); 
 
     let customer = await Customer.findByPk(customerId);
