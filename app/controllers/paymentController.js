@@ -81,7 +81,7 @@ module.exports = {
   //     };
   
   //     paypal.payment.create(payment, (err, paymentCb) => {
-  //       res.redirect(paymentCb.links[1].href);
+  //       return res.send(paymentCb.links[1].href);
   //     });
   //   } catch (err) {
   //     console.log(err)
