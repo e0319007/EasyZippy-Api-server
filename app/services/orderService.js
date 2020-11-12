@@ -18,13 +18,13 @@ module.exports = {
   retrieveOrderByCustomerId: async(customerId) => {
     Checker.isEmpty(customerId, Constants.Error.IdRequired);
     Checker.isEmpty(await Customer.findByPk(customerId), Constants.Error.CustomerNotFound);
-    return await Order.findAll({ where: { customerId } });
+    return await Order.findAll({ where: { customerId }, include: { model: LineItem } });
   },
 
   retrieveOrderByMerchantId: async(merchantId) => {
     Checker.isEmpty(merchantId, Constants.Error.IdRequired);
     Checker.isEmpty(await Merchant.findByPk(merchantId), Constants.Error.MerchantNotFound);
-    return await Order.findAll({ where: { merchantId } });
+    return await Order.findAll({ where: { merchantId }, include: { model: LineItem } });
   },
 
   retrieveAllOrders: async() => {
@@ -33,7 +33,7 @@ module.exports = {
 
   retrieveOrderById: async(orderId) => {
     Checker.isEmpty(orderId, Constants.Error.IdRequired);
-    let order = await Order.findByPk(orderId);
+    let order = await Order.findByPk(orderId, { include: { model: LineItem } });
     Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound);
     return order;
   },
