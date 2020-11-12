@@ -25,10 +25,6 @@ Booking.init(
       autoIncrement: true,
       allowNull: false
     },
-    promoIdUsed: {
-      type: INTEGER,
-      allowNull: true
-    },
     qrCode: {
       type: STRING,
       allowNull: true
