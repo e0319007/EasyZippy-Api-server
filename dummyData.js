@@ -79,7 +79,7 @@ const addDummyData = async () => {
   let bagCategory = await Category.create({ name: 'Bags', description: 'Sample Description' });
   let bottleCategory = await Category.create({ name: 'Water Bottles', description: 'Sample Description' });
   let apparelCategory = await Category.create({ name: 'Apparel', description: 'Sample Description' });
-  
+
   await Product.create({ categoryId: bagCategory.id, merchantId: nike.id, name: 'Nike Venom Bag', unitPrice: 35.5, description: 'Black', quantityAvailable: 100, images: ['bag1.jpg'], });
   await Product.create({ categoryId: bagCategory.id, merchantId: nike.id, name: 'Nike Sports Duffel Bag', unitPrice: 50.2, description: 'Pink', quantityAvailable: 100, images: ['bag2.jpg'] });
   await Product.create({ categoryId: bottleCategory.id, merchantId: nike.id, name: 'Nike Sports Bottle', unitPrice: 20, description: 'Transparent 1L', quantityAvailable: 100, images: ['bo1.jpg'] });
@@ -113,7 +113,7 @@ const addDummyData = async () => {
     await ProductVariationService.createProductVariation(productVariationData2, transaction);
   });
 
-  
+
   //console.log((await CartService.retrieveCartByCustomerId(1)).length);
 
   let kiosk = await Kiosk.create({ address: '1 Sengkang Square', description: 'Sample Description' });
@@ -166,7 +166,7 @@ const addDummyData = async () => {
     flatDiscount: 10,
     usageLimit: 20,
     merchantId: 1,
-    minimumSpent: 10 
+    minimumSpent: 10
   };
 
   const promoData2 = {
@@ -347,8 +347,8 @@ const addDummyData = async () => {
   // };
 
   const bookingData = {
-    startDate : new Date(new Date().getTime() + 10 * 60000),
-    endDate : new Date(new Date().getTime() + 500 * 60000),
+    startDate: new Date(new Date().getTime() + 10 * 60000),
+    endDate: new Date(new Date().getTime() + 500 * 60000),
     bookingSourceEnum: Constants.BookingSource.MOBILE,
     customerId: 1,
     lockerTypeId: 3,
@@ -356,8 +356,8 @@ const addDummyData = async () => {
   }
 
   const bookingData5 = {
-    startDate : new Date(new Date().getTime() + 15 * 60000),
-    endDate : new Date(new Date().getTime() + 500 * 60000),
+    startDate: new Date(new Date().getTime() + 15 * 60000),
+    endDate: new Date(new Date().getTime() + 500 * 60000),
     bookingSourceEnum: Constants.BookingSource.KIOSK,
     merchantId: 1,
     lockerTypeId: 2,
@@ -567,10 +567,10 @@ const addDummyData = async () => {
 
 addDummyData();
 
-const addMoreProducts = async() => {
+const addMoreProducts = async () => {
   let mobileAndGadgets = await Category.create({ name: 'Mobile And Gadgets', description: 'Sample Description' });
   let homeAppliances = await Category.create({ name: 'Home Appliances', description: 'Sample Description' });
-  let foodAndBeverages = await Category.create({ name: 'Food and Beverages', description: 'Sample Description' });
+  let foodAndBeverages = await Category.create({ name: 'Food', description: 'Sample Description' });
 
   let Panasonic = await MerchantService.createMerchant({ name: 'Panasonic', mobileNumber: '97478789', password: 'Password123!', email: 'panasonic@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '2', unitNumber: '5', pointOfContact: 'David', creditBalance: 1000, tenancyAgreement: 'tenancy_agreement.pdf', merchantLogoImage: 'panasonic.jpeg' });
   let Philips = await MerchantService.createMerchant({ name: 'Philips', mobileNumber: '91236358', password: 'Password123!', email: 'philips@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '1', unitNumber: '9', pointOfContact: 'Jon', creditBalance: 1000, tenancyAgreement: 'tenancy_agreement.pdf', merchantLogoImage: 'philips.jpg' });
@@ -585,7 +585,7 @@ const addMoreProducts = async() => {
   await Product.create({ categoryId: homeAppliances.id, merchantId: KMart.id, name: 'Kmart Honey Butter Chips Haitai', unitPrice: 7.6, description: 'Packing method: bagged Net content: 360g Whether it contains sugar: sugar Is it ready to eat: ready to eat', quantityAvailable: 100, images: ['kmart-honey-chips.jpg'] });
   await Product.create({ categoryId: homeAppliances.id, merchantId: KMart.id, name: 'Kmart L-GA candy 360-Vita', unitPrice: 9.3, description: 'Packing method: bagged Net content: 360g Whether it contains sugar: sugar Is it ready to eat: ready to eat', quantityAvailable: 100, images: ['kmart lga candy.jpg'] });
   await Product.create({ categoryId: mobileAndGadgets.id, merchantId: Samsung.id, name: 'Samsung S20 Phone Pink', unitPrice: 1030.0, description: 'Triple rear camera with 30x Space Zoom 6.2" Dynamic AMOLED2x display with 120Hz refresh Shoot night shots like a pro 4, 000mAh (typical) Battery and 25W Super Fast Charging Always-on display', quantityAvailable: 100, images: ['samsung s20.jpg'] });
-  await Product.create({ categoryId: homeAppliances.id, merchantId: Philips.id, name: 'Philips Espresso Maker JLGE-3225 Black', unitPrice: 230.2, description: 'Stainless steel filter holder, frame and cup tray, steel cup holder, chrome-plated base, ', quantityAvailable: 100, images: ['philips-espresso-machine.jpg' , 'philips-espresso-machine-silver.jpg'] });
+  await Product.create({ categoryId: homeAppliances.id, merchantId: Philips.id, name: 'Philips Espresso Maker JLGE-3225 Black', unitPrice: 230.2, description: 'Stainless steel filter holder, frame and cup tray, steel cup holder, chrome-plated base, ', quantityAvailable: 100, images: ['philips-espresso-machine.jpg', 'philips-espresso-machine-silver.jpg'] });
   await Product.create({ categoryId: foodAndBeverages.id, merchantId: Nescafe.id, name: 'Nescafé Gold Blend Coffee', unitPrice: 6.2, description: 'MicroGround Instant Coffee is a blend of finely ground coffee beans and premium instant coffee with non dairy creamer and the fi nest sugar', quantityAvailable: 100, images: ['nescafe-gold blend instant coffee.jpg'] });
   await Product.create({ categoryId: foodAndBeverages.id, merchantId: Nescafe.id, name: 'Nescafe Gold Origins Cap Columbia', unitPrice: 5.4, description: 'MicroGround Instant Coffee is a blend of finely ground coffee beans and premium instant coffee with non dairy creamer and the fi nest sugar', quantityAvailable: 100, images: ['nescafe-gold blend alta rica.jpg', 'nescafe-gold blend var 2.jpeg'] });
 
@@ -607,17 +607,17 @@ const addMoreProducts = async() => {
   }
   await ProductVariationService.createProductVariation(productVariationDataPhillipscoffee);
 
-  await (await Product.findByPk(1)).update({quantitySold: 20});
-  await (await Product.findByPk(2)).update({quantitySold: 33});
-  await (await Product.findByPk(4)).update({quantitySold: 37});
-  await (await Product.findByPk(5)).update({quantitySold: 130});
-  await (await Product.findByPk(6)).update({quantitySold: 310});
-  await (await Product.findByPk(7)).update({quantitySold: 50});
-  await (await Product.findByPk(8)).update({quantitySold: 3130});
-  await (await Product.findByPk(10)).update({quantitySold: 210});
-  await (await Product.findByPk(13)).update({quantitySold: 31});
-  await (await Product.findByPk(14)).update({quantitySold: 68});
-  await (await Product.findByPk(15)).update({quantitySold: 326});
-  await (await Product.findByPk(16)).update({quantitySold: 117});
-  await (await Product.findByPk(17)).update({quantitySold: 230});
+  await (await Product.findByPk(1)).update({ quantitySold: 20 });
+  await (await Product.findByPk(2)).update({ quantitySold: 33 });
+  await (await Product.findByPk(4)).update({ quantitySold: 37 });
+  await (await Product.findByPk(5)).update({ quantitySold: 130 });
+  await (await Product.findByPk(6)).update({ quantitySold: 310 });
+  await (await Product.findByPk(7)).update({ quantitySold: 50 });
+  await (await Product.findByPk(8)).update({ quantitySold: 3130 });
+  await (await Product.findByPk(10)).update({ quantitySold: 210 });
+  await (await Product.findByPk(13)).update({ quantitySold: 31 });
+  await (await Product.findByPk(14)).update({ quantitySold: 68 });
+  await (await Product.findByPk(15)).update({ quantitySold: 326 });
+  await (await Product.findByPk(16)).update({ quantitySold: 117 });
+  await (await Product.findByPk(17)).update({ quantitySold: 230 });
 }
