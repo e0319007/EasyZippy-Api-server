@@ -8,6 +8,7 @@ const Kiosk = require('../models/Kiosk');
 const Locker = require('../models/Locker');
 const LockerActionRecord = require('../models/LockerActionRecord');
 const LockerType = require('../models/LockerType');
+const Order = require('../models/Order');
 const CreditPaymentRecordService = require('./creditPaymentRecordService');
 
 const assignLockersToBookings = async(bookingId, lockerId, transaction) => {
@@ -130,7 +131,10 @@ module.exports = {
       while (!Checker.isEmpty(await Booking.findOne({ where: { qrCode } }))) {
         qrCode = Math.random().toString(36).substring(2);
       }
-
+      if(!Checker.isEmpty(booking.orderId)) {
+        let order = await Order.findByPk(booking.orderId);
+        await order.update({ orderStatusEnum: Constants.OrderStatus.READY_FOR_COLLECTION}, { transaction });
+      }
       booking = await booking.update({ bookingStatusEnum: Constants.BookingStatus.ACTIVE, qrCode }, { transaction });
     //OPEN LOCKER FOR THE SECOND TIME
     } else if (booking.bookingStatusEnum === Constants.BookingStatus.ACTIVE) {

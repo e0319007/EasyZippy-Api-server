@@ -444,7 +444,6 @@ module.exports = {
     Checker.ifEmptyThrowError(orderId, 'Order ' + Constants.Error.IdRequired)
     let order = await Order.findByPk(orderId);
     Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound);
-    await order.update({ orderStatusEnum: Constants.OrderStatus.READY_FOR_COLLECTION}, { transaction });
     booking = await booking.update({ orderId }, { transaction });
     await addCollectorToBooking(id, order.customerId, transaction)
     return booking;
