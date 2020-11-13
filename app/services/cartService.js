@@ -83,7 +83,7 @@ module.exports = {
     return await Cart.findByPk(cart.id);
   },
 
-  retrieveCartByCustomerId: async(id) => {
+  retrieveCartByCustomerId: async(id, transaction) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let customer = await Customer.findByPk(id);
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
@@ -142,7 +142,7 @@ module.exports = {
             if(!Checker.isEmpty(lineItem[itemIndex].product) && lineItem[itemIndex].product.id === invalidProductId && Checker.isEmpty(invalidItem.product.quantityNotZero)) {
               lineItem.splice(itemIndex, 1);
               --itemIndex;
-              await LineItem.destroy({ where: { productId: invalidProductId } }); //transaction
+              await LineItem.destroy({ where: { productId: invalidProductId }, transaction });
             }
           }
         } else {
