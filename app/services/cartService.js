@@ -214,7 +214,7 @@ console.log('c')
           throw new CustomError(Constants.Error.InsufficientQuantity);
         } else {
 console.log('d')
-          await li.update({ quantity }, { transaction });
+          await li.update({ quantity: (quantity + li.quantity) }, { transaction });
         }
       }
     }
