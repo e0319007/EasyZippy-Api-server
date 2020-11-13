@@ -44,7 +44,8 @@ const addDummyData = async () => {
   await CustomerService.createCustomer({ firstName: 'Dan', lastName: 'Lim', mobileNumber: '92342448', password: 'Password123!', email: 'dan@email.com', creditBalance: 1000 });
   await CustomerService.createCustomer({ firstName: 'Chris', lastName: 'Tan', mobileNumber: '94785678', password: 'Password123!', email: 'chris@email.com', creditBalance: 1000 });
   await CustomerService.createCustomer({ firstName: 'Vivian', lastName: 'Toh', mobileNumber: '92638678', password: 'Password123!', email: 'vivian@email.com', creditBalance: 1000 });
-  await CustomerService.createCustomer({ firstName: 'With', lastName: 'Credit', mobileNumber: '96677838', password: 'Password123!', email: 'withcredit@email.com', creditBalance: 1000 });
+  await CustomerService.createCustomer({ firstName: 'Mark', lastName: 'Ng', mobileNumber: '96677338', password: 'Password123!', email: 'shizhan@u.nus.edu', creditBalance: 1000 });
+  await CustomerService.createCustomer({ firstName: 'Jane', lastName: 'Ong', mobileNumber: '93784632', password: 'Password123!', email: 'szhan100@gmail.com', creditBalance: 1000 });
 
   await CustomerService.addReferrer(5, 3)
   await CustomerService.addReferrer(5, 4)
@@ -381,18 +382,18 @@ const addDummyData = async () => {
   });
 
   await sequelize.transaction(async (transaction) => {
-    //console.log(await BookingService.addCollectorToBooking(1, 1, transaction))
+    console.log(await BookingService.addCollectorToBooking(1, 6, transaction))
 
   });
 
-  await sequelize.transaction(async (transaction) => {
-    //console.log(await BookingService.changeCollectorToBooking(1, 3, transaction))
+  // await sequelize.transaction(async (transaction) => {
+  //   console.log(await BookingService.changeCollectorToBooking(1, 5, transaction))
 
-  });
+  // });
 
-  await sequelize.transaction(async (transaction) => {
-    //console.log(await BookingService.removeCollectorToBooking(1, transaction))
-  });
+  // await sequelize.transaction(async (transaction) => {
+  //   console.log(await BookingService.removeCollectorToBooking(1, transaction))
+  // });
 
   // await sequelize.transaction(async (transaction) => {
   //   //await BookingService.createBookingWithBookingPackageByMerchant(bookingData5, transaction);
