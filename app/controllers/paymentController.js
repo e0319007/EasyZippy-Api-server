@@ -168,7 +168,7 @@ module.exports = {
   merchantWithdraw: async (req, res) => {
     try {
       const { merchantId } = req.params;
-      const { amount } = req.body;
+      const { paypalEmail, amount } = req.body;
 
       //Check that merchant has sufficient balance
       const merchant = await MerchantService.retrieveMerchant(merchantId);
@@ -186,7 +186,7 @@ module.exports = {
         },
         "items": [{
           "recipient_type": "EMAIL",
-          "receiver": "sb-bcjgy3288645@personal.example.com",
+          "receiver": paypalEmail,
           "amount": {
             "currency": "SGD",
             "value": amount
