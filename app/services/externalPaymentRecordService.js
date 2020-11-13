@@ -16,6 +16,7 @@ module.exports = {
     Checker.ifEmptyThrowError(payload, Constants.Error.PayloadRequired);
     Checker.ifEmptyThrowError(externalId, Constants.Error.PaymentIdRequired);
     Checker.ifEmptyThrowError(amount, Constants.Error.AmountRequired);
+    amount = 0 - amount;
 
     const externalPaymentRecord = await ExternalPaymentRecord.create({ externalId, amount, payload, paymentTypeEnum: Constants.PaymentType.PAYPAL, customerId }, { transaction });
 
@@ -30,10 +31,25 @@ module.exports = {
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
     Checker.ifEmptyThrowError(externalId, Constants.Error.PaymentIdRequired);
     Checker.ifEmptyThrowError(amount, Constants.Error.AmountRequired);
+    amount = 0 - amount;
 
     const externalPaymentRecord = await ExternalPaymentRecord.create({ externalId, amount, paymentTypeEnum: Constants.PaymentType.PAYPAL, merchantId }, { transaction });
 
     await CreditPaymentRecordService.refundCreditMerchant(merchantId, amount, Constants.CreditPaymentType.TOP_UP, transaction);
+
+    return externalPaymentRecord;
+  },
+
+  createExternalPaymentRecordMerchantWithdraw: async(merchantId, externalId, amount, transaction) => {
+    const merchant = await Merchant.findByPk(merchantId);
+
+    Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
+    Checker.ifEmptyThrowError(externalId, Constants.Error.PaymentIdRequired);
+    Checker.ifEmptyThrowError(amount, Constants.Error.AmountRequired);
+
+    const externalPaymentRecord = await ExternalPaymentRecord.create({ externalId, amount, paymentTypeEnum: Constants.PaymentType.PAYPAL, merchantId }, { transaction });
+
+    await CreditPaymentRecordService.payCreditMerchant(merchantId, amount, Constants.CreditPaymentType.WITHDRAWAL, transaction);
 
     return externalPaymentRecord;
   }
