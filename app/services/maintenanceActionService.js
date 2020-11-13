@@ -12,11 +12,14 @@ module.exports = {
     Checker.ifEmptyThrowError(maintenanceDate, Constants.Error.DateRequired);
     Checker.ifEmptyThrowError(lockerCode, 'Locker code' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(kioskId, 'Kiosk Id' + Constants.Error.XXXIsRequired);
-    Checker.ifEmptyThrowError(await Locker.findOne( {where: {
+    let locker = await Locker.findOne( {where: {
       lockerCode,
       kioskId
-    } }), Constants.Error.LockerNotFound);
-    const maintenanceAction = await MaintenanceAction.create(maintenanceActionData, { transaction });
+    } });
+    Checker.ifEmptyThrowError(locker, Constants.Error.LockerNotFound);
+    let lockerId = locker.id;
+
+    const maintenanceAction = await MaintenanceAction.create({ maintenanceDate, description, lockerId, kioskId}, { transaction });
     return maintenanceAction;
   },
  

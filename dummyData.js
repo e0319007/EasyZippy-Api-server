@@ -221,9 +221,9 @@ const addDummyData = async () => {
   await BookingPackageModel.create({ name: 'SMALL Booking Package', description: 'Booking package for SMALL lockers', quota: 1, price: 25, duration: 30, lockerTypeId: 3 });
   await BookingPackageModel.create({ name: 'TINY Booking Package', description: 'Booking package for TINY lockers', quota: 1, price: 25, duration: 30, lockerTypeId: 4 });
 
-  await MaintenanceAction.create({ date: new Date(2020, 11, 11), description: 'Faulty locker fixed by contractor Mr Gerald Tan', lockerId: 1 })
-  await MaintenanceAction.create({ date: new Date(2020, 04, 23), description: 'Faulty locker fixed by contractor Mr Albert Low', lockerId: 2 })
-  await MaintenanceAction.create({ date: new Date(2020, 06, 01), description: 'Faulty locker fixed by contractor Mr Jason WOng', lockerId: 3 })
+  await MaintenanceAction.create({ date: new Date(2020, 11, 11), description: 'Faulty locker fixed by contractor Mr Gerald Tan', lockerId: 1, kioskId: 1 })
+  await MaintenanceAction.create({ date: new Date(2020, 04, 23), description: 'Faulty locker fixed by contractor Mr Albert Low', lockerId: 2, kioskId: 1 })
+  await MaintenanceAction.create({ date: new Date(2020, 06, 01), description: 'Faulty locker fixed by contractor Mr Jason WOng', lockerId: 3, kioskId: 1 })
 
   let bookingPackageData1 = {
     customerId: 1,
