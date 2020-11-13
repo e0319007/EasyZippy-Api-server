@@ -181,7 +181,7 @@ module.exports = {
     let inCart = false;
     let product;
     let productVariation;
-    let quantity;
+    let quantity = 0;
 
     if (lineItem.productVariationId === null) {
       product = await Product.findByPk(lineItem.productId);
@@ -202,6 +202,8 @@ module.exports = {
       }
       quantity = productVariation.quantity;
     }
+
+    if(quantity === 0) throw new CustomError(Constants.Error.ZeroQuantity);
 
     for(let li of (await cart.getLineItems())) {
       if((li.productVariationId === null && li.productId === lineItem.productId) || (li.productId === null && li.productVariationId === lineItem.productVariationId)) {

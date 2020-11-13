@@ -208,5 +208,6 @@ module.exports = {
     XXXCannotBeNegative: 'must be more than zero',
     XXXIsRequired:'is required',
     XXXMustBeNumber: 'must be a number',
+    ZeroQuantity: 'Item out of stock'
   }
 };
