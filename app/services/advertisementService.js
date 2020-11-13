@@ -246,10 +246,7 @@ module.exports = {
 
     Checker.ifEmptyThrowError(advertisement, Constants.Error.AdvertisementNotFound);
     Checker.ifDeletedThrowError(advertisement, Constants.Error.AdvertisementDeleted);
-    if(advertisement.approved) {
-      throw new CustomError(Constants.Error.AdvertisementApprovedCannotDelete);
-    }
-    
+
     let ad = Advertisement.update({
       disabled : !advertisement.disabled
     },{
