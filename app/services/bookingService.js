@@ -380,6 +380,15 @@ module.exports = {
     return booking;
   },
 
+  removeBookingFromOrder: async(id,  transaction) => {
+    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired)
+    let booking = await Booking.findByPk(id);
+    Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound);
+    let orderId = null;
+    booking = await booking.update({ orderId }, { transaction });
+    return booking;
+  },
+
   //add in a collector 
   addCollectorToBooking: async(id, collectorId, transaction) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);

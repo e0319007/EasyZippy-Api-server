@@ -88,6 +88,7 @@ router.get('/merchantBookings', Authenticator.staffOnly, BookingController.retri
 router.get('/collectorBooking/:collectorId', Authenticator.customerAndMerchantAndStaffOnly, BookingController.retrieveBookingByCollectorId);
 router.put('/booking/:id', Authenticator.customerAndMerchantAndStaffOnly, BookingController.cancelBooking);
 router.put('/tagOrderToBooking', Authenticator.merchantAndStaffOnly, BookingController.tagBookingToOrder);
+router.put('/removeBookingFromOrder', Authenticator.merchantAndStaffOnly, BookingController.removeBookingFromOrder);
 router.put('/addCollectorToBooking', Authenticator.customerAndMerchantAndStaffOnly, BookingController.addCollectorToBooking);
 router.put('/removeCollectorToBooking', Authenticator.customerAndMerchantAndStaffOnly, BookingController.removeCollectorToBooking);
 router.put('/changeCollectorToBooking', Authenticator.customerAndMerchantAndStaffOnly, BookingController.changeCollectorToBooking);
