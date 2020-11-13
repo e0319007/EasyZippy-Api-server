@@ -37,7 +37,20 @@ const markOrderComplete = async(order, transaction) => {
   console.log('Amount paid:' + order.amountPaid);
   console.log('order:');
   console.log(order);
-  let creditPaymentRecord = await CreditPaymentRecordService.increaseCreditMerchant(order.merchantId, order.totalAmount, Constants.CreditPaymentType.ORDER, transaction);
+
+  let creditPaymentRecord;
+
+  if(!Checker.isEmpty(order.promoIdUsed)){
+    let promotion = Promotion.findByPk(order.promoIdUsed);
+    if(promotion.promotionTypeEnum === Constants.PromotionType.MALL_PROMOTION) {
+      creditPaymentRecord = await CreditPaymentRecordService.increaseCreditMerchant(order.merchantId, order.totalAmount, Constants.CreditPaymentType.ORDER, transaction);
+    } else {
+      creditPaymentRecord = await CreditPaymentRecordService.increaseCreditMerchant(order.merchantId, order.discountedAmount, Constants.CreditPaymentType.ORDER, transaction);
+    }
+  } else {
+    creditPaymentRecord = await CreditPaymentRecordService.increaseCreditMerchant(order.merchantId, order.totalAmount, Constants.CreditPaymentType.ORDER, transaction);
+  }
+
   let creditPaymentRecords = await CreditPaymentRecord.findAll({ where: { orderId: order.id } });
   creditPaymentRecords.push(creditPaymentRecord);
   order = await order.update({ orderStatusEnum: Constants.OrderStatus.COMPLETE, creditPaymentRecords }, { transaction, returning: true });
@@ -50,7 +63,7 @@ const calculatePrice = async(lineItems) => {
   console.log('LineItems: ')
   console.log(lineItems.length);
   for(let lineItem of lineItems) {
-    console.log('productId:: ' + lineItem.productId);
+    console.log('productId: ' + lineItem.productId);
     console.log('productVariationId: ' + lineItem.productVariationId);
     //console.log(lineItem)
     if(lineItem.productId !== null) {

@@ -101,6 +101,7 @@ module.exports = {
     BookingPackageSoldOut: 'Booking package is sold out',
     BookingPackageQuotaInsufficient: 'Booking package quota is in sufficient',
     BookingPackageReachedMaximumLockerCount: 'Booking package reached maximum locker count',
+    BookingHasNotStarted: 'Booking time has not started',
     BookingCannotBeCancelled: 'Booking cannot be cancelled',
     BookingCannotBeMade: 'No free slots during the given start time and end time',
     BookingNotFound: 'Booking not found',

@@ -345,7 +345,7 @@ module.exports = {
     Checker.ifEmptyThrowError(await Merchant.findByPk(merchantId), Constants.Error.MerchantNotFound);
     Checker.ifEmptyThrowError(bookingSourceEnum, 'Booking Source ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(kioskId, 'Kiosk ' + Constants.Error.IdRequired);
-    Checker.ifEmptyThrowError(await Kiosk.findByPk(kioskId), 'Kiosk ' + Constants.Error.KioskNotFound);
+    Checker.ifEmptyThrowError((await Kiosk.findByPk(kioskId)), Constants.Error.KioskNotFound);
 
     let bookingPrice = await calculatePrice(startDate, endDate, lockerTypeId);
     let availSlots = await checkBookingAvailable(startDate, endDate, lockerTypeId, kioskId);
@@ -444,7 +444,6 @@ module.exports = {
     Checker.ifEmptyThrowError(orderId, 'Order ' + Constants.Error.IdRequired)
     let order = await Order.findByPk(orderId);
     Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound);
-    await order.update({ orderStatusEnum: Constants.OrderStatus.READY_FOR_COLLECTION}, { transaction });
     booking = await booking.update({ orderId }, { transaction });
     await addCollectorToBooking(id, order.customerId, transaction)
     return booking;
