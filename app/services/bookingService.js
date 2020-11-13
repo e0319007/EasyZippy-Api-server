@@ -537,7 +537,7 @@ module.exports = {
     }
 
     if(!Checker.isEmpty(merchant) && booking.bookingPrice !== null && booking.bookingPrice !== 0) {
-      await CreditPaymentRecordService.refundCreditMerchant(merchant.id, booking.bookingPrice, transaction);
+      await CreditPaymentRecordService.increaseCreditMerchant(merchant.id, booking.bookingPrice, transaction);
     }
 
     booking = await Booking.update({ 

@@ -222,7 +222,7 @@ const markOrderComplete = async(order, transaction) => {
   console.log('Amount paid:' + order.amountPaid);
   console.log('order:');
   console.log(order);
-  let creditPaymentRecord = await CreditPaymentRecordService.refundCreditMerchant(order.merchantId, order.totalAmount, Constants.CreditPaymentType.ORDER, transaction);
+  let creditPaymentRecord = await CreditPaymentRecordService.increaseCreditMerchant(order.merchantId, order.totalAmount, Constants.CreditPaymentType.ORDER, transaction);
   let creditPaymentRecords = await CreditPaymentRecord.findAll({ where: { orderId: order.id } });
   creditPaymentRecords.push(creditPaymentRecord);
   order = await order.update({ orderStatusEnum: Constants.OrderStatus.COMPLETE, creditPaymentRecords }, { transaction, returning: true });
