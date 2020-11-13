@@ -375,7 +375,7 @@ module.exports = {
     Checker.ifEmptyThrowError(orderId, 'Order ' + Constants.Error.IdRequired)
     let order = await Order.findByPk(orderId);
     Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound);
-
+    await order.update({ orderStatusEnum: Constants.OrderStatus.READY_FOR_COLLECTION}, { transaction });
     booking = await booking.update({ orderId }, { transaction });
     return booking;
   },
@@ -401,7 +401,7 @@ module.exports = {
     
     booking = await booking.update({ collectorId }, { transaction });
     console.log('add collector to booking now is')
-    console.log(booking)
+    console.log(booking);
     NotificationHelper.notificationCollectorAdded(id, collectorId);
     EmailHelper.sendEmailForAddCollector(customer.email, booking.id)
     return booking;

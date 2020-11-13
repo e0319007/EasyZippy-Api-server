@@ -180,13 +180,15 @@ module.exports = {
   },
 
   loginCustomer: async(email, password) => {
+    console.log(email);
+    console.log(password);
     Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
     Checker.ifEmptyThrowError(password, Constants.Error.PasswordRequired);
 
     email = email.toLowerCase();
 
     const customer = await Customer.findOne({ where: { email } });
-
+    console.log(customer)
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
 
     if (customer.disabled) {
