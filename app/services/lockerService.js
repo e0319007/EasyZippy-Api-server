@@ -118,6 +118,8 @@ module.exports = {
     let locker;
     //OPEN LOCKER FOR THE FIRST TIME
     if(booking.bookingStatusEnum === Constants.BookingStatus.UNFULFILLED) {
+   
+      if(booking.startDate.getTime() > new Date(new Date().getTime() + 60000*5)) throw new CustomError(Constants.Error.BookingHasNotStarted)
       //call open locker api, create locker action record after integrating to hardware
 
       locker = await Locker.findOne( { where: { lockerTypeId: booking.lockerTypeId, lockerStatusEnum: Constants.LockerStatus.EMPTY } });

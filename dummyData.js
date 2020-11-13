@@ -346,13 +346,23 @@ const addDummyData = async () => {
   //   bookingPackageId: 1,
   // };
 
-  // const bookingData = {
-  //   startDate : new Date(2020,09,30,17,00,00),
-  //   endDate : new Date(2020,09,30,19,0,00),
-  //   lockerTypeId : 1,
-  //   kioskId : 1,
-  //   bookingPackageId : 1
-  // }
+  const bookingData = {
+    startDate : new Date(new Date().getTime() + 10 * 60000),
+    endDate : new Date(new Date().getTime() + 500 * 60000),
+    bookingSourceEnum: Constants.BookingSource.MOBILE,
+    customerId: 1,
+    lockerTypeId: 3,
+    kioskId: 1
+  }
+
+  const bookingData5 = {
+    startDate : new Date(new Date().getTime() + 15 * 60000),
+    endDate : new Date(new Date().getTime() + 500 * 60000),
+    bookingSourceEnum: Constants.BookingSource.KIOSK,
+    merchantId: 1,
+    lockerTypeId: 2,
+    kioskId: 1
+  }
 
   // console.log(bookingPackage1.endDate.toLocaleString());
   // let times = await BookingService.checkBookingAllowed(bookingData);
@@ -379,7 +389,9 @@ const addDummyData = async () => {
     // console.log('*Pass 4')
     // await BookingService.createBookingByCustomer(bookingData9, transaction);
     // console.log('*Pass 5')
-    // await BookingService.createBookingWithBookingPackageByCustomer(bookingData10, transaction);
+    await BookingService.createBookingByMerchant(bookingData5, transaction);
+
+    await BookingService.createBookingByCustomer(bookingData, transaction);
   });
 
   await sequelize.transaction(async (transaction) => {
@@ -573,8 +585,24 @@ const addMoreProducts = async() => {
   await Product.create({ categoryId: homeAppliances.id, merchantId: KMart.id, name: 'Kmart Honey Butter Chips Haitai', unitPrice: 7.6, description: 'Packing method: bagged Net content: 360g Whether it contains sugar: sugar Is it ready to eat: ready to eat', quantityAvailable: 100, images: ['kmart-honey-chips.jpg'] });
   await Product.create({ categoryId: homeAppliances.id, merchantId: KMart.id, name: 'Kmart L-GA candy 360-Vita', unitPrice: 9.3, description: 'Packing method: bagged Net content: 360g Whether it contains sugar: sugar Is it ready to eat: ready to eat', quantityAvailable: 100, images: ['kmart lga candy.jpg'] });
   await Product.create({ categoryId: mobileAndGadgets.id, merchantId: Samsung.id, name: 'Samsung S20 Phone Pink', unitPrice: 1030.0, description: 'Triple rear camera with 30x Space Zoom 6.2" Dynamic AMOLED2x display with 120Hz refresh Shoot night shots like a pro 4, 000mAh (typical) Battery and 25W Super Fast Charging Always-on display', quantityAvailable: 100, images: ['samsung s20.jpg'] });
-  await Product.create({ categoryId: homeAppliances.id, merchantId: Philips.id, name: 'Philips Espresso Maker JLGE-3225 Black', unitPrice: 230.2, description: 'Stainless steel filter holder, frame and cup tray, steel cup holder, chrome-plated base, ', quantityAvailable: 100, images: ['philips-espresso-machine.jpg'] });
+  await Product.create({ categoryId: homeAppliances.id, merchantId: Philips.id, name: 'Philips Espresso Maker JLGE-3225 Black', unitPrice: 230.2, description: 'Stainless steel filter holder, frame and cup tray, steel cup holder, chrome-plated base, ', quantityAvailable: 100, images: ['philips-espresso-machine.jpg' , 'philips-espresso-machine-silver.jpg'] });
   await Product.create({ categoryId: foodAndBeverages.id, merchantId: Nescafe.id, name: 'Nescafé Gold Blend Coffee', unitPrice: 6.2, description: 'MicroGround Instant Coffee is a blend of finely ground coffee beans and premium instant coffee with non dairy creamer and the fi nest sugar', quantityAvailable: 100, images: ['nescafe-gold blend instant coffee.jpg'] });
-  await Product.create({ categoryId: foodAndBeverages.id, merchantId: Nescafe.id, name: 'Nescafe Gold Origins', unitPrice: 5.4, description: 'MicroGround Instant Coffee is a blend of finely ground coffee beans and premium instant coffee with non dairy creamer and the fi nest sugar', quantityAvailable: 100, images: ['nescafe-gold blend alta rica.jpg'] });
+  await Product.create({ categoryId: foodAndBeverages.id, merchantId: Nescafe.id, name: 'Nescafe Gold Origins Cap Columbia', unitPrice: 5.4, description: 'MicroGround Instant Coffee is a blend of finely ground coffee beans and premium instant coffee with non dairy creamer and the fi nest sugar', quantityAvailable: 100, images: ['nescafe-gold blend alta rica.jpg', 'nescafe-gold blend var 2.jpeg'] });
 
+  let productVariationDataNescafe1 = {
+    name: 'Nescafe Gold Origins Alta Rica',
+    unitPrice: 7.5,
+    quantityAvailable: 60,
+    productId: 20,
+    image: 'nescafe-gold blend var 1.jpeg'
+  }
+  await ProductVariationService.createProductVariation(productVariationDataNescafe1);
+
+  let productVariationDataNescafe1 = {
+    name: 'Philips Espresso Maker JLGE-3225 Silver',
+    unitPrice: 274.5,
+    quantityAvailable: 60,
+    productId: 18,
+    image: 'philips-espresso-machine-silver.jpg'
+  }
 }

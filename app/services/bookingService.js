@@ -345,7 +345,7 @@ module.exports = {
     Checker.ifEmptyThrowError(await Merchant.findByPk(merchantId), Constants.Error.MerchantNotFound);
     Checker.ifEmptyThrowError(bookingSourceEnum, 'Booking Source ' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(kioskId, 'Kiosk ' + Constants.Error.IdRequired);
-    Checker.ifEmptyThrowError(await Kiosk.findByPk(kioskId), 'Kiosk ' + Constants.Error.KioskNotFound);
+    Checker.ifEmptyThrowError((await Kiosk.findByPk(kioskId)), Constants.Error.KioskNotFound);
 
     let bookingPrice = await calculatePrice(startDate, endDate, lockerTypeId);
     let availSlots = await checkBookingAvailable(startDate, endDate, lockerTypeId, kioskId);
