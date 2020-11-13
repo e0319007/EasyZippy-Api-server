@@ -47,12 +47,10 @@ module.exports = {
     ADVERTISEMENT: 'Advertisement'
   },
   OrderStatus: {
-    PENDING_PAYMENT: 'Pending Payment',
     PROCESSING: 'Processing',
     READY_FOR_COLLECTION: 'Ready For Collection',
     COMPLETE: 'Complete',
-    CANCELLED: 'Cancelled',
-    REFUND: 'Refund'
+    CANCELLED: 'Cancelled'
   },
   PaymentStatus: {
     CANCELLED: 'Cancelled',
