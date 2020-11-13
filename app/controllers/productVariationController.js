@@ -85,6 +85,16 @@ module.exports = {
     }
   },
 
+  retrieveAllProductVariations: async (req, res) => {
+    try {
+      let productsVariations = await ProductVariationService.retrieveAllProductVariations();
+      return res.status(200).send(productsVariations);
+    } catch (err) {
+      console.log(err);
+      sendErrorResponse(res, err);
+    }
+  },
+
   deleteProductVariation: async(req, res) => {
     try {
       const { id } = req.params;

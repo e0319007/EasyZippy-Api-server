@@ -89,6 +89,10 @@ module.exports = {
     return ProductVariation.findAll({ where: { deleted: false, productId: id } });
   },
 
+  retrieveAllProductVariations: async () => {
+    return await ProductVariation.findAll({ where: { deleted: false, disabled: false } });
+  },
+
   deleteProductVariation: async(id, transaction) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let curProductVariation = await ProductVariation.findByPk(id);

@@ -13,7 +13,8 @@ module.exports = {
   },
   BookingSource: {
     MOBILE: 'Mobile',
-    KIOSK: 'Kiosk'
+    KIOSK: 'Kiosk',
+    WEB: 'Web'
   },
   CollectionMethod: {
     IN_STORE: 'In Store',

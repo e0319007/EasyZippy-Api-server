@@ -235,6 +235,7 @@ router.post('/product', Authenticator.merchantOnly, ProductController.createProd
 
 //Product Variation
 router.get('/productVariations/:id', Authenticator.customerAndMerchantAndStaffOnly, ProductVariationController.retrieveProductVariationsByProductId);
+router.get('/productVariations', Authenticator.customerAndMerchantAndStaffOnly, ProductVariationController.retrieveAllProductVariations);
 router.get('/productVariationsIncludingDisabled/:id', Authenticator.customerAndMerchantAndStaffOnly,  ProductVariationController.retrieveProductVariationsByProductIdIncludingDisabled);
 router.put('/productVariations/toggleDisable/:id', Authenticator.customerAndMerchantAndStaffOnly, ProductVariationController.toggleDisableProductVariation);
 router.put('/productVariations/:id', Authenticator.customerAndMerchantAndStaffOnly, ProductVariationController.updateProductVariation);
