@@ -24,6 +24,10 @@ Locker.init(
       allowNull: false,
       defaultValue: Constants.LockerStatus.EMPTY
     },
+    lockerCode: {
+      type: STRING,
+      allowNull: false
+    },
     disabled: {
       type: BOOLEAN,
       allowNull: false,

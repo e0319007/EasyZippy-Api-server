@@ -127,6 +127,7 @@ module.exports = {
     IdRequired: 'ID is required',
     ImageRequired: 'Image file required',
     InvalidDate: 'Invalid date',
+    InvalidQrCode: 'Invalid QR Code',
     InsufficientCreditBalance: 'Insufficient credit balance',
     KioskCannotBeDeleted: 'Kiosk cannot be deleted',
     KioskDeleted: 'Kiosk is deleted',

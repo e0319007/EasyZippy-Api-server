@@ -106,12 +106,17 @@ module.exports = {
 
   scanOpenLocker: async(req, res) => {
     try {
-      const { code } = req.body.code;
+      const { code } = req.body;
+      //const { code } = req.params;
+      console.log('code' + code);
+      let msg;
       await sequelize.transaction(async (transaction) => {
-        await LockerService.scanOpenLocker(code, transaction);
+        msg = await LockerService.scanOpenLocker(code, transaction);
       });
-      return res.status(200).send();
+      console.log('print msg' + msg)
+      return res.status(200).send(msg);
     } catch(err) {
+      console.log(err)
       sendErrorResponse(res, err);
     }
   }
