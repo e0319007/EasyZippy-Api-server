@@ -25,6 +25,7 @@ const ProductController = require('../controllers/productController');
 const ProductVariationController = require('../controllers/productVariationController');
 const PromotionController = require('../controllers/promotionController');
 const StaffController = require('../controllers/staffController');
+const CreditPaymentRecordController = require('../controllers/creditPaymentRecordController');
 
 //Advertisement
 router.post('/createAdvertisementAsStaff', Authenticator.staffOnly, AdvertisementController.createAdvertisementAsStaff);
@@ -113,6 +114,14 @@ router.get('/categories', Authenticator.customerAndMerchantAndStaffOnly, Categor
 router.put('/category/:id',  Authenticator.staffOnly, CategoryController.updateCategory);
 router.put('/deleteCategory/:id', Authenticator.staffOnly, CategoryController.deleteCategory);
 router.post('/category', Authenticator.staffOnly, CategoryController.createCategory);
+
+//Credit payment record
+router.get('/customerCreditPaymentRecords/:customerId', Authenticator.customerAndStaffOnly, CreditPaymentRecordController.retrieveCreditPaymentRecordByCustomerId);
+router.get('/merchantCreditPaymentRecords/:merchantId', Authenticator.merchantAndStaffOnly, CreditPaymentRecordController.retrieveCreditPaymentRecordByMerchantId);
+router.get('/customerRecords', Authenticator.staffOnly, CreditPaymentRecordController.retrieveAllCreditPaymentRecordsOfCustomer);
+router.get('/merchantRecords', Authenticator.staffOnly, CreditPaymentRecordController.retrieveAllCreditPaymentRecordsOfMerchant);
+router.get('/allRecords', Authenticator.staffOnly, CreditPaymentRecordController.retrieveAllCreditPaymentRecordsOfMerchant);
+
 
 //Customer
 router.get('/customer/:id', Authenticator.customerAndMerchantAndStaffOnly, CustomerController.retrieveCustomer);
