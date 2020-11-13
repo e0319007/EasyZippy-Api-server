@@ -598,11 +598,26 @@ const addMoreProducts = async() => {
   }
   await ProductVariationService.createProductVariation(productVariationDataNescafe1);
 
-  let productVariationDataNescafe1 = {
+  let productVariationDataPhillipscoffee = {
     name: 'Philips Espresso Maker JLGE-3225 Silver',
     unitPrice: 274.5,
     quantityAvailable: 60,
     productId: 18,
     image: 'philips-espresso-machine-silver.jpg'
   }
+  await ProductVariationService.createProductVariation(productVariationDataPhillipscoffee);
+
+  await (await Product.findByPk(1)).update({quantitySold: 20});
+  await (await Product.findByPk(2)).update({quantitySold: 33});
+  await (await Product.findByPk(4)).update({quantitySold: 37});
+  await (await Product.findByPk(5)).update({quantitySold: 130});
+  await (await Product.findByPk(6)).update({quantitySold: 310});
+  await (await Product.findByPk(7)).update({quantitySold: 50});
+  await (await Product.findByPk(8)).update({quantitySold: 3130});
+  await (await Product.findByPk(10)).update({quantitySold: 210});
+  await (await Product.findByPk(13)).update({quantitySold: 31});
+  await (await Product.findByPk(14)).update({quantitySold: 68});
+  await (await Product.findByPk(15)).update({quantitySold: 326});
+  await (await Product.findByPk(16)).update({quantitySold: 117});
+  await (await Product.findByPk(17)).update({quantitySold: 230});
 }
