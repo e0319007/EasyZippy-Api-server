@@ -519,16 +519,13 @@ const addDummyData = async () => {
   await sequelize.transaction(async (transaction) => {
     await CartService.saveItemsToCart(1, { lineItems }, transaction);
   });
-console.log('1')
   await sequelize.transaction(async (transaction) => {
     await CartService.addToCart(1, lineItem5, transaction);
   });
-  console.log('2')
 
   await sequelize.transaction(async (transaction) => {
     await CartService.addToCart(1, lineItem5, transaction);
   });
-console.log('3')
 
 
   // await sequelize.transaction(async (transaction) => {

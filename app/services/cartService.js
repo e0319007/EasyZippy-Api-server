@@ -177,7 +177,6 @@ module.exports = {
         customerId
       }
     });
-console.log('a')
     
     let inCart = false;
     let product;
@@ -203,26 +202,22 @@ console.log('a')
       }
       quantity = productVariation.quantity;
     }
-    console.log('b')
 
     for(let li of (await cart.getLineItems())) {
       if((li.productVariationId === null && li.productId === lineItem.productId) || (li.productId === null && li.productVariationId === lineItem.productVariationId)) {
         inCart = true;
-console.log('c')
 
         if(li.quantity + lineItem.quantity > quantity) {
           throw new CustomError(Constants.Error.InsufficientQuantity);
         } else {
-console.log('d')
-          await li.update({ quantity: (quantity + li.quantity) }, { transaction });
+          let newQty = lineItem.quantity + li.quantity;
+          await li.update({ quantity: newQty }, { transaction });
         }
       }
     }
-    console.log('e')
 
     if(!inCart) {
       if(lineItem.quantity > quantity) throw new CustomError(Constants.Error.InsufficientQuantity);
-console.log('f')
       lineItem = await LineItem.create(lineItem, { transaction });
       lineItems = await cart.getLineItems();
       await cart.addLineItem(lineItem, { transaction })
