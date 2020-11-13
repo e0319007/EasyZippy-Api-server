@@ -34,7 +34,7 @@ router.post('/advertisement/addImage', Upload.preUploadCheckForImg, Advertisemen
 router.get('/advertisement/merchant/:merchantId', Authenticator.merchantOnly, AdvertisementController.retrieveAdvertisementByMerchantId);
 router.get('/advertisement/staff/:staffId', Authenticator.staffOnly, AdvertisementController.retrieveAdvertisementByStaffId);
 router.get('/advertisement/:id', Authenticator.merchantAndStaffOnly, AdvertisementController.retrieveAdvertisementById);
-router.get('/advertisements/ongoing', Authenticator.customerAndStaffOnly, AdvertisementController.retrieveOngoingAdvertisement);
+router.get('/advertisements/ongoing', Authenticator.customerAndMerchantAndStaffOnly, AdvertisementController.retrieveOngoingAdvertisement);
 router.get('/advertisements', Authenticator.staffOnly, AdvertisementController.retrieveAllAdvertisement);
 router.get('/approvedAdvertisements', Authenticator.staffOnly, AdvertisementController.retrieveApprovedAdvertisement);
 router.get('/unapprovedAdvertisements', Authenticator.staffOnly, AdvertisementController.retrieveUnapprovedAdvertisement);

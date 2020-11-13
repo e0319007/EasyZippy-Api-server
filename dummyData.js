@@ -62,6 +62,7 @@ const addDummyData = async () => {
   await CustomerService.activateCustomer(customerId2);
   await CustomerService.activateCustomer(customerId3);
   await MerchantService.approveMerchant(merchantId);
+  await MerchantService.approveMerchant(2);
 
   await AnnouncementService.createAnnouncement({ title: 'Notice', description: 'The Ez2keep system will be disabled for maintenance on 21 September 2020', staffId });
   await AnnouncementService.createAnnouncement({ title: 'COVID-19 notice', description: 'Please wear your masks and practice social distancing at all times', staffId });
@@ -78,7 +79,7 @@ const addDummyData = async () => {
   let bagCategory = await Category.create({ name: 'Bags', description: 'Sample Description' });
   let bottleCategory = await Category.create({ name: 'Water Bottles', description: 'Sample Description' });
   let apparelCategory = await Category.create({ name: 'Apparel', description: 'Sample Description' });
-
+  
   await Product.create({ categoryId: bagCategory.id, merchantId: nike.id, name: 'Nike Venom Bag', unitPrice: 35.5, description: 'Black', quantityAvailable: 100, images: ['bag1.jpg'], });
   await Product.create({ categoryId: bagCategory.id, merchantId: nike.id, name: 'Nike Sports Duffel Bag', unitPrice: 50.2, description: 'Pink', quantityAvailable: 100, images: ['bag2.jpg'] });
   await Product.create({ categoryId: bottleCategory.id, merchantId: nike.id, name: 'Nike Sports Bottle', unitPrice: 20, description: 'Transparent 1L', quantityAvailable: 100, images: ['bo1.jpg'] });
@@ -165,7 +166,7 @@ const addDummyData = async () => {
     flatDiscount: 10,
     usageLimit: 20,
     merchantId: 1,
-    minimumSpent: 10
+    minimumSpent: 10 
   };
 
   const promoData2 = {
@@ -508,7 +509,7 @@ const addDummyData = async () => {
   let lineItem5 = {
     productVariationId: null,
     productId: 5,
-    quantity: 3
+    quantity: 11
   };
 
   let lineItems = new Array();
@@ -548,6 +549,32 @@ const addDummyData = async () => {
   // console.log(await orderService.retrieveOrderByMerchantId(1));
   // console.log('RETRIEVE ORDER LINE ITEMS');
   // console.log(await orderVal[0].getLineItems());
+
+  addMoreProducts();
 };
 
 addDummyData();
+
+const addMoreProducts = async() => {
+  let mobileAndGadgets = await Category.create({ name: 'Mobile And Gadgets', description: 'Sample Description' });
+  let homeAppliances = await Category.create({ name: 'Home Appliances', description: 'Sample Description' });
+  let foodAndBeverages = await Category.create({ name: 'Food and Beverages', description: 'Sample Description' });
+
+  let Panasonic = await MerchantService.createMerchant({ name: 'Panasonic', mobileNumber: '97478789', password: 'Password123!', email: 'panasonic@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '2', unitNumber: '5', pointOfContact: 'David', creditBalance: 1000, tenancyAgreement: 'tenancy_agreement.pdf', merchantLogoImage: 'panasonic.jpeg' });
+  let Philips = await MerchantService.createMerchant({ name: 'Philips', mobileNumber: '91236358', password: 'Password123!', email: 'philips@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '1', unitNumber: '9', pointOfContact: 'Jon', creditBalance: 1000, tenancyAgreement: 'tenancy_agreement.pdf', merchantLogoImage: 'philips.jpg' });
+  let Samsung = await MerchantService.createMerchant({ name: 'Samsung', mobileNumber: '93456324', password: 'Password123!', email: 'samsung@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '4', unitNumber: '6', pointOfContact: 'Shermaine', creditBalance: 1000, tenancyAgreement: 'tenancy_agreement.pdf', merchantLogoImage: 'samsung.png' });
+  let Nescafe = await MerchantService.createMerchant({ name: 'Nescafe', mobileNumber: '93456453', password: 'Password123!', email: 'nescafe@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '3', unitNumber: '7', pointOfContact: 'Leo', creditBalance: 1000, tenancyAgreement: 'tenancy_agreement.pdf', merchantLogoImage: 'nescafe.jpg' });
+  let KMart = await MerchantService.createMerchant({ name: 'KMart', mobileNumber: '93546358', password: 'Password123!', email: 'kmart@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '1', unitNumber: '3', pointOfContact: 'Kate', creditBalance: 1000, tenancyAgreement: 'tenancy_agreement.pdf', merchantLogoImage: 'kmart.png' });
+
+  await Product.create({ categoryId: homeAppliances.id, merchantId: Panasonic.id, name: 'Panasonic professional Nanoe Hair Dryer EH-ND53', unitPrice: 60.2, description: 'ES-LV9Q Black: The most important feature of this hair dryer is its Nanoe technology which uses electricity to split airborne moisture molecules into charged particles that bind to the hair. This results in smooth, shiny, healthy looking hair. ', quantityAvailable: 100, images: ['panasonic professional hair dryer EH-ND53.jpg'] });
+  await Product.create({ categoryId: homeAppliances.id, merchantId: Panasonic.id, name: 'Panasonic ES-ST2N-K751 Rechargeable Wet/Dry 3 Blade Shaver', unitPrice: 64.2, description: '13,00cpm/min linear motor for quick and precise shave Multi-Fit Arc Blade follows Facial Contour for closer shaver Wet/Dry Usage 1 year', quantityAvailable: 100, images: ['panasonic ES-LV9Q shaver black.jpg'] });
+  await Product.create({ categoryId: foodAndBeverages.id, merchantId: KMart.id, name: 'Kmart Koseomi Rice Crackers', unitPrice: 10.2, description: 'Nice crackers', quantityAvailable: 100, images: ['kmart koseomi.jpg'] });
+  await Product.create({ categoryId: foodAndBeverages.id, merchantId: KMart.id, name: 'Kmart Yakult Icecream', unitPrice: 3.2, description: 'Packing method: bagged Net content: 360g Whether it contains sugar: sugar Is it ready to eat: ready to eat', quantityAvailable: 100, images: ['kmart yakult icecream.jpg'] });
+  await Product.create({ categoryId: homeAppliances.id, merchantId: KMart.id, name: 'Kmart Honey Butter Chips Haitai', unitPrice: 7.6, description: 'Packing method: bagged Net content: 360g Whether it contains sugar: sugar Is it ready to eat: ready to eat', quantityAvailable: 100, images: ['kmart-honey-chips.jpg'] });
+  await Product.create({ categoryId: homeAppliances.id, merchantId: KMart.id, name: 'Kmart L-GA candy 360-Vita', unitPrice: 9.3, description: 'Packing method: bagged Net content: 360g Whether it contains sugar: sugar Is it ready to eat: ready to eat', quantityAvailable: 100, images: ['kmart lga candy.jpg'] });
+  await Product.create({ categoryId: mobileAndGadgets.id, merchantId: Samsung.id, name: 'Samsung S20 Phone Pink', unitPrice: 1030.0, description: 'Triple rear camera with 30x Space Zoom 6.2" Dynamic AMOLED2x display with 120Hz refresh Shoot night shots like a pro 4, 000mAh (typical) Battery and 25W Super Fast Charging Always-on display', quantityAvailable: 100, images: ['samsung s20.jpg'] });
+  await Product.create({ categoryId: homeAppliances.id, merchantId: Philips.id, name: 'Philips Espresso Maker JLGE-3225 Black', unitPrice: 230.2, description: 'Stainless steel filter holder, frame and cup tray, steel cup holder, chrome-plated base, ', quantityAvailable: 100, images: ['philips-espresso-machine.jpg'] });
+  await Product.create({ categoryId: foodAndBeverages.id, merchantId: Nescafe.id, name: 'Nescafé Gold Blend Coffee', unitPrice: 6.2, description: 'MicroGround Instant Coffee is a blend of finely ground coffee beans and premium instant coffee with non dairy creamer and the fi nest sugar', quantityAvailable: 100, images: ['nescafe-gold blend instant coffee.jpg'] });
+  await Product.create({ categoryId: foodAndBeverages.id, merchantId: Nescafe.id, name: 'Nescafe Gold Origins', unitPrice: 5.4, description: 'MicroGround Instant Coffee is a blend of finely ground coffee beans and premium instant coffee with non dairy creamer and the fi nest sugar', quantityAvailable: 100, images: ['nescafe-gold blend alta rica.jpg'] });
+
+}

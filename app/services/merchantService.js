@@ -217,7 +217,8 @@ module.exports = {
     Checker.ifEmptyThrowError(password, Constants.Error.PasswordRequired);
 
     email = email.toLowerCase();
-
+    email = email.trim();
+    password = password.trim();
     const merchant = await Merchant.findOne({ where: { email } });
 
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);

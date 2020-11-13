@@ -189,7 +189,8 @@ module.exports = {
     Checker.ifEmptyThrowError(password, Constants.Error.PasswordRequired);
 
     email = email.toLowerCase();
-    
+    email = email.trim();
+    password = password.trim();
     const staff = await Staff.findOne({ where: { email } });
 
     Checker.ifEmptyThrowError(staff, Constants.Error.StaffNotFound);
