@@ -159,6 +159,7 @@ module.exports = {
     NoActiveBookingPackage: 'No active booking package available',
     NotificationNotFound: 'Notification Not Found',
     NoLockersAvailable: 'No lockers available',
+    OrderAlreadyCancelled: 'Order already cancelled',
     OrderNotFound: 'Order not found',
     OtpInvalid: 'OTP is invalid',
     PasswordCannotChange: 'Password cannot be changed',
