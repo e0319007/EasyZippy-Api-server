@@ -26,6 +26,7 @@ module.exports = {
     BOOKING_PACKAGE: 'Booking Package',
     BOOKING_OVERTIME_CHARGE: 'Booking Overtime Charge',
     REFERRAL_BONUS: 'Referral Bonus',
+    REFUND: 'Refund',
     TOP_UP: 'Top Up',
     WITHDRAWAL: 'Withdrawal'
   },
@@ -46,12 +47,10 @@ module.exports = {
     ADVERTISEMENT: 'Advertisement'
   },
   OrderStatus: {
-    PENDING_PAYMENT: 'Pending Payment',
     PROCESSING: 'Processing',
     READY_FOR_COLLECTION: 'Ready For Collection',
     COMPLETE: 'Complete',
-    CANCELLED: 'Cancelled',
-    REFUND: 'Refund'
+    CANCELLED: 'Cancelled'
   },
   PaymentStatus: {
     CANCELLED: 'Cancelled',
@@ -102,6 +101,7 @@ module.exports = {
     BookingPackageSoldOut: 'Booking package is sold out',
     BookingPackageQuotaInsufficient: 'Booking package quota is in sufficient',
     BookingPackageReachedMaximumLockerCount: 'Booking package reached maximum locker count',
+    BookingHasNotStarted: 'Booking time has not started',
     BookingCannotBeCancelled: 'Booking cannot be cancelled',
     BookingCannotBeMade: 'No free slots during the given start time and end time',
     BookingNotFound: 'Booking not found',
@@ -208,5 +208,6 @@ module.exports = {
     XXXCannotBeNegative: 'must be more than zero',
     XXXIsRequired:'is required',
     XXXMustBeNumber: 'must be a number',
+    ZeroQuantity: 'Item out of stock'
   }
 };

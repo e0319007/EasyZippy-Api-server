@@ -2,11 +2,42 @@ const Checker = require('../common/checker');
 const Constants = require('../common/constants');
 const CustomError = require('../common/error/customError');
 const CreditPaymentRecord = require('../models/CreditPaymentRecord');
+const { Op } = require("sequelize");
 
 const Customer = require('../models/Customer')
 const Merchant = require('../models/Merchant')
 
 module.exports = {
+  retrieveCreditPaymentRecordByCustomerId: async(customerId) => {
+    return await CreditPaymentRecord.findAll({ where: {customerId} })
+  },
+
+  retrieveCreditPaymentRecordByMerchantId: async(merchantId) => {
+    return await CreditPaymentRecord.findAll({ where: { merchantId } });
+  },
+
+  retrieveAllCreditPaymentRecordsOfCustomer: async() => {
+    return await CreditPaymentRecord.findAll({ 
+      where: {
+      customerId: { 
+        [Op.ne]: null
+      } 
+    }});
+  },
+  
+  retrieveAllCreditPaymentRecordsOfMerchant: async() => {
+    return await CreditPaymentRecord.findAll({ 
+      where: {
+      merchantId: { 
+        [Op.ne]: null
+      } 
+    }});
+  },
+
+  retrieveAllCreditPaymentRecords: async() => {
+    return await CreditPaymentRecord.findAll();
+  },
+
   payCreditCustomer: async(customerId, amountPaid, creditPaymentTypeEnum, transaction) => {
     amountPaid = parseFloat(amountPaid);
     Checker.ifEmptyThrowError(customerId, Constants.Error.IdRequired);
@@ -39,7 +70,7 @@ module.exports = {
     return creditPaymentRecord;
   },
 
-  refundCreditCustomer: async(customerId, amountPaid, creditPaymentTypeEnum, transaction) => {
+  increaseCreditCustomer: async(customerId, amountPaid, creditPaymentTypeEnum, transaction) => {
     amountPaid = parseFloat(amountPaid);
     console.log('customerID' + customerId)
     Checker.ifEmptyThrowError(customerId, Constants.Error.IdRequired);
@@ -93,7 +124,7 @@ module.exports = {
     return creditPaymentRecord;
   },
 
-  refundCreditMerchant: async(merchantId, amountPaid, creditPaymentTypeEnum, transaction) => {
+  increaseCreditMerchant: async(merchantId, amountPaid, creditPaymentTypeEnum, transaction) => {
     amountPaid = parseFloat(amountPaid);
     Checker.ifEmptyThrowError(merchantId, Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(amountPaid, 'Amount paid ' + Constants.Error.XXXIsRequired);

@@ -83,7 +83,7 @@ module.exports = {
     return await Cart.findByPk(cart.id);
   },
 
-  retrieveCartByCustomerId: async(id) => {
+  retrieveCartByCustomerId: async(id, transaction) => {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let customer = await Customer.findByPk(id);
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
@@ -142,7 +142,7 @@ module.exports = {
             if(!Checker.isEmpty(lineItem[itemIndex].product) && lineItem[itemIndex].product.id === invalidProductId && Checker.isEmpty(invalidItem.product.quantityNotZero)) {
               lineItem.splice(itemIndex, 1);
               --itemIndex;
-              await LineItem.destroy({ where: { productId: invalidProductId } }); //transaction
+              await LineItem.destroy({ where: { productId: invalidProductId }, transaction });
             }
           }
         } else {
@@ -181,7 +181,7 @@ module.exports = {
     let inCart = false;
     let product;
     let productVariation;
-    let quantity;
+    let quantity = 0;
 
     if (lineItem.productVariationId === null) {
       product = await Product.findByPk(lineItem.productId);
@@ -191,7 +191,7 @@ module.exports = {
       if(product.deleted) {
         throw new CustomError(Constants.Error.ProductDeleted);
       } 
-      quantity = product.quantity;
+      quantity = product.quantityAvailable;
     } else {
       productVariation = await ProductVariation.findByPk(lineItem.productVariationId);
       if(productVariation.disabled) {
@@ -200,21 +200,26 @@ module.exports = {
       if(productVariation.deleted) {
         throw new CustomError(Constants.Error.ProductVariationDeleted);
       }
-      quantity = productVariation.quantity;
+      console.log()
+      quantity = productVariation.quantityAvailable;
     }
+    console.log('init qty' + quantity)
+
+    if(quantity === 0) throw new CustomError(Constants.Error.ZeroQuantity);
 
     for(let li of (await cart.getLineItems())) {
       if((li.productVariationId === null && li.productId === lineItem.productId) || (li.productId === null && li.productVariationId === lineItem.productVariationId)) {
         inCart = true;
-
-        if(li.quantity + lineItem.quantity > quantity) {
+        console.log('add qty: ' + Number(li.quantity + lineItem.quantity))
+        if(Number(li.quantity + lineItem.quantity) > quantity) {
           throw new CustomError(Constants.Error.InsufficientQuantity);
         } else {
-          let newQty = lineItem.quantity + li.quantity;
+          let newQty = Number(li.quantity + lineItem.quantity)
           await li.update({ quantity: newQty }, { transaction });
         }
       }
     }
+    console.log('quantity: ' + quantity)
 
     if(!inCart) {
       if(lineItem.quantity > quantity) throw new CustomError(Constants.Error.InsufficientQuantity);

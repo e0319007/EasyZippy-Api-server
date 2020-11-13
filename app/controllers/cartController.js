@@ -35,7 +35,11 @@ module.exports = {
     try {
       const { customerId } = req.params;
 
-      const cart = await CartService.retrieveCartByCustomerId(customerId);
+      let cart;
+
+      await sequelize.transaction(async (transaction) => {
+        cart = await CartService.retrieveCartByCustomerId(customerId, transaction);
+      });
       return res.status(200).send(cart);
     } catch (err) {
       console.log(err)
@@ -48,7 +52,7 @@ module.exports = {
       const { customerId } = req.params;
       const lineItem = req.body.lineItem;
       await sequelize.transaction(async (transaction) => {
-        await CartService.retrieveCartByCustomerId(customerId, lineItem, transaction);
+        await CartService.addToCart(customerId, lineItem, transaction);
       });
       return res.status(200).send();
     } catch (err) {

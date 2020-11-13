@@ -294,7 +294,7 @@ module.exports = {
 
   //send notification to merchant of new order
   notificationNewOrder : async(orderId, merchantId) => {
-    let order = await Order.findByPk(id);
+    let order = await Order.findByPk(orderId);
     Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound); 
 
     let merchant = await Merchant.findByPk(merchantId);
@@ -311,7 +311,7 @@ module.exports = {
   },
   //send notifications to merchants that customer has received the order
    notificationOrderReceivedMerchant: async(orderId, merchantId) => {
-    let order = await Order.findByPk(id);
+    let order = await Order.findByPk(orderId);
     Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound); 
 
     let merchant = await Merchant.findByPk(merchantId);
