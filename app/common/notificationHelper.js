@@ -19,7 +19,7 @@ module.exports = {
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
     
     let title = 'New Merchant Application';
-    let description = 'Click to view application by ' + merchant.name + '.';
+    let description = 'A new merchant application from ' + merchant.name + ' requires attention.';
     
     let senderModel = Constants.ModelEnum.MERCHANT;
     let receiverModel = Constants.ModelEnum.STAFF;
@@ -355,7 +355,7 @@ module.exports = {
     Checker.ifEmptyThrowError(advertisement, Constants.Error.AdvertisementNotFound);
     
     let title = 'New Advertisement Application';
-    let description = 'Click to view application.';
+    let description = 'A new advertisement application requires attention';
     
     let senderModel = Constants.ModelEnum.ADVERTISEMENT;
     let receiverModel = Constants.ModelEnum.STAFF;
@@ -372,7 +372,7 @@ module.exports = {
     Checker.ifEmptyThrowError(advertisement, Constants.Error.AdvertisementNotFound);
     
     let title = 'New Advertisement Application';
-    let description = 'Click to view application.';
+    let description = 'A new advertisement application requires attention';
     
     let senderModel = Constants.ModelEnum.ADVERTISEMENT;
     let receiverModel = Constants.ModelEnum.STAFF;
