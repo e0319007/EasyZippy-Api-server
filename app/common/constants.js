@@ -26,6 +26,7 @@ module.exports = {
     BOOKING_PACKAGE: 'Booking Package',
     BOOKING_OVERTIME_CHARGE: 'Booking Overtime Charge',
     REFERRAL_BONUS: 'Referral Bonus',
+    REFUND: 'Refund',
     TOP_UP: 'Top Up',
     WITHDRAWAL: 'Withdrawal'
   },

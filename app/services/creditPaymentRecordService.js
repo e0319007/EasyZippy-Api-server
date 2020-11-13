@@ -39,7 +39,7 @@ module.exports = {
     return creditPaymentRecord;
   },
 
-  refundCreditCustomer: async(customerId, amountPaid, creditPaymentTypeEnum, transaction) => {
+  increaseCreditCustomer: async(customerId, amountPaid, creditPaymentTypeEnum, transaction) => {
     amountPaid = parseFloat(amountPaid);
     console.log('customerID' + customerId)
     Checker.ifEmptyThrowError(customerId, Constants.Error.IdRequired);
@@ -93,7 +93,7 @@ module.exports = {
     return creditPaymentRecord;
   },
 
-  refundCreditMerchant: async(merchantId, amountPaid, creditPaymentTypeEnum, transaction) => {
+  increaseCreditMerchant: async(merchantId, amountPaid, creditPaymentTypeEnum, transaction) => {
     amountPaid = parseFloat(amountPaid);
     Checker.ifEmptyThrowError(merchantId, Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(amountPaid, 'Amount paid ' + Constants.Error.XXXIsRequired);
