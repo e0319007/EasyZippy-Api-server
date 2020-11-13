@@ -509,7 +509,7 @@ const addDummyData = async () => {
   let lineItem5 = {
     productVariationId: null,
     productId: 5,
-    quantity: 3
+    quantity: 11
   };
 
   let lineItems = new Array();
