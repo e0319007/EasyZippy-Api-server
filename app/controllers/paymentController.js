@@ -2,6 +2,7 @@ const paypal = require('paypal-rest-sdk');
 const payouts = require('@paypal/payouts-sdk');
 const sequelize = require('../common/database');
 const config = require('config');
+const { sendErrorResponse } = require('../common/error/errorHandler');
 
 const ExternalPaymentRecordService = require('../services/externalPaymentRecordService');
 
@@ -45,8 +46,7 @@ module.exports = {
         res.redirect(paymentCb.links[1].href);
       });
     } catch (err) {
-      console.log(err)
-      return res.status(400).send();
+      sendErrorResponse(res, err);
     }
   },
 
@@ -162,34 +162,47 @@ module.exports = {
   },
 
   merchantWithdraw: async (req, res) => {
-    let requestBody = {
-      "sender_batch_header": {
-        "sender_batch_id": "Test_sdk_3",
-        "email_subject": "This is a test transaction from SDK",
-        "email_message": "SDK payouts test txn",
-        "note": "Payout note"
-      },
-      "items": [{
-        "recipient_type": "EMAIL",
-        "receiver": "sb-bcjgy3288645@personal.example.com",
-        "amount": {
-          "currency": "SGD",
-          "value": "1.00"
+    try {
+      const { merchantId } = req.params;
+      const { amount } = req.body;
+
+      let requestBody = {
+        "sender_batch_header": {
+          "sender_batch_id": `${Date.now()}`,
+          "email_subject": "This is a test transaction from SDK",
+          "email_message": "SDK payouts test txn",
+          "note": "Payout note"
         },
-        "note": "This is your withdrawal",
-        "sender_item_id": "Test_txn_1"
-      }]
-    };
-    let request = new payouts.payouts.PayoutsPostRequest();
-    request.requestBody(requestBody);
- 
-    // Call API with your client and get a response for your call
-    let createPayouts  = async () => {
-      let response = await client.execute(request);
-      console.log(`Response: ${JSON.stringify(response)}`);
-      // If call returns body in response, you can get the deserialized version from the result attribute of the response.
-      console.log(`Payouts Create Response: ${JSON.stringify(response.result)}`);
-    };
-    createPayouts();
+        "items": [{
+          "recipient_type": "EMAIL",
+          "receiver": "sb-bcjgy3288645@personal.example.com",
+          "amount": {
+            "currency": "SGD",
+            "value": amount
+          },
+          "note": "This is your withdrawal",
+          "sender_item_id": "Test_txn_1"
+        }]
+      };
+      let request = new payouts.payouts.PayoutsPostRequest();
+      request.requestBody(requestBody);
+  
+      let externalId;
+      let createPayouts  = async () => {
+        let response = await client.execute(request);
+        externalId = response.result.batch_header.payout_batch_id;
+      };
+      await createPayouts();
+
+      let externalPaymentRecord;
+
+      await sequelize.transaction(async (transaction) => {
+        externalPaymentRecord = await ExternalPaymentRecordService.createExternalPaymentRecordMerchantWithdraw(merchantId, externalId, amount, transaction);
+      });
+
+      return res.status(200).send(externalPaymentRecord);
+    } catch (err) {
+      sendErrorResponse(res, err);
+    }
   }
 };

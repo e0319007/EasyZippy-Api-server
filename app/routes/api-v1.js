@@ -216,7 +216,7 @@ router.get('/pay/customer/:customerId/:amount', Authenticator.customerAndMerchan
 router.get('/customerPaySuccess', PaymentController.success);
 // router.get('/merchantPaySuccess', PaymentController.merchantPaySuccess);
 router.get('/cancel', PaymentController.cancel);
-router.post('/withdraw', PaymentController.merchantWithdraw);
+router.post('/withdraw/:merchantId', PaymentController.merchantWithdraw);
 
 //Product
 router.get('/product/:id', Authenticator.customerAndMerchantAndStaffOnly, ProductController.retrieveProduct);
