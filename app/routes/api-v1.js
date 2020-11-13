@@ -104,6 +104,7 @@ router.post('/checkBookingAllowed', Authenticator.customerAndMerchantAndStaffOnl
 //Cart
 router.get('/retrieveCart/:customerId', CartController.retrieveCartByCustomerId);
 router.put('/saveCart/:customerId', CartController.saveItemsToCart);
+router.put('/addToCart/:customerId', CartController.addToCart);
 router.post('/retrieveInvalidCartItems', CartController.getInvalidCartItems);
 
 //Category

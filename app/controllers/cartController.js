@@ -41,5 +41,19 @@ module.exports = {
       console.log(err)
       sendErrorResponse(res, err);
     }
-  }
+  },
+
+  addToCart: async(req, res) => {
+    try {
+      const { customerId } = req.params;
+      const lineItem = req.body.lineItem;
+      await sequelize.transaction(async (transaction) => {
+        await CartService.retrieveCartByCustomerId(customerId, lineItem, transaction);
+      });
+      return res.status(200).send();
+    } catch (err) {
+      console.log(err)
+      sendErrorResponse(res, err);
+    }
+  },
 }

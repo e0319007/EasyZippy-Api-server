@@ -515,11 +515,21 @@ const addDummyData = async () => {
   lineItems.push(lineItem2);
   lineItems.push(lineItem3);
   lineItems.push(lineItem4);
-  lineItems.push(lineItem5);
 
   await sequelize.transaction(async (transaction) => {
     await CartService.saveItemsToCart(1, { lineItems }, transaction);
   });
+console.log('1')
+  await sequelize.transaction(async (transaction) => {
+    await CartService.addToCart(1, lineItem5, transaction);
+  });
+  console.log('2')
+
+  await sequelize.transaction(async (transaction) => {
+    await CartService.addToCart(1, lineItem5, transaction);
+  });
+console.log('3')
+
 
   // await sequelize.transaction(async (transaction) => {
   //   console.log(await orderService.updateOrderStatus(1, Constants.OrderStatus.READY_FOR_COLLECTION, transaction));
