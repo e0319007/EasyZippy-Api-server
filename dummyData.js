@@ -62,6 +62,7 @@ const addDummyData = async () => {
   await CustomerService.activateCustomer(customerId2);
   await CustomerService.activateCustomer(customerId3);
   await MerchantService.approveMerchant(merchantId);
+  await MerchantService.approveMerchant(2);
 
   await AnnouncementService.createAnnouncement({ title: 'Notice', description: 'The Ez2keep system will be disabled for maintenance on 21 September 2020', staffId });
   await AnnouncementService.createAnnouncement({ title: 'COVID-19 notice', description: 'Please wear your masks and practice social distancing at all times', staffId });
@@ -78,7 +79,7 @@ const addDummyData = async () => {
   let bagCategory = await Category.create({ name: 'Bags', description: 'Sample Description' });
   let bottleCategory = await Category.create({ name: 'Water Bottles', description: 'Sample Description' });
   let apparelCategory = await Category.create({ name: 'Apparel', description: 'Sample Description' });
-
+  
   await Product.create({ categoryId: bagCategory.id, merchantId: nike.id, name: 'Nike Venom Bag', unitPrice: 35.5, description: 'Black', quantityAvailable: 100, images: ['bag1.jpg'], });
   await Product.create({ categoryId: bagCategory.id, merchantId: nike.id, name: 'Nike Sports Duffel Bag', unitPrice: 50.2, description: 'Pink', quantityAvailable: 100, images: ['bag2.jpg'] });
   await Product.create({ categoryId: bottleCategory.id, merchantId: nike.id, name: 'Nike Sports Bottle', unitPrice: 20, description: 'Transparent 1L', quantityAvailable: 100, images: ['bo1.jpg'] });
@@ -551,3 +552,20 @@ const addDummyData = async () => {
 };
 
 addDummyData();
+
+const addMoreProducts = () => {
+  let mobileAndGadgets = await Category.create({ name: 'Mobile And Gadgets', description: 'Sample Description' });
+  let homeAppliances = await Category.create({ name: 'Home Appliances', description: 'Sample Description' });
+  let beautyandcare = await Category.create({ name: 'Beauty and care', description: 'Sample Description' });
+  let homeandLiving = await Category.create({ name: 'Home and Living', description: 'Sample Description' });
+  let foodAndBeverages = await Category.create({ name: 'Food and Beverages', description: 'Sample Description' });
+
+  let Panasonic = await MerchantService.createMerchant({ name: 'Panasonic', mobileNumber: '97478789', password: 'Password123!', email: 'panasonic@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '2', unitNumber: '5', pointOfContact: 'David', creditBalance: 1000, tenancyAgreement: 'tenancy_agreement.pdf', merchantLogoImage: 'nike.png' });
+  let Philips = await MerchantService.createMerchant({ name: 'Philips', mobileNumber: '91236358', password: 'Password123!', email: 'philips@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '1', unitNumber: '9', pointOfContact: 'Jon', creditBalance: 1000, tenancyAgreement: 'tenancy_agreement.pdf', merchantLogoImage: 'toysrus.png' });
+  let Kao = await MerchantService.createMerchant({ name: 'Kao', mobileNumber: '9343248', password: 'Password123!', email: 'kao@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '1', unitNumber: '3', pointOfContact: 'Harry', creditBalance: 1000, tenancyAgreement: 'tenancy_agreement.pdf', merchantLogoImage: 'toysrus.png' });
+  let Cetaphil = await MerchantService.createMerchant({ name: 'Cetaphil', mobileNumber: '93246358', password: 'Password123!', email: 'cetaphil@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '1', unitNumber: '5', pointOfContact: 'Ron', creditBalance: 1000, tenancyAgreement: 'tenancy_agreement.pdf', merchantLogoImage: 'toysrus.png' });
+  let Samsung = await MerchantService.createMerchant({ name: 'Samsung', mobileNumber: '93456324', password: 'Password123!', email: 'samsung@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '4', unitNumber: '6', pointOfContact: 'Shermaine', creditBalance: 1000, tenancyAgreement: 'tenancy_agreement.pdf', merchantLogoImage: 'toysrus.png' });
+  let Nescafe = await MerchantService.createMerchant({ name: 'Nescafe', mobileNumber: '93456453', password: 'Password123!', email: 'nescafe@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '3', unitNumber: '7', pointOfContact: 'Leo', creditBalance: 1000, tenancyAgreement: 'tenancy_agreement.pdf', merchantLogoImage: 'toysrus.png' });
+  let KMart = await MerchantService.createMerchant({ name: 'KMart', mobileNumber: '93546358', password: 'Password123!', email: 'kmart@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '1', unitNumber: '3', pointOfContact: 'Kate', creditBalance: 1000, tenancyAgreement: 'tenancy_agreement.pdf', merchantLogoImage: 'toysrus.png' });
+
+}
