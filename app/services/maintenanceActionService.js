@@ -8,11 +8,18 @@ const MaintenanceAction = require('../models/MaintenanceAction')
 
 module.exports = {
   createMaintenanceAction: async(maintenanceActionData, transaction) => {
-    const { maintenanceDate, description, lockerId} = maintenanceActionData;
+    const { maintenanceDate, description, lockerCode, kioskId } = maintenanceActionData;
     Checker.ifEmptyThrowError(maintenanceDate, Constants.Error.DateRequired);
-    Checker.ifEmptyThrowError(lockerId, 'Locker ' + Constants.Error.IdRequired);
-    Checker.ifEmptyThrowError(await Locker.findByPk(lockerId), Constants.Error.LockerNotFound);
-    const maintenanceAction = await MaintenanceAction.create(maintenanceActionData, { transaction });
+    Checker.ifEmptyThrowError(lockerCode, 'Locker code' + Constants.Error.XXXIsRequired);
+    Checker.ifEmptyThrowError(kioskId, 'Kiosk Id' + Constants.Error.XXXIsRequired);
+    let locker = await Locker.findOne( {where: {
+      lockerCode,
+      kioskId
+    } });
+    Checker.ifEmptyThrowError(locker, Constants.Error.LockerNotFound);
+    let lockerId = locker.id;
+
+    const maintenanceAction = await MaintenanceAction.create({ maintenanceDate, description, lockerId, kioskId}, { transaction });
     return maintenanceAction;
   },
  

@@ -142,7 +142,7 @@ module.exports = {
             if(!Checker.isEmpty(lineItem[itemIndex].product) && lineItem[itemIndex].product.id === invalidProductId && Checker.isEmpty(invalidItem.product.quantityNotZero)) {
               lineItem.splice(itemIndex, 1);
               --itemIndex;
-              await LineItem.destroy({ where: { productId: invalidProductId } });
+              await LineItem.destroy({ where: { productId: invalidProductId } }); //transaction
             }
           }
         } else {
@@ -165,5 +165,62 @@ module.exports = {
     }
     console.log(cartItems);
     return { cartItems, invalidCartItems};
+  },
+
+  addToCart: async(customerId, lineItem, transaction) => {
+    Checker.ifEmptyThrowError(customerId, Constants.Error.IdRequired);
+    let customer = await Customer.findByPk(customerId);
+    Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
+    
+    let cart = await Cart.findOne({
+      where: {
+        customerId
+      }
+    });
+    
+    let inCart = false;
+    let product;
+    let productVariation;
+    let quantity;
+
+    if (lineItem.productVariationId === null) {
+      product = await Product.findByPk(lineItem.productId);
+      if(product.disabled) {
+        throw new CustomError(Constants.Error.ProductDisabled);
+      }
+      if(product.deleted) {
+        throw new CustomError(Constants.Error.ProductDeleted);
+      } 
+      quantity = product.quantity;
+    } else {
+      productVariation = await ProductVariation.findByPk(lineItem.productVariationId);
+      if(productVariation.disabled) {
+        throw new CustomError(Constants.Error.ProductVariationDisabled);
+      }
+      if(productVariation.deleted) {
+        throw new CustomError(Constants.Error.ProductVariationDeleted);
+      }
+      quantity = productVariation.quantity;
+    }
+
+    for(let li of (await cart.getLineItems())) {
+      if((li.productVariationId === null && li.productId === lineItem.productId) || (li.productId === null && li.productVariationId === lineItem.productVariationId)) {
+        inCart = true;
+
+        if(li.quantity + lineItem.quantity > quantity) {
+          throw new CustomError(Constants.Error.InsufficientQuantity);
+        } else {
+          let newQty = lineItem.quantity + li.quantity;
+          await li.update({ quantity: newQty }, { transaction });
+        }
+      }
+    }
+
+    if(!inCart) {
+      if(lineItem.quantity > quantity) throw new CustomError(Constants.Error.InsufficientQuantity);
+      lineItem = await LineItem.create(lineItem, { transaction });
+      lineItems = await cart.getLineItems();
+      await cart.addLineItem(lineItem, { transaction })
+    }
   }
 }

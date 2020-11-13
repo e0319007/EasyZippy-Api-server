@@ -114,6 +114,18 @@ module.exports = {
     } 
   },
 
+  removeBookingFromOrder: async(req, res) => {
+    try{
+      const { bookingId } = req.body;
+      await sequelize.transaction(async (transaction) => {
+        booking = await BookingService.removeBookingFromOrder(bookingId, transaction);
+      });
+      res.status(200).send(booking);
+    } catch(err) {
+      sendErrorResponse(res, err);
+    } 
+  },
+
   addCollectorToBooking: async(req, res) => {
     try{
       const { bookingId, collectorId }= req.body;

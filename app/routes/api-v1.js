@@ -73,6 +73,7 @@ router.get('/merchantBookingPackage/:merchantId', Authenticator.merchantAndStaff
 router.post('/customerBookingPackage', Authenticator.customerOnly, BookingPackageController.buyBookingPackageForCustomer);
 router.post('/merchantBookingPackage', Authenticator.merchantOnly, BookingPackageController.buyBookingPackageForMerchant);
 router.post('/validBookingPackage', Authenticator.customerAndMerchantOnly, BookingPackageController.retrieveValidBookingPackageByCustomerIdAndLockerTypeId);
+router.post('/validBookingPackageMerchant', Authenticator.customerAndMerchantOnly, BookingPackageController.retrieveValidBookingPackageByMerchantIdAndLockerTypeId);
 
 //Booking
 router.get('/customerBooking/upcoming/:id', Authenticator.customerAndStaffOnly, BookingController.retrieveUpcomingBookingsByCustomerId);
@@ -88,6 +89,7 @@ router.get('/merchantBookings', Authenticator.staffOnly, BookingController.retri
 router.get('/collectorBooking/:collectorId', Authenticator.customerAndMerchantAndStaffOnly, BookingController.retrieveBookingByCollectorId);
 router.put('/booking/:id', Authenticator.customerAndMerchantAndStaffOnly, BookingController.cancelBooking);
 router.put('/tagOrderToBooking', Authenticator.merchantAndStaffOnly, BookingController.tagBookingToOrder);
+router.put('/removeBookingFromOrder', Authenticator.merchantAndStaffOnly, BookingController.removeBookingFromOrder);
 router.put('/addCollectorToBooking', Authenticator.customerAndMerchantAndStaffOnly, BookingController.addCollectorToBooking);
 router.put('/removeCollectorToBooking', Authenticator.customerAndMerchantAndStaffOnly, BookingController.removeCollectorToBooking);
 router.put('/changeCollectorToBooking', Authenticator.customerAndMerchantAndStaffOnly, BookingController.changeCollectorToBooking);
@@ -102,6 +104,7 @@ router.post('/checkBookingAllowed', Authenticator.customerAndMerchantAndStaffOnl
 //Cart
 router.get('/retrieveCart/:customerId', CartController.retrieveCartByCustomerId);
 router.put('/saveCart/:customerId', CartController.saveItemsToCart);
+router.put('/addToCart/:customerId', CartController.addToCart);
 router.post('/retrieveInvalidCartItems', CartController.getInvalidCartItems);
 
 //Category

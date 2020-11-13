@@ -3,6 +3,7 @@ const {
   INTEGER, DATE, BOOLEAN, STRING, Model
 } = Sequelize;
 const sequelize = require('../common/database');
+const Kiosk = require('./Kiosk');
 
 const Locker = require('./Locker');
 
@@ -41,5 +42,8 @@ MaintenanceAction.init(
 
 MaintenanceAction.belongsTo(Locker, { foreignKey: { allowNull: false } });
 Locker.hasMany(MaintenanceAction);
+
+MaintenanceAction.belongsTo(Kiosk, { foreignKey: { allowNull: false } });
+Kiosk.hasMany(MaintenanceAction);
 
 module.exports = MaintenanceAction;
