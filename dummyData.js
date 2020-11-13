@@ -132,6 +132,8 @@ const addDummyData = async () => {
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType1.id, lockerCode: '1b' });
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType1.id, lockerCode: '1c' });
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType1.id, lockerCode: '1d' });
+  await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType1.id, lockerCode: '1e' });
+  await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType1.id, lockerCode: '1f' });
 
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType2.id, lockerCode: '2a' });
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType2.id, lockerCode: '2b' });
@@ -253,7 +255,7 @@ const addDummyData = async () => {
     await PromotionService.createMallPromotion(promoData4, transaction);
   });
 
-  await BookingPackageModel.create({ name: 'BIG Booking Package', description: 'Booking package for BIG lockers', quota: 1, price: 39, duration: 7, lockerTypeId: 1 });
+  await BookingPackageModel.create({ name: 'BIG Booking Package', description: 'Booking package for BIG lockers', quota: 1, price: 99, duration: 7, lockerTypeId: 1 });
   await BookingPackageModel.create({ name: 'MEDIUM Booking Package', description: 'Booking package for MEDIUM lockers', quota: 1, price: 29, duration: 30, lockerTypeId: 2 });
   await BookingPackageModel.create({ name: 'SMALL Booking Package', description: 'Booking package for SMALL lockers', quota: 1, price: 25, duration: 30, lockerTypeId: 3 });
   await BookingPackageModel.create({ name: 'TINY Booking Package', description: 'Booking package for TINY lockers', quota: 1, price: 25, duration: 30, lockerTypeId: 4 });
@@ -274,11 +276,11 @@ const addDummyData = async () => {
     kioskId: 1
   };
 
-  let bookingPackageDataFor6 = {
-    merchantId: 6,
-    bookingPackageModelId: 3,
-    kioskId: 1
-  };
+  // let bookingPackageDataFor6 = {
+  //   merchantId: 6,
+  //   bookingPackageModelId: 3,
+  //   kioskId: 1
+  // };
 
   let bookingPackage1;
   let bookingPackage2;
@@ -286,7 +288,7 @@ const addDummyData = async () => {
   await sequelize.transaction(async (transaction) => {
     bookingPackage1 = await BookingPackageService.createBookingPackageForCustomer(bookingPackageData1, transaction)
     bookingPackage2 = await BookingPackageService.createBookingPackageForMerchant(bookingPackageData2, transaction)
-    bookingPackage3 = await BookingPackageService.createBookingPackageForMerchant(bookingPackageDataFor6, transaction)
+    // bookingPackage3 = await BookingPackageService.createBookingPackageForMerchant(bookingPackageDataFor6, transaction)
   });
 
   console.log('Initializing booking');
@@ -664,7 +666,7 @@ const addMoreProducts = async () => {
   let Panasonic = await MerchantService.createMerchant({ name: 'Panasonic', mobileNumber: '97478789', password: 'Password123!', email: 'panasonic@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '2', unitNumber: '5', pointOfContact: 'David', creditBalance: 1000, tenancyAgreement: 'tenancy_agreement.pdf', merchantLogoImage: 'panasonic.jpeg' });
   let Philips = await MerchantService.createMerchant({ name: 'Philips', mobileNumber: '91236358', password: 'Password123!', email: 'philips@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '1', unitNumber: '9', pointOfContact: 'Jon', creditBalance: 1000, tenancyAgreement: 'tenancy_agreement.pdf', merchantLogoImage: 'philips.jpg' });
   let Samsung = await MerchantService.createMerchant({ name: 'Samsung', mobileNumber: '93456324', password: 'Password123!', email: 'samsung@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '4', unitNumber: '6', pointOfContact: 'Shermaine', creditBalance: 1000, tenancyAgreement: 'tenancy_agreement.pdf', merchantLogoImage: 'samsung.png' });
-  let Nescafe = await MerchantService.createMerchant({ name: 'Nescafe', mobileNumber: '93456453', password: 'Password123!', email: 'nescafe@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '3', unitNumber: '7', pointOfContact: 'Leo', creditBalance: 1000, tenancyAgreement: 'tenancy_agreement.pdf', merchantLogoImage: 'nescafe.jpg' });
+  let Nescafe = await MerchantService.createMerchant({ name: 'Nescafe', mobileNumber: '93456453', password: 'Password123!', email: 'nescafe@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '3', unitNumber: '7', pointOfContact: 'Leo', creditBalance: 400, tenancyAgreement: 'tenancy_agreement.pdf', merchantLogoImage: 'nescafe.jpg' });
   let KMart = await MerchantService.createMerchant({ name: 'KMart', mobileNumber: '93546358', password: 'Password123!', email: 'kmart@email.com', blk: '1', street: 'Sengkang Square', postalCode: '545078', floor: '1', unitNumber: '3', pointOfContact: 'Kate', creditBalance: 1000, tenancyAgreement: 'tenancy_agreement.pdf', merchantLogoImage: 'kmart.png' });
   await MerchantService.approveMerchant(7);
   await MerchantService.approveMerchant(6);
