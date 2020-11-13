@@ -13,5 +13,7 @@
   "jwt": {
     "private_key": "private_key"
   },
-  "private_key_file_path": ""
+  "private_key_file_path": "",
+  "paypal_client_id": "",
+  "paypal_client_secret": ""
 }

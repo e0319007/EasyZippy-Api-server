@@ -11,6 +11,7 @@ const BookingPackageController = require('../controllers/bookingPackageControlle
 const BookingPackageModelController = require('../controllers/bookingPackageModelController');
 const CategoryController = require('../controllers/categoryController');
 const CustomerController = require('../controllers/customerController');
+const ExternalPaymentRecordController = require('../controllers/externalPaymentRecordController');
 const KioskController = require('../controllers/kioskController');
 const lockerActionRecordController = require('../controllers/lockerActionRecordController');
 const LockerController = require('../controllers/lockerController');
@@ -129,6 +130,9 @@ router.post('/customer/sendOtp', CustomerController.sendOtp);
 router.post('/customer/verifyOtp', CustomerController.verifyOtp);
 router.post('/customer', CustomerController.registerCustomer);
 
+//External Payment Record
+router.post('/externalPaymentRecord/:merchantId', Authenticator.merchantOnly, ExternalPaymentRecordController.createExternalPaymentRecordMerchantTopUp);
+
 //Kiosk
 router.get('/kiosks', Authenticator.customerAndMerchantAndStaffOnly, KioskController.retrieveAllKiosks);
 router.get('/kiosk/:id', Authenticator.customerAndMerchantAndStaffOnly, KioskController.retrieveKiosk);
@@ -207,9 +211,12 @@ router.put('/order/:id', Authenticator.customerAndMerchantAndStaffOnly, OrderCon
 router.post('/order', Authenticator.customerOnly, OrderController.createOrder);
 
 //Payment
-router.get('/pay/:customerId/:amount', Authenticator.customerAndMerchantOnly, PaymentController.pay);
-router.get('/success', PaymentController.success);
+router.get('/pay/customer/:customerId/:amount', Authenticator.customerAndMerchantOnly, PaymentController.pay);
+// router.get('/pay/merchant/:merchantId/:amount', Authenticator.customerAndMerchantOnly, PaymentController.merchantPay);
+router.get('/customerPaySuccess', PaymentController.success);
+// router.get('/merchantPaySuccess', PaymentController.merchantPaySuccess);
 router.get('/cancel', PaymentController.cancel);
+router.post('/withdraw', PaymentController.merchantWithdraw);
 
 //Product
 router.get('/product/:id', Authenticator.customerAndMerchantAndStaffOnly, ProductController.retrieveProduct);
