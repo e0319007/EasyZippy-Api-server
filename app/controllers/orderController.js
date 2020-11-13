@@ -84,4 +84,18 @@ module.exports = {
     }
   },
   
+  markOrderCancel: async(req, res) => {
+    try {
+      const { id } = req.params;
+      let order;
+
+      await sequelize.transaction(async (transaction) => {
+        order = await OrderService.markOrderCancel(id, transaction);
+      });
+
+      return res.status(200).send(order);
+    } catch(err) {
+      sendErrorResponse(res, err);
+    }
+  }
 }

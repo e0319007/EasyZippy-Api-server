@@ -220,6 +220,7 @@ router.get('/orders/merchant/:merchantId', Authenticator.merchantAndStaffOnly, O
 router.get('/orders', Authenticator.staffOnly, OrderController.retrieveAllOrders);
 router.get('/order/:id', Authenticator.customerAndMerchantAndStaffOnly, OrderController.retrieveOrderById);
 router.put('/order/:id', Authenticator.customerAndMerchantAndStaffOnly, OrderController.updateOrderStatus);
+router.post('/order/cancel/:id', Authenticator.staffOnly, OrderController.markOrderCancel);
 router.post('/order', Authenticator.customerOnly, OrderController.createOrder);
 
 //Payment

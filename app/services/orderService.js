@@ -8,13 +8,119 @@ const Order = require('../models/Order');
 const Product = require('../models/Product');
 const ProductVariation = require('../models/ProductVariation');
 const Promotion = require('../models/Promotion');
+const BookingService = require('./bookingService');
 const CreditPaymentRecordService = require('./creditPaymentRecordService');
 const CartService = require('./cartService');
 const PromotionService = require('./promotionService');
 const CustomError = require('../common/error/customError');
 const NotificationHelper = require('../common/notificationHelper');
 
+const retrieveOrderById = async(orderId) => {
+  Checker.isEmpty(orderId, Constants.Error.IdRequired);
+  let order = await Order.findByPk(orderId);
+  Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound);
+  const lineItems = await order.getLineItems();
+  const items = new Array();
+  for(const lineItem of lineItems) {
+    if(!Checker.isEmpty(lineItem.productId)) {
+      const product = await Product.findByPk(lineItem.productId);
+      items.push({ product, quantity: lineItem.quantity });
+    } else if(!Checker.isEmpty(lineItem.productVariationId)) {
+      const productVariation = await ProductVariation.findByPk(lineItem.productVariationId);
+      items.push({ productVariation, quantity: lineItem.quantity });
+    }
+  }
+  return { order, items };
+};
+
+const markOrderComplete = async(order, transaction) => {
+  console.log('Amount paid:' + order.amountPaid);
+  console.log('order:');
+  console.log(order);
+
+  let creditPaymentRecord;
+
+  if(!Checker.isEmpty(order.promoIdUsed)){
+    let promotion = Promotion.findByPk(order.promoIdUsed);
+    if(promotion.promotionTypeEnum === Constants.PromotionType.MALL_PROMOTION) {
+      creditPaymentRecord = await CreditPaymentRecordService.increaseCreditMerchant(order.merchantId, order.totalAmount, Constants.CreditPaymentType.ORDER, transaction);
+    } else {
+      creditPaymentRecord = await CreditPaymentRecordService.increaseCreditMerchant(order.merchantId, order.discountedAmount, Constants.CreditPaymentType.ORDER, transaction);
+    }
+  } else {
+    creditPaymentRecord = await CreditPaymentRecordService.increaseCreditMerchant(order.merchantId, order.totalAmount, Constants.CreditPaymentType.ORDER, transaction);
+  }
+
+  let creditPaymentRecords = await CreditPaymentRecord.findAll({ where: { orderId: order.id } });
+  creditPaymentRecords.push(creditPaymentRecord);
+  order = await order.update({ orderStatusEnum: Constants.OrderStatus.COMPLETE, creditPaymentRecords }, { transaction, returning: true });
+  await NotificationHelper.notificationOrderReceivedMerchant(order.id, order.merchantId)
+  return order;
+};
+
+const calculatePrice = async(lineItems) => {
+  let price = 0;
+  console.log('LineItems: ')
+  console.log(lineItems.length);
+  for(let lineItem of lineItems) {
+    console.log('productId: ' + lineItem.productId);
+    console.log('productVariationId: ' + lineItem.productVariationId);
+    //console.log(lineItem)
+    if(lineItem.productId !== null) {
+      price += ((await Product.findByPk(lineItem.productId)).unitPrice * lineItem.quantity);
+    } else {
+      price += ((await ProductVariation.findByPk(lineItem.productVariationId)).unitPrice * lineItem.quantity);
+    }
+    console.log(lineItem.id)
+    console.log('price in loop ' + price);
+  }
+  return price;
+};
+
+const calculateCustomerRefund = async(order) => {
+  if(Checker.isEmpty(order.discountedAmount)) {
+    return order.totalAmount;
+  }
+  return order.discountedAmount;
+};
+
+const applyPromoCodeFlatDiscount = async(promoIdUsed, totalPrice, price) => {
+  price = Number(price)
+  let promotion;
+  let discountedPrice;
+  if(!Checker.isEmpty(promoIdUsed)) {
+    promotion = await Promotion.findByPk(promoIdUsed);
+    if(promotion.minimumSpent > totalPrice) throw new CustomError(Constants.Error.PromotionMinimumSpendNotMet);
+    if(promotion.startDate <= new Date() && promotion.endDate >= new Date()) {
+      discountedPrice = price - (price / totalPrice) * promotion.flatDiscount;
+    } else {
+      throw new CustomError(Constants.Error.PromotionExpired)
+    }
+  }
+  if(price < 0) return 0;
+  discountedPrice = discountedPrice.toFixed(2);
+  return discountedPrice;
+};
+
+const applyPromoCodePercentageDiscount = async(promoIdUsed, price) => {
+  price = Number(price)
+  let promotion;
+  if(!Checker.isEmpty(promoIdUsed)) {
+    promotion = await Promotion.findByPk(promoIdUsed);
+    if(promotion.startDate <= new Date() && promotion.endDate >= new Date()) {
+        price *= (1 - promotion.percentageDiscount);
+    } else {
+      throw new CustomError(Constants.Error.PromotionExpired)
+    }
+  }
+  if(price < 0) return 0;
+  price = price.toFixed(2);
+  return price;
+};
+
 module.exports = {
+  retrieveOrderById,
+
   retrieveOrderByCustomerId: async(customerId) => {
     Checker.isEmpty(customerId, Constants.Error.IdRequired);
     Checker.isEmpty(await Customer.findByPk(customerId), Constants.Error.CustomerNotFound);
@@ -45,24 +151,6 @@ module.exports = {
 
   retrieveAllOrders: async() => {
     return await Order.findAll();
-  },
-
-  retrieveOrderById: async(orderId) => {
-    Checker.isEmpty(orderId, Constants.Error.IdRequired);
-    let order = await Order.findByPk(orderId);
-    Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound);
-    const lineItems = await order.getLineItems();
-    const items = new Array();
-    for(const lineItem of lineItems) {
-      if(!Checker.isEmpty(lineItem.productId)) {
-        const product = await Product.findByPk(lineItem.productId);
-        items.push({ product, quantity: lineItem.quantity });
-      } else if(!Checker.isEmpty(lineItem.productVariationId)) {
-        const productVariation = await ProductVariation.findByPk(lineItem.productVariationId);
-        items.push({ productVariation, quantity: lineItem.quantity });
-      }
-    }
-    return { order, items };
   },
 
   retrieveAllOrderStatus: async() => {
@@ -215,83 +303,45 @@ module.exports = {
     } else {
       throw new CustomError('Promotion ' + Constants.Error.IdRequired);
     }
-  }
-}
+  },
 
-const markOrderComplete = async(order, transaction) => {
-  console.log('Amount paid:' + order.amountPaid);
-  console.log('order:');
-  console.log(order);
-
-  let creditPaymentRecord;
-
-  if(!Checker.isEmpty(order.promoIdUsed)){
-    let promotion = Promotion.findByPk(order.promoIdUsed);
-    if(promotion.promotionTypeEnum === Constants.PromotionType.MALL_PROMOTION) {
-      creditPaymentRecord = await CreditPaymentRecordService.increaseCreditMerchant(order.merchantId, order.totalAmount, Constants.CreditPaymentType.ORDER, transaction);
-    } else {
-      creditPaymentRecord = await CreditPaymentRecordService.increaseCreditMerchant(order.merchantId, order.discountedAmount, Constants.CreditPaymentType.ORDER, transaction);
+  markOrderCancel: async(id, transaction) => {
+    const order = await Order.findByPk(id);
+    Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound);
+    if(order.orderStatusEnum === Constants.OrderStatus.CANCELLED) {
+      throw new CustomError(Constants.Error.OrderAlreadyCancelled);
     }
-  } else {
-    creditPaymentRecord = await CreditPaymentRecordService.increaseCreditMerchant(order.merchantId, order.totalAmount, Constants.CreditPaymentType.ORDER, transaction);
-  }
+    const refundAmount = await calculateCustomerRefund(order);
 
-  let creditPaymentRecords = await CreditPaymentRecord.findAll({ where: { orderId: order.id } });
-  creditPaymentRecords.push(creditPaymentRecord);
-  order = await order.update({ orderStatusEnum: Constants.OrderStatus.COMPLETE, creditPaymentRecords }, { transaction, returning: true });
-  await NotificationHelper.notificationOrderReceivedMerchant(order.id, order.merchantId)
-  return order;
-}
-
-const calculatePrice = async(lineItems) => {
-  let price = 0;
-  console.log('LineItems: ')
-  console.log(lineItems.length);
-  for(let lineItem of lineItems) {
-    console.log('productId: ' + lineItem.productId);
-    console.log('productVariationId: ' + lineItem.productVariationId);
-    //console.log(lineItem)
-    if(lineItem.productId !== null) {
-      price += ((await Product.findByPk(lineItem.productId)).unitPrice * lineItem.quantity);
-    } else {
-      price += ((await ProductVariation.findByPk(lineItem.productVariationId)).unitPrice * lineItem.quantity);
+    if(order.orderStatusEnum === Constants.OrderStatus.READY_FOR_COLLECTION && order.collectionMethodEnum === Constants.CollectionMethod.KIOSK) {
+      await BookingService.removeCollectorToBooking(order.id, transaction);
     }
-    console.log(lineItem.id)
-    console.log('price in loop ' + price);
-  }
-  return price;
-}
 
-const applyPromoCodeFlatDiscount = async(promoIdUsed, totalPrice, price) => {
-  price = Number(price)
-  let promotion;
-  let discountedPrice;
-  if(!Checker.isEmpty(promoIdUsed)) {
-    promotion = await Promotion.findByPk(promoIdUsed);
-    if(promotion.minimumSpent > totalPrice) throw new CustomError(Constants.Error.PromotionMinimumSpendNotMet);
-    if(promotion.startDate <= new Date() && promotion.endDate >= new Date()) {
-      discountedPrice = price - (price / totalPrice) * promotion.flatDiscount;
-    } else {
-      throw new CustomError(Constants.Error.PromotionExpired)
+    if(order.orderStatusEnum === Constants.OrderStatus.COMPLETE) {
+      let merchantRefundAmount = refundAmount;
+      if(!Checker.isEmpty(order.promoIdUsed)) {
+        const promotion = await Promotion.findByPk(order.promoIdUsed);
+        Checker.ifEmptyThrowError(promotion, Constants.Error.PromotionNotFound);
+        if(promotion.promotionTypeEnum === Constants.PromotionType.MALL_PROMOTION) {
+          merchantRefundAmount = order.totalAmount;
+        }
+      }
+      await CreditPaymentRecordService.payCreditMerchant(order.merchantId, merchantRefundAmount, Constants.CreditPaymentType.REFUND, transaction);
     }
-  }
-  if(price < 0) return 0;
-  discountedPrice = discountedPrice.toFixed(2);
-  return discountedPrice;
-}
 
-const applyPromoCodePercentageDiscount = async(promoIdUsed, price) => {
-  price = Number(price)
-  let promotion;
-  if(!Checker.isEmpty(promoIdUsed)) {
-    promotion = await Promotion.findByPk(promoIdUsed);
-    if(promotion.startDate <= new Date() && promotion.endDate >= new Date()) {
-        price *= (1 - promotion.percentageDiscount);
-    } else {
-      throw new CustomError(Constants.Error.PromotionExpired)
+    const orderAndItems = await retrieveOrderById(order.id);
+    for (const item of orderAndItems.items) {
+      if(!Checker.isEmpty(item.product)) {
+        item.product.quantityAvailable += item.quantity;
+        await item.product.save();
+      } else {
+        item.productVariation.quantityAvailable += item.quantity;
+        await item.productVariation.save();
+      }
     }
+
+    await CreditPaymentRecordService.increaseCreditCustomer(order.customerId, refundAmount, Constants.CreditPaymentType.REFUND, transaction);
+    order.orderStatusEnum = Constants.OrderStatus.CANCELLED;
+    return await order.save();
   }
-  if(price < 0) return 0;
-  price = price.toFixed(2);
-  return price;
-}
+};
