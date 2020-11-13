@@ -3,8 +3,12 @@ const payouts = require('@paypal/payouts-sdk');
 const sequelize = require('../common/database');
 const config = require('config');
 const { sendErrorResponse } = require('../common/error/errorHandler');
+const Checker = require('../common/checker');
+const Constants = require('../common/constants');
+const CustomError = require('../common/error/customError');
 
 const ExternalPaymentRecordService = require('../services/externalPaymentRecordService');
+const MerchantService = require('../services/merchantService');
 
 const clientId = config.get('paypal_client_id');
 const clientSecret = config.get('paypal_client_secret');
@@ -165,6 +169,13 @@ module.exports = {
     try {
       const { merchantId } = req.params;
       const { amount } = req.body;
+
+      //Check that merchant has sufficient balance
+      const merchant = await MerchantService.retrieveMerchant(merchantId);
+      Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
+      if(merchant.creditBalance < Number(amount)) {
+        throw new CustomError(Constants.Error.InsufficientCreditBalance);
+      }
 
       let requestBody = {
         "sender_batch_header": {
