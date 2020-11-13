@@ -113,6 +113,8 @@ const addDummyData = async () => {
     await ProductVariationService.createProductVariation(productVariationData2, transaction);
   });
 
+  await addMoreProducts();
+
   
   //console.log((await CartService.retrieveCartByCustomerId(1)).length);
 
@@ -239,12 +241,19 @@ const addDummyData = async () => {
     kioskId: 1
   };
 
+  let bookingPackageDataFor6 = {
+    merchantId: 6,
+    bookingPackageModelId: 3,
+    kioskId: 1
+  };
+
   let bookingPackage1;
   let bookingPackage2;
 
   await sequelize.transaction(async (transaction) => {
     bookingPackage1 = await BookingPackageService.createBookingPackageForCustomer(bookingPackageData1, transaction)
     bookingPackage2 = await BookingPackageService.createBookingPackageForMerchant(bookingPackageData2, transaction)
+    bookingPackage3 = await BookingPackageService.createBookingPackageForMerchant(bookingPackageDataFor6, transaction)
   });
 
   console.log('Initializing booking');
@@ -453,6 +462,13 @@ const addDummyData = async () => {
     { productId: 3, productVariationId: null, quantity: 2 },
     { productId: 6, productVariationId: null, quantity: 2 },
   ]
+
+  let cart5 = [
+    { productId: 19, productVariationId: null, quantity: 2 },
+    { productId: 20, productVariationId: null, quantity: 1 },
+    { productId: null, productVariationId: 3, quantity: 1 }
+  ]
+
   let orderData1 = {
     cart: cart1,
     promoIdUsed: 1,
@@ -485,6 +501,14 @@ const addDummyData = async () => {
     customerId: 1
   }
 
+  let orderData5 = {
+    cart: cart5,
+    promoIdUsed: null,
+    collectionMethodEnum: Constants.CollectionMethod.KIOSK,
+    //totalAmountPaid: 3, 
+    customerId: 1
+  }
+
   let orderVal1 = await orderService.createOrder(orderData1);
   console.log('create order cart item length: ' + cart2.length);
   let orderVal2 = await orderService.createOrder(orderData2);
@@ -492,6 +516,8 @@ const addDummyData = async () => {
   let orderVal3 = await orderService.createOrder(orderData3);
   console.log('create order cart item length: ' + cart4.length);
   let orderVal4 = await orderService.createOrder(orderData4);
+  console.log('create order cart item length: ' + cart5.length);
+  let orderVal5 = await orderService.createOrder(orderData5);
 
 
   let lineItem1 = {
@@ -562,7 +588,7 @@ const addDummyData = async () => {
   // console.log('RETRIEVE ORDER LINE ITEMS');
   // console.log(await orderVal[0].getLineItems());
 
-  addMoreProducts();
+  
 };
 
 addDummyData();
