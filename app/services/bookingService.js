@@ -377,6 +377,7 @@ module.exports = {
     Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound);
     await order.update({ orderStatusEnum: Constants.OrderStatus.READY_FOR_COLLECTION}, { transaction });
     booking = await booking.update({ orderId }, { transaction });
+    await addCollectorToBooking(id, order.customerId, transaction)
     return booking;
   },
 
@@ -386,71 +387,12 @@ module.exports = {
     Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound);
     let orderId = null;
     booking = await booking.update({ orderId }, { transaction });
+    await removeCollectorToBooking(id, transaction)
     return booking;
   },
 
   //add in a collector 
-  addCollectorToBooking: async(id, collectorId, transaction) => {
-    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
-    let booking = await Booking.findByPk(id);
-    Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound);
-
-    Checker.ifEmptyThrowError(collectorId, 'Collector ' + Constants.Error.IdRequired);
-    let customer = await Customer.findByPk(collectorId);
-    Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
-    
-    booking = await booking.update({ collectorId }, { transaction });
-    console.log('add collector to booking now is')
-    console.log(booking);
-    NotificationHelper.notificationCollectorAdded(id, collectorId);
-    EmailHelper.sendEmailForAddCollector(customer.email, booking.id)
-    return booking;
-  }, 
-
-  removeCollectorToBooking: async(id, transaction) => {
-    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired)
-    let booking = await Booking.findByPk(id);
-    let collectorId = await booking.collectorId;
-    Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound);
-    
-    let qrCode = Math.random().toString(36).substring(2);
-    while (!Checker.isEmpty(await Booking.findOne({ where: { qrCode } }))) {
-      qrCode = Math.random().toString(36).substring(2);
-    }
-
-    booking = await booking.update({ collectorId: null, qrCode }, { transaction });
-    console.log('CHECK COLLECTOR TO BE REMOVED: ' + booking.collectorId)
-    NotificationHelper.notificationCollectorRemoved(id, collectorId);
-    EmailHelper.sendEmailForRemoveCollector((await Customer.findByPk(collectorId)).email, booking.id)
-    return booking;
-  }, 
-
-  changeCollectorToBooking: async(id, collectorId, transaction) => {
-    Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
-    let booking = await Booking.findByPk(id);
-    Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound);
-    const oldCollectorId = booking.collectorId;
-    console.log('old booking')
-    console.log(booking)
-
-    Checker.ifEmptyThrowError(collectorId, 'Collector ' + Constants.Error.IdRequired);
-    let customer = await Customer.findByPk(collectorId);
-    Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
-
-    let qrCode = Math.random().toString(36).substring(2);
-    while (!Checker.isEmpty(await Booking.findOne({ where: { qrCode } }))) {
-      qrCode = Math.random().toString(36).substring(2);
-    }
-    
-    booking = await booking.update({ collectorId: customer.id, qrCode }, { transaction });
-    console.log('CHECK COLLECTOR TO BE REMOVED: ' + oldCollectorId)
-
-    NotificationHelper.notificationCollectorAdded(id, collectorId);
-    NotificationHelper.notificationCollectorRemoved(id, oldCollectorId);
-    EmailHelper.sendEmailForAddCollector(customer.email, booking.id)
-    EmailHelper.sendEmailForRemoveCollector((await Customer.findByPk(oldCollectorId)).email, booking.id)
-    return booking;
-  }, 
+  
 
   retrieveAllBookingsByCustomer: async() => {
     const bookings = await Booking.findAll();
@@ -546,7 +488,71 @@ module.exports = {
     return booking;
   },
 
+  addCollectorToBooking, removeCollectorToBooking, changeCollectorToBooking
+
 }
+
+const addCollectorToBooking = async(id, collectorId, transaction) => {
+  Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
+  let booking = await Booking.findByPk(id);
+  Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound);
+
+  Checker.ifEmptyThrowError(collectorId, 'Collector ' + Constants.Error.IdRequired);
+  let customer = await Customer.findByPk(collectorId);
+  Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
+  
+  booking = await booking.update({ collectorId }, { transaction });
+  console.log('add collector to booking now is')
+  console.log(booking);
+  NotificationHelper.notificationCollectorAdded(id, collectorId);
+  EmailHelper.sendEmailForAddCollector(customer.email, booking.id)
+  return booking;
+}, 
+
+const removeCollectorToBooking = async(id, transaction) => {
+  Checker.ifEmptyThrowError(id, Constants.Error.IdRequired)
+  let booking = await Booking.findByPk(id);
+  let collectorId = await booking.collectorId;
+  Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound);
+  
+  let qrCode = Math.random().toString(36).substring(2);
+  while (!Checker.isEmpty(await Booking.findOne({ where: { qrCode } }))) {
+    qrCode = Math.random().toString(36).substring(2);
+  }
+
+  booking = await booking.update({ collectorId: null, qrCode }, { transaction });
+  console.log('CHECK COLLECTOR TO BE REMOVED: ' + booking.collectorId)
+  NotificationHelper.notificationCollectorRemoved(id, collectorId);
+  EmailHelper.sendEmailForRemoveCollector((await Customer.findByPk(collectorId)).email, booking.id)
+  return booking;
+}, 
+
+const changeCollectorToBooking = async(id, collectorId, transaction) => {
+  Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
+  let booking = await Booking.findByPk(id);
+  Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound);
+  const oldCollectorId = booking.collectorId;
+  console.log('old booking')
+  console.log(booking)
+
+  Checker.ifEmptyThrowError(collectorId, 'Collector ' + Constants.Error.IdRequired);
+  let customer = await Customer.findByPk(collectorId);
+  Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
+
+  let qrCode = Math.random().toString(36).substring(2);
+  while (!Checker.isEmpty(await Booking.findOne({ where: { qrCode } }))) {
+    qrCode = Math.random().toString(36).substring(2);
+  }
+  
+  booking = await booking.update({ collectorId: customer.id, qrCode }, { transaction });
+  console.log('CHECK COLLECTOR TO BE REMOVED: ' + oldCollectorId)
+
+  NotificationHelper.notificationCollectorAdded(id, collectorId);
+  NotificationHelper.notificationCollectorRemoved(id, oldCollectorId);
+  EmailHelper.sendEmailForAddCollector(customer.email, booking.id)
+  EmailHelper.sendEmailForRemoveCollector((await Customer.findByPk(oldCollectorId)).email, booking.id)
+  return booking;
+}, 
 
 
 
