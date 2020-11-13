@@ -102,5 +102,18 @@ module.exports = {
       console.log(err);
       sendErrorResponse(res, err);
     }
-  }
+  },
+
+  retrieveValidBookingPackageByMerchantIdAndLockerTypeId: async(req, res) => {
+    try {
+      const { merchantId, lockerTypeId, bookingStartDate } = req.body;
+      let bookingPackage = await BookingPackageService.retrieveValidBookingPackageByMerchantIdAndLockerTypeId(merchantId, lockerTypeId, bookingStartDate);
+
+      return res.status(200).send(bookingPackage);
+    } catch (err) {
+      console.log(err);
+      sendErrorResponse(res, err);
+    }
+  },
+
 }

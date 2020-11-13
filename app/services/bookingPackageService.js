@@ -162,5 +162,25 @@ module.exports = {
       throw new CustomError(Constants.Error.BookingStartDateAfterPackageEndDate);
     }
     return bookingPackage;
+  },
+
+  retrieveValidBookingPackageByMerchantIdAndLockerTypeId: async(merchantId, lockerTypeId, bookingStartDate) => {
+    Checker.ifEmptyThrowError(merchantId, 'Merchant ' + Constants.Error.IdRequired);
+    Checker.ifEmptyThrowError(lockerTypeId, 'Locker type ' + Constants.Error.IdRequired);
+    Checker.ifEmptyThrowError(bookingStartDate, Constants.Error.DateRequired);
+    const bookingPackage = await BookingPackage.findOne({ where: { merchantId, expired: false } });
+    Checker.ifEmptyThrowError(bookingPackage, Constants.Error.NoActiveBookingPackage);
+    const bookingPackageModel = await bookingPackage.getBookingPackageModel();
+
+    if(bookingPackageModel.lockerTypeId !== Number(lockerTypeId)) {
+      throw new CustomError(Constants.Error.LockerTypeDifferent);
+    }
+    if(bookingPackage.lockerCount >= bookingPackageModel.quota) {
+      throw new CustomError(Constants.Error.BookingPackageQuotaInsufficient);
+    }
+    if(bookingPackage.endDate < new Date(bookingStartDate)) {
+      throw new CustomError(Constants.Error.BookingStartDateAfterPackageEndDate);
+    }
+    return bookingPackage;
   }
 };
