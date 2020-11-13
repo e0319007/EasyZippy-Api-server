@@ -10,7 +10,8 @@ module.exports = {
   createMaintenanceAction: async(maintenanceActionData, transaction) => {
     const { maintenanceDate, description, lockerCode, kioskId } = maintenanceActionData;
     Checker.ifEmptyThrowError(maintenanceDate, Constants.Error.DateRequired);
-    Checker.ifEmptyThrowError(lockerCode, 'Locker ' + Constants.Error.IdRequired);
+    Checker.ifEmptyThrowError(lockerCode, 'Locker code' + Constants.Error.XXXIsRequired);
+    Checker.ifEmptyThrowError(kioskId, 'Kiosk Id' + Constants.Error.XXXIsRequired);
     Checker.ifEmptyThrowError(await Locker.findOne( {where: {
       lockerCode,
       kioskId
