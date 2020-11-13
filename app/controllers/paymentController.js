@@ -199,7 +199,7 @@ module.exports = {
       request.requestBody(requestBody);
   
       let externalId;
-      let createPayouts  = async () => {
+      let createPayouts = async () => {
         let response = await client.execute(request);
         externalId = response.result.batch_header.payout_batch_id;
       };
