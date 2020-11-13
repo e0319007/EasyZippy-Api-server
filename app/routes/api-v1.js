@@ -211,9 +211,9 @@ router.put('/order/:id', Authenticator.customerAndMerchantAndStaffOnly, OrderCon
 router.post('/order', Authenticator.customerOnly, OrderController.createOrder);
 
 //Payment
-router.get('/pay/customer/:customerId/:amount', Authenticator.customerAndMerchantOnly, PaymentController.customerPay);
+router.get('/pay/customer/:customerId/:amount', Authenticator.customerAndMerchantOnly, PaymentController.pay);
 // router.get('/pay/merchant/:merchantId/:amount', Authenticator.customerAndMerchantOnly, PaymentController.merchantPay);
-router.get('/customerPaySuccess', PaymentController.customerPaySuccess);
+router.get('/customerPaySuccess', PaymentController.success);
 // router.get('/merchantPaySuccess', PaymentController.merchantPaySuccess);
 router.get('/cancel', PaymentController.cancel);
 router.post('/withdraw', PaymentController.merchantWithdraw);

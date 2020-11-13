@@ -11,7 +11,7 @@ let environment = new payouts.core.SandboxEnvironment(clientId, clientSecret);
 let client = new payouts.core.PayPalHttpClient(environment);
 
 module.exports = {
-  customerPay: async (req, res) => {
+  pay: async (req, res) => {
     try {
       const { customerId, amount } = req.params;
       const payment = {
@@ -20,7 +20,7 @@ module.exports = {
           "payment_method": "paypal"
         },
         "redirect_urls": {
-          "return_url": `http://localhost:5000/customerPaySuccess?customerId=${customerId}&amount=${amount}`,
+          "return_url": `http://localhost:5000/success?customerId=${customerId}&amount=${amount}`,
           "cancel_url": "http://localhost:5000/cancel"
         },
         "transactions": [{
@@ -89,7 +89,7 @@ module.exports = {
   //   }
   // },
 
-  customerPaySuccess: async (req, res) => {
+  success: async (req, res) => {
     const customerId = req.query.customerId;
     const amount = req.query.amount;
     let payerId = req.query.PayerID;
@@ -119,7 +119,7 @@ module.exports = {
     });
 
     setTimeout(async () => {await sequelize.transaction(async (transaction) => {
-      await ExternalPaymentRecordService.createExternalPaymentRecordCustomerTopUp(customerId, paymentData, transaction);
+      await ExternalPaymentRecordService.createExternalPaymentRecord(customerId, paymentData, transaction);
     })}, 10000);
   },
 
