@@ -24,6 +24,7 @@ const ProductVariation = require('./app/models/ProductVariation');
 const MaintenanceAction = require('./app/models/MaintenanceAction');
 const orderService = require('./app/services/orderService');
 const advertisementService = require('./app/services/advertisementService');
+const Booking = require('./app/models/Booking');
 
 const addDummyData = async () => {
   const staff1 = await StaffService.createStaff({ firstName: 'Alice', lastName: 'Ang', mobileNumber: '91234567', email: 'alice@email.com', staffRoleEnum: 'Admin' });
@@ -150,6 +151,8 @@ const addDummyData = async () => {
   // await Advertisement.create({ image: '1601607853991.jpeg', title: 'Lazada sale', description: 'Lazada 50% off all items',  advertiserUrl: 'http://www.lazada.com', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '91111111', advertiserEmail: 'test1@email.com', approved: true });
   await Advertisement.create({ image: '1601608444371.jpeg', title: 'Shopee sale', description: 'Shopee 50% off all electronic items', advertiserUrl: 'http://www.shopee.com', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '92222222', advertiserEmail: 'test2@email.com', approved: true });
   await Advertisement.create({ image: '1601608583950.jpeg', title: 'Qoo10 sale', description: 'Qoo10 50% off apparel items', advertiserUrl: 'http://www.qoo10.com', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '93333333', advertiserEmail: 'test3@email.com', approved: true });
+  await Advertisement.create({ image: 'nesAd1.png', title: 'Nescafe - savour the moment that matters', description: 'Shop Nescafe now', advertiserUrl: 'https://www.nescafe.com/sg/', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '93333333', advertiserEmail: 'nescafe@email.com', approved: true, expired: true });
+  await Advertisement.create({ image: 'nesAd2.png', title: 'Wake up to life', description: 'Shop Nescafe now', advertiserUrl: 'https://www.nescafe.com/sg/', startDate: '2020-08-02T11:11:09+08:00', endDate: '2020-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '93333333', advertiserEmail: 'nescafe@email.com', approved: true });
   advertisementService.createAdvertisementAsMerchantWithoutAccount({ image: '1601607853991.jpeg', title: 'Lazada sale', description: 'Lazada 50% off all items', advertiserUrl: 'http://www.lazada.com', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '91111111', advertiserEmail: 'test1@email.com', approved: true })
 
   await LockerActionRecord.create({ timestamp: new Date(), lockerActionEnum: Constants.LockerAction.OPEN, lockerId: 1 });
@@ -213,9 +216,39 @@ const addDummyData = async () => {
     minimumSpent: 10
   };
 
+  const promoDataNes1 = {
+    promoCode: 'NESXMAS10',
+    title: 'Nescafe Christmas Promotion',
+    startDate: new Date(),
+    endDate: new Date(new Date().getTime() + 24 * 30 * 1000 * 60),
+    description: "Buy on this platform for seasonal discounts!",
+    termsAndConditions: "terms and conditions",
+    percentageDiscount: null,
+    flatDiscount: 10,
+    usageLimit: 20,
+    merchantId: 6,
+    minimumSpent: 10
+  };
+
+  const promoDataNes2 = {
+    promoCode: 'NES1212',
+    title: 'Nescafe 12-12 Promotion',
+    startDate: new Date(new Date().getTime() + 28 * 30 * 1000 * 60),
+    endDate: new Date(new Date().getTime() + 30 * 30 * 1000 * 60),
+    description: "Buy on this platform for seasonal discounts!",
+    termsAndConditions: "terms and conditions",
+    percentageDiscount: 0.05,
+    flatDiscount: null,
+    usageLimit: 20,
+    merchantId: 6,
+    minimumSpent: 10
+  };
+
   await sequelize.transaction(async (transaction) => {
     await PromotionService.createMerchantPromotion(promoData1, transaction);
     await PromotionService.createMerchantPromotion(promoData2, transaction);
+    await PromotionService.createMerchantPromotion(promoDataNes1, transaction);
+    await PromotionService.createMerchantPromotion(promoDataNes2, transaction);
     await PromotionService.createMallPromotion(promoData3, transaction);
     await PromotionService.createMallPromotion(promoData4, transaction);
   });
@@ -373,6 +406,33 @@ const addDummyData = async () => {
     kioskId: 1
   }
 
+  const bookingData51 = {
+    startDate: new Date(new Date().getTime() + 115 * 60000),
+    endDate: new Date(new Date().getTime() + 900 * 60000),
+    bookingSourceEnum: Constants.BookingSource.KIOSK,
+    merchantId: 6,
+    lockerTypeId: 1,
+    kioskId: 1
+  }
+
+  const bookingData52 = {
+    startDate: new Date(new Date().getTime() + 3 * 115 * 60000),
+    endDate: new Date(new Date().getTime() + 3 * 900 * 60000),
+    bookingSourceEnum: Constants.BookingSource.KIOSK,
+    merchantId: 6,
+    lockerTypeId: 1,
+    kioskId: 1
+  }
+
+  const bookingData53 = {
+    startDate: new Date(new Date().getTime() + 5 * 665 * 60000),
+    endDate: new Date(new Date().getTime() + 5 * 800 * 60000),
+    bookingSourceEnum: Constants.BookingSource.KIOSK,
+    merchantId: 6,
+    lockerTypeId: 2,
+    kioskId: 1
+  }
+
   // console.log(bookingPackage1.endDate.toLocaleString());
   // let times = await BookingService.checkBookingAllowed(bookingData);
   // console.log(times);
@@ -401,6 +461,9 @@ const addDummyData = async () => {
     await BookingService.createBookingByMerchant(bookingData5, transaction);
 
     await BookingService.createBookingByCustomer(bookingData, transaction);
+    await BookingService.createBookingByMerchant(bookingData51, transaction);
+    await BookingService.createBookingByMerchant(bookingData52, transaction);
+    await BookingService.createBookingByMerchant(bookingData53, transaction);
   });
 
   await sequelize.transaction(async (transaction) => {
