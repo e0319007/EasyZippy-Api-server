@@ -115,10 +115,11 @@ module.exports = {
     let merchant = await Merchant.findByPk(merchantId);
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
     if (amountPaid <= merchant.creditBalance) {
-      let newCreditAmount = merchant.creditBalance -  amountPaid;
+      let newCreditAmount = Number(merchant.creditBalance) -  Number(amountPaid);
+      console.log('new credit amount ' + newCreditAmount)
       await merchant.update({ creditBalance: newCreditAmount }, { transaction });
     } else throw new CustomError(Constants.Error.InsufficientCreditBalance);
-
+    
     let creditPaymentRecord = await CreditPaymentRecord.create({ amount: 0 - amountPaid, merchantId, creditPaymentTypeEnum }, { transaction });
 
     return creditPaymentRecord;

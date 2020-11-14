@@ -460,13 +460,14 @@ const addDummyData = async () => {
     // console.log('*Pass 4')
     // await BookingService.createBookingByCustomer(bookingData9, transaction);
     // console.log('*Pass 5')
-    await BookingService.createBookingByMerchant(bookingData5, transaction);
+    // await BookingService.createBookingByMerchant(bookingData5, transaction);
 
-    await BookingService.createBookingByCustomer(bookingData, transaction);
-    await BookingService.createBookingByMerchant(bookingData51, transaction);
-    await BookingService.createBookingByMerchant(bookingData52, transaction);
-    await BookingService.createBookingByMerchant(bookingData53, transaction);
+    // await BookingService.createBookingByCustomer(bookingData, transaction);
+    
   });
+  // await BookingService.createBookingByMerchant(bookingData51);
+  // await BookingService.createBookingByMerchant(bookingData52);
+  // await BookingService.createBookingByMerchant(bookingData53);
 
   await sequelize.transaction(async (transaction) => {
     console.log(await BookingService.addCollectorToBooking(1, 6, transaction))
@@ -581,8 +582,8 @@ const addDummyData = async () => {
   let orderVal3 = await orderService.createOrder(orderData3);
   console.log('create order cart item length: ' + cart4.length);
   let orderVal4 = await orderService.createOrder(orderData4);
-  console.log('create order cart item length: ' + cart5.length);
-  let orderVal5 = await orderService.createOrder(orderData5);
+  // console.log('create order cart item length: ' + cart5.length);
+  // let orderVal5 = await orderService.createOrder(orderData5);
 
 
   let lineItem1 = {
