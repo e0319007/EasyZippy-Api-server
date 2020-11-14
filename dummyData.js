@@ -64,6 +64,7 @@ const addDummyData = async () => {
   await CustomerService.activateCustomer(customerId3);
   await CustomerService.activateCustomer(customerId3);
   await MerchantService.approveMerchant(2);
+  await MerchantService.approveMerchant(1);
 
   await AnnouncementService.createAnnouncement({ title: 'Notice', description: 'The Ez2keep system will be disabled for maintenance on 21 September 2020', staffId });
   await AnnouncementService.createAnnouncement({ title: 'COVID-19 notice', description: 'Please wear your masks and practice social distancing at all times', staffId });
@@ -572,7 +573,7 @@ const addDummyData = async () => {
     promoIdUsed: null,
     collectionMethodEnum: Constants.CollectionMethod.KIOSK,
     //totalAmountPaid: 3, 
-    customerId: 1
+    customerId: 5
   }
 
   let orderVal1 = await orderService.createOrder(orderData1);
