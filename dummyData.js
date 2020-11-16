@@ -374,14 +374,14 @@ const addDummyData = async () => {
   //   bookingPackageId: 1,
   // }
 
-  // let bookingData9 = {
-  //   startDate: new Date(2020,09,25,11,40), 
-  //   endDate: new Date(2020,09,25,14,00), 
-  //   bookingSourceEnum: Constants.BookingSource.MOBILE, 
-  //   customerId: 1, 
-  //   lockerTypeId: 1,
-  //   kioskId: 1
-  // }
+  let bookingData9 = {
+    startDate: new Date(new Date().getTime() + 10 * 60000), 
+    endDate: new Date(new Date().getTime() + 500 * 60000),
+    bookingSourceEnum: Constants.BookingSource.MOBILE, 
+    customerId: 1, 
+    lockerTypeId: 3,
+    kioskId: 1
+  }
 
   // let bookingData10 = {
   //   startDate : new Date(2020,09,30,17,00,00),
@@ -395,7 +395,7 @@ const addDummyData = async () => {
     startDate: new Date(new Date().getTime() + 10 * 60000),
     endDate: new Date(new Date().getTime() + 500 * 60000),
     bookingSourceEnum: Constants.BookingSource.MOBILE,
-    customerId: 1,
+    customerId: 5,
     lockerTypeId: 3,
     kioskId: 1
   }
@@ -459,11 +459,11 @@ const addDummyData = async () => {
     // await BookingService.createBookingWithBookingPackageByCustomer(bookingData8, transaction);
 
     // console.log('*Pass 4')
-    // await BookingService.createBookingByCustomer(bookingData9, transaction);
+    await BookingService.createBookingByCustomer(bookingData9, transaction);
     // console.log('*Pass 5')
     // await BookingService.createBookingByMerchant(bookingData5, transaction);
 
-    // await BookingService.createBookingByCustomer(bookingData, transaction);
+    await BookingService.createBookingByCustomer(bookingData, transaction);
     
   });
   // await BookingService.createBookingByMerchant(bookingData51);
@@ -527,8 +527,8 @@ const addDummyData = async () => {
   ]
 
   let cart5 = [
-    { productId: 19, productVariationId: null, quantity: 2 },
-    { productId: 20, productVariationId: null, quantity: 1 },
+    // { productId: 19, productVariationId: null, quantity: 2 },
+    // { productId: 20, productVariationId: null, quantity: 1 },
     { productId: null, productVariationId: 4, quantity: 1 }
   ]
 
@@ -561,7 +561,7 @@ const addDummyData = async () => {
     promoIdUsed: 4,
     collectionMethodEnum: Constants.CollectionMethod.IN_STORE,
     //totalAmountPaid: 3, 
-    customerId: 6
+    customerId: 4
   }
 
   let orderData5 = {
@@ -579,7 +579,7 @@ const addDummyData = async () => {
   let orderVal3 = await orderService.createOrder(orderData3);
   console.log('create order cart item length: ' + cart4.length);
   let orderVal4 = await orderService.createOrder(orderData4);
-  // console.log('create order cart item length: ' + cart5.length);
+  console.log('create order cart item length: ' + cart5.length);
   let orderVal5 = await orderService.createOrder(orderData5);
 
 

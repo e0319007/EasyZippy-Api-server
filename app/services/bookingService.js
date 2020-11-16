@@ -81,12 +81,6 @@ const changeCollectorToBooking = async(id, collectorId, transaction) => {
 };
 
 
-
-
-
-
-
-
 const checkBookingAvailable = async(startDate, endDate, lockerTypeId, kioskId) => {
   let bookings = await Booking.findAll({ where: { lockerTypeId, kioskId } });
   let lockers = await Locker.findAll({ where: { lockerTypeId, kioskId } });
@@ -187,7 +181,7 @@ const calculatePrice = async(startDate, endDate, lockerTypeId) => {
   if(duration < 0) {
     return 0;
   }
-  return (duration / 1000 / 60) * pricePerMinute;
+  return Number((duration / 1000 / 60) * Number(pricePerMinute));
 }
 
 const createBookingWithBookingPackageByCustomer = async(bookingData, transaction) => {
@@ -318,7 +312,7 @@ module.exports = {
       throw new CustomError(Constants.Error.BookingCannotBeMade);
     }
 
-    bookingPrice = bookingPrice.toFixed(2);
+    bookingPrice = Number(bookingPrice.toFixed(2));
 
     //QR CODE
     let qrCode = Math.random().toString(36).substring(2);

@@ -39,7 +39,7 @@ module.exports = {
   },
 
   payCreditCustomer: async(customerId, amountPaid, creditPaymentTypeEnum, transaction) => {
-    amountPaid = parseFloat(amountPaid);
+    amountPaid = Number(Number(amountPaid).toFixed(2));
     Checker.ifEmptyThrowError(customerId, Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(amountPaid, 'Amount paid ' + Constants.Error.XXXIsRequired);
     Checker.ifNotNumberThrowError(amountPaid, 'Amount paid ' + Constants.Error.XXXMustBeNumber);
@@ -64,6 +64,7 @@ module.exports = {
     }
 
     let newCreditAmount = customer.creditBalance -  amountPaid;
+    newCreditAmount = Number(newCreditAmount.toFixed(2));
     await customer.update({ creditBalance: newCreditAmount, referralCreditMarker }, { transaction });
     let creditPaymentRecord = await CreditPaymentRecord.create({ amount: 0 - amountPaid, customerId, creditPaymentTypeEnum, referralCreditUsed }, { transaction });
 
@@ -71,7 +72,7 @@ module.exports = {
   },
 
   increaseCreditCustomer: async(customerId, amountPaid, creditPaymentTypeEnum, transaction) => {
-    amountPaid = parseFloat(amountPaid);
+    amountPaid = Number(Number(amountPaid).toFixed(2));
     console.log('customerID' + customerId)
     Checker.ifEmptyThrowError(customerId, Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(amountPaid, 'Amount paid ' + Constants.Error.XXXIsRequired);
@@ -89,7 +90,7 @@ module.exports = {
   },
 
   refundCreditCustomerWithReferral: async(customerId, amountPaid, creditPaymentTypeEnum, referralCreditUsed, transaction) => {
-    amountPaid = parseFloat(amountPaid);
+    amountPaid = Number(Number(amountPaid).toFixed(2));
     Checker.ifEmptyThrowError(customerId, Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(amountPaid, 'Amount paid ' + Constants.Error.XXXIsRequired);
     Checker.ifNotNumberThrowError(amountPaid, 'Amount paid ' + Constants.Error.XXXMustBeNumber);
@@ -106,7 +107,7 @@ module.exports = {
   },
 
   payCreditMerchant: async(merchantId, amountPaid, creditPaymentTypeEnum, transaction) => {
-    amountPaid = parseFloat(amountPaid);
+    amountPaid = Number(Number(amountPaid).toFixed(2));
     Checker.ifEmptyThrowError(merchantId, Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(amountPaid, 'Amount paid ' + Constants.Error.XXXIsRequired);
     Checker.ifNotNumberThrowError(amountPaid, 'Amount paid ' + Constants.Error.XXXMustBeNumber);
@@ -116,6 +117,7 @@ module.exports = {
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
     if (amountPaid <= merchant.creditBalance) {
       let newCreditAmount = Number(merchant.creditBalance) -  Number(amountPaid);
+      newCreditAmount = Number(newCreditAmount.toFixed(2));
       console.log('new credit amount ' + newCreditAmount)
       await merchant.update({ creditBalance: newCreditAmount }, { transaction });
     } else throw new CustomError(Constants.Error.InsufficientCreditBalance);
@@ -126,7 +128,7 @@ module.exports = {
   },
 
   increaseCreditMerchant: async(merchantId, amountPaid, creditPaymentTypeEnum, transaction) => {
-    amountPaid = parseFloat(amountPaid);
+    amountPaid = Number(Number(amountPaid).toFixed(2));
     Checker.ifEmptyThrowError(merchantId, Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(amountPaid, 'Amount paid ' + Constants.Error.XXXIsRequired);
     Checker.ifNotNumberThrowError(amountPaid, 'Amount paid ' + Constants.Error.XXXMustBeNumber);
