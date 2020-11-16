@@ -676,8 +676,8 @@ const addMoreProducts = async () => {
   await Product.create({ categoryId: homeAppliances.id, merchantId: Panasonic.id, name: 'Panasonic ES-ST2N-K751 Rechargeable Wet/Dry 3 Blade Shaver', unitPrice: 64.2, description: '13,00cpm/min linear motor for quick and precise shave Multi-Fit Arc Blade follows Facial Contour for closer shaver Wet/Dry Usage 1 year', quantityAvailable: 100, images: ['panasonic ES-LV9Q shaver black.jpg'] });
   await Product.create({ categoryId: foodAndBeverages.id, merchantId: KMart.id, name: 'Kmart Koseomi Rice Crackers', unitPrice: 10.2, description: 'Nice crackers', quantityAvailable: 100, images: ['kmart koseomi.jpg'] });
   await Product.create({ categoryId: foodAndBeverages.id, merchantId: KMart.id, name: 'Kmart Yakult Icecream', unitPrice: 3.2, description: 'Packing method: bagged Net content: 360g Whether it contains sugar: sugar Is it ready to eat: ready to eat', quantityAvailable: 100, images: ['kmart yakult icecream.jpg'] });
-  await Product.create({ categoryId: homeAppliances.id, merchantId: KMart.id, name: 'Kmart Honey Butter Chips Haitai', unitPrice: 7.6, description: 'Packing method: bagged Net content: 360g Whether it contains sugar: sugar Is it ready to eat: ready to eat', quantityAvailable: 100, images: ['kmart-honey-chips.jpg'] });
-  await Product.create({ categoryId: homeAppliances.id, merchantId: KMart.id, name: 'Kmart L-GA candy 360-Vita', unitPrice: 9.3, description: 'Packing method: bagged Net content: 360g Whether it contains sugar: sugar Is it ready to eat: ready to eat', quantityAvailable: 100, images: ['kmart lga candy.jpg'] });
+  await Product.create({ categoryId: foodAndBeverages.id, merchantId: KMart.id, name: 'Kmart Honey Butter Chips Haitai', unitPrice: 7.6, description: 'Packing method: bagged Net content: 360g Whether it contains sugar: sugar Is it ready to eat: ready to eat', quantityAvailable: 100, images: ['kmart-honey-chips.jpg'] });
+  await Product.create({ categoryId: foodAndBeverages.id, merchantId: KMart.id, name: 'Kmart L-GA candy 360-Vita', unitPrice: 9.3, description: 'Packing method: bagged Net content: 360g Whether it contains sugar: sugar Is it ready to eat: ready to eat', quantityAvailable: 100, images: ['kmart lga candy.jpg'] });
   await Product.create({ categoryId: mobileAndGadgets.id, merchantId: Samsung.id, name: 'Samsung S20 Phone Pink', unitPrice: 1030.0, description: 'Triple rear camera with 30x Space Zoom 6.2" Dynamic AMOLED2x display with 120Hz refresh Shoot night shots like a pro 4, 000mAh (typical) Battery and 25W Super Fast Charging Always-on display', quantityAvailable: 100, images: ['samsung s20.jpg'] });
   await Product.create({ categoryId: homeAppliances.id, merchantId: Philips.id, name: 'Philips Espresso Maker JLGE-3225 Black', unitPrice: 230.2, description: 'Stainless steel filter holder, frame and cup tray, steel cup holder, chrome-plated base, ', quantityAvailable: 100, images: ['philips-espresso-machine.jpg', 'philips-espresso-machine-silver.jpg'] });
   await Product.create({ categoryId: foodAndBeverages.id, merchantId: Nescafe.id, name: 'Nescafé Gold Blend Coffee', unitPrice: 6.2, description: 'MicroGround Instant Coffee is a blend of finely ground coffee beans and premium instant coffee with non dairy creamer and the fi nest sugar', quantityAvailable: 100, images: ['nescafe-gold blend instant coffee.jpg'] });
@@ -714,4 +714,25 @@ const addMoreProducts = async () => {
   await (await Product.findByPk(15)).update({ quantitySold: 326 });
   await (await Product.findByPk(16)).update({ quantitySold: 117 });
   await (await Product.findByPk(17)).update({ quantitySold: 230 });
+
+  Product.update({ createdAt: new Date(new Date().getTime() - 3000) }, { where: { id: 1 } } )
+  Product.update({ createdAt: new Date(new Date().getTime() - 2000) }, { where: { id: 2 } } )
+  Product.update({ createdAt: new Date(new Date().getTime() - 1000) }, { where: { id: 3 } } )
+  Product.update({ createdAt: new Date(new Date().getTime() - 3000) }, { where: { id: 4 } } )
+  Product.update({ createdAt: new Date(new Date().getTime() - 4000) }, { where: { id: 5 } } )
+  Product.update({ createdAt: new Date(new Date().getTime() - 5000) }, { where: { id: 6 } } )
+  Product.update({ createdAt: new Date(new Date().getTime() - 6000) }, { where: { id: 7 } } )
+  Product.update({ createdAt: new Date(new Date().getTime() - 7300) }, { where: { id: 8 } } )
+  Product.update({ createdAt: new Date(new Date().getTime() - 83001) }, { where: { id: 9 } } )
+  Product.update({ createdAt: new Date(new Date().getTime() - 830100) }, { where: { id: 10 } } )
+  Product.update({ createdAt: new Date(new Date().getTime() - 83100) }, { where: { id: 11 } } )
+  Product.update({ createdAt: new Date(new Date().getTime() - 81300) }, { where: { id: 12 } } )
+  Product.update({ createdAt: new Date(new Date().getTime() - 830) }, { where: { id: 13 } } )
+  Product.update({ createdAt: new Date(new Date().getTime() - 12300) }, { where: { id: 14 } } )
+  Product.update({ createdAt: new Date(new Date().getTime() - 82300) }, { where: { id: 15 } } )
+  Product.update({ createdAt: new Date(new Date().getTime() - 18300) }, { where: { id: 16 } } )
+  Product.update({ createdAt: new Date(new Date().getTime() - 28300) }, { where: { id: 17 } } )
+  Product.update({ createdAt: new Date(new Date().getTime() - 48300) }, { where: { id: 18 } } )
+  Product.update({ createdAt: new Date(new Date().getTime() - 38300) }, { where: { id: 19 } } )
+
 }
