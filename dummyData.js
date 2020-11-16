@@ -503,31 +503,27 @@ const addDummyData = async () => {
    **/
 
   let cart1 = [
-    { productId: null, productVariationId: 1, quantity: 2 },
-    { productId: 2, productVariationId: null, quantity: 2 },
-    { productId: 3, productVariationId: null, quantity: 2 },
-    { productId: 6, productVariationId: null, quantity: 2 },
+    { productId: null, productVariationId: 1, quantity: 1 },
+    { productId: 2, productVariationId: null, quantity: 1 },
+    { productId: 3, productVariationId: null, quantity: 1 }
   ]
 
   let cart2 = [
-    { productId: null, productVariationId: 1, quantity: 2 },
+    { productId: null, productVariationId: 1, quantity: 1 },
     { productId: 2, productVariationId: null, quantity: 2 },
-    { productId: 3, productVariationId: null, quantity: 2 },
-    { productId: 6, productVariationId: null, quantity: 2 },
+    { productId: 6, productVariationId: null, quantity: 1 },
   ]
 
   let cart3 = [
-    { productId: null, productVariationId: 1, quantity: 2 },
-    { productId: 2, productVariationId: null, quantity: 2 },
+    { productId: 2, productVariationId: null, quantity: 1 },
     { productId: 3, productVariationId: null, quantity: 2 },
-    { productId: 6, productVariationId: null, quantity: 2 },
+    { productId: 6, productVariationId: null, quantity: 1 },
   ]
 
   let cart4 = [
-    { productId: null, productVariationId: 1, quantity: 2 },
-    { productId: 2, productVariationId: null, quantity: 2 },
-    { productId: 3, productVariationId: null, quantity: 2 },
-    { productId: 6, productVariationId: null, quantity: 2 },
+    { productId: null, productVariationId: 1, quantity: 3 },
+    { productId: 3, productVariationId: null, quantity: 1 },
+    { productId: 6, productVariationId: null, quantity: 3 },
   ]
 
   let cart5 = [
@@ -539,7 +535,7 @@ const addDummyData = async () => {
   let orderData1 = {
     cart: cart1,
     promoIdUsed: 1,
-    collectionMethodEnum: Constants.CollectionMethod.IN_STORE,
+    collectionMethodEnum: Constants.CollectionMethod.KIOSK,
     //totalAmountPaid: 3, 
     customerId: 1
   }
@@ -555,7 +551,7 @@ const addDummyData = async () => {
   let orderData3 = {
     cart: cart3,
     promoIdUsed: 3,
-    collectionMethodEnum: Constants.CollectionMethod.IN_STORE,
+    collectionMethodEnum: Constants.CollectionMethod.KIOSK,
     //totalAmountPaid: 3, 
     customerId: 1
   }
