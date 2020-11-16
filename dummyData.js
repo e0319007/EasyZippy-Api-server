@@ -674,6 +674,7 @@ const addMoreProducts = async () => {
   await MerchantService.approveMerchant(6);
   await MerchantService.approveMerchant(5);
   await MerchantService.approveMerchant(4);
+  await MerchantService.approveMerchant(3);
 
   await Product.create({ categoryId: homeAppliances.id, merchantId: Panasonic.id, name: 'Panasonic professional Nanoe Hair Dryer EH-ND53', unitPrice: 60.2, description: 'ES-LV9Q Black: The most important feature of this hair dryer is its Nanoe technology which uses electricity to split airborne moisture molecules into charged particles that bind to the hair. This results in smooth, shiny, healthy looking hair. ', quantityAvailable: 100, images: ['panasonic professional hair dryer EH-ND53.jpg'] });
   await Product.create({ categoryId: homeAppliances.id, merchantId: Panasonic.id, name: 'Panasonic ES-ST2N-K751 Rechargeable Wet/Dry 3 Blade Shaver', unitPrice: 64.2, description: '13,00cpm/min linear motor for quick and precise shave Multi-Fit Arc Blade follows Facial Contour for closer shaver Wet/Dry Usage 1 year', quantityAvailable: 100, images: ['panasonic ES-LV9Q shaver black.jpg'] });
