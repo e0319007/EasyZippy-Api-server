@@ -332,6 +332,8 @@ module.exports = {
     let { startDate, endDate, bookingSourceEnum, merchantId, lockerTypeId, kioskId} = bookingData;
     startDate = new Date(startDate);
     endDate = new Date(endDate);
+    console.log(startDate)
+    console.log(endDate)
     if(startDate.getTime() + 300000 < (new Date()).getTime()) throw new CustomError(Constants.Error.InvalidDate)
     if(startDate > endDate) throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     if(endDate.getTime() - startDate.getTime() > 2 * 24 * 60 * 60 * 1000) throw new CustomError(Constants.Error.TimeCannotExceed48H);
@@ -370,6 +372,8 @@ module.exports = {
     let booking;
     startDate = new Date(startDate);
     endDate = new Date(endDate);
+    console.log(startDate)
+    console.log(endDate)
     if(startDate.getTime() + 300000 < (new Date()).getTime()) throw new CustomError(Constants.Error.InvalidDate)
     if(startDate > endDate) throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     if(endDate.getTime() - startDate.getTime() > 2 * 24 * 60 * 60 * 1000) throw new CustomError(Constants.Error.TimeCannotExceed48H);
@@ -542,6 +546,11 @@ module.exports = {
 
     if(!Checker.isEmpty(merchant) && booking.bookingPrice !== null && booking.bookingPrice !== 0) {
       await CreditPaymentRecordService.increaseCreditMerchant(merchant.id, booking.bookingPrice, Constants.CreditPaymentType.REFUND, transaction);
+    }
+
+    if(booking.bookingPackageId !== null) {
+      let bookingPackage = await BookingPackage.findByPk(booking.bookingPackageId);
+      await bookingPackage.update({lockerCount: --bookingPackage.lockerCount });
     }
 
     booking = await Booking.update({ 
