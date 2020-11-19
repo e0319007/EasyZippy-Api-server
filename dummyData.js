@@ -62,7 +62,9 @@ const addDummyData = async () => {
   await CustomerService.activateCustomer(customerId);
   await CustomerService.activateCustomer(customerId2);
   await CustomerService.activateCustomer(customerId3);
-  await CustomerService.activateCustomer(customerId3);
+  await CustomerService.activateCustomer(4);
+  await CustomerService.activateCustomer(5);
+  await CustomerService.activateCustomer(6);
   await MerchantService.approveMerchant(2);
   await MerchantService.approveMerchant(1);
 
@@ -117,7 +119,7 @@ const addDummyData = async () => {
 
   await addMoreProducts();
 
-  
+
   //console.log((await CartService.retrieveCartByCustomerId(1)).length);
 
   let kiosk = await Kiosk.create({ address: '1 Sengkang Square', description: 'Sample Description' });
@@ -375,10 +377,10 @@ const addDummyData = async () => {
   // }
 
   let bookingData9 = {
-    startDate: new Date(new Date().getTime() + 10 * 60000), 
+    startDate: new Date(new Date().getTime() + 10 * 60000),
     endDate: new Date(new Date().getTime() + 500 * 60000),
-    bookingSourceEnum: Constants.BookingSource.MOBILE, 
-    customerId: 1, 
+    bookingSourceEnum: Constants.BookingSource.MOBILE,
+    customerId: 1,
     lockerTypeId: 3,
     kioskId: 1
   }
@@ -464,7 +466,7 @@ const addDummyData = async () => {
     // await BookingService.createBookingByMerchant(bookingData5, transaction);
 
     await BookingService.createBookingByCustomer(bookingData, transaction);
-    
+
   });
   // await BookingService.createBookingByMerchant(bookingData51);
   // await BookingService.createBookingByMerchant(bookingData52);
@@ -581,7 +583,7 @@ const addDummyData = async () => {
   let orderVal4 = await orderService.createOrder(orderData4);
   console.log('create order cart item length: ' + cart5.length);
   let orderVal5 = await orderService.createOrder(orderData5);
- 
+
 
   let lineItem1 = {
     productVariationId: 1,
@@ -651,7 +653,7 @@ const addDummyData = async () => {
   // console.log('RETRIEVE ORDER LINE ITEMS');
   // console.log(await orderVal[0].getLineItems());
 
-  
+
 };
 
 addDummyData();
@@ -715,24 +717,24 @@ const addMoreProducts = async () => {
   await (await Product.findByPk(16)).update({ quantitySold: 117 });
   await (await Product.findByPk(17)).update({ quantitySold: 230 });
 
-  Product.update({ createdAt: new Date(new Date().getTime() - 3000) }, { where: { id: 1 } } )
-  Product.update({ createdAt: new Date(new Date().getTime() - 2000) }, { where: { id: 2 } } )
-  Product.update({ createdAt: new Date(new Date().getTime() - 1000) }, { where: { id: 3 } } )
-  Product.update({ createdAt: new Date(new Date().getTime() - 3000) }, { where: { id: 4 } } )
-  Product.update({ createdAt: new Date(new Date().getTime() - 4000) }, { where: { id: 5 } } )
-  Product.update({ createdAt: new Date(new Date().getTime() - 5000) }, { where: { id: 6 } } )
-  Product.update({ createdAt: new Date(new Date().getTime() - 6000) }, { where: { id: 7 } } )
-  Product.update({ createdAt: new Date(new Date().getTime() - 7300) }, { where: { id: 8 } } )
-  Product.update({ createdAt: new Date(new Date().getTime() - 83001) }, { where: { id: 9 } } )
-  Product.update({ createdAt: new Date(new Date().getTime() - 830100) }, { where: { id: 10 } } )
-  Product.update({ createdAt: new Date(new Date().getTime() - 83100) }, { where: { id: 11 } } )
-  Product.update({ createdAt: new Date(new Date().getTime() - 81300) }, { where: { id: 12 } } )
-  Product.update({ createdAt: new Date(new Date().getTime() - 830) }, { where: { id: 13 } } )
-  Product.update({ createdAt: new Date(new Date().getTime() - 12300) }, { where: { id: 14 } } )
-  Product.update({ createdAt: new Date(new Date().getTime() - 82300) }, { where: { id: 15 } } )
-  Product.update({ createdAt: new Date(new Date().getTime() - 18300) }, { where: { id: 16 } } )
-  Product.update({ createdAt: new Date(new Date().getTime() - 28300) }, { where: { id: 17 } } )
-  Product.update({ createdAt: new Date(new Date().getTime() - 48300) }, { where: { id: 18 } } )
-  Product.update({ createdAt: new Date(new Date().getTime() - 38300) }, { where: { id: 19 } } )
+  Product.update({ createdAt: new Date(new Date().getTime() - 3000) }, { where: { id: 1 } })
+  Product.update({ createdAt: new Date(new Date().getTime() - 2000) }, { where: { id: 2 } })
+  Product.update({ createdAt: new Date(new Date().getTime() - 1000) }, { where: { id: 3 } })
+  Product.update({ createdAt: new Date(new Date().getTime() - 3000) }, { where: { id: 4 } })
+  Product.update({ createdAt: new Date(new Date().getTime() - 4000) }, { where: { id: 5 } })
+  Product.update({ createdAt: new Date(new Date().getTime() - 5000) }, { where: { id: 6 } })
+  Product.update({ createdAt: new Date(new Date().getTime() - 6000) }, { where: { id: 7 } })
+  Product.update({ createdAt: new Date(new Date().getTime() - 7300) }, { where: { id: 8 } })
+  Product.update({ createdAt: new Date(new Date().getTime() - 83001) }, { where: { id: 9 } })
+  Product.update({ createdAt: new Date(new Date().getTime() - 830100) }, { where: { id: 10 } })
+  Product.update({ createdAt: new Date(new Date().getTime() - 83100) }, { where: { id: 11 } })
+  Product.update({ createdAt: new Date(new Date().getTime() - 81300) }, { where: { id: 12 } })
+  Product.update({ createdAt: new Date(new Date().getTime() - 830) }, { where: { id: 13 } })
+  Product.update({ createdAt: new Date(new Date().getTime() - 12300) }, { where: { id: 14 } })
+  Product.update({ createdAt: new Date(new Date().getTime() - 82300) }, { where: { id: 15 } })
+  Product.update({ createdAt: new Date(new Date().getTime() - 18300) }, { where: { id: 16 } })
+  Product.update({ createdAt: new Date(new Date().getTime() - 28300) }, { where: { id: 17 } })
+  Product.update({ createdAt: new Date(new Date().getTime() - 48300) }, { where: { id: 18 } })
+  Product.update({ createdAt: new Date(new Date().getTime() - 38300) }, { where: { id: 19 } })
 
 }
