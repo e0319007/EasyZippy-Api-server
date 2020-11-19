@@ -307,6 +307,7 @@ module.exports = {
       });
       return res.status(200).send(booking);
     } catch (err) {
+      console.log(err)
       sendErrorResponse(res, err);
     }
   },

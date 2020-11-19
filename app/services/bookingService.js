@@ -17,6 +17,8 @@ const ScheduleHelper = require('../common/scheduleHelper')
 const NotificationHelper = require('../common/notificationHelper');
 const CreditPaymentRecord = require('../models/CreditPaymentRecord');
 const EmailHelper = require('../common/emailHelper');
+const emailHelper = require('../common/emailHelper');
+const notificationHelper = require('../common/notificationHelper');
 
 const addCollectorToBooking = async(id, collectorId, transaction) => {
   Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
@@ -540,7 +542,7 @@ module.exports = {
     
     if(!Checker.isEmpty(customer) && booking.bookingPrice !== null && booking.bookingPrice !== 0) {
       console.log('creditPaymentRecord.referralCreditUsed' + creditPaymentRecord.referralCreditUsed)
-      if(creditPaymentRecord.referralCreditUsed == 0) await CreditPaymentRecordService.refundCreditCustomer(customer.id, booking.bookingPrice, Constants.CreditPaymentType.BOOKING, transaction);
+      if(creditPaymentRecord.referralCreditUsed == 0) await CreditPaymentRecordService.increaseCreditMerchant(customer.id, booking.bookingPrice, Constants.CreditPaymentType.BOOKING, transaction);
       else await CreditPaymentRecordService.refundCreditCustomerWithReferral(customer.id, booking.bookingPrice, Constants.CreditPaymentType.BOOKING, creditPaymentRecord.referralCreditUsed, transaction);
     }
 
@@ -551,6 +553,12 @@ module.exports = {
     if(booking.bookingPackageId !== null) {
       let bookingPackage = await BookingPackage.findByPk(booking.bookingPackageId);
       await bookingPackage.update({lockerCount: --bookingPackage.lockerCount });
+    }
+
+    if(booking.collectorId !== null) {
+      let collector = await Customer.findByPk(booking.collectorId);
+      await emailHelper.sendEmailForRemoveCollector(collector.email, booking.id);
+      await notificationHelper.notificationCollectorRemoved(booking.id, collector.id);
     }
 
     booking = await Booking.update({ 
