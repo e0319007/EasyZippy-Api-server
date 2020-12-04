@@ -17,6 +17,8 @@ const ScheduleHelper = require('../common/scheduleHelper')
 const NotificationHelper = require('../common/notificationHelper');
 const CreditPaymentRecord = require('../models/CreditPaymentRecord');
 const EmailHelper = require('../common/emailHelper');
+const emailHelper = require('../common/emailHelper');
+const notificationHelper = require('../common/notificationHelper');
 
 const addCollectorToBooking = async(id, collectorId, transaction) => {
   Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
@@ -315,6 +317,8 @@ module.exports = {
     let { startDate, endDate, bookingSourceEnum, merchantId, lockerTypeId, kioskId} = bookingData;
     startDate = new Date(startDate);
     endDate = new Date(endDate);
+    console.log(startDate)
+    console.log(endDate)
     if(startDate.getTime() + 300000 < (new Date()).getTime()) throw new CustomError(Constants.Error.InvalidDate)
     if(startDate > endDate) throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     if(endDate.getTime() - startDate.getTime() > 2 * 24 * 60 * 60 * 1000) throw new CustomError(Constants.Error.TimeCannotExceed48H);
@@ -353,6 +357,8 @@ module.exports = {
     let booking;
     startDate = new Date(startDate);
     endDate = new Date(endDate);
+    console.log(startDate)
+    console.log(endDate)
     if(startDate.getTime() + 300000 < (new Date()).getTime()) throw new CustomError(Constants.Error.InvalidDate)
     if(startDate > endDate) throw new CustomError(Constants.Error.StartDateLaterThanEndDate);
     if(endDate.getTime() - startDate.getTime() > 2 * 24 * 60 * 60 * 1000) throw new CustomError(Constants.Error.TimeCannotExceed48H);
@@ -514,12 +520,23 @@ module.exports = {
     const creditPaymentRecord = await CreditPaymentRecord.findByPk(booking.creditPaymentRecordId);
     
     if(!Checker.isEmpty(customer) && booking.bookingPrice !== null && booking.bookingPrice !== 0) {
-      if(creditPaymentRecord.referralCreditUsed == 0) await CreditPaymentRecordService.refundCreditCustomer(customer.id, booking.bookingPrice, Constants.CreditPaymentType.BOOKING, transaction);
+      if(creditPaymentRecord.referralCreditUsed == 0) await CreditPaymentRecordService.increaseCreditMerchant(customer.id, booking.bookingPrice, Constants.CreditPaymentType.BOOKING, transaction);
       else await CreditPaymentRecordService.refundCreditCustomerWithReferral(customer.id, booking.bookingPrice, Constants.CreditPaymentType.BOOKING, creditPaymentRecord.referralCreditUsed, transaction);
     }
 
     if(!Checker.isEmpty(merchant) && booking.bookingPrice !== null && booking.bookingPrice !== 0) {
       await CreditPaymentRecordService.increaseCreditMerchant(merchant.id, booking.bookingPrice, Constants.CreditPaymentType.REFUND, transaction);
+    }
+
+    if(booking.bookingPackageId !== null) {
+      let bookingPackage = await BookingPackage.findByPk(booking.bookingPackageId);
+      await bookingPackage.update({lockerCount: --bookingPackage.lockerCount });
+    }
+
+    if(booking.collectorId !== null) {
+      let collector = await Customer.findByPk(booking.collectorId);
+      await emailHelper.sendEmailForRemoveCollector(collector.email, booking.id);
+      await notificationHelper.notificationCollectorRemoved(booking.id, collector.id);
     }
 
     booking = await Booking.update({ 

@@ -1,6 +1,8 @@
 const Checker = require('../common/checker');
 const Constants = require('../common/constants');
+const EmailHelper = require('../common/emailHelper');
 const CustomError = require('../common/error/customError');
+const NotificationHelper = require('../common/notificationHelper');
 const Booking = require('../models/Booking');
 const BookingPackage = require('../models/BookingPackage');
 const Kiosk = require('../models/Kiosk');
@@ -133,6 +135,7 @@ module.exports = {
       if(!Checker.isEmpty(booking.orderId)) {
         let order = await Order.findByPk(booking.orderId);
         await order.update({ orderStatusEnum: Constants.OrderStatus.READY_FOR_COLLECTION}, { transaction });
+        NotificationHelper.notificationOrderReadyForCollection(order.id, order.customerId)
       }
       booking = await booking.update({ bookingStatusEnum: Constants.BookingStatus.ACTIVE, qrCode }, { transaction });
     //OPEN LOCKER FOR THE SECOND TIME
