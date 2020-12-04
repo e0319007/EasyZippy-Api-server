@@ -14,7 +14,6 @@ module.exports = {
     let { customerId, bookingPackageModelId, kioskId } = bookingPackageData;
 
     if(Checker.isEmpty(customerId)) {
-      console.log(bookingPackageData)
       throw new CustomError('Customer ' + Constants.Error.IdRequired)
     }
     Checker.ifEmptyThrowError(await Customer.findByPk(customerId), Constants.Error.CustomerNotFound);
@@ -83,7 +82,6 @@ module.exports = {
     let bookingPackageModels = await BookingPackageModel.findAll({ where: { lockerTypeId } });
     let bookingPackageCount = 0;
     for(const bpm of bookingPackageModels) {
-      //let bookingPackage = await BookingPackage.findAll({ where: { bookingPackageModelId: bpm.id } });
       let bookingPackages = await bpm.getBookingPackages();
       let availBookingPackage = new Array();
       for(let bp of bookingPackages) {

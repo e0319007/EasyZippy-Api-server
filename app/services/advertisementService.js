@@ -43,9 +43,7 @@ module.exports = {
 
     let merchant = await Merchant.findByPk(merchantId);
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
-    console.log("merchant info: " + merchant)
     if (Checker.isEmpty(advertiserEmail)) {
-      console.log("merchant.email: " + merchant.email);
       advertisementData.advertiserEmail = merchant.email;
     }
     if (Checker.isEmpty(advertiserMobile)) {
@@ -115,23 +113,11 @@ module.exports = {
 
   //retrieve advertisemnt that can be shown
   retrieveOngoingAdvertisement: async() => {
-    console.log(new Date())
     let advertisments = await Advertisement.findAll({
       where: {
         deleted: false,
         approved: true,
-        expired: false,
-        // $or: [
-        //   {
-        //     startDate: { 
-        //       $gte: new Date(), 
-        //     },
-        //   },{
-        //     endDate: { 
-        //       $lte: new Date(),
-        //     }
-        //   }
-        // ]
+        expired: false
       }
     })
     return advertisments;
@@ -162,7 +148,6 @@ module.exports = {
       }
     }
     if(Checker.isEmpty(advertisement.staffId)) {
-      console.log("advertisement is not a staff advertisement")
       if(updateKeys.includes('advertiserMobile')) {
         Checker.ifEmptyThrowError(advertisementData.advertiserMobile, Constants.Error.AdvertiserMobileRequired);
       }
@@ -178,7 +163,6 @@ module.exports = {
     }
     if(updateKeys.includes('image')) {
       Checker.ifEmptyThrowError(advertisementData.image, Constants.Error.ImageRequired);
-      console.log(advertisement.image)
       fs.remove(advertisement.image);
     }
     advertisement = await Advertisement.update(advertisementData, { where : { id }, returning: true, transaction });
@@ -192,13 +176,9 @@ module.exports = {
     Checker.ifDeletedThrowError(curAdvertisement, Constants.Error.AdvertisementDeleted);
     
     let curDateTime = new Date();
-
-    console.log(curAdvertisement.approved)
     
     //dont approve when advertisement has been mark as expired or when the start date of advertisement has passed
     if(!curAdvertisement.approved && (curAdvertisement.expired || curDateTime > curAdvertisement.startDate)) {
-      console.log("current Date time: " + curDateTime)
-      console.log("start time: " + curAdvertisement.startDate)
       throw new CustomError(Constants.Error.AdvertisementExpired);
     }
 

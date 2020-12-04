@@ -14,7 +14,6 @@ module.exports = {
    */
   //send notification when staff receives a new merchant application
   notificationNewApplication: async(id) => {
-    console.log('In notificationNewApplication')
     let merchant = await Merchant.findByPk(id);
     Checker.ifEmptyThrowError(merchant, Constants.Error.MerchantNotFound);
     
@@ -350,7 +349,6 @@ module.exports = {
 
    //send notification to staff about new advertisement from merchant 
    notificationNewAdvertisementApplicationFromMerchant: async(advertisementId, transaction) => {
-    console.log('In notificationNewApplication')
     let advertisement = await Advertisement.findByPk(advertisementId, { transaction });
     Checker.ifEmptyThrowError(advertisement, Constants.Error.AdvertisementNotFound);
     
@@ -367,7 +365,6 @@ module.exports = {
 
    //send notification to staff about new advertisement from advertisers
    notificationNewAdvertisementApplicationFromAdvertiser: async(advertisementId, transaction) => {
-    console.log('In notificationNewApplication')
     let advertisement = await Advertisement.findByPk(advertisementId, { transaction });
     Checker.ifEmptyThrowError(advertisement, Constants.Error.AdvertisementNotFound);
     

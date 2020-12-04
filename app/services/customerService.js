@@ -179,10 +179,7 @@ module.exports = {
       return customer;
   },
 
-  loginCustomer: async(email, password) => {
-    console.log(email);
-    console.log(password);
-    
+  loginCustomer: async(email, password) => {    
     Checker.ifEmptyThrowError(email, Constants.Error.EmailRequired);
     Checker.ifEmptyThrowError(password, Constants.Error.PasswordRequired);
     
@@ -192,7 +189,6 @@ module.exports = {
     email = email.toLowerCase();
 
     const customer = await Customer.findOne({ where: { email } });
-    console.log(customer)
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
 
     if (customer.disabled) {
@@ -347,12 +343,11 @@ module.exports = {
     let referrer = await Customer.findByPk(referrerId);
     Checker.ifEmptyThrowError(referrer, 'Referrer ' + Constants.Error.CustomerNotFound);
     Checker.ifEmptyThrowError(referee, 'Referee ' + Constants.Error.CustomerNotFound);
-    //console.log('before' + referee.referrerId)
     if (!Checker.isEmpty(referee.referrerId)) throw new CustomError(Constants.Error.ReferrerExist)
     referee = await Customer.update({ referrerId }, { where: { id: refereeId }, transaction, returning:true });
     referee = await CreditPaymentRecordService.addReferralBonus(referrerId, refereeId, transaction);
     return referee;
-  },
+  }
 }
 
 

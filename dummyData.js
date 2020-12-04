@@ -117,9 +117,6 @@ const addDummyData = async () => {
 
   await addMoreProducts();
 
-  
-  //console.log((await CartService.retrieveCartByCustomerId(1)).length);
-
   let kiosk = await Kiosk.create({ address: '1 Sengkang Square', description: 'Sample Description' });
   let kiosk2 = await Kiosk.create({ address: '3155 Commonwealth Ave West', description: 'Sample Description' });
   let lockerType1 = await LockerType.create({ name: 'BIG', lockerHeight: 120, lockerWidth: 40, lockerLength: 50, pricePerHalfHour: 3 });
@@ -151,7 +148,6 @@ const addDummyData = async () => {
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType3.id, lockerCode: '3f' });
   await Locker.create({ lockerStatusEnum: 'Empty', kioskId: kiosk.id, lockerTypeId: lockerType3.id, lockerCode: '3g' });
 
-  // await Advertisement.create({ image: '1601607853991.jpeg', title: 'Lazada sale', description: 'Lazada 50% off all items',  advertiserUrl: 'http://www.lazada.com', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '91111111', advertiserEmail: 'test1@email.com', approved: true });
   await Advertisement.create({ image: '1601608444371.jpeg', title: 'Shopee sale', description: 'Shopee 50% off all electronic items', advertiserUrl: 'http://www.shopee.com', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '92222222', advertiserEmail: 'test2@email.com', approved: true });
   await Advertisement.create({ image: '1601608583950.jpeg', title: 'Qoo10 sale', description: 'Qoo10 50% off apparel items', advertiserUrl: 'http://www.qoo10.com', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '93333333', advertiserEmail: 'test3@email.com', approved: true });
   await Advertisement.create({ image: 'nesAd1.png', title: 'Nescafe - savour the moment that matters', description: 'Shop Nescafe now', advertiserUrl: 'https://www.nescafe.com/sg/', startDate: '2020-09-02T11:11:09+08:00', endDate: '2021-10-02T11:11:09+08:00', amountPaid: 100, advertiserMobile: '93333333', advertiserEmail: 'nescafe@email.com', approved: true, expired: true });
@@ -277,22 +273,13 @@ const addDummyData = async () => {
     kioskId: 1
   };
 
-  // let bookingPackageDataFor6 = {
-  //   merchantId: 6,
-  //   bookingPackageModelId: 3,
-  //   kioskId: 1
-  // };
-
   let bookingPackage1;
   let bookingPackage2;
 
   await sequelize.transaction(async (transaction) => {
     bookingPackage1 = await BookingPackageService.createBookingPackageForCustomer(bookingPackageData1, transaction)
     bookingPackage2 = await BookingPackageService.createBookingPackageForMerchant(bookingPackageData2, transaction)
-    // bookingPackage3 = await BookingPackageService.createBookingPackageForMerchant(bookingPackageDataFor6, transaction)
   });
-
-  console.log('Initializing booking');
 
   const startDate1 = new Date(new Date().getTime() + 24 * 60 * 60000);
   const endDate1 = new Date(new Date().getTime() + 24 * 60 * 60000 + 60 * 60000);
@@ -340,40 +327,6 @@ const addDummyData = async () => {
     bookingPackageId: 2,
   }
 
-  // let bookingData5 = {
-  //   startDate: new Date(2020,09,26,20,40), 
-  //   endDate: new Date(2020,09,26,23,20), 
-  //   bookingSourceEnum: Constants.BookingSource.MOBILE, 
-  //   merchantId: 1, 
-  //   bookingPackageId: 2,
-  // };
-
-  //ADDITIONAL
-
-  // let bookingData6 = {
-  //   startDate: new Date(2020,09,24,20,40), 
-  //   endDate: new Date(2020,09,24,23,20), 
-  //   bookingSourceEnum: Constants.BookingSource.KIOSK, 
-  //   customerId: 1, 
-  //   bookingPackageId: 1,
-  // }
-
-  // let bookingData7 = {
-  //   startDate: new Date(2020,09,24,21,40), 
-  //   endDate: new Date(2020,09,24,23,20), 
-  //   bookingSourceEnum: Constants.BookingSource.KIOSK, 
-  //   customerId: 1, 
-  //   bookingPackageId: 1,
-  // }
-
-  // let bookingData8 = {
-  //   startDate: new Date(2020,09,24,21,40), 
-  //   endDate: new Date(2020,09,24,23,20), 
-  //   bookingSourceEnum: Constants.BookingSource.KIOSK, 
-  //   customerId: 1, 
-  //   bookingPackageId: 1,
-  // }
-
   let bookingData9 = {
     startDate: new Date(new Date().getTime() + 10 * 60000), 
     endDate: new Date(new Date().getTime() + 500 * 60000),
@@ -382,14 +335,6 @@ const addDummyData = async () => {
     lockerTypeId: 3,
     kioskId: 1
   }
-
-  // let bookingData10 = {
-  //   startDate : new Date(2020,09,30,17,00,00),
-  //   endDate : new Date(2020,09,30,19,00,00),
-  //   bookingSourceEnum: Constants.BookingSource.KIOSK, 
-  //   customerId: 1, 
-  //   bookingPackageId: 1,
-  // };
 
   const bookingData = {
     startDate: new Date(new Date().getTime() + 10 * 60000),
@@ -436,67 +381,19 @@ const addDummyData = async () => {
     kioskId: 1
   }
 
-  // console.log(bookingPackage1.endDate.toLocaleString());
-  // let times = await BookingService.checkBookingAllowed(bookingData);
-  // console.log(times);
-
   await sequelize.transaction(async (transaction) => {
     await BookingService.createBookingByCustomer(bookingData1, transaction);
-    console.log('Pass 1')
     await BookingService.createBookingByMerchant(bookingData2, transaction);
-    console.log('Pass 2')
     await BookingService.createBookingWithBookingPackageByCustomer(bookingData3, transaction);
-    console.log('Pass 3')
     await BookingService.createBookingWithBookingPackageByMerchant(bookingData4, transaction);
-    console.log('Pass 4')
-    // await BookingService.createBookingWithBookingPackageByMerchant(bookingData5, transaction);
-
-    // console.log('*Pass 1')
-    // await BookingService.createBookingWithBookingPackageByCustomer(bookingData6, transaction);
-    // console.log('*Pass 2')
-    // await BookingService.createBookingWithBookingPackageByCustomer(bookingData7, transaction);
-    // console.log('*Pass 3')
-    // await BookingService.createBookingWithBookingPackageByCustomer(bookingData8, transaction);
-
-    // console.log('*Pass 4')
     await BookingService.createBookingByCustomer(bookingData9, transaction);
-    // console.log('*Pass 5')
-    // await BookingService.createBookingByMerchant(bookingData5, transaction);
-
     await BookingService.createBookingByCustomer(bookingData, transaction);
     
   });
-  // await BookingService.createBookingByMerchant(bookingData51);
-  // await BookingService.createBookingByMerchant(bookingData52);
-  // await BookingService.createBookingByMerchant(bookingData53);
-
+  
   await sequelize.transaction(async (transaction) => {
-    console.log(await BookingService.addCollectorToBooking(1, 6, transaction))
-
+    await BookingService.addCollectorToBooking(1, 6, transaction);
   });
-
-  // await sequelize.transaction(async (transaction) => {
-  //   console.log(await BookingService.changeCollectorToBooking(1, 5, transaction))
-
-  // });
-
-  // await sequelize.transaction(async (transaction) => {
-  //   console.log(await BookingService.removeCollectorToBooking(1, transaction))
-  // });
-
-  // await sequelize.transaction(async (transaction) => {
-  //   //await BookingService.createBookingWithBookingPackageByMerchant(bookingData5, transaction);
-  //   console.log(await BookingService.addCollectorToBooking(1, 1, transaction))
-  //   console.log(await BookingService.changeCollectorToBooking(1, 3, transaction))
-  //   console.log(await BookingService.removeCollectorToBooking(1, transaction))
-  await sequelize.transaction(async (transaction) => {
-    //console.log(await BookingService.cancelBooking(1, transaction))
-  });
-
-  // console.log('*****')
-  // console.log(await BookingService.retrieveBookingByCustomerId(1))
-  // console.log(await BookingService.retrieveBookingByCollectorId(3))
-  // console.log(await BookingService.retrieveBookingByMerchantId(1))
 
   /**
    * TEST ORDER
@@ -527,8 +424,6 @@ const addDummyData = async () => {
   ]
 
   let cart5 = [
-    // { productId: 19, productVariationId: null, quantity: 2 },
-    // { productId: 20, productVariationId: null, quantity: 1 },
     { productId: null, productVariationId: 4, quantity: 1 }
   ]
 
@@ -536,7 +431,6 @@ const addDummyData = async () => {
     cart: cart1,
     promoIdUsed: 1,
     collectionMethodEnum: Constants.CollectionMethod.KIOSK,
-    //totalAmountPaid: 3, 
     customerId: 1
   }
 
@@ -544,7 +438,6 @@ const addDummyData = async () => {
     cart: cart2,
     promoIdUsed: 2,
     collectionMethodEnum: Constants.CollectionMethod.IN_STORE,
-    //totalAmountPaid: 3, 
     customerId: 1
   }
 
@@ -552,7 +445,6 @@ const addDummyData = async () => {
     cart: cart3,
     promoIdUsed: 3,
     collectionMethodEnum: Constants.CollectionMethod.KIOSK,
-    //totalAmountPaid: 3, 
     customerId: 2
   }
 
@@ -560,7 +452,6 @@ const addDummyData = async () => {
     cart: cart4,
     promoIdUsed: 4,
     collectionMethodEnum: Constants.CollectionMethod.IN_STORE,
-    //totalAmountPaid: 3, 
     customerId: 4
   }
 
@@ -568,18 +459,13 @@ const addDummyData = async () => {
     cart: cart5,
     promoIdUsed: null,
     collectionMethodEnum: Constants.CollectionMethod.KIOSK,
-    //totalAmountPaid: 3, 
     customerId: 5
   }
 
   let orderVal1 = await orderService.createOrder(orderData1);
-  console.log('create order cart item length: ' + cart2.length);
   let orderVal2 = await orderService.createOrder(orderData2);
-  console.log('create order cart item length: ' + cart3.length);
   let orderVal3 = await orderService.createOrder(orderData3);
-  console.log('create order cart item length: ' + cart4.length);
   let orderVal4 = await orderService.createOrder(orderData4);
-  console.log('create order cart item length: ' + cart5.length);
   let orderVal5 = await orderService.createOrder(orderData5);
 
 
@@ -629,29 +515,6 @@ const addDummyData = async () => {
   await sequelize.transaction(async (transaction) => {
     await CartService.addToCart(1, lineItem5, transaction);
   });
-
-
-  // await sequelize.transaction(async (transaction) => {
-  //   console.log(await orderService.updateOrderStatus(1, Constants.OrderStatus.READY_FOR_COLLECTION, transaction));
-
-  // });
-
-  // await sequelize.transaction(async (transaction) => {
-  //   await orderService.updateOrderStatus(1, Constants.OrderStatus.COMPLETE, transaction);
-  // });
-
-  // console.log('RETRIEVE ALL')
-  // console.log(await orderService.retrieveAllOrders());
-  // console.log('RETRIEVE BY ID')
-  // console.log(await orderService.retrieveOrderById(1));
-  // console.log('RETRIEVE BY CUSTOMER ID')
-  // console.log(await orderService.retrieveOrderByCustomerId(1));
-  // console.log('RETRIEVE BY MERCHANT ID')
-  // console.log(await orderService.retrieveOrderByMerchantId(1));
-  // console.log('RETRIEVE ORDER LINE ITEMS');
-  // console.log(await orderVal[0].getLineItems());
-
-  
 };
 
 addDummyData();
@@ -734,5 +597,4 @@ const addMoreProducts = async () => {
   Product.update({ createdAt: new Date(new Date().getTime() - 28300) }, { where: { id: 17 } } )
   Product.update({ createdAt: new Date(new Date().getTime() - 48300) }, { where: { id: 18 } } )
   Product.update({ createdAt: new Date(new Date().getTime() - 38300) }, { where: { id: 19 } } )
-
-}
+};

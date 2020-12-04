@@ -5,21 +5,7 @@ const fs = require('fs-extra');
 const Checker = require('../common/checker');
 
 module.exports = {
-  createProduct: async(req, res) => {
-    // let temp = new Array();
-    // let imageArray = new Array();
-    // let imageString = "";
-    // images = req.body.images;
-    // console.log(images + "\n");
-
-    // temp = images.split(",");
-    // temp.forEach(x => {
-    //   x.trim(); 
-    //   imageString += x;
-    //   imageArray.push(x);
-    //   console.log(x);
-    // });
-    
+  createProduct: async(req, res) => {    
     let imageArray = req.body.images;
     try {
       const productData = req.body;
@@ -101,7 +87,6 @@ module.exports = {
       await sequelize.transaction(async (transaction) => {
         product = await ProductService.toggleDisableProduct(id, transaction);
       });
-      console.log(product)
       return res.status(200).send(product);
     } catch(err) {
       console.log(err)

@@ -72,8 +72,6 @@ module.exports = {
     Checker.ifEmptyThrowError(announcement, Constants.Error.AnnouncementNotFound);
     let then = Date.parse(announcement.sentTime);
     let now = new Date().valueOf();
-    console.log('then:'+ then)
-    console.log('now :'+ now)
 
     if(then > now) {
       await Announcement.update({ deleted: true }, { where: { id }, transaction });

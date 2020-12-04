@@ -34,10 +34,6 @@ const retrieveOrderById = async(orderId) => {
 };
 
 const markOrderComplete = async(order, transaction) => {
-  console.log('Amount paid:' + order.amountPaid);
-  console.log('order:');
-  console.log(order);
-
   let creditPaymentRecord;
 
   if(!Checker.isEmpty(order.promoIdUsed)){
@@ -60,19 +56,12 @@ const markOrderComplete = async(order, transaction) => {
 
 const calculatePrice = async(lineItems) => {
   let price = 0;
-  console.log('LineItems: ')
-  console.log(lineItems.length);
   for(let lineItem of lineItems) {
-    console.log('productId: ' + lineItem.productId);
-    console.log('productVariationId: ' + lineItem.productVariationId);
-    //console.log(lineItem)
     if(lineItem.productId !== null) {
       price += ((await Product.findByPk(lineItem.productId)).unitPrice * lineItem.quantity);
     } else {
       price += ((await ProductVariation.findByPk(lineItem.productVariationId)).unitPrice * lineItem.quantity);
     }
-    console.log(lineItem.id)
-    console.log('price in loop ' + price);
   }
   return price;
 };
@@ -162,7 +151,6 @@ module.exports = {
     Checker.ifEmptyThrowError(id, Constants.Error.IdRequired);
     let order = await Order.findByPk(id);
     Checker.ifEmptyThrowError(order, Constants.Error.OrderNotFound);
-    console.log(order)
     if(orderStatusEnum === Constants.OrderStatus.COMPLETE) {
       return await markOrderComplete(order, transaction);
     } else if(orderStatusEnum === Constants.OrderStatus.READY_FOR_COLLECTION) {
@@ -176,9 +164,6 @@ module.exports = {
     let { cart, promoIdUsed, collectionMethodEnum, totalAmountPaid, customerId } = orderData;
 
     Checker.ifEmptyThrowError(collectionMethodEnum, 'Collection method enum ' + Constants.Error.XXXIsRequired);
-    // Checker.ifEmptyThrowError(totalAmountPaid, 'Total amount ' + Constants.Error.XXXIsRequired)
-    // Checker.ifNegativeThrowError(totalAmountPaid, 'Total amount ' + Constants.Error.XXXCannotBeNegative);
-    // Checker.ifNotNumberThrowError(totalAmountPaid, 'Total amount ' + Constants.Error.XXXMustBeNumber);
     Checker.isEmpty(customerId, Constants.Error.IdRequired);
     Checker.isEmpty(await Customer.findByPk(customerId), Constants.Error.CustomerNotFound);
 
@@ -244,7 +229,6 @@ module.exports = {
     
     if(!Checker.isEmpty(promoIdUsed)) {
       promotion = await Promotion.findByPk(promoIdUsed);
-      console.log('in promotion service: ' + promoIdUsed)
       Checker.ifEmptyThrowError(promotion, Constants.Error.PromotionNotFound);
       if(!Checker.isEmpty(promotion.usageLimit) && promotion.usageLimit <= promotion.usageCount) {
         throw new CustomError(Constants.Error.PromotionUsageLimitReached);
@@ -286,8 +270,6 @@ module.exports = {
       }
     }
     await CartService.saveItemsToCart(customerId, [])
-    // if(totalAmountPaid != trackTotalAmount) throw new CustomError(Constants.Error.PriceDoesNotTally);
-
     return orders;
   },
 

@@ -23,7 +23,6 @@ module.exports = {
     Checker.ifEmptyThrowError(lockerCode, 'Locker code ' + Constants.Error.XXXIsRequired)
     Checker.ifEmptyThrowError(kioskId, 'Kiosk ' + Constants.Error.IdRequired)
     Checker.ifEmptyThrowError(await Kiosk.findByPk(kioskId), Constants.Error.KioskNotFound)
-    console.log(lockerTypeId)
     Checker.ifEmptyThrowError(await LockerType.findByPk(lockerTypeId), Constants.Error.LockerTypeNotFound)
     return await Locker.create(lockerData, { transaction });
   },
@@ -108,13 +107,11 @@ module.exports = {
       throw new CustomError(Constants.Error.InvalidQrCode);
     }
     if(booking.bookingStatusEnum !== Constants.BookingStatus.UNFULFILLED && booking.bookingStatusEnum !== Constants.BookingStatus.ACTIVE) {
-      console.log(booking.bookingStatusEnum)
       throw new CustomError(Constants.Error.InvalidQrCode);
     } 
 
     let text = '';
 
-    console.log(booking.bookingStatusEnum)
     let locker;
     //OPEN LOCKER FOR THE FIRST TIME
     if(booking.bookingStatusEnum === Constants.BookingStatus.UNFULFILLED) {
@@ -154,16 +151,13 @@ module.exports = {
         if(!Checker.isEmpty(booking.merchantId)) {
           extraPrice = extraPrice.toFixed(2);
           extraPrice = Number(extraPrice)
-          console.log('extra' + extraPrice)
           creditPaymentRecord = await CreditPaymentRecordService.payCreditMerchant(booking.merchantId, extraPrice, Constants.CreditPaymentType.BOOKING_OVERTIME_CHARGE, transaction);
         } else {
-          console.log('extra2' + extraPrice)
           creditPaymentRecord = await CreditPaymentRecordService.payCreditCustomer(booking.customerId, extraPrice, Constants.CreditPaymentType.BOOKING_OVERTIME_CHARGE, transaction);
         }
         booking = await booking.update({ bookingPrice: booking.bookingPrice + extraPrice }, { transaction });
       }
 
-      console.log('hey')
       booking = await booking.update({ bookingStatusEnum: Constants.BookingStatus.FULFILLED }, { transaction });
       locker = await locker.update( { lockerStatusEnum: Constants.LockerStatus.EMPTY }, { transaction }); 
       

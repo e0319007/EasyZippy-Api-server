@@ -10,7 +10,6 @@ module.exports = {
     try {  
       const advertisementData = req.body;
       let advertisement;
-      console.log(advertisementData)
       await sequelize.transaction(async (transaction) => {
         advertisement = await AdvertisementService.createAdvertisementAsStaff(advertisementData, transaction)
       });
@@ -37,7 +36,6 @@ module.exports = {
     let image = req.body.image;
     try {  
       const advertisementData = req.body;
-      console.log(advertisementData)
       let advertisement;
       await sequelize.transaction(async (transaction) => {
         advertisement = await AdvertisementService.createAdvertisementAsMerchant(advertisementData, transaction)
@@ -80,7 +78,6 @@ module.exports = {
   retrieveAdvertisementByMerchantId: async(req, res) => {
     try {  
       const { merchantId } = req.params;
-      console.log("merchant id: " + merchantId);
       let advertisements = await AdvertisementService.retrieveAdvertisementByMerchantId(merchantId);
       return res.status(200).send(advertisements);
     } catch (err) {

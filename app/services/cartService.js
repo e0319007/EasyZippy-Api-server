@@ -55,8 +55,6 @@ module.exports = {
         customerId: id         
       }
     });
-    // console.log('****is array? ' + Array.isArray(await cart.getLineItems()))
-    // console.log('****array? ' + await cart.getLineItems())
 
     let ctx = (await cart.getLineItems()).length;
     let i = 0;
@@ -72,12 +70,8 @@ module.exports = {
       await LineItem.destroy({ where: { id: liId.pop() }, transaction });
     }
 
-    // console.log('lineItems')
-    // console.log(lineItems)
     while(!Checker.isEmpty(lineItems)) {
       let lt = lineItems.pop();
-      // console.log(lt);
-      // console.log('in loop')
       await LineItem.create({ productId: lt.productId, productVariationId: lt.productVariationId, quantity: lt.quantity, cartId: id }, { transaction })
     }
     return await Cart.findByPk(cart.id);
@@ -95,11 +89,6 @@ module.exports = {
     });
     let cartItems = new Array();
     if (Checker.isEmpty(await cart.getLineItems())) return cartItems;
-    // console.log('****is array? ' + Array.isArray(await cart.getLineItems()))
-
-    // console.log(await cart.getLineItems())
-    // console.log(typeof (await cart.getLineItems()))
-    // console.log(typeof (await cart.getLineItems()))
 
     let merchantMapLineitems = new Map();
 
@@ -119,7 +108,6 @@ module.exports = {
         merchant = await Merchant.findByPk((await Product.findByPk(pv.productId)).merchantId);
       } else merchant = await Merchant.findByPk(p.merchantId);
       let merchantId = merchant.id
-      console.log('merchantid: ' + merchantId)
       if(merchantMapLineitems.has(merchantId)) {
         let items = merchantMapLineitems.get(merchantId);
         items.push(lineItem);
@@ -157,13 +145,11 @@ module.exports = {
         }
       }
 
-      console.log(merchantId)
       cartItems.push({ 
         merchant: await Merchant.findByPk(merchantId),
         lineItems: lineItem
        })
     }
-    console.log(cartItems);
     return { cartItems, invalidCartItems};
   },
 
@@ -200,17 +186,14 @@ module.exports = {
       if(productVariation.deleted) {
         throw new CustomError(Constants.Error.ProductVariationDeleted);
       }
-      console.log()
       quantity = productVariation.quantityAvailable;
     }
-    console.log('init qty' + quantity)
 
     if(quantity === 0) throw new CustomError(Constants.Error.ZeroQuantity);
 
     for(let li of (await cart.getLineItems())) {
       if((li.productVariationId === null && li.productId === lineItem.productId) || (li.productId === null && li.productVariationId === lineItem.productVariationId)) {
         inCart = true;
-        console.log('add qty: ' + Number(li.quantity + lineItem.quantity))
         if(Number(li.quantity + lineItem.quantity) > quantity) {
           throw new CustomError(Constants.Error.InsufficientQuantity);
         } else {
@@ -219,7 +202,6 @@ module.exports = {
         }
       }
     }
-    console.log('quantity: ' + quantity)
 
     if(!inCart) {
       if(lineItem.quantity > quantity) throw new CustomError(Constants.Error.InsufficientQuantity);

@@ -73,7 +73,6 @@ module.exports = {
 
   increaseCreditCustomer: async(customerId, amountPaid, creditPaymentTypeEnum, transaction) => {
     amountPaid = Number(Number(amountPaid).toFixed(2));
-    console.log('customerID' + customerId)
     Checker.ifEmptyThrowError(customerId, Constants.Error.IdRequired);
     Checker.ifEmptyThrowError(amountPaid, 'Amount paid ' + Constants.Error.XXXIsRequired);
     Checker.ifNotNumberThrowError(amountPaid, 'Amount paid ' + Constants.Error.XXXMustBeNumber);
@@ -81,7 +80,6 @@ module.exports = {
 
     let customer = await Customer.findByPk(customerId);
     Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
-    console.log(customer)
     let creditBalance = Number(customer.creditBalance) + Number(amountPaid)
     customer = await customer.update({ creditBalance }, { transaction });
     let creditPaymentRecord = await CreditPaymentRecord.create({ amount: amountPaid, customerId, creditPaymentTypeEnum }, { transaction });
@@ -118,7 +116,6 @@ module.exports = {
     if (amountPaid <= merchant.creditBalance) {
       let newCreditAmount = Number(merchant.creditBalance) -  Number(amountPaid);
       newCreditAmount = Number(newCreditAmount.toFixed(2));
-      console.log('new credit amount ' + newCreditAmount)
       await merchant.update({ creditBalance: newCreditAmount }, { transaction });
     } else throw new CustomError(Constants.Error.InsufficientCreditBalance);
     

@@ -28,8 +28,6 @@ const addCollectorToBooking = async(id, collectorId, transaction) => {
   Checker.ifEmptyThrowError(customer, Constants.Error.CustomerNotFound);
   
   booking = await booking.update({ collectorId }, { transaction });
-  console.log('add collector to booking now is')
-  console.log(booking);
   NotificationHelper.notificationCollectorAdded(id, collectorId);
   EmailHelper.sendEmailForAddCollector(customer.email, booking.id)
   return booking;
@@ -47,7 +45,6 @@ const removeCollectorToBooking = async(id, transaction) => {
   }
 
   booking = await booking.update({ collectorId: null, qrCode }, { transaction });
-  console.log('CHECK COLLECTOR TO BE REMOVED: ' + booking.collectorId)
   NotificationHelper.notificationCollectorRemoved(id, collectorId);
   EmailHelper.sendEmailForRemoveCollector((await Customer.findByPk(collectorId)).email, booking.id)
   return booking;
@@ -58,8 +55,6 @@ const changeCollectorToBooking = async(id, collectorId, transaction) => {
   let booking = await Booking.findByPk(id);
   Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound);
   const oldCollectorId = booking.collectorId;
-  console.log('old booking')
-  console.log(booking)
 
   Checker.ifEmptyThrowError(collectorId, 'Collector ' + Constants.Error.IdRequired);
   let customer = await Customer.findByPk(collectorId);
@@ -71,7 +66,6 @@ const changeCollectorToBooking = async(id, collectorId, transaction) => {
   }
   
   booking = await booking.update({ collectorId: customer.id, qrCode }, { transaction });
-  console.log('CHECK COLLECTOR TO BE REMOVED: ' + oldCollectorId)
 
   NotificationHelper.notificationCollectorAdded(id, collectorId);
   NotificationHelper.notificationCollectorRemoved(id, oldCollectorId);
@@ -89,7 +83,6 @@ const checkBookingAvailable = async(startDate, endDate, lockerTypeId, kioskId) =
   let bookingPackageCount = 0;
 
   for(const bpm of bookingPackageModels) {
-    //let bookingPackage = await BookingPackage.findAll({ where: { bookingPackageModelId: bpm.id } });
     let bookingPackages = await bpm.getBookingPackages();
     let availBookingPackage = new Array();
     //check for non-expired booking packages only
@@ -111,7 +104,6 @@ const checkBookingAvailable = async(startDate, endDate, lockerTypeId, kioskId) =
     if (b.startDate <= startDate && b.endDate >= startDate && b.endDate <= endDate) {
       // currBooking:   |----|
       // b.booking  :|----|  
-      console.log('A')
       let gap = parseInt(Math.abs(b.endDate.getTime() - startDate.getTime()) / (1000 * 60));
       for(let i = 0; i < gap; i++) {
         emptyTimes[i] = ++emptyTimes[i];
@@ -119,7 +111,6 @@ const checkBookingAvailable = async(startDate, endDate, lockerTypeId, kioskId) =
     }else if (b.startDate >= startDate && b.startDate <= endDate && b.endDate >= endDate) {
     // currBooking:|----|
     // b.booking  :   |----| 
-      console.log('B')  
       let startGap = parseInt(Math.abs(b.startDate.getTime() - startDate.getTime()) / (1000 * 60));
       for(let i = startGap; i < emptyTimes.length; i++) {
         emptyTimes[i] = ++emptyTimes[i];
@@ -127,7 +118,6 @@ const checkBookingAvailable = async(startDate, endDate, lockerTypeId, kioskId) =
     } else if (b.startDate >= startDate && b.endDate <= endDate) {
       // currBooking:|----|
       // b.booking  : |--|  
-        console.log('C') 
       let startGap = parseInt(Math.abs(b.startDate.getTime() - startDate.getTime()) / (1000 * 60));
       let gap = parseInt(Math.abs(b.endDate.getTime() - startDate.getTime()) / (1000 * 60));
       for(let i = startGap; i < gap; i++) {
@@ -136,13 +126,11 @@ const checkBookingAvailable = async(startDate, endDate, lockerTypeId, kioskId) =
     } else if (b.startDate <= startDate && b.endDate >= endDate) {
       // currBooking: |--|
       // b.booking  :|----| 
-      console.log('D')
       for(let i = 0; i < emptyTimes.length; i++) {
         emptyTimes[i] = ++emptyTimes[i];
       }
     } 
   }
-  //console.log(emptyTimes)
   let availableSlots = new Array();
   let i = 0;
   let j = 0;
@@ -157,20 +145,16 @@ const checkBookingAvailable = async(startDate, endDate, lockerTypeId, kioskId) =
       j++;
     }
     if(availableStartDate != null && duration >= 15) {
-      //console.log(duration)
       availableEndDate = new Date(availableStartDate.getTime() + duration * 60000);
       availableSlot = {
         'startDate': availableStartDate,
         'endDate': availableEndDate
       };
       availableSlots.push(availableSlot);
-      // console.log('availableStartDate: ' + availableStartDate )
-      // console.log('availableEndDate: ' +  availableEndDate)
     }
     i = j + 1;
   };
 
-  //console.log(availableSlot)
   return availableSlots;
 }
 
@@ -219,7 +203,6 @@ const createBookingWithBookingPackageByCustomer = async(bookingData, transaction
 
   /*CHECK BOOKING CROSS OVER BOOKING PACKAGE END TIME*/
   if(endDate > bookingPackage.endDate) {
-    console.log('PASS')
     let bookingPrice = await calculatePrice(bookingPackage.endDate, endDate, lockerTypeId);
     let availSlots = await checkBookingAvailable(bookingPackage.endDate, endDate, lockerTypeId, kioskId);
     if (Checker.isEmpty(availSlots) || (!Checker.isEmpty(availSlots) && availSlots[0].startDate.getTime() != bookingPackage.endDate.getTime() || availSlots[0].endDate.getTime() != endDate.getTime())) {
@@ -523,10 +506,6 @@ module.exports = {
     Checker.ifEmptyThrowError(booking, Constants.Error.BookingNotFound);
     
     if(booking.bookingStatusEnum != Constants.BookingStatus.UNFULFILLED || booking.startDate.getTime() - 30 * 60000 <= new Date().getTime()) {
-      console.log(booking.startDate)
-      console.log(booking.startDate.getTime())
-      console.log(new Date(new Date() - 30 * 60000))
-      console.log(new Date(new Date() - 30 * 60000).getTime())
       throw new CustomError(Constants.Error.BookingCannotBeCancelled)
     }
 
@@ -535,7 +514,6 @@ module.exports = {
     const creditPaymentRecord = await CreditPaymentRecord.findByPk(booking.creditPaymentRecordId);
     
     if(!Checker.isEmpty(customer) && booking.bookingPrice !== null && booking.bookingPrice !== 0) {
-      console.log('creditPaymentRecord.referralCreditUsed' + creditPaymentRecord.referralCreditUsed)
       if(creditPaymentRecord.referralCreditUsed == 0) await CreditPaymentRecordService.refundCreditCustomer(customer.id, booking.bookingPrice, Constants.CreditPaymentType.BOOKING, transaction);
       else await CreditPaymentRecordService.refundCreditCustomerWithReferral(customer.id, booking.bookingPrice, Constants.CreditPaymentType.BOOKING, creditPaymentRecord.referralCreditUsed, transaction);
     }
@@ -551,6 +529,5 @@ module.exports = {
   },
 
   addCollectorToBooking, removeCollectorToBooking, changeCollectorToBooking
-
 }
 
