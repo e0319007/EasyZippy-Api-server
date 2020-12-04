@@ -36,7 +36,6 @@ module.exports = {
     let bookingPackageModels = await BookingPackageModel.findAll({ where: { lockerTypeId } });
     let bookingPackageCount = 0;
     for(const bpm of bookingPackageModels) {
-      //let bookingPackage = await BookingPackage.findAll({ where: { bookingPackageModelId: bpm.id } });
       let bookingPackages = await bpm.getBookingPackages();
       let availBookingPackage = new Array();
       for(let bp of bookingPackages) {

@@ -1,5 +1,6 @@
 const supertest = require('supertest');
 const app = require('../app');
+// To be kept in view for future use beyond this project
 //const request = supertest(app);
 // module.exports = {
 //   registerStaff: async (data) => request(app).post(/staff).send(data),

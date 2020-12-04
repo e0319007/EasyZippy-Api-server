@@ -225,9 +225,7 @@ router.post('/order', Authenticator.customerOnly, OrderController.createOrder);
 
 //Payment
 router.get('/pay/customer/:customerId/:amount', Authenticator.customerAndMerchantOnly, PaymentController.pay);
-// router.get('/pay/merchant/:merchantId/:amount', Authenticator.customerAndMerchantOnly, PaymentController.merchantPay);
 router.get('/customerPaySuccess', PaymentController.success);
-// router.get('/merchantPaySuccess', PaymentController.merchantPaySuccess);
 router.get('/cancel', PaymentController.cancel);
 router.post('/withdraw/:merchantId', PaymentController.merchantWithdraw);
 

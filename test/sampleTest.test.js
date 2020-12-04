@@ -9,8 +9,6 @@ describe('Sample Test Desc', () => {
   });
 
   it('Sample Case', async (done) => {
-
-    // await Customer.create({ firstName: 'Customer', lastName: 'One', mobileNumber: '91234567', password: 'password', salt: 'salt', email: 'email' });
     expect(true).toEqual(true);
     done();
   });

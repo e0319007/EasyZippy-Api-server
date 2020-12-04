@@ -33,14 +33,6 @@ module.exports = {
         i++;
       }
       return res.status(200).send(array);
-
-      // let i = 0;
-      // let imageString = "";
-      // while(!Checker.isEmpty(req.files[i])) {
-      //   imageString += './app/assets/' + req.files[i].filename + ",";
-      //   i++;
-      // }
-      // return res.status(200).send(imageString.slice(0,-1));
     } catch (err) {
       console.log(err)
       sendErrorResponse(res, err);

@@ -79,7 +79,6 @@ module.exports = {
     Checker.ifEmptyThrowError(await Merchant.findByPk(merchantId), Constants.Error.MerchantNotFound)
     Checker.ifEmptyThrowError(await Category.findByPk(categoryId), Constants.Error.CategoryNotFound)
     
-    //product = await product.update(productData, { transaction, returning: true });
     product = await Product.update(productData, { where: { id }, transaction, returning: true })
     return product;
   },
