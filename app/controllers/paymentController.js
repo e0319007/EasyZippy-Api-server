@@ -87,7 +87,7 @@ module.exports = {
     });
 
     setTimeout(async () => {await sequelize.transaction(async (transaction) => {
-      await ExternalPaymentRecordService.createExternalPaymentRecord(customerId, paymentData, transaction);
+      await ExternalPaymentRecordService.createExternalPaymentRecordCustomerTopUp(customerId, paymentData, transaction);
     })}, 10000);
   },
 
