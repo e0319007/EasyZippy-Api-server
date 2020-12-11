@@ -12,7 +12,7 @@ const MerchantService = require('../services/merchantService');
 
 const clientId = config.get('paypal_client_id');
 const clientSecret = config.get('paypal_client_secret');
-let environment = new payouts.core.SandboxEnvironment(clientId, clientSecret);
+let environment = new payouts.core.LiveEnvironment(clientId, clientSecret);
 let client = new payouts.core.PayPalHttpClient(environment);
 
 module.exports = {
